@@ -1,0 +1,449 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'UA-149444322-1');
+		</script>
+
+
+		<title>Mentalit&agrave;&nbsp;Computazionale - Generazione di un numero casuale</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../../en/index.html">en</a>
+										<a class="logo" href="../../../it/index.html">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Generazione di un numero casuale</h1>
+		</header>
+
+		<p>
+			Generare numeri casuali su un computer quantistico non &egrave; cosa difficile in quanto l&apos;impredicibilit&agrave; della misura di un qubit
+			in stato di sovrapposizione &egrave; di fatto una forma di casualit&agrave; naturale.
+			Tradurre tale idea in codice &egrave; relativamente semplice: prendendo n qubit (quindi il numero casuale ottenuto da ogni esecuzione sar&agrave; 
+			un numero intero da 0 a 2<sup>n</sup> - 1) con stato iniziale uguale a $|0\rangle$, 
+			si applica su ciascuno degli n qubit la porta quantistica Hadamard e infine si effettua la misura. 
+			La porta Hadamard applicata a $|0\rangle$ porta il qubit nello stato di sovrapposizione:
+						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
+						e ci&ograve; significa che la misura avr&agrave; la probabilit&agrave; del 50% di essere uguale a 0 e del 50% di essere uguale a 1.
+		</p>
+
+		<h2>Schema circuitale</h2>
+		<p>Considerando di avere a disposizione un computer quantistico con 5 qubit, lo schema circuitale che realizza quanto detto sopra &egrave; il seguente:</p>
+		<div class="betweentextlines"><img src="../../../posts/quantum-computing/random-number-generation/qc-rndnmgen-circuit.png" /></div>
+		<br/>
+
+		<h2>Codice in QASM</h2>
+		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quantistico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<pre><code class="asm">OPENQASM 2.0;
+include "qelib1.inc";
+
+qreg q[5];
+creg c[5];
+
+h q[0];
+h q[1];
+h q[2];
+h q[3];
+h q[4];
+
+measure q[0] -> c[0];
+measure q[1] -> c[1];
+measure q[2] -> c[2];
+measure q[3] -> c[3];
+measure q[4] -> c[4];</code></pre>
+		<br/>
+	
+		<h2>Codice in Python con Qiskit</h2>
+		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quantistico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<pre><code class="python">q = QuantumRegister(5, 'q')
+c = ClassicalRegister(5, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.h(q[0])
+circuit.h(q[1])
+circuit.h(q[2])
+circuit.h(q[3])
+circuit.h(q[4])
+
+circuit.measure(q, c)</code></pre>
+		<br/>
+	
+		<h2>Codice in Microsoft .NET Core Q# per simulatore quantistico</h2>
+		<p>Il seguente programma &egrave; la traduzione in Microsoft Q# Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato su un Linux con .NET Core, runtime Q# e simulatore quantistico Microsoft installati.</p>
+		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
+
+    open Microsoft.Quantum.Intrinsic;
+    open Microsoft.Quantum.Canon;
+    open Microsoft.Quantum.Measurement;
+
+    operation RandomNumberGenerator() : (Result, Result, Result, Result, Result)
+    {
+        using (q = Qubit[5])
+        {
+            H(q[0]);
+            H(q[1]);
+            H(q[2]);
+            H(q[3]);
+            H(q[4]);
+
+            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
+
+            ResetAll(q);
+            return result;
+        }
+    }
+</code></pre>
+		<br/>
+
+		<h2>Risultati su IBM Q Experience</h2>
+		<p>
+			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot uguale a 8192 sia sul simulatore &apos;qasm_simulator&apos; di IBM che sul computer quantisco IBM &apos;ibmq_london&apos; di IBM
+			ottenendo il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
+			La non perfetta uniformit&agrave; mostrata nel caso dei computer quantistici reali rispetto ai simulatori &egrave; riconducibile a rumore.
+			<br />
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
+		</p>
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-sim.png" /></div>
+		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos; (prime 20 combinazioni)</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-real.png" /></div>
+		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos; (prime 20 combinazioni)</div>
+		<br />
+
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-sim.png" /></div>
+		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-real.png" /></div>
+		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
+		<br />
+		<br />
+
+		<h2>Risultati su simulatore Microsoft</h2>
+		<p>
+			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
+			<br />
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
+		</p>
+
+		<div class="table-wrapper">
+			<table class="alt">
+				<thead>
+					<tr>
+						<th>Binario</th>
+						<th>Decimale</th>
+						<th>Conteggio</th>
+						<th>Probabilit&agrave; (%)</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<td>00000</td><td>00</td><td>257</td><td>3.14%</td>
+					</tr>
+					<tr>
+						<td>00001</td><td>01</td><td>265</td><td>3.24%</td>
+					</tr>
+					<tr>
+						<td>00010</td><td>02</td><td>240</td><td>2.93%</td>
+					</tr>
+					<tr>
+						<td>00011</td><td>03</td><td>255</td><td>3.11%</td>
+					</tr>
+					<tr>
+						<td>00100</td><td>04</td><td>237</td><td>2.89%</td>
+					</tr>
+					<tr>
+						<td>00101</td><td>05</td><td>265</td><td>3.24%</td>
+					</tr>
+					<tr>
+						<td>00110</td><td>06</td><td>267</td><td>3.26%</td>
+					</tr>
+					<tr>
+						<td>00111</td><td>07</td><td>255</td><td>3.11%</td>
+					</tr>
+					<tr>
+						<td>01000</td><td>08</td><td>257</td><td>3.14%</td>
+					</tr>
+					<tr>
+						<td>01001</td><td>09</td><td>256</td><td>3.13%</td>
+					</tr>
+					<tr>
+						<td>01010</td><td>10</td><td>241</td><td>2.94%</td>
+					</tr>
+					<tr>
+						<td>01011</td><td>11</td><td>246</td><td>3.00%</td>
+					</tr>
+					<tr>
+						<td>01100</td><td>12</td><td>251</td><td>3.06%</td>
+					</tr>
+					<tr>
+						<td>01101</td><td>13</td><td>264</td><td>3.22%</td>
+					</tr>
+					<tr>
+						<td>01110</td><td>14</td><td>272</td><td>3.32%</td>
+					</tr>
+					<tr>
+						<td>01111</td><td>15</td><td>265</td><td>3.24%</td>
+					</tr>
+					<tr>
+						<td>10000</td><td>16</td><td>223</td><td>2.72%</td>
+					</tr>
+					<tr>
+						<td>10001</td><td>17</td><td>244</td><td>2.98%</td>
+					</tr>
+					<tr>
+						<td>10010</td><td>18</td><td>262</td><td>3.20%</td>
+					</tr>
+					<tr>
+						<td>10011</td><td>19</td><td>245</td><td>2.99%</td>
+					</tr>
+					<tr>
+						<td>10100</td><td>20</td><td>255</td><td>3.11%</td>
+					</tr>
+					<tr>
+						<td>10101</td><td>21/td><td>248</td><td>3.03%</td>
+					</tr>
+					<tr>
+						<td>10110</td><td>22</td><td>251</td><td>3.06%</td>
+					</tr>
+					<tr>
+						<td>10111</td><td>23</td><td>256</td><td>3.13%</td>
+					</tr>
+					<tr>
+						<td>11000</td><td>24</td><td>272</td><td>3.32%</td>
+					</tr>
+					<tr>
+						<td>11001</td><td>25</td><td>267</td><td>3.26%</td>
+					</tr>
+					<tr>
+						<td>11010</td><td>26</td><td>292</td><td>3.56%</td>
+					</tr>
+					<tr>
+						<td>11011</td><td>27</td><td>227</td><td>2.77%</td>
+					</tr>
+					<tr>
+						<td>11100</td><td>28</td><td>278</td><td>3.39%</td>
+					</tr>
+					<tr>
+						<td>11101</td><td>29</td><td>262</td><td>3.20%</td>
+					</tr>
+					<tr>
+						<td>11110</td><td>30</td><td>257</td><td>3.14%</td>
+					</tr>
+					<tr>
+						<td>11111</td><td>31</td><td>260</td><td>3.17%</td>
+					</tr>
+
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2">Totale:</td>
+						<td>8192</td>
+						<td>100.00%</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class="photocaption">Risultato del programma scritto in Q# ed eseguito su Linux con .NET Core e simulatore quantistico Microsoft</div>
+		<br />
+		<br />
+
+		<h2>Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/RandomNumberGenerator">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell'angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../../it/index.html">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione di una variabile con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../../it/posts/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+												<li><a href="../../../it/posts/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../../it/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+											</ul>
+										</li>
+										<li><a href="../../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="major">
+                                            <h2><a href="../../../it/reti-neurali.html">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../it/reti-neurali.html" class="image"><span class="icon solid fa-sitemap"/></a>
+											<p>
+	Studi, esperimenti ed esempi di modelli di apprendimento automatico profondo basati su reti neurali di diverse tipologie: percettroni multistrato, convoluzionali, ricorrenti, long-short-term-memory.
+	Applicazioni delle reti neurali all'approssimazione di oggetti matematici, all'analisi di testi, immagini, suoni e video, alla ricerca di pattern ricorrenti in serie numeriche.
+	Codice rigorosamente originale scritto in Python 3 con TensorFlow e/o PyTorch, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                        <header class="major">
+                                            <h2><a href="../../../it/computazione-quantistica.html">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../it/computazione-quantistica.html" class="image"><span class="icon solid fa-atom"/></a>
+											<p>
+	Studi, esperimenti ed esempi di programmi scritti per computer quantistici e simulatori. Algoritmi che sfruttano le porte quantistiche, la sovrapposizione degli stati dei qubit, l'entanglement, 
+	il collasso della misura. Analisi dei risultati ottenuti dall'esecuzione di programmi su computer quantistici reali.
+	Codice rigorosamente originale scritto nei linguaggi pi&ugrave; comuni per la programmazione quantistica quali QASM, Q# e Python con Qiskit, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../../assets/js/jquery.min.js"></script>
+			<script src="../../../assets/js/browser.min.js"></script>
+			<script src="../../../assets/js/breakpoints.min.js"></script>
+			<script src="../../../assets/js/util.js"></script>
+			<script src="../../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+
+
+	</body>
+</html>
+

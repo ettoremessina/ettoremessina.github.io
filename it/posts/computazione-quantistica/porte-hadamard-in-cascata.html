@@ -1,0 +1,457 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'UA-149444322-1');
+		</script>
+
+
+		<title>Mentalit&agrave;&nbsp;Computazionale - Porte Hadamard in cascata</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../../en/index.html">en</a>
+										<a class="logo" href="../../../it/index.html">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	$\newcommand\dag\dagger$
+	<section>
+		<header class="main">
+			<h1>Porte Hadamard in cascata</h1>
+		</header>
+
+		<p>
+			La porta Hadamard applicata a un qubit con valore iniziale che sia $|0\rangle$ oppure $|1\rangle$ porta il qubit stesso in uno stato di sovrapposizione in modo tale che 
+			effettuando una misura (e quindi il collasso della funzione d&apos;onda) si ottiene il risultato di 0 o 1 con la stessa probabilit&agrave;.
+			<br />
+			Ragionando classicamente potremmo pensare che l&apos;applicazione di una porta Hadamard e una seguente misura sia come il lancio di una moneta ove la probabilit&agrave; che esca
+			testa (o croce) &egrave; del 50%. Continuando il paragone, rilanciando in aria la moneta una seconda volta e andando a guardare il risultato, si deduce banalmente che la probabilit&agrave; 
+			di ottenere testa (o croce) &egrave; sempre del 50%. In altre parole un secondo lancio non cambia la distribuzione di probabilit&agrave; del risultato rispetto al caso di un singolo lancio.
+			<br />
+			<br />
+			Invece nel mondo quantistico questo paragone &egrave; fuorviante, infatti la seconda applicazione della porta Hadamard riporta lo stato del qubit al valore precedente la prima applicazione.
+			<br />
+			Questo post mostra come nella computazione quantistica &egrave; bene modellare matematicamente i comportamenti degli operatori senza avventurarsi in azzardati paragoni con il mondo macroscopico.
+		</p>
+
+		<h2>Il modello matematico del qubit</h2>
+		<p>
+			Il qubit &egrave; descritto matematicamente come uno spazio di Hilbert complesso bidimensionale. La base canonica di questo spazio si indica (usando la notazione di Dirac) con
+						$$\{|0\rangle,|1\rangle\}$$
+						che scritta nella forma della base dei vettori delle componenti &egrave;
+						$$\{\begin{bmatrix} 1 \\ 0 \\ \end{bmatrix},\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}\}$$
+						e ciascun elemento della base corrisponde rispettivamente ai bit classici 0 e 1.
+			<br/>
+			Come per ogni spazio vettoriale, ogni vettore dello spazio pu&ograve; essere scritto univocamente come combinazione lineare dei vettori della base
+						$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+						e la meccanica quantistica dice che se si effettua una misura (rispetto alla base) si pu&ograve; soltanto ottenere lo stato $|0\rangle$ (corrispondente al bit 0)
+			con probabilit&agrave; $|\alpha|^2$ oppure lo stato $|1\rangle$ (corrispondente al bit 1) con probabilit&agrave; $|\beta|^2$.
+		</p>
+
+		<h2>Il modello matematico della porta Hadamard</h2>
+		<p>
+			La porta Hadamard &egrave; matematicamente modellata dalla seguente matrice
+						$$H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						Applicando $H$ al vettore delle componenti di $|0\rangle$ si ottiene
+						$$\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \\ \end{bmatrix}$$
+						che corrisponde nello spazio vettoriale iniziale al vettore espresso dalla combinazione lineare
+						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
+						e per quanto detto sopra, se si effettua una misura, la probabilit&agrave; di ottenere $|1\rangle$ &egrave; $|\beta|^2=(|1/\sqrt2|)^2=(1/\sqrt2)^2=1/2$.
+			Ne consegue che la probabilit&agrave; di ottenere $|0\rangle$ &egrave; anche essa uguale a $1/2$.
+		</p>
+		<p>
+			Applicando $H$ al vettore delle componenti di $|1\rangle$ si ottiene
+						$$\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \\ \end{bmatrix}$$
+						che corrisponde nello spazio vettoriale iniziale al vettore espresso dalla combinazione lineare
+						$$\frac{|0\rangle - |1\rangle}{\sqrt{2}}$$
+						e per quanto detto sopra, se si effettua una misura, la probabilit&agrave; di ottenere $|1\rangle$ &egrave; $|\beta|^2=(|-1/\sqrt2|)^2=(1/\sqrt2)^2=1/2$. 
+			Ne consegue che la probabilit&agrave; di ottenere $|0\rangle$ &egrave; anche essa uguale a $1/2$.
+		</p>
+
+		<h2>La doppia applicazione della porta Hadamard</h2>
+		<p>
+			Si osservi che la matrice $H$ che modella la porta Hadamard &egrave; <em>hermetiana</em> e <em>unitaria</em>.
+			<br/>
+			&Egrave; hermetiana perché la sua trasposta coniugata coincide con la matrice stessa, 
+			infatti scambiando le righe con le colonne e invertendo i segni delle parti immaginarie (che non ci sono)
+						$$H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						si ottiene sempre
+						$$H^\dag=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						che &egrave; appunto la matrice di partenza $H$.
+			<br/>
+			<br/>
+			&Egrave; unitaria perché la sua trasposta coniugata coincide con la sua inversa.
+			Si osservi intanto che
+						$$H^{-1}=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=H$$
+						e la verifica &egrave; un semplice calcolo
+						$$H^{-1}H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=\frac{1}{2} \left[\begin{matrix} 2 & 0 \\ 0 & 2 \end{matrix} \right] = \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
+						Vale dunque l&apos;equivalenza $$HH=HH^-1=HH^\dag=I$$
+			per cui vale per qualsiasi vettore  (usando la propriet&agrave; associativa del prodotto matriciale) $|\psi\rangle$ vale
+						$$HH|\psi\rangle=I|\psi\rangle=|\psi\rangle$$
+						e quindi la doppia applicazione di una porta Hadamard in cascata porta il sistema allo stato precedente
+			la prima applicazione.
+		</p>
+
+		<h2>Il circuito quantistico</h2>
+		<p>
+			Avendo mostrato che la doppia applicazione di una porta Hadamard equivale all&apos;applicazione della matrice identit&agrave;,
+			banalemente vale, in quanto caso particolare, le equivalenze 
+			$HH|0\rangle=I|0\rangle=|0\rangle$ e $HH|1\rangle=I|1\rangle=|1\rangle$.
+			<br/>
+			Il circuito quantistico
+			<div class="betweentextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-circuit.png" /></div>
+			realizza le seguenti applicazioni (considerando che il valore iniziale di tutti i qubit &egrave; $|0\rangle$):
+				<ui>
+					<li>qubit 0: una applicazione della porta Hadamard e una misura: il risultato atteso sar&agrave; una probabilit&agrave; del 50% di ottenere 0 e del 50% di ottenere 1.			
+					<li>qubit 1: una doppia applicazione della porta Hadamard e una misura: il risultato atteso sar&agrave; una probabilit&agrave; del 100% di ottenere 0 e dello 0% di ottenere 1.			
+					<li>qubit 2: una applicazione Pauli-X che equivale a un NOT quantistico (quindi lo stato $|0\rangle$ diventa $|1\rangle$):
+						il risultato atteso sar&agrave; una probabilit&agrave; dello 0% di ottenere 0 e del 100% di ottenere 1.			
+					<li>qubit 3: una applicazione della porta Pauli-X, poi una Hadamard e una misura: il risultato atteso sar&agrave; una probabilit&agrave; del 50% di ottenere 0 e del 50% di ottenere 1.			
+					<li>qubit 1: una applicazione della porta Pauli-X, poi una doppia applicazione della porta Hadamard e una misura: il risultato atteso sar&agrave; una probabilit&agrave; dello 0% di ottenere 0 e del 100% di ottenere 1.
+				</ui>
+		</p>
+
+		<h2>Codice in QASM</h2>
+		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quanstico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<pre><code class="asm">include "qelib1.inc";
+
+qreg q[5];
+creg c[5];
+
+h q[0];
+h q[1];
+h q[1];
+x q[2];
+x q[3];
+h q[3];
+x q[4];
+h q[4];
+h q[4];
+
+measure q[0] -> c[0];
+measure q[1] -> c[1];
+measure q[2] -> c[2];
+measure q[3] -> c[3];
+measure q[4] -> c[4];</code></pre>
+
+		<h2>Codice in Python con Qiskit</h2>
+		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quanstico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<pre><code class="python">q = QuantumRegister(5, 'q')
+c = ClassicalRegister(5, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.h(q[0])
+circuit.h(q[1])
+circuit.h(q[1])
+circuit.x(q[2])
+circuit.x(q[3])
+circuit.h(q[3])
+circuit.x(q[4])
+circuit.h(q[4])
+circuit.h(q[4])
+
+circuit.measure(q, c)</code></pre>
+
+		<h2>Codice in Microsoft Q# per simulatore</h2>
+		<p>Il seguente programma &egrave; la traduzione in Microsoft Q# Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato su un laptop linux con .NET Core e runtime Q# installati.</p>
+		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
+
+    open Microsoft.Quantum.Intrinsic;
+    open Microsoft.Quantum.Canon;
+    open Microsoft.Quantum.Measurement;
+
+    operation CascadeHadamardGates() : (Result, Result, Result, Result, Result)
+    {
+        using (q = Qubit[5])
+        {
+            H(q[0]);
+            H(q[1]);
+            H(q[1]);
+            X(q[2]);
+            X(q[3]);
+            H(q[3]);
+            X(q[4]);
+            H(q[4]);
+            H(q[4]);
+
+            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
+
+            ResetAll(q);
+            return result;
+        }
+    }
+</code></pre>
+
+		<h2>Risultati su IBM Q Experience</h2>
+		<p>
+			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot=1024 sia sul simulatore IBM &apos;qasm_simulator&apos; che sul computer quantisco IBM &apos;ibmq_london&apos;
+			ottenendo la distribuzione attesa: i bit 1, 2 e 4 sono costanti (valgono rispettivamente sempre 0, 1 e 1).
+			<br/>
+			I bit 0 e 3 si combinano nelle 4 coppie 00 01 10 e 11 ciascuna con il 25% di probabilit&agrave;.
+			La non perfetta distribuzione mostrata nel caso dei computer quantistici reali rispetto ai simulatori &egrave; riconducibile a rumori.
+			<br/>
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
+		</p>
+		<p>
+
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-sim.png" /></div>
+		<div class="photocaption">Risultato del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-real.png" /></div>
+		<div class="photocaption">Risultato del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-sim.png" /></div>
+		<div class="photocaption">Risultato del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-real.png" /></div>
+		<div class="photocaption">Risultato del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
+		</p>
+
+		<br />
+
+		<h2>Risultati su simulatore Microsoft</h2>
+		<p>
+			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia la seguente distribuzione: 
+			bits 1, 2 and 4 are constant (always 0, 1 and 1 respectively)
+			while bits 0 and 3 combine in the 4 pairs 00 01 10 and 11 each with 25% probability.
+			<br />
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
+		</p>
+
+		<div class="table-wrapper">
+			<table class="alt">
+				<thead>
+					<tr>
+						<th>Misura</th>
+						<th>Conteggio</th>
+						<th>Probabilit&agrave; (%)</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<td>10100</td><td>243</td><td>23.74%</td>
+					</tr>
+					<tr>
+						<td>10101</td><td>271</td><td>26.46%</td>
+					</tr>
+					<tr>
+						<td>11100</td><td>251</td><td>24.51%</td>
+					</tr>
+					<tr>
+						<td>11101</td><td>259</td><td>25.29%</td>
+					</tr>
+
+					<tr>
+						<td colspan="3">Tutte le altre combinazioni sono zero</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="1">Totale:</td>
+						<td>1024</td>
+						<td>100.00%</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class="photocaption">Risultato del programma scritto in Q# ed eseguito su Linux con .NET Core e simulatore quantistico Microsoft</div>
+		<br />
+		<br />
+
+		<h2>Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/CascadeHadamardGates">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell'angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../../it/index.html">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione di una variabile con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../../it/posts/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+												<li><a href="../../../it/posts/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../../it/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+											</ul>
+										</li>
+										<li><a href="../../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="major">
+                                            <h2><a href="../../../it/reti-neurali.html">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../it/reti-neurali.html" class="image"><span class="icon solid fa-sitemap"/></a>
+											<p>
+	Studi, esperimenti ed esempi di modelli di apprendimento automatico profondo basati su reti neurali di diverse tipologie: percettroni multistrato, convoluzionali, ricorrenti, long-short-term-memory.
+	Applicazioni delle reti neurali all'approssimazione di oggetti matematici, all'analisi di testi, immagini, suoni e video, alla ricerca di pattern ricorrenti in serie numeriche.
+	Codice rigorosamente originale scritto in Python 3 con TensorFlow e/o PyTorch, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                        <header class="major">
+                                            <h2><a href="../../../it/computazione-quantistica.html">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../it/computazione-quantistica.html" class="image"><span class="icon solid fa-atom"/></a>
+											<p>
+	Studi, esperimenti ed esempi di programmi scritti per computer quantistici e simulatori. Algoritmi che sfruttano le porte quantistiche, la sovrapposizione degli stati dei qubit, l'entanglement, 
+	il collasso della misura. Analisi dei risultati ottenuti dall'esecuzione di programmi su computer quantistici reali.
+	Codice rigorosamente originale scritto nei linguaggi pi&ugrave; comuni per la programmazione quantistica quali QASM, Q# e Python con Qiskit, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../../assets/js/jquery.min.js"></script>
+			<script src="../../../assets/js/browser.min.js"></script>
+			<script src="../../../assets/js/breakpoints.min.js"></script>
+			<script src="../../../assets/js/util.js"></script>
+			<script src="../../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+
+
+	</body>
+</html>
+

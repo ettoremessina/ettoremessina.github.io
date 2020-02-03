@@ -1,0 +1,452 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script async type="text/plain" data-cookiescript="accepted" data-cookiecategory="functionality" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-149444322-1');
+		</script>
+
+
+
+		<title>Computational&nbsp;Mindset - Cascade Hadamard Gates</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../../en/index.html">en</a>
+										<a class="logo" href="../../../it/index.html">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram"><span class="label" target="_blank">Skype</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype"><span class="label" target="_blank">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	$\newcommand\dag\dagger$
+	<section>
+		<header class="main">
+			<h1>Cascade Hadamard Gates</h1>
+		</header>
+
+		<p>
+			The Hadamard gate applied to a qubit with an initial value that is $|0\rangle$ or $|1\rangle$ brings the qubit itself into an superposition state so that
+			making a measurement (and therefore the collapse of the wave function) you get the result of 0 or 1 with the same probability.
+			<br />
+			Thinking classically we could think that the application of a Hadamard gate and a following measure is like the launch of a coin where the probability that it comes out
+			heads (or tails) is 50%. Continuing the comparison, raising the coin in the air a second time and going to look at the result, it is trivially deduced that the probability
+			getting heads (or tails) is always 50%. In other words, a second throw does not change the probability distribution of the result compared to the case of a single throw.
+			<br />
+			<br />	
+			Instead in the quantum world this comparison is misleading, in fact the second application of the Hadamard gate brings the state of the qubit back to the value before the first application.
+			<br />
+			This post shows how in quantum computing is better to model mathematically the operators' behavior without venturing into risky comparisons with the macroscopic world.
+		</p>
+
+		<h2>The mathematical model of the qubit</h2>
+		<p>
+			The qubit is mathematically described as a two-dimensional complex Hilbert space. The canonical basis of this space is indicated (using Dirac's notation) with
+						$$\{|0\rangle,|1\rangle\}$$
+						which written in the form of the base of the component vector is
+						$$\{\begin{bmatrix} 1 \\ 0 \\ \end{bmatrix},\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}\}$$
+						and each element of the base corresponds respectively to the classic bits 0 and 1.
+			<br/>
+			As with any vector space, each vector of the space vector can be uniquely written as a linear combination of the base vectors
+						$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+						and quantum mechanics says that if you make a measurement (relative to the base) you can only get the state $|0\rangle$ (corresponding to bit 0)
+			with $|\alpha|^2$ probability or the state $|1\rangle$ (corresponding to bit 1) with $|\beta|^2$ probability.
+		</p>
+
+		<h2>The mathematical model of the Hadamard gate</h2>
+		<p>
+			The Hadamard gate is mathematically modeled by the following matrix
+						$$H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						Applying $H$ to the vector of the components of $|0\rangle$ you get
+						$$\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ 1 \\ \end{bmatrix}$$
+						which corresponds in the initial vector space to the vector expressed by the linear combination
+						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
+						and as stated above, if a measurement is made, the probability of getting $|1\rangle$ is $|\beta|^2=(|1/\sqrt2|)^2=(1/\sqrt2)^2=1/2$.
+			Consequently, the probability of getting $|0\rangle$ is also equal to $1/2$.
+		</p>
+		<p>
+			Applying $H$ to the vector of the components of $|1\rangle$ you get
+						$$\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}=\frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -1 \\ \end{bmatrix}$$
+						which corresponds in the initial vector space to the vector expressed by the linear combination
+						$$\frac{|0\rangle - |1\rangle}{\sqrt{2}}$$
+						and as stated above, if a measurement is made, the probability of getting $|1\rangle$ is $|1\rangle$ is $|\beta|^2=(|-1/\sqrt2|)^2=(1/\sqrt2)^2=1/2$. 
+			Consequently, the probability of getting $|0\rangle$ is also equal to $1/2$.
+		</p>
+
+		<h2>The double application of Hadamard gate</h2>
+		<p>
+			Note that the $H$ matrix modeling the Hadamard gate is <em>hermetian</em> and <em>unitary</em>.
+			<br/>
+			It is hermetian because its conjugate transpose coincides with the matrix itself,
+			in fact exchanging the rows with the columns and inverting the signs of the imaginary parts (which are missing)
+						$$H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						you get always
+						$$H^\dag=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]$$
+						which is precisely the starting matrix $H$.
+			<br/>
+			<br/>
+			It is unitary because its conjugate transpose coincides with its inverse.
+			Meanwhile, observe that
+						$$H^{-1}=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=H$$
+						and verification is a simple calculation
+						$$H^{-1}H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=\frac{1}{2} \left[\begin{matrix} 2 & 0 \\ 0 & 2 \end{matrix} \right] = \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
+						Applying the equivalence $$HH=HH^-1=HH^\dag=I$$ for each vector
+			(using the associative property of the matrix product) $|\psi\rangle$
+						$$HH|\psi\rangle=I|\psi\rangle=|\psi\rangle$$
+						and therefore the double application of a Hadamard gate in cascade brings the system to the state before the first application.
+		</p>
+
+		<h2>The quantum circuit</h2>
+		<p>
+			Having shown that the double application of a Hadamard gate is equivalent to the application of the identity matrix,
+			trivially applies, as a particular case, the equivalences
+			$HH|0\rangle=I|0\rangle=|0\rangle$ and $HH|1\rangle=I|1\rangle=|1\rangle$.
+			<br/>
+			The quantum circuit
+			<div class="betweentextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-circuit.png" /></div>
+			implements the following sequences (considering that the initial value of all qubits is $|0\rangle$):
+				<ui>
+					<li>qubit 0: an application of the Hadamard gate and a measure: the expected result will be a probability 50% to get 0 and 50% to get 1.			
+					<li>qubit 1: a double application of the Hadamard gate and a measure: the expected result will be a probability 100% to get 0 and 0% to get 1.			
+					<li>qubit 2: a Pauli-X application which is equivalent to a quantum NOT (herefore the state $|0\rangle$ becomes $|1\rangle$):
+						the expected result will be a 0% probability of getting 0 and a 100% probability of getting 1.
+					<li>qubit 3: an application of the Pauli-X gate, then an application of the Hadamard gate and a measure: the expected result will be a probability 50% to get 0 and 50% to get 1.
+					<li>qubit 1: an application of the Pauli-X door, then a double application of the Hadamard gate and a measure: the expected result will be a probability; 0% to get 0 and 100% to get 1.
+				</ui>							
+		</p>
+
+		<h2>QASM code</h2>
+		<p>The following program is the translation in QASM language of the circuit illustrated above; this program has been tested both on IBM&apos;s quantum computer &apos;ibmq_london&apos; and on the IBM &apos;qasm_simulator&apos; simulator.</p>
+		<pre><code class="asm">include "qelib1.inc";
+
+qreg q[5];
+creg c[5];
+
+h q[0];
+h q[1];
+h q[1];
+x q[2];
+x q[3];
+h q[3];
+x q[4];
+h q[4];
+h q[4];
+
+measure q[0] -> c[0];
+measure q[1] -> c[1];
+measure q[2] -> c[2];
+measure q[3] -> c[3];
+measure q[4] -> c[4];</code></pre>
+
+		<h2>Python with Qiskit code</h2>
+		<p>The following program is the translation in Python with Qiskit of the circuit shown above; this program was tested inside a Jupyter Notebook using as backend both IBM&apos;s quantum computer &apos;ibmq_london&apos; and IBM&apos;s &apos;qasm_simulator&apos; simulator.</p>
+		<pre><code class="python">q = QuantumRegister(5, 'q')
+c = ClassicalRegister(5, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.h(q[0])
+circuit.h(q[1])
+circuit.h(q[1])
+circuit.x(q[2])
+circuit.x(q[3])
+circuit.h(q[3])
+circuit.x(q[4])
+circuit.h(q[4])
+circuit.h(q[4])
+
+circuit.measure(q, c)</code></pre>
+
+		<h2>Microsoft Q# .NET Core code for quantum simulator</h2>
+		<p>The following program is the Microsoft Q# translation of the circuit shown above; this program has been tested on a Linux with .NET Core, Q# runtime and Microsoft quantum simulator installed.</p>
+		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
+
+    open Microsoft.Quantum.Intrinsic;
+    open Microsoft.Quantum.Canon;
+    open Microsoft.Quantum.Measurement;
+
+    operation CascadeHadamardGates() : (Result, Result, Result, Result, Result)
+    {
+        using (q = Qubit[5])
+        {
+            H(q[0]);
+            H(q[1]);
+            H(q[1]);
+            X(q[2]);
+            X(q[3]);
+            H(q[3]);
+            X(q[4]);
+            H(q[4]);
+            H(q[4]);
+
+            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
+
+            ResetAll(q);
+            return result;
+        }
+    }
+</code></pre>
+
+		<h2>Results on IBM Q Experience</h2>
+		<p>
+			Both programs for IBM Q Experience were executed with a number of shots equals to 1024 both on the IBM&apos;s simulator &apos;qasm_simulator&apos; and on the real computer IBM&apos;s &apos;ibmq_london&apos;
+			obtaining the expected result, ie the bits 1, 2 and 4 are constants (their measured values is always respectively 0, 1 and 1).
+			<br/>
+			The bits 0 and 3 combine in the 4 pairs 00 01 10 and 11 each with 25% probability.
+			The imperfect uniformity shown in the case of real quantum computers compared to simulators is due to noise.
+			<br/>
+			<b>Note</b>: Given the stochastic nature of this code, your specific results may vary. Consider running the example a few times.
+		</p>
+		<p>
+
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-sim.png" /></div>
+		<div class="photocaption">QASM program execution result on IBM simulator &apos;qasm_simulator&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-real.png" /></div>
+		<div class="photocaption">QASM program execution result on IBM real quantum computer 'ibmq_london'</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-sim.png" /></div>
+		<div class="photocaption">Python + Qiskit program execution result on IBM simulator &apos;qasm_simulator&apos;</div>
+		<br />
+		<div class="belowtextlines"><img src="../../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-real.png" /></div>
+		<div class="photocaption">Python + Qiskit program execution result on IBM real quantum computer &apos;ibmq_london&apos;</div>
+		</p>
+
+		<br />
+
+		<h2>Results on Microsoft simulator</h2>
+		<p>
+			The execution of the Q# program for .NET Core produced the expected result, i.e. the following distribution:
+			<br />
+			<b>Note</b>: Given the stochastic nature of this code, your specific results may vary. Consider running the example a few times.
+		</p>
+
+		<div class="table-wrapper">
+			<table class="alt">
+				<thead>
+					<tr>
+						<th>Measure</th>
+						<th>Count</th>
+						<th>Probability (%)</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<td>10100</td><td>243</td><td>23.74%</td>
+					</tr>
+					<tr>
+						<td>10101</td><td>271</td><td>26.46%</td>
+					</tr>
+					<tr>
+						<td>11100</td><td>251</td><td>24.51%</td>
+					</tr>
+					<tr>
+						<td>11101</td><td>259</td><td>25.29%</td>
+					</tr>
+
+					<tr>
+						<td colspan="3">All other combinations are zero</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="1">Total:</td>
+						<td>1024</td>
+						<td>100.00%</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class="photocaption">Q# program result on Linux with .NET Core and Microsoft quantum simulator</div>
+		<br />
+		<br />
+
+		<h2>Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/CascadeHadamardGates">GitHub</a>.
+			<br />
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../../en/index.html">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../../en/posts/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+												<li><a href="../../../en/posts/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../../en/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+											</ul>
+										</li>
+										<li><a href="../../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="major">
+                                            <h2><a href="../../../en/neural-networks.html">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../en/neural-networks.html" class="image"><span class="icon solid fa-sitemap"/></a>
+											<p>
+	Studies, experiments and examples about deep learning machine models based on different topologies of neural networks: multilayer perceptrons, convolutional and recurrent layers, long-short-term-memory cells.
+	Applications of neural networks to fit mathematical objects, to analyze texts, images, sounds and videos, to search for recurrent patterns in numerical series.
+	Code strictly original written in Python 3 with TensorFlow and/or PyTorch, working and freely available on <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                        <header class="major">
+                                            <h2><a href="../../../en/quantum-computing.html">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../en/quantum-computing.html" class="image"><span class="icon solid fa-atom" /></a>
+											<p>
+	Studies, experiments and examples about programs written for quantum computers and correspondent simulators. Algorithms that uses combinations of quantum gates, qubit superposition, entanglement,
+	measure collapse. Analysis of results got from the execution of programs on true quantum computers.
+	Code strictly original written in most common languages for the quantum programming like QASM, Q# and Python con Qiskit, working and freely available on <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../../assets/js/jquery.min.js"></script>
+			<script src="../../../assets/js/browser.min.js"></script>
+			<script src="../../../assets/js/breakpoints.min.js"></script>
+			<script src="../../../assets/js/util.js"></script>
+			<script src="../../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+
+
+	</body>
+</html>
+

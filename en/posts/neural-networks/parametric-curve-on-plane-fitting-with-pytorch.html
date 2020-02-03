@@ -1,0 +1,467 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script async type="text/plain" data-cookiescript="accepted" data-cookiecategory="functionality" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-149444322-1');
+		</script>
+
+
+
+		<title>Computational&nbsp;Mindset - Parametric curve on plane fitting with PyTorch</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../../en/index.html">en</a>
+										<a class="logo" href="../../../it/index.html">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram"><span class="label" target="_blank">Skype</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype"><span class="label" target="_blank">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Parametric curve on plane fitting with PyTorch</h1>
+		</header>
+
+		<p>
+			A parametric curve on a Cartesian reference system $Oxy$ with parameter $t$ within a closed interval of reals is defined with a pair of real functions $x(t) \colon [a,b] \to \rm I\!R$ and $y(t) \colon [a,b] \to \rm I\!R$
+			that return respectively the values of $x$ and $y$ coordinates as the parameter $t$ changes;
+			equivalently a parametric curve on plane is also defined with a vector function $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R}$ in this way: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ \end{bmatrix}$$
+			where the two components of the vectors of the function image are respectively the $x$ and $y$ coordinates of the curve on Cartesian reference system.
+			<br/>
+			<br/>
+			The fitting of a continuous and limited real-valued curve with a neural network is a classic machine learning problem and it does not require any sophisticated neural network architecture:
+			it is enough an <em>MLP</em> (Multi-Layer Perceptron) in order to get a fitting with accuracy close to 100%.
+			<br/>
+			Note that the two definitions of parametric curve, albeit mathematically equivalent, suggest two different architectures of neural networks:
+			the first definition leads to a pair of independent MLPs, one to fit $x(t)$ and the other one to fit $y(t)$ to then combine the results from the two networks and obtain the $(x,y)$ pairs that fit the curve on plane;
+			the second definition instead suggests a single MLP where the input layer contains only one neuron because the dimension of domain is 1
+			instead the output layer contains 2 neurons because the dimension of codomain is 2.
+			<br/>
+			<br/>
+			As mentioned in the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a>, on Internet you can find several examples of MLPs that fit curves; 
+			however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
+			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
+			without any explanation describing the reasons for their choice.
+			<br/>
+			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
+			and they force the experimenter to proceed for code changes in order to implement and test MLP customization and/or training procedure.
+		</p>
+		<p>
+			Goal of this post and related code, available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting">GitHub</a>, is to allow the experimenter to implement and test different combinations
+			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts (plus two variants) which separately implement the following features:
+			<ul>
+				<li>
+					<b>Dataset generation</b>: generation of a csv file from a pair of functions $x(t) \colon [a,b] \to \rm I\!R$ and $y(t) \colon [a,b] \to \rm I\!R$ passed as arguments (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
+					from the output of measuring instruments, from data-loggers connected to electronic sensors, etc) and therefore not necessarily be generated in a synthetic way.
+				</li>
+				<li>
+					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
+				</li>
+				<li>
+					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
+				</li>
+				<li>
+					<b>Visualization of the result</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+				</li>
+			</ul>
+			The related code requires the version 3 of Python and it uses PyTorch technology in order to implement MLP and training procedure.
+			Also the code requires the NumPy and MatPlotLib libraries.
+			<br/>
+			The exact same mechanism was created using TensorFlow 2 (with Keras) techology; see the post <a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a> always published on this website.
+		</p>
+
+		<h2>Dataset generation</h2>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_gen.py" target="_blank"><code>pmc2t_gen.py</code></a> Python program
+			is to generate datasets (both training and test ones) to be used in later phases;
+			it takes in command line the two component functions to be approximated (in <em>lambda body</em> syntax), the interval of independent parameter $t$ (begin, end and discretization step)
+			and it generates the dataset in an output csv file applying the two function to the passed interval of the parameter $t$.
+			<br/>
+			In fact the output csv file has three columns (without header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
+			second and third columns contain respectively the values of the components $x$ and $y$, ie the values of functions $x(t)$ and $y(t)$ correspondent to values of $t$ of first column.
+			<br/>
+			<br/>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_gen.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_gen.py [-h] 
+  -h, --help                  show this help message and exit
+  --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
+  --xt FUNCX_T_BODY           x=x(t) body (lamba format)
+  --yt FUNCY_T_BODY           y=y(t) body (lamba format)
+  --rbegin RANGE_BEGIN        begin range (default:-5.0)
+  --rend RANGE_END            end range (default:+5.0)
+  --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+		</p>
+		<h3>An example of using the program pmc2t_gen.py</h3>
+		<p>
+			Suppose you want to approximate in the range $[0,4\pi]$ the Lissajous curve that is described by the following function:
+			$$f(t) = \begin{bmatrix} x(t)=2 \sin (\frac{t}{2} + 1) \\ y(t)=3 \sin t \\ \end{bmatrix}$$
+			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
+			<pre><code class="python">2 * np.sin(0.5 * t + 1)
+3 * np.sin(t)</code></pre>
+			To generate the training dataset, run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_gen.py \
+  --dsout mytrain.csv \
+  --xt "2 * np.sin(0.5 * t + 1)" \
+  --yt "3 * np.sin(t)" \
+  --rbegin 0.0 \
+  --rend 12.56 \
+  --rstep 0.01</code></pre>
+			instead to generate the test dataset, run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_gen.py \
+  --dsout mytest.csv \
+  --xt "2 * np.sin(0.5 * t + 1)" \
+  --yt "3 * np.sin(t)" \
+  --rbegin 0.0 \
+  --rend 12.56 \
+  --rstep 0.0475</code></pre>
+			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
+			because the training, to be accurate, it must be run on more data.
+			Also note that it is appropriate for the discretization step of the test dataset is <u>not</u> a multiple of the training one
+			in order to ensure that the test dataset contains most of the data that is not present in training dataset, and this makes prediction more interesting.
+		</p>
+
+		<h2>MLP architecture definition + Training</h2>
+		<p>
+			This feature has two different implementations according to the two mathematical definitions of parametric curve on plane: the official implementation is the one that fits the vector function using a single MLP
+			instead the <em>Twin</em> variant implementation fits the component functions separately using two twin MLPs.
+			<br/>
+			The official version implemented by Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit.py" target="_blank"><code>pmc2t_fit.py</code></a>
+			creates dynamically an MLP and performs its training according to the passed parameters through the command line in order to fit the vector function that defines the curve on plane.
+			<br/>
+			The <em>Twin</em> variant implemented Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit_twin.py" target="_blank"><code>pmc2t_fit_twin.py</code></a>
+			creates dynamically an pair of twin MLPs and performs their training according to the passed parameters through the command line in order to fit the separately the component functions that defines the curve on plane.
+			<br/>
+			To get the official program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_fit.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_fit.py [-h]
+  --trainds TRAIN_DATASET_FILENAME
+  --modelout MODEL_PATH
+  [--epochs EPOCHS]
+  [--batch_size BATCH_SIZE]
+  [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
+  [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
+  [--optimizer OPTIMIZER]
+  [--loss LOSS]
+  [--device DEVICE]</code></pre>
+			To get the <em>Twin</em> variant usage you can run this following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_fit_twin.py --help</code></pre>
+			and the output got is (excluding the program name) equal to the official version usage.
+			<br/>
+			<br/>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line of both programs.
+			<br/>
+		</p>
+		<h3>An example of using the program pmc2t_fit.py</h3>
+		<p>
+			Suppose you have a training dataset available (for example generated through <code>pmc2t_gen.py</code> program as shown in the previous paragraph)
+			and you want the MLP to have two hidden layers with 150 neurons each and you want to use the ReLU activation function exiting the two layers;
+			moreover you want to perform 500 training epochs with a 200 items batch size using the Adamax with learning rate equal to 0.02
+			and loss function equal to MSELoss. To put all this into action, run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_fit.py \
+  --trainds mytrain.csv \
+  --modelout mymodel.pth \
+  --hlayers 150 150 \
+  --hactivation 'ReLU()' 'ReLU()' \
+  --epochs 500 \
+  --batch_size 200 \
+  --optimizer 'Adamax(lr=0.02)' \
+  --loss 'MSELoss()'</code></pre>
+			at the end of which the file <code>mymodel.pth</code> will contain the MLP model trained on <code>mytrain.csv</code> dataset according to the parameters passed on the command line.
+		</p>
+
+		<h2>Prediction</h2>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
+			is to apply the MLP model generated through <code>fx_fit.py</code> to an input dataset (for example the test dataset generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
+			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
+			<br/>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python fx_predict.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fx_predict.py [-h]
+--model MODEL_PATH
+--ds DATASET_FILENAME
+--predictionout PREDICTION_DATA_FILENAME
+[--device DEVICE]</code></code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			<br/>
+		</p>
+		<h3>An example of using the program fx_predict.py</h3>
+		<p>
+			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
+			and the trained model of MLP in the file <code>mymodel.pth</code> (generated through <code>fx_fit.py</code> program as shown in the example of previous paragraph); run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_predict.py \
+  --model mymodel.pth \
+  --ds mytest.csv \
+  --predictionout myprediction.csv
+</code></pre>
+			at the end of which the file <code>myprediction.csv</code> will contain the fitting of the initial function.
+		</p>
+
+		<h2>Visualization of the result</h2>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
+			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
+			<br/>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fx_plot.py [-h]
+--ds DATASET_FILENAME
+--prediction PREDICTION_DATA_FILENAME
+[--savefig SAVE_FIGURE_FILENAME]
+[--device DEVICE]</code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			<br/>
+		</p>
+		<h3>An example of using the program fx_plot.py</h3>
+		<p>
+			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
+			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_plot.py \
+  --ds mytest.csv \
+  --prediction myprediction.csv</code></pre>
+			which shows the two curves superimposed: in blue the test dataset one, in red the prediction one.
+			<br/>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
+		</p>
+		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch/nn-pcopfwpt-example05.png" /></div>
+		<div class="photocaption">Chart generated by the program <code>fx_plot.py</code> that shows the fitting of the function $f(x)=\sqrt{|x|}$ made by the MLP.</div>
+		<br/>
+
+		<h2>Examples of cascade use of the four programs</h2>
+		<p>
+			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting/examples" target="_blank"><code>parametric-curve-on-plane-fitting/examples</code></a>
+			there are nine shell scripts that show the use in cascade of the four programs in various combinations of parameters
+			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters)
+			To run the nine examples, run the following commands:
+<pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
+$ sh example1.sh
+$ sh example2.sh
+$ sh example3.sh
+$ sh example4.sh
+$ sh example5.sh
+$ sh example6.sh
+$ sh example7.sh
+$ sh example8.sh
+$ sh example9.sh</code></pre>
+			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
+		</p>
+
+		<h2>Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../../en/index.html">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../../en/posts/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+												<li><a href="../../../en/posts/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../../en/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+											</ul>
+										</li>
+										<li><a href="../../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="major">
+                                            <h2><a href="../../../en/neural-networks.html">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../en/neural-networks.html" class="image"><span class="icon solid fa-sitemap"/></a>
+											<p>
+	Studies, experiments and examples about deep learning machine models based on different topologies of neural networks: multilayer perceptrons, convolutional and recurrent layers, long-short-term-memory cells.
+	Applications of neural networks to fit mathematical objects, to analyze texts, images, sounds and videos, to search for recurrent patterns in numerical series.
+	Code strictly original written in Python 3 with TensorFlow and/or PyTorch, working and freely available on <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                        <header class="major">
+                                            <h2><a href="../../../en/quantum-computing.html">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../../en/quantum-computing.html" class="image"><span class="icon solid fa-atom" /></a>
+											<p>
+	Studies, experiments and examples about programs written for quantum computers and correspondent simulators. Algorithms that uses combinations of quantum gates, qubit superposition, entanglement,
+	measure collapse. Analysis of results got from the execution of programs on true quantum computers.
+	Code strictly original written in most common languages for the quantum programming like QASM, Q# and Python con Qiskit, working and freely available on <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
+</p>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../../assets/js/jquery.min.js"></script>
+			<script src="../../../assets/js/browser.min.js"></script>
+			<script src="../../../assets/js/breakpoints.min.js"></script>
+			<script src="../../../assets/js/util.js"></script>
+			<script src="../../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+
+
+	</body>
+</html>
+
