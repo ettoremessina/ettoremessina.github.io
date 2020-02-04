@@ -104,7 +104,7 @@
 			cos&igrave; come la dimensione del codominio mentre vi &egrave; una certa libert&agrave; di opzioni nello scegliere l&apos;architettura degli strati nascosti, le funzioni di attivazione, le funzioni di loss, l&apos;ottimizzatore e i vari parametri di addestramento.
 			<br/>
 			Su Internet si trovano numerosi esempi di MLP che approssimano questo tipo di funzioni; tuttavia spesso tali esempi combinano in un unico script Python la generazione dei dataset (con la funzione da approssimare hardcoded), il training del MLP, 
-			la predizione e la visualizzazione dei risultati; inoltre l&apos;architettura della rete neurale &egrave; hardcoded o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono molto spesso decisi dall&apos;autore 
+			la predizione e la visualizzazione dei risultati; inoltre l&apos;architettura della rete neurale &egrave; spesso hardcoded o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono decisi dall&apos;autore 
 			senza una spiegazione che descriva le motivazioni della loro scelta.
 			<br/>
 			La scarsa parametrizzazione, il ricorso a scelte implementate hardcoded e l&apos;unificazione di varie funzionalit&agrave; in un unico script rendono poco agevole la sperimentazione
@@ -126,7 +126,7 @@
 					<b>Predizione</b>: applicazione del modello precedentemente addestrato a un dataset di input (che dovrebbe contenere dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
 				</li>
 				<li>
-					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva del dataset di training e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
+					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva di un dataset iniziale (training o test) e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
 				</li>
 			</ul>
 			Il codice descritto da questo post richiede la versione 3 di Python ed utilizza la tecnologia TensorFlow 2 (sia per CPU che per GPU) con Keras (che &egrave; gi&agrave; integrato dentro TensorFlow 2) per realizzare il MLP e l&apos;addestramento.
