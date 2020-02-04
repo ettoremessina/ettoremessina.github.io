@@ -23,6 +23,18 @@
 <html>
 	<head>
 
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+		</style>
 		<script type="text/javascript" charset="UTF-8" src="//cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="functionality" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
 		<script>
@@ -36,8 +48,10 @@
 
 		<title>Mentalit&agrave;&nbsp;Computazionale - Approssimazione di una curva parametrica su un piano con PyTorch</title>
 		
+
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
 		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
 		<script>hljs.initHighlightingOnLoad();</script>
 		<style>
 			pre > code 
@@ -49,7 +63,7 @@
 		
 		<script type="text/javascript" src="//latex.codecogs.com/latexit.js"></script>
 		<script type="text/x-mathjax-config">
-			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+			MathJax.Hub.Config({tex2jax: {inlineMath: ['$','$'], ['\\(','\\)']}});
 		</script>
 		<script type="text/javascript"
 			src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -434,8 +448,6 @@ $ sh example9.sh</code></pre>
 					color: white !important;
 				}
 			</style>
-
-
 	</body>
 </html>
 
