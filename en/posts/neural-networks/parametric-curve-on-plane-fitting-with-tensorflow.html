@@ -112,13 +112,24 @@
 		</header>
 
 		<p>
-			The fitting of a continuous and limited real-valued function defined in a closed interval of the reals $f(x) \colon [a,b] \to \rm I\!R$ with a neural network
-			is a classic machine learning problem and it does not require any sophisticated neural network architecture in order to get a fitting with approximation close to 100%:
-			it is enough an <em>MLP</em> (Multi-Layer Perceptron) where both the input and output layers contain only one neuron because the dimension of both domain and codomain is 1
-			and some freedom of choice in hidden layer architecture, their own activation functions, loss function, optimizator and several training parameters.
+			A parametric curve on a Cartesian reference system $Oxy$ with parameter $t$ within a closed interval of reals is defined with a pair of real functions $x(t) \colon [a,b] \to \rm I\!R$ and $y(t) \colon [a,b] \to \rm I\!R$
+			that return respectively the values of $x$ and $y$ coordinates as the parameter $t$ changes;
+			equivalently a parametric curve on plane is also defined with a vector function $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R}$ in this way: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ \end{bmatrix}$$
+			where the two components of the vectors of the function image are respectively the $x$ and $y$ coordinates of the curve on Cartesian reference system.
 			<br/>
-			On Internet you can find several examples of MLPs that fit that approximate this kind of functions; however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
-			prediction and result visualization; also the architecture of the neural network is  often hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
+			<br/>
+			The fitting of a continuous and limited real-valued curve with a neural network is a classic machine learning problem and it does not require any sophisticated neural network architecture:
+			it is enough an <em>MLP</em> (Multi-Layer Perceptron) in order to get a fitting with accuracy close to 100%.
+			<br/>
+			Note that the two definitions of parametric curve, albeit mathematically equivalent, suggest two different architectures of neural networks:
+			the first definition leads to a pair of independent MLPs, one to fit $x(t)$ and the other one to fit $y(t)$ to then combine the results from the two networks and obtain the $(x,y)$ pairs that fit the curve on plane;
+			the second definition instead suggests a single MLP where the input layer contains only one neuron because the dimension of domain is 1
+			instead the output layer contains 2 neurons because the dimension of codomain is 2.
+			<br/>
+			<br/>
+			As mentioned in the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a>, on Internet you can find several examples of MLPs that fit curves; 
+			however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
+			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
 			without any explanation describing the reasons for their choice.
 			<br/>
 			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
@@ -126,20 +137,20 @@
 		</p>
 		<p>
 			Goal of this post and related code, available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-on-plane-fitting">GitHub</a>, is to allow the experimenter to implement and test different combinations
-			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts which separately implement the following features:
+			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts (plus two variants) which separately implement the following features:
 			<ul>
 				<li>
-					<b>Dataset generation</b>: generation of a csv file from a function $f(x) \colon [a,b] \to \rm I\!R$ passed as argument (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
+					<b>Dataset generation</b>: generation of a csv file from a pair of functions $x(t) \colon [a,b] \to \rm I\!R$ and $y(t) \colon [a,b] \to \rm I\!R$ passed as arguments (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
 					from the output of measuring instruments, from data-loggers connected to electronic sensors, etc) and therefore not necessarily be generated in a synthetic way.
 				</li>
 				<li>
 					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
 				</li>
 				<li>
-					<b>Prediction</b>: application of the previously trained model to the test dataset (which contains data never seen by the model being trained) and generation of an output csv file containing the prediction.
+					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
 				</li>
 				<li>
-					<b>VResult visualization</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+					<b>Visualization of the result</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
 				</li>
 			</ul>
 			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2) in order to implement MLP and training procedure.
@@ -150,51 +161,55 @@
 
 		<h2>Dataset generation</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/fx_gen.py" target="_blank"><code>fx_gen.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_gen.py" target="_blank"><code>pmc2t_gen.py</code></a> Python program
 			is to generate datasets (both training and test ones) to be used in later phases;
-			it takes in command line the function to be approximated (in <em>lambda body</em> syntax), the interval of independent variable (begin, end and discretization step)
-			and it generates the dataset in an output csv file applying the function to the passed interval.
+			it takes in command line the two component functions to be approximated (in <em>lambda body</em> syntax), the interval of independent parameter $t$ (begin, end and discretization step)
+			and it generates the dataset in an output csv file applying the two function to the passed interval of the parameter $t$.
 			<br/>
-			In fact the output csv file has two columns (without header): first column contains the sorted values of independent variable $x$ falling in the passed interval discretized by discretization step;
-			second column contains the values of dependent variable, ie the values of function $f(x)$ correspondent to values of $x$ of first column.
+			In fact the output csv file has three columns (without header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
+			second and third columns contain respectively the values of the components $x$ and $y$, ie the values of functions $x(t)$ and $y(t)$ correspondent to values of $t$ of first column.
 			<br/>
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_gen.py --help</code></pre>
+			<pre><code class="shell">$ python pmc2t_gen.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_gen.py [-h] 
--h, --help                  show this help message and exit
---dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
---fx FUNC_X_BODY            f(x) body (body lamba format)
---rbegin RANGE_BEGIN        begin range (default:-5.0)
---rend RANGE_END            end range (default:+5.0)
---rstep RANGE_STEP          step range (default: 0.01)</code></pre>
+			<pre><code class="shell">usage: pmc2t_gen.py [-h] 
+  -h, --help                  show this help message and exit
+  --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
+  --xt FUNCX_T_BODY           x=x(t) body (lamba format)
+  --yt FUNCY_T_BODY           y=y(t) body (lamba format)
+  --rbegin RANGE_BEGIN        begin range (default:-5.0)
+  --rend RANGE_END            end range (default:+5.0)
+  --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
-			<br/>
 		</p>
-		<h3>An example of using the program fx_gen.py</h2>
+		<h3>An example of using the program pmc2t_gen.py</h3>
 		<p>
-			Suppose you want to approximate the function $$f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$$ in the range $[-20.0,20.0]$.
+			Suppose you want to approximate the spiral of Archimedes in the range $[0.0,20.0]$ described by the following function:
+			$$f(t) = \begin{bmatrix} x(t)=\frac{1}{10} t \cos t \\ y(t)=\frac{1}{10} t \sin t \\ \end{bmatrix}$$
 			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
-			<pre><code class="python">np.sin(2 * x) / np.exp(x / 5)</code></pre>
+			<pre><code class="python">0.1 * t * np.cos(t)
+0.1 * t * np.sin(t)</code></pre>
 			To generate the training dataset, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python pmc2t_gen.py \
   --dsout mytrain.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
+  --xt "0.1 * t * np.cos(t)" \
+  --yt "0.1 * t * np.sin(t)" \
+  --rbegin 0.0 \
   --rend 20.0 \
   --rstep 0.01</code></pre>
 			instead to generate the test dataset, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python pmc2t_gen.py \
   --dsout mytest.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
+  --xt "0.1 * t * np.cos(t)" \
+  --yt "0.1 * t * np.sin(t)" \
+  --rbegin 0.0 \
   --rend 20.0 \
   --rstep 0.0475</code></pre>
 			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
@@ -205,130 +220,165 @@
 
 		<h2>MLP architecture definition + Training</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a> Python program
-			is to dynamically create the MLP and perform its training according to the passed parameters through the command line.
-			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_fit.py --help</code></pre>
+			This feature has two different implementations according to the two mathematical definitions of parametric curve on plane: the official implementation is the one that fits the vector function using a single MLP
+			instead the <em>Twin</em> variant implementation fits the component functions separately using two twin MLPs.
+			<br/>
+			The official version implemented by Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit.py" target="_blank"><code>pmc2t_fit.py</code></a>
+			creates dynamically an MLP and performs its training according to the passed parameters through the command line in order to fit the vector function that defines the curve on plane.
+			<br/>
+			The <em>Twin</em> variant implemented Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit_twin.py" target="_blank"><code>pmc2t_fit_twin.py</code></a>
+			creates dynamically an pair of twin MLPs and performs their training according to the passed parameters through the command line in order to fit the separately the component functions that defines the curve on plane.
+			<br/>
+			To get the official program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_fit.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_fit.py [-h]
---trainds TRAIN_DATASET_FILENAME
---modelout MODEL_PATH
-[--epochs EPOCHS]
-[--batch_size BATCH_SIZE]
-[--learning_rate LEARNING_RATE]
-[--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
-[--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
-[--optimizer OPTIMIZER]
-[--loss LOSS]</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			<pre><code class="shell">usage: pmc2t_fit.py [-h]
+  --trainds TRAIN_DATASET_FILENAME
+  --modelout MODEL_PATH
+  [--epochs EPOCHS]
+  [--batch_size BATCH_SIZE]
+  [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
+  [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
+  [--optimizer OPTIMIZER]
+  [--loss LOSS]</code></pre>
+			To get the <em>Twin</em> variant usage you can run this following command:
 			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_fit_twin.py --help</code></pre>
+			and the output got is (excluding the program name) equal to the official version usage.
+			<br/>
+			<br/>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line of both programs.
 		</p>
-		<h3>An example of using the program fx_fit.py</h2>
+		<h3>An example of using the program pmc2t_fit.py</h3>
 		<p>
-			Suppose you have a training dataset available (for example generated through <code>fx_gen.py</code> program as shown in the previous paragraph)
+			Suppose you have a training dataset available (for example generated through <code>pmc2t_gen.py</code> program as shown in the previous paragraph)
 			and you want the MLP to have three hidden layers with respectively with 200, 300 and 200 neurons and that you want to use the sigmoid activation function output from all three layers;
-			moreover you want to perform 1000 training epochs with a 200 items batch size using the Adamax optimizator algorithm with learning rate equal to 0.02 
+			moreover you want to perform 500 training epochs with a 200 items batch size using the Adamax optimizator algorithm with learning rate equal to 0.02 
 			and loss function equal to MeanSquaredError. To put all this into action, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_fit.py \
+			<pre><code class="shell">$ python pmc2t_fit.py \
   --trainds mytrain.csv \
   --modelout mymodel \
-  --hlayers 200 300 200
+  --hlayers 200 300 200 \
   --hactivation sigmoid sigmoid sigmoid \
-  --epochs 1000 \
+  --epochs 500 \
   --batch_size 200 \
-  --optimizer 'Adamax()' \
-  --learning_rate 0.02 \
+  --optimizer 'Adamax(learning_rate=0.02)' \
   --loss 'MeanSquaredError()'</code></pre>
 			at the end of which the folder <code>mymodel</code> will contain the MLP model trained on <code>mytrain.csv</code> dataset according to the parameters passed on the command line.
 		</p>
 
 		<h2>Prediction</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
-			the purpose is to apply the MLP model generated through <code>fx_fit.py</code> to the test dataset (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
-			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
-			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
+			As with training, this feature also has two different implementations according to the two mathematical definitions of parametric curve on plane: the official implementation that makes the prediction using a single pre-trained MLP that fits the curve defined by a vector function
+			and the <em>Twin</em> variant that makes the prediction using a pair of pre-trained twin MLPs that fit separately the two component functions.
 			<br/>
-			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_predict.py --help</code></pre>
+			<br/>
+			Goal of the official version implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict.py" target="_blank"><code>pmc2t_predict.py</code></a> Python program
+			is to apply the MLP model generated through <code>pmc2t_fit.py</code> to an input dataset (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a csv file with three columns (without header): the first column contains the values of indepedent parameter $t$ taken from input dataset
+			and the second and third columns contain the predicted values of the two components, ie the values of the prediction that fits the parametric curve $f(t)$ correspondent to values of $t$ of first column.
+			<br/>
+			<br/>
+			Goal of the <em>Twin</em> variant implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict_twin.py" target="_blank"><code>pmc2t_predict_twin.py</code></a> Python program
+			is to apply the pair of MLPs generated through <code>pmc2t_fit_twin.py</code> to an input dataset (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a file structurally equal to the output one of official version; the way to compute the values of second and thrid columns is different because these are the values of predictions coming out from the two MLPs that fit separately the component functions $x(t)$ and $y(t)$.
+			<br/>
+			<br/>
+			To get the official program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_predict.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_predict.py [-h]
---model MODEL_PATH
---testds TEST_DATASET_FILENAME
---predictedout PREDICTED_DATA_FILENAME</code></pre>
+			<pre><code class="shell">usage: pmc2t_predict.py [-h]
+  --model MODEL_PATH
+  --ds DATASET_FILENAME
+  --predictionout PREDICTION_DATA_FILENAME</code></pre>
+			To get the <em>Twin</em> variant usage you can run this following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_predict_twin.py --help</code></pre>
+			and the output got is (excluding the program name) equal to the official version usage.
+			<br/>
+			<br/>			
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_predict.py</h2>
+		<h3>An example of using the program pmc2t_predict.py</h3>
 		<p>
-			Suppose you have the test dataset available <code>mytest.csv</code> (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>fx_fit.py</code> program as shown in the example of previous paragraph); run the following command:
+			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph)
+			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>pmc2t_fit.py</code> program as shown in the example of previous paragraph); run the following command:
 			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_predict.py \
+			<pre><code class="shell">$ python pmc2t_predict.py \
   --model mymodel \
-  --testds mytest.csv \
-  --predictedout myprediction.csv
+  --ds mytest.csv \
+  --predictionout myprediction.csv
 </code></pre>
-			at the end of which the <code>myprediction.csv</code> will contain the fitting of the initial function.
+			at the end of which the file <code>myprediction.csv</code> will contain the fitting of the initial function.
 		</p>
 
-		<h2>Result visualization</h2>
+		<h2>Visualization of the result</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/pmc2t_plot.py" target="_blank"><code>pmc2t_plot.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			<pre><code class="shell">$ python pmc2t_plot.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_plot.py [-h]
---ds DATASET_FILENAME
---predicted PREDICTED_DATA_FILENAME
-[--savefig SAVE_FIGURE_FILENAME]</code></pre>
+			<pre><code class="shell">usage: pmc2t_plot.py [-h]
+  --ds DATASET_FILENAME
+  --prediction PREDICTION_DATA_FILENAME
+  [--savefig SAVE_FIGURE_FILENAME]</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_plot.py</h2>
+		<h3>An example of using the program pmc2t_plot.py</h3>
 		<p>
-			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the chart with the two curves, execute the following command:
+			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph)
+			and the prediction csv file (generated through <code>pmc2t_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_plot.py \
+			<pre><code class="shell">$ python pmc2t_plot.py \
   --ds mytest.csv \
-  --predicted myprediction.csv</code></pre>
-			which shows the two curves superimposed: in blue the test dataset one, in red the prediction one.
+  --prediction myprediction.csv</code></pre>
+			which shows the two xy-scatter charts superimposed: in blue the test dataset one, in red the prediction one.
 			<br/>
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow/nn-pcopfwtf-example09.png" /></div>
-		<div class="photocaption">Chart generated by the program <code>fx_plot.py</code> that shows the fitting of the function $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$ made by the MLP.</div>
+		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow/nn-pcopfwtf-example01.png" /></div>
+		<div class="photocaption">Chart generated by the program <code>pmc2t_plot.py</code> that shows the fitting done by MLP of the spiral of Archimedes $f(t) = \begin{bmatrix} x(t)=\frac{1}{10} t \cos t \\ y(t)=\frac{1}{10} t \sin t \\ \end{bmatrix}$</div>
 		<br/>
 
 		<h2>Examples of cascade use of the four programs</h2>
 		<p>
 			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-on-plane-fitting/examples" target="_blank"><code>parametric-curve-on-plane-fitting/examples</code></a>
-			there are nine shell scripts that show the use in cascade of the four programs in various combinations of parameters
-			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters)
-			To run the nine examples, run the following commands:
+			there are five shell scripts that show the use in cascade of the four programs, with training and prediction in the official version, in various combinations of parameters
+			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters).
+			Also there are five other shell scripts that reproduce the same examples but with with training and prediction in the <em>Twin</em> variant.
+			To run the five examples for official version, run the following commands:
 <pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
 $ sh example1.sh
 $ sh example2.sh
 $ sh example3.sh
 $ sh example4.sh
 $ sh example5.sh
-$ sh example6.sh
-$ sh example7.sh
-$ sh example8.sh
-$ sh example9.sh</code></pre>
+</code></pre>
+			Instead to run the five examples for the <em>Twin</em> variant, run the following commands:
+			<br/>
+			<br/>
+<pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
+$ sh example1_twin.sh
+$ sh example2_twin.sh
+$ sh example3_twin.sh
+$ sh example4_twin.sh
+$ sh example5_twin.sh
+</code></pre>
 			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
 		</p>
 

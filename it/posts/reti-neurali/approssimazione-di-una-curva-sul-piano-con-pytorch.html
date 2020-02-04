@@ -112,35 +112,48 @@
 		</header>
 
 		<p>
-			L&apos;approssimazione di una funzione continua e limitata a valori reali di una variable reale in un intervallo chiuso $f(x) \colon [a,b] \to \rm I\!R$ con una rete neurale
-			&egrave; un problema classico di machine learning e non richiede reti neurali con architeture sofisticate per ottenere risultati con precisione prossima al 100%:
-			&egrave; sufficiente un <em>MLP</em> (un percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron) ove il layer di input e il layer di output contengono entrambi un solo neurone in quando la dimensione del dominio &egrave; 1 
-			cos&igrave; come la dimensione del codominio mentre vi &egrave; una certa libert&agrave; di opzioni nello scegliere l&apos;architettura degli strati nascosti, le funzioni di attivazione, le funzioni di loss, l&apos;ottimizzatore e i vari parametri di addestramento.
+			Una curva parametrica con parametro $t$ appartenente a un intervallo chiuso su un sistema di riferimento cartesiano $Oxy$ si definisce con una coppia di funzioni $x(t) \colon [a,b] \to \rm I\!R$ e $y(t) \colon [a,b] \to \rm I\!R$
+			le quali restituiscono rispettivamente il valore della coordinata $x$ e della coordinata $y$ al variare del parametro $t$;
+			equivalentemente una curva parametrica sul piano &egrave; definita anche con una funzione vettoriale $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R}$ cos&igrave; definita: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ \end{bmatrix}$$
+			ove le due componenti dei vettori dell&apos;immagine della funzione rappresentano rispettivamente le coordinate $x$ e $y$ della curva sul piano cartesiano.
 			<br/>
-			Su Internet si trovano numerosi esempi di MLP che approssimano questo tipo di funzioni; tuttavia spesso tali esempi combinano in un unico script Python la generazione dei dataset (con la funzione da approssimare hardcoded), il training del MLP, 
-			la predizione e la visualizzazione dei risultati; inoltre l&apos;architettura della rete neurale &egrave; spesso hardcoded o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono decisi dall&apos;autore 
+			<br/>
+			L&apos;approssimazione di una tale curva, se continua e limitata, con una rete neurale &egrave; un problema classico di machine learning e non richiede reti neurali con architeture sofisticate:
+			&egrave; sufficiente un <em>MLP</em> (un percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron) per ottenere risultati con accuratezza prossima al 100%.
+			<br/>
+			Si osservi intanto che le due definizioni di curva parametrica, seppur matematicamente equivalenti, suggeriscono due architetture di reti neurali differenti: la prima definizione conduce a una coppia di MLP indipendenti, uno per approssimare $x(t)$ e l&apos;altro per approssimare $y(t)$
+			per poi combinare i risultati in uscita dalle due reti e ottenere le coppie $(x,y)$ che approssimano la curva sul piano;
+			la seconda definizione suggerisce invece un MLP ove il layer di input contiene un solo neurone in quando la dimensione del dominio &egrave; 1 (l&apos;intervallo $[a,b]$) 
+			mentre il layer di output contiente 2 neuroni in quanto la dimensione del codominio &egrave; 2.
+			<br/>
+			<br/>
+			Come gi&agrave; osservato nel post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a>, su Internet si trovano numerosi esempi di MLP che approssimano curve; 
+			tuttavia spesso tali esempi combinano in un unico script Python la generazione dei dataset, il training, la predizione e la visualizzazione della curva approssimata;
+			inoltre l&apos;architettura &egrave; hardcoded o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono molto spesso decisi dall&apos;autore 
 			senza una spiegazione che descriva le motivazioni della loro scelta.
 			<br/>
 			La scarsa parametrizzazione, il ricorso a scelte implementate hardcoded e l&apos;unificazione di varie funzionalit&agrave; in un unico script rendono poco agevole la sperimentazione
-			e costringono lo sperimentatore a procedere per modifiche di codice al fine di realizzare e testare personalizzazioni del MLP e/o della procedura di addestramento.
+			e costringono lo sperimentatore a procedere per modifiche di codice al fine di realizzare e testare personalizzazioni degli MLP coinvolti e/o delle procedure di addestramento.
 		</p>
 		<p>
-			Scopo di questo post e del relativo codice, disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting">GitHub</a>, &egrave; di consentire allo sperimentatore di implementare e testare diverse combinazioni
-			di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python che implementano separatamente le seguenti funzionalit&agrave;:
+			Scopo di questo post e del relativo codice, disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting">GitHub</a>, &egrave; di consentire allo sperimentatore di implementare e testare diverse combinazioni
+			di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python (pi&ugrave; due varianti) che implementano separatamente le seguenti funzionalit&agrave;:
 			<ul>
 				<li>
-					<b>Creazione dei dataset</b>: generazione di un file csv a partire da una funzione $f(x) \colon [a,b] \to \rm I\!R$ passata come argomento (quindi <u>non</u> hardcoded). Questa fase &egrave; opzionale in quanto i dataset potrebbero pre-esistere (come avviene nel mondo reale ad esempio estraendo curve da dati presenti su database o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici, ecc)
+					<b>Creazione dei dataset</b>: generazione di un file csv a partire da una coppia di funzioni $x(t) \colon [a,b] \to \rm I\!R$ e $y(t) \colon [a,b] \to \rm I\!R$ passate come argomento (quindi <u>non</u> hardcoded). Questa fase &egrave; opzionale in quanto i dataset potrebbero pre-esistere
+					(come avviene nel mondo reale ad esempio estraendo curve da dati presenti su database o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici, ecc)
 					e quindi non necessariamente essere generati in modo sintetico.
 				</li>
 				<li>
 					<b>Definizione dell&apos;architettura del MLP + Addestramento</b>: configurazione dell&apos;architettura degli strati nascosti del MLP con le relative funzioni di attivazione in uscita ed esecuzione della procedura di addestramento sul dataset di training consentendo di specificare la scelta dell&apos;algoritmo di ottimizzazione, della funzione di loss
 					e di altri parametri di addestramento.
+					<br/>
 				</li>
 				<li>
-					<b>Predizione</b>: applicazione del modello precedentemente addestrato al dataset di test (che contiene dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
+					<b>Predizione</b>: applicazione del modello precedentemente addestrato a un dataset di input (che dovrebbe contenere dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
 				</li>
 				<li>
-					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva del dataset initiale  (training o test) e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
+					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva del dataset di training e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
 				</li>
 			</ul>
 			Il codice descritto da questo post richiede la versione 3 di Python ed utilizza la tecnologia PyTorch per realizzare il MLP e l&apos;addestramento.
@@ -151,52 +164,56 @@
 
 		<h2>Creazione dei dataset</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_gen.py" target="_blank"><code>fx_gen.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_gen.py" target="_blank"><code>pmc2t_gen.py</code></a>
 			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
-			prende in linea di comando la funzione da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo della variabile indipendente (inizio, fine e passo di discretizzazione)
-			e genera il dataset in un file nel formato csv applicando la funzione all&apos;intervallo passato.
+			prende in linea di comando le due funzioni componenti da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo del parametro indipendente $t$ (inizio, fine e passo di discretizzazione)
+			e genera il dataset in un file nel formato csv applicando le due funzione all&apos;intervallo del parametro $t$ passato.
 			<br/>
-			Il file csv in uscita ha infatti due colonne (senza header): la prima colonna contiene i valori, ordinati in modo crescente, della variabile indipendente $x$ nell&apos;intervallo desiderato con il passo di discretizzazione specificato;
-			la seconda colonna contiene i valori della variabile dipendente, ovverosia i valori della funzione $f(x)$ corrispondenti al valore di $x$ della prima colonna.
-			<br/>
+			Il file csv in uscita ha infatti tre colonne (senza header): la prima colonna contiene i valori, ordinati in modo crescente, del parametro indipendente $t$ nell&apos;intervallo desiderato con il passo di discretizzazione specificato;
+			la seconda colonna e terza colonna contengono rispettivamente i valori delle componenti $x$ e $y$, ovverosia i valori delle funzioni $x(t)$ e $y(t)$ corrispondenti al valore di $t$ della prima colonna.
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python fx_gen.py --help</code></pre>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_gen.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_gen.py [-h] 
+			<pre><code class="shell">usage: pmc2t_gen.py [-h] 
 -h, --help                  show this help message and exit
 --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
---fx FUNC_X_BODY            f(x) body (body lamba format)
+--xt FUNCX_T_BODY           x=x(t) body (lamba format)
+--yt FUNCY_T_BODY           y=y(t) body (lamba format)
 --rbegin RANGE_BEGIN        begin range (default:-5.0)
 --rend RANGE_END            end range (default:+5.0)
 --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
-			<br/>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 		</p>
-		<h3>Un esempio di uso del programma fx_gen.py</h2>
+		<h3>Un esempio di uso del programma pmc2t_gen.py</h3>
 		<p>
-			Si supponga di voler approssimare nell&apos;intervallo $[-5.0,5.0]$ la seguente funzione $$f(x)=\sqrt{|x|}$$
-			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
-			<pre><code class="python">np.sqrt(np.abs(x))</code></pre>
+			Si supponga di voler approssimare la curva di Lissajous nell&apos;intervallo $[0,4\pi]$ descritta dalla seguente funzione
+			$$f(t) = \begin{bmatrix} x(t)=2 \sin (\frac{t}{2} + 1) \\ y(t)=3 \sin t \\ \end{bmatrix}$$
+			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, le due espressioni componenti si traducono in sintassi lambda body Python cos&igrave;:
+			<pre><code class="python">2 * np.sin(0.5 * t + 1)
+3 * np.sin(t)</code></pre>
 			Per generare il dataset di training, si esegua quindi il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python pmc2t_gen.py \
   --dsout mytrain.csv \
-  --fx "np.sqrt(np.abs(x))" \
-  --rbegin -5.0 \
-  --rend 5.0 \
+  --xt "2 * np.sin(0.5 * t + 1)" \
+  --yt "3 * np.sin(t)" \
+  --rbegin 0.0 \
+  --rend 12.56 \
   --rstep 0.01</code></pre>
 			mentre per generare il dataset di test, si esegua il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python pmc2t_gen.py \
   --dsout mytest.csv \
-  --fx "np.sqrt(np.abs(x))" \
-  --rbegin -5.0 \
-  --rend 5.0 \
+  --xt "2 * np.sin(0.5 * t + 1)" \
+  --yt "3 * np.sin(t)" \
+  --rbegin 0.0 \
+  --rend 12.56 \
   --rstep 0.0475</code></pre>
 			Si osservi che il passo di discretizzazione del dataset di test &egrave; pi&ugrave; grande di quello di training e questo &egrave; normale 
 			in quanto l&apos;addestramento, per essere accurato, deve essere eseguito su una maggiore quantit&agrave; di dati.
@@ -206,10 +223,18 @@
 
 		<h2>Definizione dell&apos;architettura del MLP + Addestramento</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a>
-			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente il MLP ed effettuare il suo addestramento.
-			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python fx_fit.py --help</code></pre>
+			Questa funzionalit&agrave; ha due implementazioni differenti secondo le due definizioni matematiche di curva parametrica: l&apos;implementazione ufficiale &egrave; quella che approssima con un solo MLP la curva definita come funzione vettoriale
+			mentre la variante <em>Twin</em> approssima le funzioni componenti separatamente con due MLP gemelli.
+			<br/>
+			La versione ufficiale &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit.py" target="_blank"><code>pmc2t_fit.py</code></a>
+			che, in accordo con i parametri passati in linea di comando, crea dinamicamente un MLP ed effettua il suo addestramento al fine di approssimare la funzione vettoriale che definisce la curva sul piano.
+			<br/>
+			La variante <em>Twin</em> &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_fit_twin.py" target="_blank"><code>pmc2t_fit_twin.py</code></a>
+			che, in accordo con i parametri passati in linea di comando, crea dinamicamente una coppia di MLP gemelli ed effettua l&apos;addestramento di ciascuno di essi al fine di approssimare separatemente le singole funzioni componenti che definiscono la curva sul piano.
+			<br/>
+			Per ottenere l&apos;usage della versione ufficiale del programma &egrave; sufficiente eseguire il seguente comando:
+			<br/>
+			<pre><code class="shell">$ python pmc2t_fit.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
@@ -218,127 +243,156 @@
 --modelout MODEL_PATH
 [--epochs EPOCHS]
 [--batch_size BATCH_SIZE]
-[--learning_rate LEARNING_RATE]
 [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
 [--optimizer OPTIMIZER]
 [--loss LOSS]
 [--device DEVICE]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Per ottenere l&apos;usage della variante <em>Twin</em> &egrave; sufficiente eseguire il seguente comando:
 			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_fit_twin.py --help</code></pre>
+			e l&apos;output ottenuto (a parte il nome del programma) &egrave; identico a quello della versione ufficiale.
+			<br/>
+			<br/>			
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando di entrambi i programmi.
 		</p>
-		<h3>Un esempio di uso del programma fx_fit.py</h2>
+		<h3>Un esempio di uso del programma pmc2t_fit.py</h3>
 		<p>
 			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>fx_gen.py</code> come mostrato nel paragrafo precedente)
-			e si voglia che il MLP abbia tre layer nascosti rispettivamente con 200, 300 e 200 neuroni e che si voglia usare la funzione di attivazione in uscita dai tre layer rispettivamente Tanh, ReLU e Tanh;
-			inoltre si vogliano eseguire 500 epoche di training con un batch size di 100 elementi usando l&apos;algoritmo di ottimizzazione RMSprop con un learning rate di 0.01 
-			e la SmoothL1Loss quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
+			e si voglia che il MLP abbia due layer nascosti con 150 neuroni ciascuno e che si voglia usare la funzione di attivazione ReLU in uscita dai due layer;
+			inoltre si vogliano eseguire 500 epoche di training con un batch size di 200 elementi usando l&apos;algoritmo di ottimizzazione Adamax con un learning rate di 0.02 
+			e la MSELoss quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
 			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_fit.py \
+			<pre><code class="shell">$ python pmc2t_fit.py \
   --trainds mytrain.csv \
   --modelout mymodel.pth \
-  --hlayers 200 300 200 
-  --hactivations 'Tanh()' 'ReLU()' 'Tanh()' \
-  --loss 'SmoothL1Loss()' \
-  --optimizer 'RMSprop()' \
+  --hlayers 150 150 \
+  --hactivation 'ReLU()' 'ReLU()' \
   --epochs 500 \
-  --batch_size 100 \
-  --learning_rate 0.01</code></pre>
+  --batch_size 200 \
+  --optimizer 'Adamax(lr=0.02)' \
+  --loss 'MSELoss()'</code></pre>
 			al termine del quale il file <code>mymodel.pth</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
 		</p>
 
 		<h2>Predizione</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a>
-			&egrave; quello di applicare il modello di MLP generato tramite <code>fx_fit.py</code> al dataset di test (ad esempio generato tramite <code>fx_gen.py</code> come mostrato in un paragrafo precedente);
-			l&apos;esecuzione del programma produce in uscita un file csv con due colonne (senza header): la prima colonna contiene i valori della variabile indipendente $x$ presi dal dataset di test
-			e la seconda colonna contiene i valori predetti della variabile dipendente, ovverosia i valori della predizione che approssimano la funzione $f(x)$ corrispondenti al valore di $x$ della prima colonna.
+			Come per l&apos;addestramento anche questa funzionalit&agrave; ha due implementazioni differenti secondo le due definizioni matematiche di curva parametrica: l&apos;implementazione ufficiale &egrave; quella che effettua la predizione usando un solo MLP pre-addestrato che approssima la curva definita come funzione vettoriale
+			mentre la variante <em>Twin</em> effettua separatamente la predizione usando due MLP pre-addestrati gemelli che approssimano separatamente le due singole funzioni componenti.
 			<br/>
-			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python fx_predict.py --help</code></pre>
+			<br/>
+			Scopo della versione ufficiale &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict.py" target="_blank"><code>pmc2t_predict.py</code></a>
+			&egrave; quello di applicare il modello di MLP generato tramite <code>pmc2t_fit.py</code> a un dataset in input (ad esempio il dataset di test generato tramite <code>pmc2t_gen.py</code> come mostrato in un paragrafo precedente);
+			l&apos;esecuzione del programma produce in uscita un file csv con tre colonne (senza header): la prima colonna contiene i valori del parametro indipendente $t$ presi dal dataset in input
+			mentre la seconda e la terza colonna contengono i valori predetti delle due componenti, ovverosia i valori della predizione che approssimano la curva parametrica $f(t)$ corrispondenti al valore di $t$ della prima colonna.
+			<br/>
+			<br/>
+			Scopo della variante <em>Twin</em> &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict_twin.py" target="_blank"><code>pmc2t_predict_twin.py</code></a>
+			&egrave; quello di applicare la coppia modelli di MLP generati tramite <code>pmc2t_fit_twin.py</code> a un dataset in input (ad esempio generato tramite <code>pmc2t_gen.py</code> come mostrato in un paragrafo precedente);
+			l&apos;esecuzione del programma produce in uscita un file strutturalmente identico a quello in uscita dalla versione ufficiale; &egrave; diverso il modo di calcolare i valori della seconda e terza colonna in quanto questi sono rispettivamente i valori delle predizioni dai due singoli MLP che approssimano separatamente le due funzioni componenti $x(t)$ e $y(t)$.
+			<br/>
+			Per ottenere l&apos;usage della versione ufficiale del programma &egrave; sufficiente eseguire il seguente comando:
+			<br/>
+			<pre><code class="shell">$ python pmc2t_predict.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
 			<pre><code class="shell">usage: fx_predict.py [-h]
 --model MODEL_PATH
---testds TEST_DATASET_FILENAME
---predictedout PREDICTED_DATA_FILENAME
+--ds DATASET_FILENAME
+--predictionout PREDICTION_DATA_FILENAME
 [--device DEVICE]</code></code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Per ottenere l&apos;usage della variante <em>Twin</em> &egrave; sufficiente eseguire il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_predict_twin.py --help</code></pre>
+			e l&apos;output ottenuto (a parte il nome del programma) &egrave; identico a quello della versione ufficiale.
+			<br/>
+			<br/>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando di entrambi i programmi.
 			<br/>
 		</p>
-		<h3>Un esempio di uso del programma fx_predict.py</h2>
+		<h3>Un esempio di uso del programma pmc2t_predict.py</h3>
 		<p>
-			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fx_gen.py</code> come mostrato in un paragrafo precedente)
-			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>fx_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
+			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>pmc2t_gen.py</code> come mostrato in un paragrafo precedente)
+			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>pmc2t_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
 			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_predict.py \
+			<pre><code class="shell">$ python pmc2t_predict.py \
   --model mymodel.pth \
-  --testds mytest.csv \
-  --predictedout myprediction.csv
+  --ds mytest.csv \
+  --predictionout myprediction.csv
 </code></pre>
-			al termine del quale il file <code>myprediction.csv</code> conterr&agrave; l&apos;approssimazione della funzione iniziale.
+			al termine del quale il file <code>myprediction.csv</code> conterr&agrave; l&apos;approssimazione della curva parametrica iniziale.
 		</p>
 
 		<h2>Visualizzazione del risultato</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_plot.py" target="_blank"><code>pmc2t_plot.py</code></a>
 			&egrave; quello di visualizzare la curva della predizione sovrapposta alla curva del dataset iniziale (che sia quello di test o di training) e questo consente la comparazione visuale delle due curve.
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_plot.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_plot.py [-h]
+			<pre><code class="shell">usage: pmc2t_plot.py [-h]
 --ds DATASET_FILENAME
---predicted PREDICTED_DATA_FILENAME
+--prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]
 [--device DEVICE]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
-		<h3>Un esempio di uso del programma fx_plot.py</h2>
+		<h3>Un esempio di uso del programma pmc2t_plot.py</h3>
 		<p>
-			Avendo a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fx_gen.py</code> come mostrato in un paragrafo precedente)
-			e il file csv della predizione (generato tramite <code>fx_predict.py</code> come mostrato nel precedente paragrafo), per generare i due grafici si esegua il seguente comando:
+			Avendo a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>pmc2t_gen.py</code> come mostrato in un paragrafo precedente)
+			e il file csv della predizione (generato tramite <code>pmc2t_predict.py</code> come mostrato nel precedente paragrafo), per generare i due grafici si esegua il seguente comando:
 			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_plot.py \
+			<pre><code class="shell">$ python pmc2t_plot.py \
   --ds mytest.csv \
-  --predicted myprediction.csv</code></pre>
+  --prediction myprediction.csv</code></pre>
 			che mostra le due curve sovrapposte: in blu quella del dataset di test, in rosso quella della predizione.
+			<br/>
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/one-variable-function-fitting-with-pytorch/nn-pcopfwpth-example04.png" /></div>
-		<div class="photocaption">Grafico generato dal programma <code>fx_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della funzione $f(x)=\sqrt{|x|}$</div>
+		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch/nn-pcopfwpt-example05.png" /></div>
+		<div class="photocaption">Grafico generato dal programma <code>pmc2t_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della curva di Lissajous $f(t) = \begin{bmatrix} x(t)=2 \sin (\frac{t}{2} + 1) \\ y(t)=3 \sin t \\ \end{bmatrix}$</div>
 		<br/>
 
 		<h2>Esempi di uso in cascata dei quattro programmi</h2>
 		<p>
-			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting/examples" target="_blank"><code>one-variable-function-fitting/examples</code></a>
-			ci sono nove script shell che mostrano l&apos;uso dei quattro programmi in cascata in varie combinazioni
+			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting/examples" target="_blank"><code>parametric-curve-on-plane-fitting/examples</code></a>
+			ci sono cinque script shell che mostrano l&apos;uso dei quattro programmi in cascata, con addestramento e predizione nella versione ufficiale, in varie combinazioni
 			di parametri (architettura del MLP, funzioni di attivazione, algoritmo, funzione di loss, parametri di prodedura di training).
-			Per mandare in esecuzione i nove esempi eseguire i seguenti comandi:
-<pre><code class="shell">$ cd one-variable-function-fitting/examples
+			Inoltre ci sono altri cinque script shell che ripropongono gli stessi esempi ma con addestramento e predizione nella variante <em>Twin</em>.
+			Per mandare in esecuzione i cinque esempi nella versione ufficiale eseguire i seguenti comandi:
+			<br/>
+<pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
 $ sh example1.sh
 $ sh example2.sh
 $ sh example3.sh
 $ sh example4.sh
 $ sh example5.sh
-$ sh example6.sh
-$ sh example7.sh
-$ sh example8.sh
-$ sh example9.sh</code></pre>
+</code></pre>
+			Invece per mandare in esecuzione i cinque esempi nella variante <em>Twin</em> eseguire i seguenti comandi:
+			<br/>
+			<br/>
+<pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
+$ sh example1_twin.sh
+$ sh example2_twin.sh
+$ sh example3_twin.sh
+$ sh example4_twin.sh
+$ sh example5_twin.sh
+</code></pre>
 			<b>Nota</b>: Data la natura stocastica di questi esempi (relativamente alla parte di training), i singoli specifici risultati possono variare. Si consideri di eseguire i singoli esempi pi&ugrave; volte.
 		</p>
 
 		<h2>Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.

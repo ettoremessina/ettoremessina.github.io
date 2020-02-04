@@ -113,12 +113,12 @@
 
 		<p>
 			The fitting of a continuous and limited real-valued function defined in a closed interval of the reals $f(x) \colon [a,b] \to \rm I\!R$ with a neural network
-			is a classic machine learning problem and it does not require any sophisticated neural network architecture in order to get a fitting with approximation close to 100%:
+			is a classic machine learning problem and it does not require any sophisticated neural network architecture in order to get a fitting with accuracy close to 100%:
 			it is enough an <em>MLP</em> (Multi-Layer Perceptron) where both the input and output layers contain only one neuron because the dimension of both domain and codomain is 1
 			and some freedom of choice in hidden layer architecture, their own activation functions, loss function, optimizator and several training parameters.
 			<br/>
-			On Internet you can find several examples of MLPs that fit that approximate this kind of functions; however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
-			prediction and result visualization; also the architecture of the neural network is often  hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
+			On Internet you can find several examples of MLPs that fit this kind of functions; however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
+			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
 			without any explanation describing the reasons for their choice.
 			<br/>
 			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
@@ -136,16 +136,16 @@
 					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
 				</li>
 				<li>
-					<b>Prediction</b>: application of the previously trained model to the test dataset (which contains data never seen by the model being trained) and generation of an output csv file containing the prediction.
+					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
 				</li>
 				<li>
-					<b>VResult visualization</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+					<b>Visualization of the result</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
 				</li>
 			</ul>
 			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2) in order to implement MLP and training procedure.
 			Also the code requires the NumPy and MatPlotLib libraries.
 			<br/>
-			The exact same mechanism was created using PyTorch technology; see the post <a href="_post_ovffwpt_url_">One variable function fitting with PyTorch</a> always published on this website.
+			The exact same mechanism was created using PyTorch technology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a> always published on this website.
 		</p>
 
 		<h2>Dataset generation</h2>
@@ -155,7 +155,7 @@
 			it takes in command line the function to be approximated (in <em>lambda body</em> syntax), the interval of independent variable (begin, end and discretization step)
 			and it generates the dataset in an output csv file applying the function to the passed interval.
 			<br/>
-			In fact the output csv file has two columns (without header): first column contains the sorted values of independent variable $x$ falling in the passed interval discretized by discretization step;
+			In fact the output csv file has two columns (without header): first column contains the sorted values of independent variable $x$ within the passed interval discretized by discretization step;
 			second column contains the values of dependent variable, ie the values of function $f(x)$ correspondent to values of $x$ of first column.
 			<br/>
 			<br/>
@@ -174,7 +174,7 @@
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_gen.py</h2>
+		<h3>An example of using the program fx_gen.py</h3>
 		<p>
 			Suppose you want to approximate the function $$f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$$ in the range $[-20.0,20.0]$.
 			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
@@ -206,7 +206,7 @@
 		<h2>MLP architecture definition + Training</h2>
 		<p>
 			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a> Python program
-			is to dynamically create the MLP and perform its training according to the passed parameters through the command line.
+			is to dynamically create a MLP and perform its training according to the passed parameters through the command line.
 			To get the program usage you can run this following command:
 			<pre><code class="shell">$ python fx_fit.py --help</code></pre>
 			and the output got is:
@@ -225,7 +225,7 @@
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_fit.py</h2>
+		<h3>An example of using the program fx_fit.py</h3>
 		<p>
 			Suppose you have a training dataset available (for example generated through <code>fx_gen.py</code> program as shown in the previous paragraph)
 			and you want the MLP to have three hidden layers with respectively with 200, 300 and 200 neurons and that you want to use the sigmoid activation function output from all three layers;
@@ -236,7 +236,7 @@
 			<pre><code class="shell">$ python fx_fit.py \
   --trainds mytrain.csv \
   --modelout mymodel \
-  --hlayers 200 300 200
+  --hlayers 200 300 200 \
   --hactivation sigmoid sigmoid sigmoid \
   --epochs 1000 \
   --batch_size 200 \
@@ -249,7 +249,7 @@
 		<h2>Prediction</h2>
 		<p>
 			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
-			the purpose is to apply the MLP model generated through <code>fx_fit.py</code> to the test dataset (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
+			is to apply the MLP model generated through <code>fx_fit.py</code> to an input dataset (for example the test dataset generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
 			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
 			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
 			<br/>
@@ -260,26 +260,26 @@
 			<br/>
 			<pre><code class="shell">usage: fx_predict.py [-h]
 --model MODEL_PATH
---testds TEST_DATASET_FILENAME
---predictedout PREDICTED_DATA_FILENAME</code></pre>
+--ds DATASET_FILENAME
+--predictionout PREDICTION_DATA_FILENAME</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_predict.py</h2>
+		<h3>An example of using the program fx_predict.py</h3>
 		<p>
-			Suppose you have the test dataset available <code>mytest.csv</code> (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
+			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
 			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>fx_fit.py</code> program as shown in the example of previous paragraph); run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_predict.py \
   --model mymodel \
-  --testds mytest.csv \
-  --predictedout myprediction.csv
+  --ds mytest.csv \
+  --predictionout myprediction.csv
 </code></pre>
-			at the end of which the <code>myprediction.csv</code> will contain the fitting of the initial function.
+			at the end of which the file <code>myprediction.csv</code> will contain the fitting of the initial function.
 		</p>
 
-		<h2>Result visualization</h2>
+		<h2>Visualization of the result</h2>
 		<p>
 			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
@@ -291,20 +291,20 @@
 			<br/>
 			<pre><code class="shell">usage: fx_plot.py [-h]
 --ds DATASET_FILENAME
---predicted PREDICTED_DATA_FILENAME
+--prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_plot.py</h2>
+		<h3>An example of using the program fx_plot.py</h3>
 		<p>
 			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the chart with the two curves, execute the following command:
+			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_plot.py \
   --ds mytest.csv \
-  --predicted myprediction.csv</code></pre>
+  --prediction myprediction.csv</code></pre>
 			which shows the two curves superimposed: in blue the test dataset one, in red the prediction one.
 			<br/>
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
