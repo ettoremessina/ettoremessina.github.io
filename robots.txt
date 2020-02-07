@@ -1,4 +1,3 @@
 Sitemap: https://computationalmindset.com/sitemap.xml
 User-agent:*
-Disallow:
-
+Disallow: /html5up-license/
