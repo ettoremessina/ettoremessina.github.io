@@ -50,7 +50,7 @@
 
 		<title>Computational&nbsp;Mindset - Parametric curve on plane fitting with PyTorch</title>
 		<meta name="description" content="To fit a parametric curve on plan by observing different multilayer perceptor models with PyTorch without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, ytorch, multilayer perceptron, mlp, fitting, curve, plan, activation, training, loss, optimization, command line" >		
+		<meta name="keywords" content="machine learning, deep learning, neural network, pytorch, multilayer perceptron, mlp, fitting, curve, plan, activation, training, loss, optimization, command line" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -256,7 +256,6 @@
 			<br/>
 			<br/>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line of both programs.
-			<br/>
 		</p>
 		<h3>An example of using the program pmc2t_fit.py</h3>
 		<p>
@@ -280,31 +279,47 @@
 
 		<h2>Prediction</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
-			is to apply the MLP model generated through <code>fx_fit.py</code> to an input dataset (for example the test dataset generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
-			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
-			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
+			As with training, this feature also has two different implementations according to the two mathematical definitions of parametric curve on plane: the official implementation that makes the prediction using a single pre-trained MLP that fits the curve defined by a vector function
+			and the <em>Twin</em> variant that makes the prediction using a pair of pre-trained twin MLPs that fit separately the two component functions.
 			<br/>
-			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_predict.py --help</code></pre>
+			<br/>
+			Goal of the official version implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict.py" target="_blank"><code>pmc2t_predict.py</code></a> Python program
+			is to apply the MLP model generated through <code>pmc2t_fit.py</code> to an input dataset (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a csv file with three columns (without header): the first column contains the values of indepedent parameter $t$ taken from input dataset
+			and the second and third columns contain the predicted values of the two components, ie the values of the prediction that fits the parametric curve $f(t)$ correspondent to values of $t$ of first column.
+			<br/>
+			<br/>
+			Goal of the <em>Twin</em> variant implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_predict_twin.py" target="_blank"><code>pmc2t_predict_twin.py</code></a> Python program
+			is to apply the pair of MLPs generated through <code>pmc2t_fit_twin.py</code> to an input dataset (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a file structurally equal to the output one of official version; the way to compute the values of second and thrid columns is different because these are the values of predictions coming out from the two MLPs that fit separately the component functions $x(t)$ and $y(t)$.
+			<br/>
+			<br/>
+			To get the official program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_predict.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_predict.py [-h]
---model MODEL_PATH
---ds DATASET_FILENAME
---predictionout PREDICTION_DATA_FILENAME
-[--device DEVICE]</code></code></pre>
+			<pre><code class="shell">usage: pmc2t_predict.py [-h]
+  --model MODEL_PATH
+  --ds DATASET_FILENAME
+  --predictionout PREDICTION_DATA_FILENAME
+  [--device DEVICE]</code></pre>
+			To get the <em>Twin</em> variant usage you can run this following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python pmc2t_predict_twin.py --help</code></pre>
+			and the output got is (excluding the program name) equal to the official version usage.
+			<br/>
+			<br/>			
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_predict.py</h3>
+		<h3>An example of using the program pmc2t_predict.py</h3>
 		<p>
-			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the trained model of MLP in the file <code>mymodel.pth</code> (generated through <code>fx_fit.py</code> program as shown in the example of previous paragraph); run the following command:
+			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph)
+			and the trained model of MLP in the file <code>mymodel.pth</code> (generated through <code>pmc2t_fit.py</code> program as shown in the example of previous paragraph); run the following command:
 			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_predict.py \
+			<pre><code class="shell">$ python pmc2t_predict.py \
   --model mymodel.pth \
   --ds mytest.csv \
   --predictionout myprediction.csv
@@ -314,55 +329,62 @@
 
 		<h2>Visualization of the result</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/pmc2t_plot.py" target="_blank"><code>pmc2t_plot.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			<pre><code class="shell">$ python pmc2t_plot.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_plot.py [-h]
---ds DATASET_FILENAME
---prediction PREDICTION_DATA_FILENAME
-[--savefig SAVE_FIGURE_FILENAME]
-[--device DEVICE]</code></pre>
+			<pre><code class="shell">usage: pmc2t_plot.py [-h]
+  --ds DATASET_FILENAME
+  --prediction PREDICTION_DATA_FILENAME
+  [--savefig SAVE_FIGURE_FILENAME]</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-on-plane-fitting/README.md" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_plot.py</h3>
+		<h3>An example of using the program pmc2t_plot.py</h3>
 		<p>
-			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
+			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>pmc2t_gen.py</code> program as shown in a previous paragraph)
+			and the prediction csv file (generated through <code>pmc2t_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_plot.py \
+			<pre><code class="shell">$ python pmc2t_plot.py \
   --ds mytest.csv \
   --prediction myprediction.csv</code></pre>
-			which shows the two curves superimposed: in blue the test dataset one, in red the prediction one.
+			which shows the two xy-scatter charts superimposed: in blue the test dataset one, in red the prediction one.
 			<br/>
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
 		</p>
 		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch/nn-pcopfwpt-example05.png" /></div>
-		<div class="photocaption">Chart generated by the program <code>fx_plot.py</code> that shows the fitting of the function $f(x)=\sqrt{|x|}$ made by the MLP.</div>
+		<div class="photocaption">Chart generated by the program <code>pmc2t_plot.py</code> that shows the fitting done by the MLP of the Lissajous curve $f(t) = \begin{bmatrix} x(t)=2 \sin (\frac{t}{2} + 1) \\ y(t)=3 \sin t \\ \end{bmatrix}$</div>
 		<br/>
 
 		<h2>Examples of cascade use of the four programs</h2>
 		<p>
 			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting/examples" target="_blank"><code>parametric-curve-on-plane-fitting/examples</code></a>
-			there are nine shell scripts that show the use in cascade of the four programs in various combinations of parameters
-			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters)
-			To run the nine examples, run the following commands:
+			there are five shell scripts that show the use in cascade of the four programs, with training and prediction in the official version, in various combinations of parameters
+			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters).
+			Also there are five other shell scripts that reproduce the same examples but with with training and prediction in the <em>Twin</em> variant.
+			To run the five examples for official version, run the following commands:
 <pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
 $ sh example1.sh
 $ sh example2.sh
 $ sh example3.sh
 $ sh example4.sh
 $ sh example5.sh
-$ sh example6.sh
-$ sh example7.sh
-$ sh example8.sh
-$ sh example9.sh</code></pre>
+</code></pre>
+			Instead to run the five examples for the <em>Twin</em> variant, run the following commands:
+			<br/>
+			<br/>
+<pre><code class="shell">$ cd parametric-curve-on-plane-fitting/examples
+$ sh example1_twin.sh
+$ sh example2_twin.sh
+$ sh example3_twin.sh
+$ sh example4_twin.sh
+$ sh example5_twin.sh
+</code></pre>
 			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
 		</p>
 

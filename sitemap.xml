@@ -9,127 +9,117 @@
 
 <url>
   <loc>https://computationalmindset.com/</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/index.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/info.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/index.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/quantum-computing.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/datasets/synthetic-words-dataset.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/quantum-computing/hadamard-gate-cascade.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/posts/quantum-computing/random-number-generation.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://computationalmindset.com/html5up-license/LICENSE.txt</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
-  <priority>0.64</priority>
-</url>
-<url>
-  <loc>https://computationalmindset.com/html5up-license/README.txt</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/info.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/computazione-quantistica.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/datasets/synthetic-words-dataset.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/computazione-quantistica/porte-hadamard-in-cascata.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/posts/computazione-quantistica/generazione-numero-casuale.html</loc>
-  <lastmod>2020-02-05T00:30:20+00:00</lastmod>
+  <lastmod>2020-02-08T16:02:12+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 
