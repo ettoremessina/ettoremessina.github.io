@@ -14,6 +14,10 @@
 
 
 
+
+
+
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -36,15 +40,17 @@
 			#cookiescript_checkbox_text {
 				color: white;
 			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
 		</style>
-		<script type="text/javascript" charset="UTF-8" src="//cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
 		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
-
-			gtag('config', 'UA-149444322-1');
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
 		</script>
 
 
@@ -149,7 +155,7 @@
 			The related code requires the version 3 of Python and it uses PyTorch technology in order to implement MLP and training procedure.
 			Also the code requires the NumPy and MatPlotLib libraries.
 			<br/>
-			The exact same mechanism was created using TensorFlow (with Keras) techology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a> always published on this website.
+			The exact same mechanism was created using TensorFlow (with Keras) technology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a> always published on this website.
 		</p>
 
 		<h2>Dataset generation</h2>
@@ -372,6 +378,8 @@ $ sh example9.sh</code></pre>
 												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
 											</ul>
 										</li>
 										<li>

@@ -14,6 +14,10 @@
 
 
 
+
+
+
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -36,15 +40,17 @@
 			#cookiescript_checkbox_text {
 				color: white;
 			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
 		</style>
-		<script type="text/javascript" charset="UTF-8" src="//cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
 		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
-
-			gtag('config', 'UA-149444322-1');
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
 		</script>
 
 
@@ -116,7 +122,7 @@
 		</header>
 
 		<p>
-			Una curva parametrica con parametro $t$ appartenente a un intervallo chiuso su un sistema di riferimento cartesiano $Oxy$ si definisce con una coppia di funzioni $x(t) \colon [a,b] \to \rm I\!R$ e $y(t) \colon [a,b] \to \rm I\!R$
+			Una curva parametrica, con parametro $t$ appartenente a un intervallo chiuso, su un sistema di riferimento cartesiano $Oxy$ si definisce con una coppia di funzioni $x(t) \colon [a,b] \to \rm I\!R$ e $y(t) \colon [a,b] \to \rm I\!R$
 			le quali restituiscono rispettivamente il valore della coordinata $x$ e della coordinata $y$ al variare del parametro $t$;
 			equivalentemente una curva parametrica sul piano &egrave; definita anche con una funzione vettoriale $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R}$ cos&igrave; definita: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ \end{bmatrix}$$
 			ove le due componenti dei vettori dell&apos;immagine della funzione rappresentano rispettivamente le coordinate $x$ e $y$ della curva sul piano cartesiano.
@@ -157,10 +163,10 @@
 					<b>Predizione</b>: applicazione del modello precedentemente addestrato a un dataset di input (che dovrebbe contenere dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
 				</li>
 				<li>
-					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva del dataset di training e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
+					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva di un dataset di input e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
 				</li>
 			</ul>
-			Il codice descritto da questo post richiede la versione 3 di Python ed utilizza la tecnologia PyTorch per realizzare il MLP e l&apos;addestramento.
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch per realizzare il MLP e l&apos;addestramento.
 			Il codice richiede inoltre le librerie NumPy e MatPlotLib.
 			<br/>
 			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a> pubblicato sempre su questo sito web.
@@ -242,7 +248,7 @@
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_fit.py [-h]
+			<pre><code class="shell">usage: pmc2t_fit.py [-h]
 --trainds TRAIN_DATASET_FILENAME
 --modelout MODEL_PATH
 [--epochs EPOCHS]
@@ -263,7 +269,7 @@
 		</p>
 		<h3>Un esempio di uso del programma pmc2t_fit.py</h3>
 		<p>
-			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>fx_gen.py</code> come mostrato nel paragrafo precedente)
+			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>pmc3t_fit.py</code> come mostrato nel paragrafo precedente)
 			e si voglia che il MLP abbia due layer nascosti con 150 neuroni ciascuno e che si voglia usare la funzione di attivazione ReLU in uscita dai due layer;
 			inoltre si vogliano eseguire 500 epoche di training con un batch size di 200 elementi usando l&apos;algoritmo di ottimizzazione Adamax con un learning rate di 0.02 
 			e la MSELoss quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
@@ -427,6 +433,8 @@ $ sh example5_twin.sh
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
 											</ul>
 										</li>
 										<li>
