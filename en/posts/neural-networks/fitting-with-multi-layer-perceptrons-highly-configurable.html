@@ -55,9 +55,19 @@
 		</script>
 
 
-		<title>Computational&nbsp;Mindset - Synthetic Words</title>
-		<meta name="description" content="Il dataset &apos;synthetic-words&apos; contiene file audio che riproducono parole inglesi tramite voci sintetiche; la sfida sar&agrave; allenare una rete neurale su tale dataset e poi testarla su voci naturali." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, dataset, word, voice, wav, spectrogram, fourier" >
+		<title>Computational&nbsp;Mindset - Fitting with highly configurable multi layer perceptrons</title>
+		<meta name="description" content="To fit a function of a variable by observing different multilayer perceptor models with PyTorch without writing code but only via the command line." >
+		<meta name="keywords" content="machine learning, deep learning, neural network, pytorch, multilayer perceptron, mlp, fitting, approximate, function, one variable, activation, training, loss, optimization, command line" >
+		<style>
+			.valign-middle
+			{
+				vertical-align: middle;
+			}
+			.size-of-symbols
+			{
+				font-size: 20px;
+			}
+		</style>
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -70,6 +80,15 @@
 				font-size: 1.2em;
 			}
 		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
 
 
 
@@ -110,32 +129,129 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Synthetic Words</h1>
+			<h1>Fitting with highly configurable multi layer perceptrons</h1>
 		</header>
 
-		<div class="belowtextlines"><img src="../../../posts/datasets/synthetic-words-dataset/synthetic-words-dataset-highlight.jpg" alt="Synthetic Words" /></div>
-
 		<p>
+			The fitting of functions, curves and surfaces with a neural network is a classic machine learning problem and it does not require any sophisticated neural network architecture in order to get a fitting with accuracy close to 100%:
+			it is enough an <em>MLP</em> (Multi-Layer Perceptron) where both the input and output layers contain only one neuron because the dimension of both domain and codomain is 1
+			and some freedom of choice in hidden layer architecture, their own activation functions, loss function, optimizator and several training parameters.
 			<br/>
-			The 'synthetic-words' dataset contains audio files that reproduce the pronunciation of 20 English words got using synthetic voices available on the Mac via the command <code>say</code>.
-			The audio files are in wav format and are sampled at 22050 Hz mono; for each word there are 325 wav files obtained with 25 different voices performed at different speeds.
+			On Internet you can find several examples of MLPs that fit this kind of functions; however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
+			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
+			without any explanation describing the reasons for their choice.
 			<br/>
-			The files are collected in two tar.gz archives (10 words for each archive) freely downloadable; the repository also contains a script to unzip them and a script
-			if you want to regenerate (on a Mac) the dataset, and you are allowed to change the words, voices and speeds.
-			The challenge will be to train a neural network on this dataset of synthetic voices and then test it to recognize the same words spoken by natural voices.
+			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
+			and they force the experimenter to proceed for code changes in order to implement and test MLP customization and/or training procedure.
 		</p>
 
-		<h2>Download of the dataset</h2>
 		<p>
-			The dataset and the script for Mac to regenerate it are available on <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/synthetic-words">GitHub</a>.
-			<br />
-			
-			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
-			<br/>
-			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
-			<br/>
+			Goal of this series of posts on the fitting of functions, curves and surfaces is to allow the experimenter to implement and test different combinations
+			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts which separately implement the following features:
+			<ul>
+				<li>
+					<b>Dataset generation</b>: generation of a csv file from a mathematical object passed as argument (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
+					from the output of measuring instruments, from data-loggers connected to electronic sensors, etc) and therefore not necessarily be generated in a synthetic way.
+				</li>
+				<li>
+					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
+				</li>
+				<li>
+					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
+				</li>
+				<li>
+					<b>Visualization of the result</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+				</li>
+			</ul>
+		</p>
 
-		</p>			
+		<h2>Links to posts and code</h2>
+		<p>
+			The following table allows you to access the specific posts and the relative code of the various types of fitters: please click on <i class="icon fas fa-file"></i> icon to to show the correspondent post 
+			and on <i class="icon brands fa-github"></i> icon to get the code available on GitHub.
+		</p>
+
+		<div class="table-wrapper">
+			<table class="alt">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th class="align-center"><img src="../../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" /></th>
+						<th class="align-center"><img src="../../../posts/neural-networks/pytorch-logo-120.png" style="max-width: 30px; max-height: 30px"/></th>
+					</tr>
+					<tr>
+						<th>Typology</th>
+						<th>&nbsp;</th>
+						<th class="align-center">TensorFlow</th>
+						<th class="align-center">PyTorch</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="valign-middle">One variable real function fitting</td>
+						<td class="align-center valign-middle"><img src="../../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-ovff-thumb.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html" class="icon fas fa-file"></a>
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html" class="icon fas fa-file"></a>
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">Parametric curve on plane fitting</td>
+						<td class="align-center valign-middle"><img src="../../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-pcopf-thumb.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-on-plane-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">Parametric curve in space fitting</td>
+						<td class="align-center valign-middle"><img src="../../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-pcisf-thumb.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+					</tr>
+					<!-- 2vrffw2vrffw
+					<tr>
+						<td class="valign-middle">Two variables real function fitting</td>
+						<td class="align-center valign-middle"><img src="../../../posts/neural-networks/one-variable-function-fitting-with-tensorflow/nn-ovffwtf-highlight.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-tensorflow.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-real-function-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-pytorch.html" class="icon fas fa-file" />
+							&nbsp;
+							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-real-function-fitting" target="_blank" class="icon brands fa-github"></a>
+						</td>
+					</tr>
+					-->
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	
 	</section>
 
 						</div>

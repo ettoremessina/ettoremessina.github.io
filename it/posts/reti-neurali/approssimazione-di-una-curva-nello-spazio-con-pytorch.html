@@ -18,6 +18,7 @@
 
 
 
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -122,50 +123,38 @@
 		</header>
 
 		<p>
-			Una curva parametrica, con parametro $t$ appartenente a un intervallo chiuso, su un sistema di riferimento 3-D $Oxyz$ si definisce con una terna di funzioni $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ e $z(t) \colon [a,b] \to \rm I\!R$
+			Questo post fa parte di una serie di post sull&apos;approssimazione di oggetti matematici (funzioni, curve e superfici) tramite una rete neurale di tipo <em>MLP</em> (percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron);
+			per una introduzione sull&apos;argomento si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
+			<br />
+			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una curva parametrica, con parametro $t$ appartenente a un intervallo chiuso, su un sistema di riferimento 3-D $Oxyz$ definita con una terna di funzioni $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ e $z(t) \colon [a,b] \to \rm I\!R$
 			le quali restituiscono rispettivamente il valore della coordinata $x$, della coordinata $y$ e della coordinata $z$ al variare del parametro $t$;
 			equivalentemente una curva parametrica nello spazio &egrave; definita anche con una funzione vettoriale $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R x \rm I\!R}$ cos&igrave; definita: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ z(t) \\ \end{bmatrix}$$
 			ove le tre componenti dei vettori dell&apos;immagine della funzione rappresentano rispettivamente le coordinate $x$, $y$ e $z$ della curva nello spazio.
 			<br/>
 			<br/>
-			L&apos;approssimazione di una tale curva, se continua e limitata, con una rete neurale &egrave; un problema classico di machine learning e non richiede reti neurali con architeture sofisticate:
-			&egrave; sufficiente un <em>MLP</em> (un percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron) per ottenere risultati con accuratezza prossima al 100%.
-			<br/>
 			La seconda definizione suggerisce una architettura di un MLP ove il layer di input contiene un solo neurone in quando la dimensione del dominio &egrave; 1 (l&apos;intervallo $[a,b]$) 
 			mentre il layer di output contiente 3 neuroni in quanto la dimensione del codominio &egrave; 3.
 			<br/>
-			<br/>
-			Come gi&agrave; osservato nel post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a>, su Internet si trovano numerosi esempi di MLP che approssimano curve; 
-			tuttavia spesso tali esempi combinano in un unico script Python la generazione dei dataset, il training, la predizione e la visualizzazione della curva approssimata;
-			inoltre l&apos;architettura &egrave; hardcoded o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono molto spesso decisi dall&apos;autore 
-			senza una spiegazione che descriva le motivazioni della loro scelta.
-			<br/>
-			La scarsa parametrizzazione, il ricorso a scelte implementate hardcoded e l&apos;unificazione di varie funzionalit&agrave; in un unico script rendono poco agevole la sperimentazione
-			e costringono lo sperimentatore a procedere per modifiche di codice al fine di realizzare e testare personalizzazioni degli MLP coinvolti e/o delle procedure di addestramento.
-		</p>
-		<p>
-			Scopo di questo post e del relativo codice, disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting">GitHub</a>, &egrave; di consentire allo sperimentatore di implementare e testare diverse combinazioni
-			di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python che implementano separatamente le seguenti funzionalit&agrave;:
+			Nell&apos;ambito dell&apos;approssimazione di una curva parametrica continua e limitata nello spazio, lo scopo di questo post &egrave; di consentire all&apos;utilizzatore di testare diverse combinazioni di architettura MLP,
+			funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python che implementano separatamente le seguenti funzionalit&agrave;:
+
 			<ul>
 				<li>
-					<b>Creazione dei dataset</b>: generazione di un file csv a partire da una terna di funzioni $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ e $z(t) \colon [a,b] \to \rm I\!R$ passate come argomento (quindi <u>non</u> hardcoded). Questa fase &egrave; opzionale in quanto i dataset potrebbero pre-esistere
-					(come avviene nel mondo reale ad esempio estraendo curve da dati presenti su database o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici, ecc)
-					e quindi non necessariamente essere generati in modo sintetico.
+						<em>Creazione dei dataset</em>
 				</li>
 				<li>
-					<b>Definizione dell&apos;architettura del MLP + Addestramento</b>: configurazione dell&apos;architettura degli strati nascosti del MLP con le relative funzioni di attivazione in uscita ed esecuzione della procedura di addestramento sul dataset di training consentendo di specificare la scelta dell&apos;algoritmo di ottimizzazione, della funzione di loss
-					e di altri parametri di addestramento.
-					<br/>
+						<em>Definizione dell&apos;architettura del MLP + Addestramento</em>
 				</li>
 				<li>
-					<b>Predizione</b>: applicazione del modello precedentemente addestrato a un dataset di input (che dovrebbe contenere dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
+						<em>Predizione</em>
 				</li>
 				<li>
-					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva di un dataset di input e quella della predizione e consente la comparazione visuale delle due curve. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
+						<em>Visualizzazione del risultato</em>
 				</li>
 			</ul>
-			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch per realizzare il MLP e l&apos;addestramento.
-			Il codice richiede inoltre le librerie NumPy e MatPlotLib.
+
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch; richiede inoltre le librerie NumPy e MatPlotLib.<br/>
+			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
 			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a> pubblicato sempre su questo sito web.
 		</p>
@@ -369,7 +358,7 @@ $ sh example5.sh
 			<b>Nota</b>: Data la natura stocastica di questi esempi (relativamente alla parte di training), i singoli specifici risultati possono variare. Si consideri di eseguire i singoli esempi pi&ugrave; volte.
 		</p>
 
-		<h2>Download del codice completo</h2>
+		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
 			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting">GitHub</a>.
 			<br/>
@@ -398,12 +387,17 @@ $ sh example5.sh
 										<li>
 											<span class="opener">Reti&nbsp;Neurali</span>
 											<ul>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione di una variabile con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione di una variabile con PyTorch</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
+												<!-- 2vrffw2vrffw
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
+												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
+												-->
 											</ul>
 										</li>
 										<li>

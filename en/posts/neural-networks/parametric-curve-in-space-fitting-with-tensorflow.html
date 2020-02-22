@@ -18,6 +18,7 @@
 
 
 
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -56,7 +57,7 @@
 
 		<title>Computational&nbsp;Mindset - Parametric curve in space fitting with TensorFlow</title>
 		<meta name="description" content="To fit a parametric curve in space by observing different multilayer perceptor models with TensorFlow without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, curve, space, activation, training, loss, optimization, command line" >
+		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, curve, space, activation, training, loss, optimization, command line" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -122,47 +123,38 @@
 		</header>
 
 		<p>
-			A parametric curve on a 3-D reference system $Oxyz$ with parameter $t$ within a closed interval of reals is defined with a triple of real functions $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ and $z(t) \colon [a,b] \to \rm I\!R$
+			This post is part of a series of posts on the fitting of mathematical objects (functions, curves and surfaces) through a <em>MLP</em> (Multi-Layer Perceptron) neural network;
+			for an introduction on the subject please see the post <a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a>.<br />
+			<br />
+			The topic of this post is the fitting of a parametric curve on a 3-D reference system $Oxyz$ with parameter $t$ within a closed interval of reals
+			is defined with a triple of real functions $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ and $z(t) \colon [a,b] \to \rm I\!R$
 			that return respectively the values of $x$, $y$ and $z$ coordinates as the parameter $t$ changes;
 			equivalently a parametric curve in space is also defined with a vector function $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R x \rm I\!R}$ in this way: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ z(t) \\ \end{bmatrix}$$
 			where the three components of the vectors of the function image are respectively the $x$, $y$ and $z$ coordinates of the curve on 3-D reference system.
 			<br/>
 			<br/>
-			The fitting of a continuous and limited real-valued curve with a neural network is a classic machine learning problem and it does not require any sophisticated neural network architecture:
-			it is enough an <em>MLP</em> (Multi-Layer Perceptron) in order to get a fitting with accuracy close to 100%.
-			<br/>
-			Note that the second definition of parametric curve suggests an architecture of a single MLP where the input layer contains only one neuron because the dimension of domain is 1
+			The second definition of parametric curve suggests an architecture of single MLP where the input layer contains only one neuron because the dimension of domain is 1
 			instead the output layer contains 3 neurons because the dimension of codomain is 3.
 			<br/>
-			<br/>
-			As mentioned in the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a>, on Internet you can find several examples of MLPs that fit curves; 
-			however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
-			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
-			without any explanation describing the reasons for their choice.
-			<br/>
-			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
-			and they force the experimenter to proceed for code changes in order to implement and test MLP customization and/or training procedure.
-		</p>
-		<p>
-			Goal of this post and related code, available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting">GitHub</a>, is to allow the experimenter to implement and test different combinations
-			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts (plus two variants) which separately implement the following features:
+			As part of the fitting is to allow the user to test different combinations of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts (plus two variants) which separately implement the following features:
+
 			<ul>
 				<li>
-					<b>Dataset generation</b>: generation of a csv file from a pair of functions $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ and $z(t) \colon [a,b] \to \rm I\!R$ passed as arguments (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
-					from the output of measuring instruments, from data-loggers connected to electronic sensors, etc) and therefore not necessarily be generated in a synthetic way.
+					<em>Dataset generation</em>
 				</li>
 				<li>
-					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
+					<em>MLP architecture definition + Training</em>
 				</li>
 				<li>
-					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
+					<em>Prediction</em>
 				</li>
 				<li>
-					<b>Visualization of the result</b>: generation of a chart that shows overlapped the initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+					<em>Visualization of the result</em>
 				</li>
 			</ul>
-			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2) in order to implement MLP and training procedure.
-			Also the code requires the NumPy and MatPlotLib libraries.
+
+			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2); it requires also the NumPy and MatPlotLib libraries.
+			To get the code please see the paragraph <a href='#downloadcode'>Download of the complete code</a> at the end of this post.<br/>
 			<br/>
 			The exact same mechanism was created using PyTorch technology; see the post <a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a> always published on this website.
 		</p>
@@ -364,7 +356,7 @@ $ sh example5.sh
 			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
 		</p>
 
-		<h2>Download of the complete code</h2>
+		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
 			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting">GitHub</a>.
 			<br/>
@@ -394,12 +386,17 @@ $ sh example5.sh
 										<li>
 											<span class="opener">Neural&nbsp;Networks</span>
 											<ul>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a></li>
+												<li><a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable real function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable real function fitting with PyTorch</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
+												<!-- 2vrffw2vrffw
+												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-tensorflow.html">Two variables real function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two variables real function fitting with PyTorch</a></li>
+												-->
 											</ul>
 										</li>
 										<li>

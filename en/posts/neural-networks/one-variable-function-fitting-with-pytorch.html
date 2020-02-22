@@ -18,6 +18,7 @@
 
 
 
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -54,9 +55,9 @@
 		</script>
 
 
-		<title>Computational&nbsp;Mindset - One variable function fitting with PyTorch</title>
+		<title>Computational&nbsp;Mindset - One variable real function fitting with PyTorch</title>
 		<meta name="description" content="To fit a function of a variable by observing different multilayer perceptor models with PyTorch without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, pytorch, multilayer perceptron, mlp, fitting, function, one variable, activation, training, loss, optimization, command line" >
+		<meta name="keywords" content="machine learning, deep learning, neural network, pytorch, multilayer perceptron, mlp, fitting, approximate, function, one variable, activation, training, loss, optimization, command line" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -118,44 +119,36 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>One variable function fitting with PyTorch</h1>
+			<h1>One variable real function fitting with PyTorch</h1>
 		</header>
 
 		<p>
-			The fitting of a continuous and limited real-valued function defined in a closed interval of the reals $f(x) \colon [a,b] \to \rm I\!R$ with a neural network
-			is a classic machine learning problem and it does not require any sophisticated neural network architecture in order to get a fitting with accuracy close to 100%:
-			it is enough an <em>MLP</em> (Multi-Layer Perceptron) where both the input and output layers contain only one neuron because the dimension of both domain and codomain is 1
-			and some freedom of choice in hidden layer architecture, their own activation functions, loss function, optimizator and several training parameters.
-			<br/>
-			On Internet you can find several examples of MLPs that fit this kind of functions; however often such examples combine in a single Python script dataset generation (and function to fit usually hardcoded), MLP training, 
-			prediction and result visualization; also the architecture of the neural network is hardcoded and/or is not very parameterizable via command line and finally the activation functions, the used optimizer and the loss function are decided by the author 
-			without any explanation describing the reasons for their choice.
-			<br/>
-			Poor parameterization, the use of hard-coded implemented choices and unification of various functionalities in a single script make experimentation difficult
-			and they force the experimenter to proceed for code changes in order to implement and test MLP customization and/or training procedure.
-		</p>
-		<p>
-			Goal of this post and related code, available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting">GitHub</a>, is to allow the experimenter to implement and test different combinations
-			of MLP architectures, their own activation functions, training algorithm and loss function without writing code but working only on the command line of the four Python scripts which separately implement the following features:
+			This post is part of a series of posts on the fitting of mathematical objects (functions, curves and surfaces) through a <em>MLP</em> (Multi-Layer Perceptron) neural network;
+			for an introduction on the subject please see the post <a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a>.<br />
+			<br />
+			The topic of this post is the fitting of a continuous and limited real-valued function defined in a closed interval of the reals $$f(x) \colon [a,b] \to \rm I\!R$$ with a MLP
+			so that the user can test different combinations of MLP architectures, their own activation functions, training algorithm and loss function without writing code
+			but working only on the command line of the four Python scripts which separately implement the following features:
+
 			<ul>
 				<li>
-					<b>Dataset generation</b>: generation of a csv file from a function $f(x) \colon [a,b] \to \rm I\!R$ passed as argument (therefore <u>not</u> hardcoded). This phase not mandatory, in fact datasets could be pre-existing (as it happens in the real world, for example by extracting curves from data present in databases or Excel files,
-					from the output of measuring instruments, from data-loggers connected to electronic sensors, etc) and therefore not necessarily be generated in a synthetic way.
+					<em>Dataset generation</em>
 				</li>
 				<li>
-					<b>MLP architecture definition + Training</b>: configuration of MLP hidden layer architecture with their own activation functions and training procedure execution on training dataset allowing you to specify your choice of optimization algorithm, loss function and other training parameters.
+					<em>MLP architecture definition + Training</em>
 				</li>
 				<li>
-					<b>Prediction</b>: application of the previously trained model to an input dataset (which should contain data never seen by the model being trained) and generation of an output csv file containing the prediction.
+					<em>Prediction</em>
 				</li>
 				<li>
-					<b>Visualization of the result</b>: generation of a chart that shows overlapped initial dataset curve (training or test, as you prefer) and prediction curve and it allows the visual comparison of the two curves. This phase is not mandatory because the prediction is saved in the previous step in a csv file and therefore it is already usable as such.
+					<em>Visualization of the result</em>
 				</li>
 			</ul>
-			The related code requires the version 3 of Python and it uses PyTorch technology in order to implement MLP and training procedure.
-			Also the code requires the NumPy and MatPlotLib libraries.
+
+			The related code requires the version 3 of Python and it uses PyTorch technology; it requires also the NumPy and MatPlotLib libraries.<br/>
+			To get the code please see the paragraph <a href='#downloadcode'>Download of the complete code</a> at the end of this post.<br/>
 			<br/>
-			The exact same mechanism was created using TensorFlow (with Keras) technology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a> always published on this website.
+			The exact same mechanism was created using TensorFlow (with Keras) technology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable real function fitting with TensorFlow</a> always published on this website.
 		</p>
 
 		<h2>Dataset generation</h2>
@@ -345,7 +338,7 @@ $ sh example9.sh</code></pre>
 			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
 		</p>
 
-		<h2>Download of the complete code</h2>
+		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
 			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting">GitHub</a>.
 			<br/>
@@ -374,12 +367,17 @@ $ sh example9.sh</code></pre>
 										<li>
 											<span class="opener">Neural&nbsp;Networks</span>
 											<ul>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable function fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable function fitting with PyTorch</a></li>
+												<li><a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One variable real function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One variable real function fitting with PyTorch</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
 												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
+												<!-- 2vrffw2vrffw
+												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-tensorflow.html">Two variables real function fitting with TensorFlow</a></li>
+												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two variables real function fitting with PyTorch</a></li>
+												-->
 											</ul>
 										</li>
 										<li>
