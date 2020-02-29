@@ -55,9 +55,9 @@
 		</script>
 
 
-		<title>Approssimazione di una funzione reale di una variabile con TensorFlow</title>
-		<meta name="description" content="Approssimare una funzione di una variabile osservando diversi modelli di percettrone multistrato con TensorFlow senza scrivere codice ma solo tramite linea di comando." >
-		<meta name="keywords" content="machine learning, deep learning, rete neurale, tensorflow, percettrone multistrato, mlp, approssimazione, funzione, una variabile, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
+		<title>Approssimazione di una funzione reale di una variabile con PyTorch</title>
+		<meta name="description" content="Approssimare una funzione di una variabile osservando diversi modelli di percettrone multistrato con PyTorch senza scrivere codice ma solo tramite linea di comando." >
+		<meta name="keywords" content="machine learning, deep learning, rete neurale, pytorch, percettrone multistrato, mlp, approssimazione, funzione, una variabile, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -119,7 +119,7 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Approssimazione di una funzione reale di una variabile con TensorFlow</h1>
+			<h1>Approssimazione di una funzione reale di una variabile con PyTorch</h1>
 		</header>
 
 		<p>
@@ -145,15 +145,15 @@
 				</li>
 			</ul>
 
-			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia TensorFlow 2 (sia per CPU che per GPU) con Keras (che &egrave; gi&agrave; integrato dentro TensorFlow 2); richiede inoltre le librerie NumPy e MatPlotLib.<br/>
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch; richiede inoltre le librerie NumPy e MatPlotLib.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
-			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia PyTorch; si veda il post <a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a> pubblicato sempre su questo sito web.
+			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a> pubblicato sempre su questo sito web.
 		</p>
 
 		<h2>Creazione dei dataset</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_gen.py" target="_blank"><code>fx_gen.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_gen.py" target="_blank"><code>fx_gen.py</code></a>
 			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
 			prende in linea di comando la funzione da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo della variabile indipendente (inizio, fine e passo di discretizzazione)
 			e genera il dataset in un file nel formato csv applicando la funzione all&apos;intervallo passato.
@@ -174,31 +174,31 @@
 --rbegin RANGE_BEGIN        begin range (default:-5.0)
 --rend RANGE_END            end range (default:+5.0)
 --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md#fx_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fx_gen.py</h3>
 		<p>
-			Si supponga di voler approssimare nell&apos;intervallo $[-20.0,20.0]$ la seguente funzione $$f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$$
+			Si supponga di voler approssimare nell&apos;intervallo $[-5.0,5.0]$ la seguente funzione $$f(x)=\sqrt{|x|}$$
 			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
-			<pre><code class="python">np.sin(2 * x) / np.exp(x / 5)</code></pre>
+			<pre><code class="python">np.sqrt(np.abs(x))</code></pre>
 			Per generare il dataset di training, si esegua quindi il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytrain.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
-  --rend 20.0 \
+  --fx "np.sqrt(np.abs(x))" \
+  --rbegin -5.0 \
+  --rend 5.0 \
   --rstep 0.01</code></pre>
 			mentre per generare il dataset di test, si esegua il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytest.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
-  --rend 20.0 \
+  --fx "np.sqrt(np.abs(x))" \
+  --rbegin -5.0 \
+  --rend 5.0 \
   --rstep 0.0475</code></pre>
 			Si osservi che il passo di discretizzazione del dataset di test &egrave; pi&ugrave; grande di quello di training e questo &egrave; normale 
 			in quanto l&apos;addestramento, per essere accurato, deve essere eseguito su una maggiore quantit&agrave; di dati.
@@ -208,7 +208,7 @@
 
 		<h2>Definizione dell&apos;architettura del MLP + Addestramento</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a>
 			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente un MLP ed effettuare il suo addestramento.
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
 			<pre><code class="shell">$ python fx_fit.py --help</code></pre>
@@ -223,34 +223,35 @@
 [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
 [--optimizer OPTIMIZER]
-[--loss LOSS]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+[--loss LOSS]
+[--device DEVICE]</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md#fx_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fx_fit.py</h3>
 		<p>
 			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>fx_gen.py</code> come mostrato nel paragrafo precedente)
-			e si voglia che il MLP abbia tre layer nascosti rispettivamente con 200, 300 e 200 neuroni e che si voglia usare la funzione di attivazione sigmoid in uscita da tutti e tre i layer;
-			inoltre si vogliano eseguire 1000 epoche di training con un batch size di 200 elementi usando l&apos;algoritmo di ottimizzazione Adamax con un learning rate di 0.02 
-			e la MeanSquaredError quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
+			e si voglia che il MLP abbia tre layer nascosti rispettivamente con 200, 300 e 200 neuroni e che si voglia usare la funzione di attivazione in uscita dai tre layer rispettivamente Tanh, ReLU e Tanh;
+			inoltre si vogliano eseguire 500 epoche di training con un batch size di 100 elementi usando l&apos;algoritmo di ottimizzazione RMSprop con un learning rate di 0.01 
+			e la SmoothL1Loss quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_fit.py \
   --trainds mytrain.csv \
-  --modelout mymodel \
+  --modelout mymodel.pth \
   --hlayers 200 300 200 \
-  --hactivation sigmoid sigmoid sigmoid \
-  --epochs 1000 \
-  --batch_size 200 \
-  --optimizer 'Adamax(learning_rate=0.02)' \
-  -- \
-  --loss 'MeanSquaredError()'</code></pre>
-			al termine del quale la cartella <code>mymodel</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
+  --hactivations 'Tanh()' 'ReLU()' 'Tanh()' \
+  --loss 'SmoothL1Loss()' \
+  --optimizer 'RMSprop(learning_rate=0.01)' \
+  --epochs 500 \
+  --batch_size 100 \
+  --</code></pre>
+			al termine del quale il file <code>mymodel.pth</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
 		</p>
 
 		<h2>Predizione</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a>
 			&egrave; quello di applicare il modello di MLP generato tramite <code>fx_fit.py</code> al dataset di test (ad esempio generato tramite <code>fx_gen.py</code> come mostrato in un paragrafo precedente);
 			l&apos;esecuzione del programma produce in uscita un file csv con due colonne (senza header): la prima colonna contiene i valori della variabile indipendente $x$ presi dal dataset di test
 			e la seconda colonna contiene i valori predetti della variabile dipendente, ovverosia i valori della predizione che approssimano la funzione $f(x)$ corrispondenti al valore di $x$ della prima colonna.
@@ -263,18 +264,19 @@
 			<pre><code class="shell">usage: fx_predict.py [-h]
 --model MODEL_PATH
 --ds DATASET_FILENAME
---predictionout PREDICTION_DATA_FILENAME</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+--predictionout PREDICTION_DATA_FILENAME
+[--device DEVICE]</code></code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md#fx_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fx_predict.py</h3>
 		<p>
 			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fx_gen.py</code> come mostrato in un paragrafo precedente)
-			e il modello di MLP addestrato nella cartella <code>mymodel</code> (generato tramite <code>fx_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
+			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>fx_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_predict.py \
-  --model mymodel \
+  --model mymodel.pth \
   --ds mytest.csv \
   --predictionout myprediction.csv
 </code></pre>
@@ -283,7 +285,7 @@
 
 		<h2>Visualizzazione del risultato</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a>
 			&egrave; quello di visualizzare la curva della predizione sovrapposta alla curva del dataset iniziale (che sia quello di test o di training) e questo consente la comparazione visuale delle due curve.
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
@@ -295,7 +297,7 @@
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md#fx_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fx_plot.py</h3>
@@ -311,13 +313,13 @@
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../posts/neural-networks/one-variable-function-fitting-with-tensorflow/nn-ovffwtf-example09.png" /></div>
-		<div class="photocaption">Grafico generato dal programma <code>fx_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della funzione $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$</div>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/one-variable-real-function-fitting-with-pytorch/nn-ovffwpt-example04.png" /></div>
+		<div class="photocaption">Grafico generato dal programma <code>fx_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della funzione $f(x)=\sqrt{|x|}$</div>
 		<br/>
 
 		<h2>Esempi di uso in cascata dei quattro programmi</h2>
 		<p>
-			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting/examples" target="_blank"><code>one-variable-function-fitting/examples</code></a>
+			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting/examples" target="_blank"><code>one-variable-function-fitting/examples</code></a>
 			ci sono nove script shell che mostrano l&apos;uso dei quattro programmi in cascata in varie combinazioni
 			di parametri (architettura del MLP, funzioni di attivazione, algoritmo, funzione di loss, parametri di prodedura di training).
 			Per mandare in esecuzione i nove esempi eseguire i seguenti comandi:
@@ -336,7 +338,7 @@ $ sh example9.sh</code></pre>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
@@ -364,8 +366,8 @@ $ sh example9.sh</code></pre>
 											<span class="opener">Reti&nbsp;Neurali</span>
 											<ul>
 												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
-												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
-												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
