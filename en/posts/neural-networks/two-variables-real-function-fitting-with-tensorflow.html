@@ -55,9 +55,9 @@
 		</script>
 
 
-		<title>One-variable real-valued function fitting with TensorFlow</title>
-		<meta name="description" content="To fit a function of a variable by observing different multilayer perceptron models with TensorFlow without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, function, one variable, activation, training, loss, optimization, command line" >
+		<title>Two-variables real-valued function fitting with TensorFlow</title>
+		<meta name="description" content="To fit a function of two variables by observing different multilayer perceptron models with TensorFlow without writing code but only via the command line." >
+		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, function, two variables, surface, activation, training, loss, optimization, command line" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -119,14 +119,14 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>One-variable real-valued function fitting with TensorFlow</h1>
+			<h1>Two-variables real-valued function fitting with TensorFlow</h1>
 		</header>
 
 		<p>
 			This post is part of a series of posts on the fitting of mathematical objects (functions, curves and surfaces) through a <em>MLP</em> (Multi-Layer Perceptron) neural network;
 			for an introduction on the subject please see the post <a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a>.<br />
 			<br />
-			The topic of this post is the fitting of a continuous and limited real-valued function defined in a closed interval of the reals $$f(x) \colon [a,b] \to \rm I\!R$$ with a MLP
+			The topic of this post is the fitting of a continuous and limited real-valued function of two variables constrained in a rectangle $$f(x,y) \colon [a,b]\times[c,d] \to \rm I\!R$$ with a MLP
 			so that the user can test different combinations of MLP architectures, their own activation functions, training algorithm and loss function without writing code
 			but working only on the command line of the four Python scripts which separately implement the following features:
 
@@ -148,58 +148,64 @@
 			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2); it requires also NumPy and MatPlotLib libraries.<br/>
 			To get the code please see the paragraph <a href='#downloadcode'>Download of the complete code</a> at the end of this post.<br/>
 			<br/>
-			The exact same mechanism was created using PyTorch technology; see the post <a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One-variable real-valued function fitting with PyTorch</a> always published on this website.
+			The exact same mechanism was created using PyTorch technology; see the post <a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two-variables real-valued function fitting with PyTorch</a> always published on this website.
 		</p>
 
 		<h2>Dataset generation</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_gen.py" target="_blank"><code>fx_gen.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_gen.py" target="_blank"><code>fxy_gen.py</code></a> Python program
 			is to generate datasets (both training and test ones) to be used in later phases;
-			it takes in command line the function to be approximated (in <em>lambda body</em> syntax), the interval of independent variable (begin, end and discretization step)
-			and it generates the dataset in an output csv file applying the function to the passed interval.
+			it takes in command line the function of two variables to be approximated (in <em>lambda body</em> syntax), the rectangular subset of domain (specifing the two intervals of the sides of the rectangle) and discretization step
+			and it generates the dataset in an output csv file applying the function to the passed rectangle.
 			<br/>
-			In fact the output csv file has two columns (without header): first column contains the sorted values of independent variable $x$ within the passed interval discretized by discretization step;
-			second column contains the values of dependent variable, ie the values of function $f(x)$ correspondent to values of $x$ of first column.
+			In fact the output csv file has three columns (without header): first two columns contain the values of independent variables $x$ and $y$ within the passed rectangle discretized by discretization step;
+			thrid column contains the values of dependent variable, ie the values of function $f(x,y)$ correspondent to values of $x$ and $y$ of first two columns.
 			<br/>
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_gen.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_gen.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_gen.py [-h] 
+			<pre><code class="shell">usage: fxy_gen.py [-h] 
 -h, --help                  show this help message and exit
 --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
---fx FUNC_X_BODY            f(x) body (body lamba format)
---rbegin RANGE_BEGIN        begin range (default:-5.0)
---rend RANGE_END            end range (default:+5.0)
+--fxy FUNC_X_BODY           f(x,y) body (body lamba format)
+--rxbegin RANGE_BEGIN       begin x range (default:-5.0)
+--rxend RANGE_END           end x range (default:+5.0)
+--rybegin RANGE_BEGIN       begin y range (default:-5.0)
+--ryend RANGE_END           end y range (default:+5.0)
 --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_gen" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_gen" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_gen.py</h3>
+		<h3>An example of using the program fxy_gen.py</h3>
 		<p>
-			Suppose you want to approximate the function $$f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$$ in the range $[-20.0,20.0]$.
+			Suppose you want to approximate in the rectagle $[-5.0,5.0]\times[-5.0,5.0]$ the function $$\sin \sqrt{x^2 + y^2}$$.
 			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
-			<pre><code class="python">np.sin(2 * x) / np.exp(x / 5)</code></pre>
+			<pre><code class="python">np.sin(np.sqrt(x**2 + y**2))</code></pre>
 			To generate the training dataset, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python fxy_gen.py \
   --dsout mytrain.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
-  --rend 20.0 \
-  --rstep 0.01</code></pre>
+  --fxy "np.sin(np.sqrt(x**2 + y**2))" \
+  --rxbegin -5.0 \
+  --rxend 5.0 \
+  --rybegin -5.0 \
+  --ryend 5.0 \
+  --rstep 0.075</code></pre>
 			instead to generate the test dataset, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
+			<pre><code class="shell">$ python fxy_gen.py \
   --dsout mytest.csv \
-  --fx "np.sin(2 * x) / np.exp(x / 5)" \
-  --rbegin -20.0 \
-  --rend 20.0 \
-  --rstep 0.0475</code></pre>
+  --fxy "np.sin(np.sqrt(x**2 + y**2))" \
+  --rxbegin -5.0 \
+  --rxend 5.0 \
+  --rybegin -5.0 \
+  --ryend 5.0 \
+  --rstep 0.275</code></pre>
 			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
 			because the training, to be accurate, it must be run on more data.
 			Also note that it is appropriate for the discretization step of the test dataset is <u>not</u> a multiple of the training one
@@ -208,14 +214,14 @@
 
 		<h2>MLP architecture definition + Training</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_fit.py" target="_blank"><code>fx_fit.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_fit.py" target="_blank"><code>fxy_fit.py</code></a> Python program
 			is to dynamically create a MLP and perform its training according to the passed parameters through the command line.
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_fit.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_fit.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_fit.py [-h]
+			<pre><code class="shell">usage: fxy_fit.py [-h]
 --trainds TRAIN_DATASET_FILENAME
 --modelout MODEL_PATH
 [--epochs EPOCHS]
@@ -224,55 +230,56 @@
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
 [--optimizer OPTIMIZER]
 [--loss LOSS]</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_fit" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_fit" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_fit.py</h3>
+		<h3>An example of using the program fxy_fit.py</h3>
 		<p>
-			Suppose you have a training dataset available (for example generated through <code>fx_gen.py</code> program as shown in the previous paragraph)
-			and you want the MLP to have three hidden layers with respectively with 200, 300 and 200 neurons and that you want to use the sigmoid activation function output from all three layers;
-			moreover you want to perform 1000 training epochs with a 200 items batch size using the Adamax optimizator algorithm with learning rate equal to 0.02 
-			and loss function equal to MeanSquaredError. To put all this into action, run the following command:
+			Suppose you have a training dataset available (for example generated through <code>fxy_gen.py</code> program as shown in the previous paragraph)
+			and you want the MLP to have two hidden layers with both 100 neurons and that you want to use the relu activation function output from all two layers;
+			moreover you want to perform 10 training epochs with a 50 items batch size using the SGD optimizator algorithm with default learning rate,
+			momentum equal to 0.9, decay equal to 10<sup>-6</sup> and nesterov flag set to true and loss function equal to MeanSquaredError.
+			To put all this into action, run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_fit.py \
+			<pre><code class="shell">$ python fxy_fit.py \
   --trainds mytrain.csv \
   --modelout mymodel \
-  --hlayers 200 300 200 \
-  --hactivation sigmoid sigmoid sigmoid \
-  --epochs 1000 \
-  --batch_size 200 \
-  --optimizer 'Adamax(learning_rate=0.02)' \
+  --hlayers 100 100 \
+  --hactivations relu relu \
+  --epochs 10 \
+  --batch_size 50 \
+  --optimizer 'SGD(decay=1e-6, momentum=0.9, nesterov=True)' \
   --loss 'MeanSquaredError()'</code></pre>
 			at the end of which the folder <code>mymodel</code> will contain the MLP model trained on <code>mytrain.csv</code> dataset according to the parameters passed on the command line.
 		</p>
 
 		<h2>Prediction</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
-			is to apply the MLP model generated through <code>fx_fit.py</code> to an input dataset (for example the test dataset generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
-			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
-			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_predict.py" target="_blank"><code>fxy_predict.py</code></a> Python program
+			is to apply the MLP model generated through <code>fxy_fit.py</code> to an input dataset (for example the test dataset generated through <code>fxy_gen.py</code> program as shown in a previous paragraph);
+			the execution of the program produces in output a csv file with three columns (without header): the first two columns contains the values of indepedent variable $x$ and $y$ taken from test dataset
+			and the third column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ and $y$ of first two columns.
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_predict.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_predict.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_predict.py [-h]
+			<pre><code class="shell">usage: fxy_predict.py [-h]
 --model MODEL_PATH
 --ds DATASET_FILENAME
 --predictionout PREDICTION_DATA_FILENAME</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_predict" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_predict" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_predict.py</h3>
+		<h3>An example of using the program fxy_predict.py</h3>
 		<p>
-			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>fx_fit.py</code> program as shown in the example of previous paragraph); run the following command:
+			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>fxy_gen.py</code> program as shown in a previous paragraph)
+			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>fxy_fit.py</code> program as shown in the example of previous paragraph); run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_predict.py \
+			<pre><code class="shell">$ python fxy_predict.py \
   --model mymodel \
   --ds mytest.csv \
   --predictionout myprediction.csv
@@ -282,60 +289,54 @@
 
 		<h2>Visualization of the result</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_plot.py" target="_blank"><code>fxy_plot.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_plot.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_plot.py [-h]
+			<pre><code class="shell">usage: fxy_plot.py [-h]
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_plot" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_plot" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_plot.py</h3>
+		<h3>An example of using the program fxy_plot.py</h3>
 		<p>
-			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
-			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
+			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fxy_gen.py</code> program as shown in a previous paragraph)
+			and the prediction csv file (generated through <code>fxy_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_plot.py \
+			<pre><code class="shell">$ python fxy_plot.py \
   --ds mytest.csv \
   --prediction myprediction.csv</code></pre>
-			which shows the two curves superimposed: in blue the input dataset, in red the prediction one.
+			which shows the two curves neighboring: in blue the input dataset, in red the prediction one.
 			<br/>
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/one-variable-function-fitting-with-tensorflow/nn-ovffwtf-example09.png" /></div>
-		<div class="photocaption">Chart generated by the program <code>fx_plot.py</code> that shows the fitting of the function $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$ made by the MLP.</div>
+		<div class="betweentextlines"><img src="../../../posts/neural-networks/two-variables-real-function-fitting-with-tensorflow/nn-2vrffwtf-example02.png" /></div>
+		<div class="photocaption">Chart generated by the program <code>fxy_plot.py</code> that shows the fitting of the function $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$ made by the MLP.</div>
 		<br/>
 
 		<h2>Examples of cascade use of the four programs</h2>
 		<p>
-			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting/examples" target="_blank"><code>one-variable-function-fitting/examples</code></a>
-			there are nine shell scripts that show the use in cascade of the four programs in various combinations of parameters
+			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-function-fitting/examples" target="_blank"><code>two-variables-function-fitting/examples</code></a>
+			there are three shell scripts that show the use in cascade of the four programs in various combinations of parameters
 			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters)
-			To run the nine examples, run the following commands:
-<pre><code class="shell">$ cd one-variable-function-fitting/examples
+			To run the three examples, run the following commands:
+<pre><code class="shell">$ cd two-variables-function-fitting/examples
 $ sh example1.sh
 $ sh example2.sh
-$ sh example3.sh
-$ sh example4.sh
-$ sh example5.sh
-$ sh example6.sh
-$ sh example7.sh
-$ sh example8.sh
-$ sh example9.sh</code></pre>
+$ sh example3.sh</code></pre>
 			<b>Note</b>: Given the stochastic nature of these examples (relative to the training phase), your specific results may vary. Consider running the example a few times.
 		</p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-function-fitting">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
@@ -344,7 +345,6 @@ $ sh example9.sh</code></pre>
 			<br/>
 
 		</p>
-
 	</section>
 
 

@@ -55,7 +55,7 @@
 		</script>
 
 
-		<title>Mentalit&agrave;&nbsp;Computazionale - Approssimazione di una funzione reale di una variabile con PyTorch</title>
+		<title>Approssimazione di una funzione reale di una variabile con PyTorch</title>
 		<meta name="description" content="Approssimare una funzione di una variabile osservando diversi modelli di percettrone multistrato con PyTorch senza scrivere codice ma solo tramite linea di comando." >
 		<meta name="keywords" content="machine learning, deep learning, rete neurale, pytorch, percettrone multistrato, mlp, approssimazione, funzione, una variabile, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
 		
@@ -107,9 +107,9 @@
 									<ul class="icons">
 										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
 										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
-										<li><a href="https://www.facebook.com/MentalitaComputazionale" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
-										<li><a href="https://www.instagram.com/etmessina" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
-										<li><a href="https://www.linkedin.com/in/ettoremessina" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
 										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
 										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
 										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
@@ -126,8 +126,8 @@
 			Questo post fa parte di una serie di post sull&apos;approssimazione di oggetti matematici (funzioni, curve e superfici) tramite una rete neurale di tipo <em>MLP</em> (percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron);
 			per una introduzione sull&apos;argomento si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
 			<br />
-			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una funzione reale continua e limitata a valori reali di una variable reale in un intervallo chiuso $$f(x) \colon [a,b] \to \rm I\!R$$ con un MLP
-			in modo che l&apos;utilizzatore possa testare diverse combinazioni tra architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python
+			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una funzione reale continua e limitata a valori reali di una variabile reale in un intervallo chiuso $$f(x) \colon [a,b] \to \rm I\!R$$ con un MLP
+			in modo che l&apos;utilizzatore possa testare diverse combinazioni di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python
 			che implementano separatamente le funzionalit&agrave; di:
 			
 			<ul>
@@ -220,7 +220,6 @@
 --modelout MODEL_PATH
 [--epochs EPOCHS]
 [--batch_size BATCH_SIZE]
-[--learning_rate LEARNING_RATE]
 [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
 [--optimizer OPTIMIZER]
@@ -243,10 +242,10 @@
   --hlayers 200 300 200 \
   --hactivations 'Tanh()' 'ReLU()' 'Tanh()' \
   --loss 'SmoothL1Loss()' \
-  --optimizer 'RMSprop()' \
+  --optimizer 'RMSprop(learning_rate=0.01)' \
   --epochs 500 \
   --batch_size 100 \
-  --learning_rate 0.01</code></pre>
+  --</code></pre>
 			al termine del quale il file <code>mymodel.pth</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
 		</p>
 
@@ -297,8 +296,7 @@
 			<pre><code class="shell">usage: fx_plot.py [-h]
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
-[--savefig SAVE_FIGURE_FILENAME]
-[--device DEVICE]</code></pre>
+[--savefig SAVE_FIGURE_FILENAME]</code></pre>
 			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/one-variable-function-fitting/README.md#fx_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
@@ -311,7 +309,7 @@
 			<pre><code class="shell">$ python fx_plot.py \
   --ds mytest.csv \
   --prediction myprediction.csv</code></pre>
-			che mostra le due curve sovrapposte: in blu quella del dataset di test, in rosso quella della predizione.
+			che mostra le due curve sovrapposte: in blu quella del dataset di input, in rosso quella della predizione.
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
@@ -374,10 +372,8 @@ $ sh example9.sh</code></pre>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
-												<!-- 2vrffw2vrffw
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
 												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
-												-->
 											</ul>
 										</li>
 										<li>
@@ -400,27 +396,17 @@ $ sh example9.sh</code></pre>
 							<!-- Section -->
 								<section>
                                     <div class="side-topics">
-                                        <header class="major">
+                                        <header class="align-center">
                                             <h2><a href="../../../it/reti-neurali.html">Reti&nbsp;Neurali</a></h2>
                                         </header>
                                         <article>
                                             <a href="../../../it/reti-neurali.html" class="image"><span class="icon solid fa-sitemap"/></a>
-											<p>
-	Studi, esperimenti ed esempi di modelli di apprendimento automatico profondo basati su reti neurali di diverse tipologie: percettroni multistrato, convoluzionali, ricorrenti, long-short-term-memory.
-	Applicazioni delle reti neurali all'approssimazione di oggetti matematici, all'analisi di testi, immagini, suoni e video, alla ricerca di pattern ricorrenti in serie numeriche.
-	Codice rigorosamente originale scritto in Python 3 con TensorFlow e/o PyTorch, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
-</p>
                                         </article>
-                                        <header class="major">
+                                        <header class="align-center">
                                             <h2><a href="../../../it/computazione-quantistica.html">Computazione&nbsp;Quantistica</a></h2>
                                         </header>
                                         <article>
                                             <a href="../../../it/computazione-quantistica.html" class="image"><span class="icon solid fa-atom"/></a>
-											<p>
-	Studi, esperimenti ed esempi di programmi scritti per computer quantistici e simulatori. Algoritmi che sfruttano le porte quantistiche, la sovrapposizione degli stati dei qubit, l'entanglement, 
-	il collasso della misura. Analisi dei risultati ottenuti dall'esecuzione di programmi su computer quantistici reali.
-	Codice rigorosamente originale scritto nei linguaggi pi&ugrave; comuni per la programmazione quantistica quali QASM, Q# e Python con Qiskit, funzionante e liberamente disponibile su <a href="https://github.com/ettoremessina" target="_blank">GitHub</a>.
-</p>
                                         </article>
                                     </div>
 								</section>

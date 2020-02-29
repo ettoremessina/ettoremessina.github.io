@@ -55,9 +55,9 @@
 		</script>
 
 
-		<title>Approssimazione di una curva parametrica nello spazio con PyTorch</title>
-		<meta name="description" content="Approssimare una curva parametrica nello spazio osservando diversi modelli di percettrone multistrato con PyTorch senza scrivere codice ma solo tramite linea di comando." >
-		<meta name="keywords" content="machine learning, deep learning, rete neurale, pytorch, percettrone multistrato, mlp, approssimazione, curva, parametrica, piano, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
+		<title>Approssimazione di una funzione reale di due variabili con PyTorch</title>
+		<meta name="description" content="Approssimare una funzione reale di due variabili osservando diversi modelli di percettrone multistrato con Pytorch senza scrivere codice ma solo tramite linea di comando." >
+		<meta name="keywords" content="machine learning, deep learning, rete neurale, pytorch, percettrone multistrato, mlp, approssimazione, funzione, due variabili, superficie, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -119,25 +119,17 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Approssimazione di una curva parametrica nello spazio con PyTorch</h1>
+			<h1>Approssimazione di una funzione reale di due variabili con PyTorch</h1>
 		</header>
 
 		<p>
 			Questo post fa parte di una serie di post sull&apos;approssimazione di oggetti matematici (funzioni, curve e superfici) tramite una rete neurale di tipo <em>MLP</em> (percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron);
 			per una introduzione sull&apos;argomento si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
 			<br />
-			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una curva parametrica, con parametro $t$ appartenente a un intervallo chiuso, su un sistema di riferimento 3-D $Oxyz$ definita con una terna di funzioni $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ e $z(t) \colon [a,b] \to \rm I\!R$
-			le quali restituiscono rispettivamente il valore della coordinata $x$, della coordinata $y$ e della coordinata $z$ al variare del parametro $t$;
-			equivalentemente una curva parametrica nello spazio &egrave; definita anche con una funzione vettoriale $f(t) \colon [a,b] \to {\rm I\!R x \rm I\!R x \rm I\!R}$ cos&igrave; definita: $$f(t) = \begin{bmatrix} x(t) \\ y(t) \\ z(t) \\ \end{bmatrix}$$
-			ove le tre componenti dei vettori dell&apos;immagine della funzione rappresentano rispettivamente le coordinate $x$, $y$ e $z$ della curva nello spazio.
-			<br/>
-			<br/>
-			La seconda definizione suggerisce una architettura di un MLP ove il layer di input contiene un solo neurone in quando la dimensione del dominio &egrave; 1 (l&apos;intervallo $[a,b]$) 
-			mentre il layer di output contiente 3 neuroni in quanto la dimensione del codominio &egrave; 3.
-			<br/>
-			Nell&apos;ambito dell&apos;approssimazione di una curva parametrica continua e limitata nello spazio, lo scopo di questo post &egrave; di consentire all&apos;utilizzatore di testare diverse combinazioni di architettura MLP,
-			funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python che implementano separatamente le seguenti funzionalit&agrave;:
-
+			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una funzione reale continua e limitata a valori reali di due variabili reali vincolata in un rettangolo $$f(x,y) \colon [a,b]\times[c,d] \to \rm I\!R$$ con un MLP
+			in modo che l&apos;utilizzatore possa testare diverse combinazioni di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python
+			che implementano separatamente le funzionalit&agrave; di:
+			
 			<ul>
 				<li>
 						<em>Creazione dei dataset</em>
@@ -156,66 +148,64 @@
 			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch; richiede inoltre le librerie NumPy e MatPlotLib.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
-			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a> pubblicato sempre su questo sito web.
+			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a> pubblicato sempre su questo sito web.
 		</p>
 
 		<h2>Creazione dei dataset</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_gen.py" target="_blank"><code>pmc3t_gen.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_gen.py" target="_blank"><code>fxy_gen.py</code></a>
 			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
-			prende in linea di comando le tre funzioni componenti da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo del parametro indipendente $t$ (inizio, fine e passo di discretizzazione)
-			e genera il dataset in un file nel formato csv applicando le tre funzione all&apos;intervallo del parametro $t$ passato.
+			prende in linea di comando la funzione a due variabili da approssimare (in sintassi <em>lambda body</em>), il sottoinsieme rettangolare del dominio (specificando tramite due intervalli i due lati del rettangolo) e passo di discretizzazione
+			e genera il dataset in un file nel formato csv applicando la funzione al rettangolo passato.
 			<br/>
-			Il file csv in uscita ha infatti quattro colonne (senza header): la prima colonna contiene i valori, ordinati in modo crescente, del parametro indipendente $t$ nell&apos;intervallo desiderato con il passo di discretizzazione specificato;
-			la seconda colonna, terza e quarta colonna contengono rispettivamente i valori delle componenti $x$, $y$ e $z$, ovverosia i valori delle funzioni $x(t)$, $y(t)$ e $z(t)$ corrispondenti al valore di $t$ della prima colonna.
+			Il file csv in uscita ha infatti tre colonne (senza header): le prime due colonne contengono i valori delle due variabili indipendenti $x$ e $y$ nel rettangolo desiderato con il passo di discretizzazione specificato;
+			la terza colonna contiene i valori della variabile dipendente, ovverosia i valori della funzione $f(x,y)$ corrispondenti al valore di $x$ e di $y$ delle prime due colonne.
+			<br/>
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<br/>
-			<pre><code class="shell">$ python pmc3t_gen.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_gen.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: pmc3t_gen.py [-h] 
-  -h, --help                  show this help message and exit
-  --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
-  --xt FUNCX_T_BODY           x=x(t) body (lamba format)
-  --yt FUNCY_T_BODY           y=y(t) body (lamba format)
-  --zt FUNCY_T_BODY           z=z(t) body (lamba format)
-  --rbegin RANGE_BEGIN        begin range (default:-5.0)
-  --rend RANGE_END            end range (default:+5.0)
-  --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			<pre><code class="shell">usage: fxy_gen.py [-h] 
+-h, --help                  show this help message and exit
+--dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
+--fxy FUNC_X_BODY           f(x,y) body (body lamba format)
+--rxbegin RANGE_BEGIN       begin x range (default:-5.0)
+--rxend RANGE_END           end x range (default:+5.0)
+--rybegin RANGE_BEGIN       begin y range (default:-5.0)
+--ryend RANGE_END           end y range (default:+5.0)
+--rstep RANGE_STEP          step range (default: 0.01)</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			<br/>
 		</p>
-		<h3>Un esempio di uso del programma pmc3t_gen.py</h3>
+		<h3>Un esempio di uso del programma fxy_gen.py</h3>
 		<p>
-			Si supponga di voler approssimare una circonferenza perturbata lungo $z$ con $t$ nell&apos;intervallo $[0,2\pi]$ descritta dalla seguente funzione
-			$$f(t) = \begin{bmatrix} x(t)= \cos t \\ y(t)= \sin t \\ z(t)= \frac{\cos 4t}{4} \\ \end{bmatrix}$$
-			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, le tre espressioni componenti si traducono in sintassi lambda body Python cos&igrave;:
-			<pre><code class="python">np.cos(t)
-np.sin(t)
-np.cos(4 * t) / 4.0</code></pre>
+			Si supponga di voler approssimare nel rettangolo $[-5.0,5.0]\times[-5.0,5.0]$ la seguente funzione $$\sin \sqrt{x^2 + y^2}$$,
+			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
+			<pre><code class="python">np.sin(np.sqrt(x**2 + y**2))</code></pre>
 			Per generare il dataset di training, si esegua quindi il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python pmc3t_gen.py \
+			<pre><code class="shell">$ python fxy_gen.py \
   --dsout mytrain.csv \
-  --xt "np.cos(t)" \
-  --yt "np.sin(t)" \
-  --zt "np.cos(4 * t) / 4.0" \
-  --rbegin 0.0 \
-  --rend 6.28 \
-  --rstep 0.01</code></pre>
+  --fxy "np.sin(np.sqrt(x**2 + y**2))" \
+  --rxbegin -5.0 \
+  --rxend 5.0 \
+  --rybegin -5.0 \
+  --ryend 5.0 \
+  --rstep 0.075</code></pre>
 			mentre per generare il dataset di test, si esegua il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python pmc3t_gen.py \
+			<pre><code class="shell">$ python fxy_gen.py \
   --dsout mytest.csv \
-  --xt "np.cos(t)" \
-  --yt "np.sin(t)" \
-  --zt "np.cos(4 * t) / 4.0" \
-  --rbegin 0.0 \
-  --rend 6.28 \
-  --rstep 0.0475</code></pre>
+  --fxy "np.sin(np.sqrt(x**2 + y**2))" \
+  --rxbegin -5.0 \
+  --rxend 5.0 \
+  --rybegin -5.0 \
+  --ryend 5.0 \
+  --rstep 0.275</code></pre>
 			Si osservi che il passo di discretizzazione del dataset di test &egrave; pi&ugrave; grande di quello di training e questo &egrave; normale 
 			in quanto l&apos;addestramento, per essere accurato, deve essere eseguito su una maggiore quantit&agrave; di dati.
 			Inoltre si osservi che &egrave; opportuno che il passo di discretizzazione del dataset di test <u>non</u> sia un multiplo di quello di training
@@ -224,18 +214,14 @@ np.cos(4 * t) / 4.0</code></pre>
 
 		<h2>Definizione dell&apos;architettura del MLP + Addestramento</h2>
 		<p>
-			Questa funzionalit&agrave; ha due implementazioni differenti secondo le due definizioni matematiche di curva parametrica: l&apos;implementazione ufficiale &egrave; quella che approssima con un solo MLP la curva definita come funzione vettoriale.
-			<br/>
-			La versione ufficiale &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_fit.py" target="_blank"><code>pmc3t_fit.py</code></a>
-			che, in accordo con i parametri passati in linea di comando, crea dinamicamente un MLP ed effettua il suo addestramento al fine di approssimare la funzione vettoriale che definisce la curva sul piano.
-			<br/>
-			Per ottenere l&apos;usage della versione ufficiale del programma &egrave; sufficiente eseguire il seguente comando:
-			<br/>
-			<pre><code class="shell">$ python pmc3t_fit.py --help</code></pre>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_fit.py" target="_blank"><code>fxy_fit.py</code></a>
+			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente un MLP ed effettuare il suo addestramento.
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fxy_fit.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: pmc3t_fit.py [-h]
+			<pre><code class="shell">usage: fxy_fit.py [-h]
 --trainds TRAIN_DATASET_FILENAME
 --modelout MODEL_PATH
 [--epochs EPOCHS]
@@ -245,121 +231,114 @@ np.cos(4 * t) / 4.0</code></pre>
 [--optimizer OPTIMIZER]
 [--loss LOSS]
 [--device DEVICE]</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
-			<br/>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando di entrambi i programmi.
 		</p>
-		<h3>Un esempio di uso del programma pmc3t_fit.py</h3>
+		<h3>Un esempio di uso del programma fxy_fit.py</h3>
 		<p>
-			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>pmc3t_fit.py</code> come mostrato nel paragrafo precedente)
-			e si voglia che il MLP abbia tre layer nascosti con rispettivamente 150, 300 e 150 neuroni e che si voglia usare la funzione di attivazione Tanh in uscita dai tre layer;
-			inoltre si vogliano eseguire 500 epoche di training con un batch size di 200 elementi usando l&apos;algoritmo di ottimizzazione Adamax con un learning rate di 0.005 
-			e la MSELoss quale funzione di loss. Per mettere in azione tutto questo si esegua il seguente comando:
+			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato nel paragrafo precedente)
+			e si voglia che il MLP abbia due layer nascosti entrambi con 100 neuroni e che si voglia usare la funzione di attivazione ReLU in uscita da tutti e tre i layer;
+			inoltre si vogliano eseguire 10 epoche di training con un batch size di 50 elementi usando l&apos;algoritmo di ottimizzazione SGD con learning rate pari a 0.01,
+			con il momentum a 0.9, il decay a 10<sup>-6</sup> e il flag nesterov a true e infine la MSELoss quale funzione di loss.
+			Per mettere in azione tutto questo si esegua il seguente comando:
 			<br/>
-			<pre><code class="shell">$ python pmc3t_fit.py \
+			<br/>
+			<pre><code class="shell">$ python fxy_fit.py \
   --trainds mytrain.csv \
   --modelout mymodel.pth \
-  --hlayers 150 300 150 \
-  --hactivation 'Tanh()' 'Tanh()' 'Tanh()' \
-  --epochs 500 \
-  --batch_size 200 \
-  --optimizer 'Adamax(lr=0.005)' \
-  --loss 'MSELoss'</code></pre>
+  --hlayers 100 100 \
+  --hactivations 'ReLU()' 'ReLU()' \
+  --epochs 10 \
+  --batch_size 50 \
+  --optimizer 'SGD(lr=0.01, weight_decay=1e-6, momentum=0.9, nesterov=True)' \
+  --loss 'MSELoss()'</code></pre>
 			al termine del quale il file <code>mymodel.pth</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
 		</p>
 
 		<h2>Predizione</h2>
 		<p>
-			Come per l&apos;addestramento anche questa funzionalit&agrave; ha due implementazioni differenti secondo le due definizioni matematiche di curva parametrica: l&apos;implementazione ufficiale &egrave; quella che effettua la predizione usando un solo MLP pre-addestrato che approssima la curva definita come funzione vettoriale.
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_predict.py" target="_blank"><code>fxy_predict.py</code></a>
+			&egrave; quello di applicare il modello di MLP generato tramite <code>fxy_fit.py</code> al dataset di test (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato in un paragrafo precedente);
+			l&apos;esecuzione del programma produce in uscita un file csv con tre colonne (senza header): le prime due colonne contengono i valori delle variabili indipendenti $x$ e $y$ presi dal dataset di test
+			e la terza colonna contiene i valori predetti della variabile dipendente, ovverosia i valori della predizione che approssimano la funzione $f(x,y)$ corrispondenti a valori di $x$ e $y$ delle prime due colonne.
 			<br/>
-			Scopo della versione ufficiale &egrave; realizzata dal programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_predict.py" target="_blank"><code>pmc3t_predict.py</code></a>
-			&egrave; quello di applicare il modello di MLP generato tramite <code>pmc3t_fit.py</code> a un dataset in input (ad esempio il dataset di test generato tramite <code>pmc3t_gen.py</code> come mostrato in un paragrafo precedente);
-			l&apos;esecuzione del programma produce in uscita un file csv con tre colonne (senza header): la prima colonna contiene i valori del parametro indipendente $t$ presi dal dataset in input
-			mentre la seconda e la terza colonna contengono i valori predetti delle due componenti, ovverosia i valori della predizione che approssimano la curva parametrica $f(t)$ corrispondenti al valore di $t$ della prima colonna.
-			<br/>
-			<br/>
-			Per ottenere l&apos;usage della versione ufficiale del programma &egrave; sufficiente eseguire il seguente comando:
-			<br/>
-			<pre><code class="shell">$ python pmc3t_predict.py --help</code></pre>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fxy_predict.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_predict.py [-h]
+			<pre><code class="shell">usage: fxy_predict.py [-h]
 --model MODEL_PATH
 --ds DATASET_FILENAME
 --predictionout PREDICTION_DATA_FILENAME
-[--device DEVICE]</code></code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando di entrambi i programmi.
+[--device DEVICE]</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
-		<h3>Un esempio di uso del programma pmc3t_predict.py</h3>
+		<h3>Un esempio di uso del programma fxy_predict.py</h3>
 		<p>
-			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>pmc3t_gen.py</code> come mostrato in un paragrafo precedente)
-			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>pmc3t_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
+			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato in un paragrafo precedente)
+			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>fxy_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
 			<br/>
-			<pre><code class="shell">$ python pmc3t_predict.py \
+			<br/>
+			<pre><code class="shell">$ python fxy_predict.py \
   --model mymodel.pth \
   --ds mytest.csv \
   --predictionout myprediction.csv
 </code></pre>
-			al termine del quale il file <code>myprediction.csv</code> conterr&agrave; l&apos;approssimazione della curva parametrica iniziale.
+			al termine del quale il file <code>myprediction.csv</code> conterr&agrave; l&apos;approssimazione della funzione iniziale.
 		</p>
 
 		<h2>Visualizzazione del risultato</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_plot.py" target="_blank"><code>pmc3t_plot.py</code></a>
-			&egrave; quello di visualizzare la curva della predizione sovrapposta alla curva del dataset iniziale (che sia quello di test o di training) e questo consente la comparazione visuale delle due curve.
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_plot.py" target="_blank"><code>fxy_plot.py</code></a>
+			&egrave; quello di visualizzare la superficie del dataset iniziale (che sia quello di test o di training) vicino alla superficie della predizione e questo consente la comparazione visuale delle due superfici.
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<br/>
-			<pre><code class="shell">$ python pmc3t_plot.py --help</code></pre>
+			<pre><code class="shell">$ python fxy_plot.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: pmc3t_plot.py [-h]
+			<pre><code class="shell">usage: fxy_plot.py [-h]
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
-		<h3>Un esempio di uso del programma pmc3t_plot.py</h3>
+		<h3>Un esempio di uso del programma fxy_plot.py</h3>
 		<p>
-			Avendo a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>pmc3t_gen.py</code> come mostrato in un paragrafo precedente)
-			e il file csv della predizione (generato tramite <code>pmc3t_predict.py</code> come mostrato nel precedente paragrafo), per generare i due grafici si esegua il seguente comando:
+			Avendo a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato in un paragrafo precedente)
+			e il file csv della predizione (generato tramite <code>fxy_predict.py</code> come mostrato nel precedente paragrafo), per generare i due grafici si esegua il seguente comando:
 			<br/>
-			<pre><code class="shell">$ python pmc3t_plot.py \
+			<br/>
+			<pre><code class="shell">$ python fxy_plot.py \
   --ds mytest.csv \
   --prediction myprediction.csv</code></pre>
-			che mostra le due curve sovrapposte: in blu quella del dataset di input, in rosso quella della predizione.
-			<br/>
+			che mostra le due superfici una vicino altra: in blu quella del dataset di input, in rosso quella della predizione.
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch/nn-pcisfwpt-example03.png" /></div>
-		<div class="photocaption">Grafico generato dal programma <code>pmc3t_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della curva $f(t) = \begin{bmatrix} x(t)= \cos t \\ y(t)= \sin t \\ z(t)= \frac{\cos 4t}{4} \\ \end{bmatrix}$</div>
+		<div class="betweentextlines"><img src="../../../posts/neural-networks/two-variables-real-function-fitting-with-pytorch/nn-2vrffwpt-example02.png" /></div>
+		<div class="photocaption">Grafico generato dal programma <code>fxy_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della funzione $f(x,y)=\sin \sqrt{x^2 + y^2}$</div>
 		<br/>
 
 		<h2>Esempi di uso in cascata dei quattro programmi</h2>
 		<p>
-			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting/examples" target="_blank"><code>parametric-curve-in-space-fitting/examples</code></a>
-			ci sono cinque script shell che mostrano l&apos;uso dei quattro programmi in cascata, con addestramento e predizione nella versione ufficiale, in varie combinazioni
+			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-function-fitting/examples" target="_blank"><code>two-variables-function-fitting/examples</code></a>
+			ci sono tre script shell che mostrano l&apos;uso dei quattro programmi in cascata in varie combinazioni
 			di parametri (architettura del MLP, funzioni di attivazione, algoritmo, funzione di loss, parametri di prodedura di training).
-			Per mandare in esecuzione i cinque esempi nella versione ufficiale eseguire i seguenti comandi:
-			<br/>
-<pre><code class="shell">$ cd parametric-curve-in-space-fitting/examples
+			Per mandare in esecuzione i tre esempi eseguire i seguenti comandi:
+<pre><code class="shell">$ cd two-variables-function-fitting/examples
 $ sh example1.sh
 $ sh example2.sh
-$ sh example3.sh
-$ sh example4.sh
-$ sh example5.sh
-</code></pre>
+$ sh example3.sh</code></pre>
 			<b>Nota</b>: Data la natura stocastica di questi esempi (relativamente alla parte di training), i singoli specifici risultati possono variare. Si consideri di eseguire i singoli esempi pi&ugrave; volte.
 		</p>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-function-fitting">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
