@@ -55,9 +55,9 @@
 		</script>
 
 
-		<title>Parametric curve in space fitting with TensorFlow</title>
-		<meta name="description" content="To fit a parametric curve in space by observing different multilayer perceptron models with TensorFlow without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, curve, space, activation, training, loss, optimization, command line" >
+		<title>Parametric curve in space fitting with PyTorch</title>
+		<meta name="description" content="To fit a parametric curve in space by observing different multilayer perceptron models with PyTorch without writing code but only via the command line." >
+		<meta name="keywords" content="machine learning, deep learning, neural network, pytorch, multilayer perceptron, mlp, fitting, approximate, curve, space, activation, training, loss, optimization, command line" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -84,9 +84,9 @@
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="../../../assets/css/main.css" />
-		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
-		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
 	</head>
 	<body class="is-preload">
 
@@ -99,10 +99,10 @@
 
 							<!-- Header -->
 								<header id="header">
-									<a href="../../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
 									<div style="text-align:right">
-										<a class="logo" href="../../../en/index.html">en</a>
-										<a class="logo" href="../../../it/index.html">it</a>
+										<a class="logo" href="../../en/">en</a>
+										<a class="logo" href="../../it/">it</a>
 									</div>
 									<ul class="icons">
 										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
@@ -119,12 +119,12 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Parametric curve in space fitting with TensorFlow</h1>
+			<h1>Parametric curve in space fitting with PyTorch</h1>
 		</header>
 
 		<p>
 			This post is part of a series of posts on the fitting of mathematical objects (functions, curves and surfaces) through a <em>MLP</em> (Multi-Layer Perceptron) neural network;
-			for an introduction on the subject please see the post <a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a>.<br />
+			for an introduction on the subject please see the post <a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a>.<br />
 			<br />
 			The topic of this post is the fitting of a parametric curve on a 3-D reference system $Oxyz$ with parameter $t$ within a closed interval of reals
 			is defined with a triple of real functions $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ and $z(t) \colon [a,b] \to \rm I\!R$
@@ -153,20 +153,20 @@
 				</li>
 			</ul>
 
-			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2); it requires also NumPy and MatPlotLib libraries.
+			The related code requires the version 3 of Python and it uses PyTorch technology; it requires also NumPy and MatPlotLib libraries.<br/>
 			To get the code please see the paragraph <a href='#downloadcode'>Download of the complete code</a> at the end of this post.<br/>
 			<br/>
-			The exact same mechanism was created using PyTorch technology; see the post <a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a> always published on this website.
+			The exact same mechanism was created using TensorFlow 2 (with Keras) technology; see the post <a href="../../en/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a> always published on this website.
 		</p>
 
 		<h2>Dataset generation</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/pmc3t_gen.py" target="_blank"><code>pmc3t_gen.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_gen.py" target="_blank"><code>pmc3t_gen.py</code></a> Python program
 			is to generate datasets (both training and test ones) to be used in later phases;
 			it takes in command line the two component functions to be approximated (in <em>lambda body</em> syntax), the interval of independent parameter $t$ (begin, end and discretization step)
 			and it generates the dataset in an output csv file applying the two function to the passed interval of the parameter $t$.
 			<br/>
-			In fact the output csv file has four columns (without header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
+			In fact the output csv file has three columns (without header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
 			second, third and fourth columns contain respectively the values of the components $x$, $y$ and $z$ ie the values of functions $x(t)$, $y(t)$ and $z(t)$ correspondent to values of $t$ of first column.
 			<br/>
 			<br/>
@@ -180,41 +180,41 @@
   --dsout DS_OUTPUT_FILENAME  dataset output file (csv format)
   --xt FUNCX_T_BODY           x=x(t) body (lamba format)
   --yt FUNCY_T_BODY           y=y(t) body (lamba format)
-  --zt FUNCY_T_BODY           y=y(t) body (lamba format)
+  --zt FUNCY_T_BODY           z=z(t) body (lamba format)
   --rbegin RANGE_BEGIN        begin range (default:-5.0)
   --rend RANGE_END            end range (default:+5.0)
   --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_gen" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_gen" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 		</p>
 		<h3>An example of using the program pmc3t_gen.py</h3>
 		<p>
-			Suppose you want to approximate the spiral of Archimedes ironed in space with $t$ within the range $[0.0,20.0]$ described by the following function:
-			$$f(t) = \begin{bmatrix} x(t)=\frac{1}{10} t \cos t \\ y(t)=\frac{1}{10} t \sin t \\ z(t) = t \\ \end{bmatrix}$$
+			Suppose you want to approximate in the range $[0,2\pi]$ the disrupted circle described by the following function:
+			$$f(t) = \begin{bmatrix} x(t)= \cos t \\ y(t)= \sin t \\ z(t)= \frac{\cos 4t}{4} \\ \end{bmatrix}$$
 			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
-			<pre><code class="python">0.1 * t * np.cos(t)
-0.1 * t * np.sin(t)
-t</code></pre>
+			<pre><code class="python">np.cos(t)
+np.sin(t)
+np.cos(4 * t) / 4.0</code></pre>
 			To generate the training dataset, run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python pmc3t_gen.py \
   --dsout mytrain.csv \
-  --xt "0.1 * t * np.cos(t)" \
-  --yt "0.1 * t * np.sin(t)" \
-  --zt "t" \
+  --xt "np.cos(t)" \
+  --yt "np.sin(t)" \
+  --zt "np.cos(4 * t) / 4.0" \
   --rbegin 0.0 \
-  --rend 20.0 \
+  --rend 6.28 \
   --rstep 0.01</code></pre>
 			instead to generate the test dataset, run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python pmc3t_gen.py \
   --dsout mytest.csv \
-  --xt "0.1 * t * np.cos(t)" \
-  --yt "0.1 * t * np.sin(t)" \
-  --zt "t" \
+  --xt "np.cos(t)" \
+  --yt "np.sin(t)" \
+  --zt "np.cos(4 * t) / 4.0" \
   --rbegin 0.0 \
-  --rend 20.0 \
+  --rend 6.28 \
   --rstep 0.0475</code></pre>
 			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
 			because the training, to be accurate, it must be run on more data.
@@ -224,10 +224,10 @@ t</code></pre>
 
 		<h2>MLP architecture definition + Training</h2>
 		<p>
-			This feature has two different implementations according to the 2nd mathematical definitions of parametric curve in space, namely the one that fits the vector function using a single MLP.
+			This feature has two different implementations according to the 2nd mathematical definitions of parametric curve in space, namely the one that fits the vector function using a single MLP
 			<br/>
-			The official version implemented by Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/pmc3t_fit.py" target="_blank"><code>pmc3t_fit.py</code></a>
-			creates dynamically an MLP and performs its training according to the passed parameters through the command line in order to fit the vector function that defines the curve in space.
+			The official version implemented by Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_fit.py" target="_blank"><code>pmc3t_fit.py</code></a>
+			creates dynamically an MLP and performs its training according to the passed parameters through the command line in order to fit the vector function that defines the curve on plane.
 			<br/>
 			To get the official program usage you can run this following command:
 			<pre><code class="shell">$ python pmc3t_fit.py --help</code></pre>
@@ -242,37 +242,36 @@ t</code></pre>
   [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
   [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
   [--optimizer OPTIMIZER]
-  [--loss LOSS]</code></pre>
-			<br/>
-			<br/>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_fit" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line of both programs.
+  [--loss LOSS]
+  [--device DEVICE]</code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_fit" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line of both programs.
 		</p>
 		<h3>An example of using the program pmc3t_fit.py</h3>
 		<p>
 			Suppose you have a training dataset available (for example generated through <code>pmc3t_gen.py</code> program as shown in the previous paragraph)
-			and you want the MLP to have three hidden layers with respectively with 200, 300 and 200 neurons and that you want to use the sigmoid activation function output from all three layers;
-			moreover you want to perform 500 training epochs with a 200 items batch size using the Adamax optimizator algorithm with learning rate equal to 0.02 
-			and loss function equal to MeanSquaredError. To put all this into action, run the following command:
+			and you want the MLP to have three hidden layers with respectively 150, 300 and 150 neurons each and you want to use the Tanh activation function exiting the three layers;
+			moreover you want to perform 500 training epochs with a 200 items batch size using the Adamax with learning rate equal to 0.005
+			and loss function equal to MSELoss. To put all this into action, run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python pmc3t_fit.py \
   --trainds mytrain.csv \
-  --modelout mymodel \
-  --hlayers 200 300 200 \
-  --hactivation sigmoid sigmoid sigmoid \
+  --modelout mymodel.pth \
+  --hlayers 150 300 150 \
+  --hactivation 'Tanh()' 'Tanh()' 'Tanh()' \
   --epochs 500 \
   --batch_size 200 \
-  --optimizer 'Adamax(learning_rate=0.02)' \
-  --loss 'MeanSquaredError()'</code></pre>
-			at the end of which the folder <code>mymodel</code> will contain the MLP model trained on <code>mytrain.csv</code> dataset according to the parameters passed on the command line.
+  --optimizer 'Adamax(lr=0.005)' \
+  --loss 'MSELoss'</code></pre>
+  			at the end of which the file <code>mymodel.pth</code> will contain the MLP model trained on <code>mytrain.csv</code> dataset according to the parameters passed on the command line.
 		</p>
 
 		<h2>Prediction</h2>
 		<p>
-			As with training, this feature also has two different implementations according to the two mathematical definitions of parametric curve in space: the official implementation that makes the prediction using a single pre-trained MLP that fits the curve defined by a vector function.
+			As with training, this feature also has two different implementations according to the two mathematical definitions of parametric curve on plane: the official implementation that makes the prediction using a single pre-trained MLP that fits the curve defined by a vector function.
 			<br/>
 			<br/>
-			Goal of the official version implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/pmc3t_predict.py" target="_blank"><code>pmc3t_predict.py</code></a> Python program
+			Goal of the official version implemented by <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_predict.py" target="_blank"><code>pmc3t_predict.py</code></a> Python program
 			is to apply the MLP model generated through <code>pmc3t_fit.py</code> to an input dataset (for example generated through <code>pmc3t_gen.py</code> program as shown in a previous paragraph);
 			the execution of the program produces in output a csv file with three columns (without header): the first column contains the values of indepedent parameter $t$ taken from input dataset
 			and the second and third columns contain the predicted values of the two components, ie the values of the prediction that fits the parametric curve $f(t)$ correspondent to values of $t$ of first column.
@@ -286,19 +285,18 @@ t</code></pre>
 			<pre><code class="shell">usage: pmc3t_predict.py [-h]
   --model MODEL_PATH
   --ds DATASET_FILENAME
-  --predictionout PREDICTION_DATA_FILENAME</code></pre>
-			<br/>
-			<br/>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_predict" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+  --predictionout PREDICTION_DATA_FILENAME
+  [--device DEVICE]</code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_predict" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
 		<h3>An example of using the program pmc3t_predict.py</h3>
 		<p>
 			Suppose you have the test dataset <code>mytest.csv</code> available (for example generated through <code>pmc3t_gen.py</code> program as shown in a previous paragraph)
-			and the trained model of MLP in the folder <code>mymodel</code> (generated through <code>pmc3t_fit.py</code> program as shown in the example of previous paragraph); run the following command:
+			and the trained model of MLP in the file <code>mymodel.pth</code> (generated through <code>pmc3t_fit.py</code> program as shown in the example of previous paragraph); run the following command:
 			<br/>
 			<pre><code class="shell">$ python pmc3t_predict.py \
-  --model mymodel \
+  --model mymodel.pth \
   --ds mytest.csv \
   --predictionout myprediction.csv
 </code></pre>
@@ -307,7 +305,7 @@ t</code></pre>
 
 		<h2>Visualization of the result</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/pmc3t_plot.py" target="_blank"><code>pmc3t_plot.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/pmc3t_plot.py" target="_blank"><code>pmc3t_plot.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
 			<br/>
 			To get the program usage you can run this following command:
@@ -319,7 +317,7 @@ t</code></pre>
   --ds DATASET_FILENAME
   --prediction PREDICTION_DATA_FILENAME
   [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_plot" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/parametric-curve-in-space-fitting/README.md#pmc3t_plot" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
 		<h3>An example of using the program pmc3t_plot.py</h3>
@@ -335,14 +333,13 @@ t</code></pre>
 			<br/>
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow/
-		nn-pcisfwtf-example01.png" /></div>
-		<div class="photocaption">Chart generated by the program <code>pmc3t_plot.py</code> that shows the fitting done by the MLP of the spiral of Archimedes in space $f(t) = \begin{bmatrix} x(t)=\frac{1}{10} t \cos t \\ y(t)=\frac{1}{10} t \sin t \\ z(t) = t \\ \end{bmatrix}$</div>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch/nn-pcisfwpt-example03.png" /></div>
+		<div class="photocaption">Chart generated by the program <code>pmc3t_plot.py</code> that shows the fitting done by the MLP of the curve $f(t) = \begin{bmatrix} x(t)= \cos t \\ y(t)= \sin t \\ z(t)= \frac{\cos 4t}{4} \\ \end{bmatrix}$</div>
 		<br/>
 
 		<h2>Examples of cascade use of the four programs</h2>
 		<p>
-			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting/examples" target="_blank"><code>parametric-curve-in-space-fitting/examples</code></a>
+			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting/examples" target="_blank"><code>parametric-curve-in-space-fitting/examples</code></a>
 			there are five shell scripts that show the use in cascade of the four programs, with training and prediction in the official version, in various combinations of parameters
 			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters).
 			To run the five examples for official version, run the following commands:
@@ -358,7 +355,7 @@ $ sh example5.sh
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
@@ -369,7 +366,6 @@ $ sh example5.sh
 		</p>
 
 	</section>
-
 
 						</div>
 				</div>
@@ -382,35 +378,35 @@ $ sh example5.sh
 										<h2>Menu</h2>
 									</header>
 									<ul>
-										<li><a href="../../../en/index.html">Home</a></li>
+										<li><a href="../../en/">Home</a></li>
 										<li>
 											<span class="opener">Neural&nbsp;Networks</span>
 											<ul>
-												<li><a href="../../../en/posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-tensorflow.html">One-variable real-valued function fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/one-variable-function-fitting-with-pytorch.html">One-variable real-valued function fitting with PyTorch</a></li>
-												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
-												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
-												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-tensorflow.html">Two-variables real-valued function fitting with TensorFlow</a></li>
-												<li><a href="../../../en/posts/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two-variables real-valued function fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+												<li><a href="../../en/neural-networks/one-variable-function-fitting-with-tensorflow.html">One-variable real-valued function fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/one-variable-function-fitting-with-pytorch.html">One-variable real-valued function fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/two-variables-real-function-fitting-with-tensorflow.html">Two-variables real-valued function fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two-variables real-valued function fitting with PyTorch</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Quantum&nbsp;Computing</span>
 											<ul>
-												<li><a href="../../../en/posts/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
-												<li><a href="../../../en/posts/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Datasets</span>
 											<ul>
-												<li><a href="../../../en/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
 											</ul>
 										</li>
-										<li><a href="../../../en/info.html">Info</a></li>
+										<li><a href="../../en/info.html">Info</a></li>
 									</ul>
 								</nav>
 
@@ -418,16 +414,16 @@ $ sh example5.sh
 								<section>
                                     <div class="side-topics">
                                         <header class="align-center">
-                                            <h2><a href="../../../en/neural-networks.html">Neural&nbsp;Networks</a></h2>
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../en/neural-networks.html" class="image"><span class="icon solid fa-sitemap"/></a>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
                                         </article>
                                         <header class="align-center">
-                                            <h2><a href="../../../en/quantum-computing.html">Quantum&nbsp;Computing</a></h2>
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../en/quantum-computing.html" class="image"><span class="icon solid fa-atom" /></a>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
                                         </article>
                                     </div>
 								</section>
@@ -437,10 +433,10 @@ $ sh example5.sh
 									<p class="copyright">
 										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
 										<br/>
-										Click on links to see <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
 										<br>
 										<br>
-										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
 									</p>
 								</footer>
 						</div>
@@ -448,11 +444,11 @@ $ sh example5.sh
 			</div>
 
 		<!-- Scripts -->
-			<script src="../../../assets/js/jquery.min.js"></script>
-			<script src="../../../assets/js/browser.min.js"></script>
-			<script src="../../../assets/js/breakpoints.min.js"></script>
-			<script src="../../../assets/js/util.js"></script>
-			<script src="../../../assets/js/main.js"></script>
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
 
 			<style>
 				a.cc-link

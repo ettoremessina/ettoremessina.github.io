@@ -55,9 +55,9 @@
 		</script>
 
 
-		<title>Approssimazione di una funzione reale di due variabili con TensorFlow</title>
-		<meta name="description" content="Approssimare una funzione reale di due variabili osservando diversi modelli di percettrone multistrato con TensorFlow senza scrivere codice ma solo tramite linea di comando." >
-		<meta name="keywords" content="machine learning, deep learning, rete neurale, tensorflow, percettrone multistrato, mlp, approssimazione, funzione, due variabili, superficie, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
+		<title>Approssimazione di una funzione reale di due variabili con PyTorch</title>
+		<meta name="description" content="Approssimare una funzione reale di due variabili osservando diversi modelli di percettrone multistrato con Pytorch senza scrivere codice ma solo tramite linea di comando." >
+		<meta name="keywords" content="machine learning, deep learning, rete neurale, pytorch, percettrone multistrato, mlp, approssimazione, funzione, due variabili, superficie, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -84,9 +84,9 @@
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="../../../assets/css/main.css" />
-		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
-		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
 	</head>
 	<body class="is-preload">
 
@@ -99,10 +99,10 @@
 
 							<!-- Header -->
 								<header id="header">
-									<a href="../../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
 									<div style="text-align:right">
-										<a class="logo" href="../../../en/index.html">en</a>
-										<a class="logo" href="../../../it/index.html">it</a>
+										<a class="logo" href="../../en/">en</a>
+										<a class="logo" href="../../it/">it</a>
 									</div>
 									<ul class="icons">
 										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
@@ -119,12 +119,12 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Approssimazione di una funzione reale di due variabili con TensorFlow</h1>
+			<h1>Approssimazione di una funzione reale di due variabili con PyTorch</h1>
 		</header>
 
 		<p>
 			Questo post fa parte di una serie di post sull&apos;approssimazione di oggetti matematici (funzioni, curve e superfici) tramite una rete neurale di tipo <em>MLP</em> (percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron);
-			per una introduzione sull&apos;argomento si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
+			per una introduzione sull&apos;argomento si veda il post <a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
 			<br />
 			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una funzione reale continua e limitata a valori reali di due variabili reali vincolata in un rettangolo $$f(x,y) \colon [a,b]\times[c,d] \to \rm I\!R$$ con un MLP
 			in modo che l&apos;utilizzatore possa testare diverse combinazioni di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python
@@ -145,15 +145,15 @@
 				</li>
 			</ul>
 
-			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia TensorFlow 2 (sia per CPU che per GPU) con Keras (che &egrave; gi&agrave; integrato dentro TensorFlow 2); richiede inoltre le librerie NumPy e MatPlotLib.<br/>
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch; richiede inoltre le librerie NumPy e MatPlotLib.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
-			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia PyTorch; si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a> pubblicato sempre su questo sito web.
+			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a> pubblicato sempre su questo sito web.
 		</p>
 
 		<h2>Creazione dei dataset</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_gen.py" target="_blank"><code>fxy_gen.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_gen.py" target="_blank"><code>fxy_gen.py</code></a>
 			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
 			prende in linea di comando la funzione a due variabili da approssimare (in sintassi <em>lambda body</em>), il sottoinsieme rettangolare del dominio (specificando tramite due intervalli i due lati del rettangolo) e passo di discretizzazione
 			e genera il dataset in un file nel formato csv applicando la funzione al rettangolo passato.
@@ -176,7 +176,7 @@
 --rybegin RANGE_BEGIN       begin y range (default:-5.0)
 --ryend RANGE_END           end y range (default:+5.0)
 --rstep RANGE_STEP          step range (default: 0.01)</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_gen" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fxy_gen.py</h3>
@@ -214,7 +214,7 @@
 
 		<h2>Definizione dell&apos;architettura del MLP + Addestramento</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_fit.py" target="_blank"><code>fxy_fit.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_fit.py" target="_blank"><code>fxy_fit.py</code></a>
 			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente un MLP ed effettuare il suo addestramento.
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
 			<pre><code class="shell">$ python fxy_fit.py --help</code></pre>
@@ -229,34 +229,35 @@
 [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
 [--optimizer OPTIMIZER]
-[--loss LOSS]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+[--loss LOSS]
+[--device DEVICE]</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_fit" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fxy_fit.py</h3>
 		<p>
 			Si supponga di avere a disposizione un dataset di training (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato nel paragrafo precedente)
-			e si voglia che il MLP abbia due layer nascosti entrambi con 100 neuroni e che si voglia usare la funzione di attivazione relu in uscita da tutti e tre i layer;
-			inoltre si vogliano eseguire 10 epoche di training con un batch size di 50 elementi usando l&apos;algoritmo di ottimizzazione SGD con il learning rate di default,
-			con il momentum a 0.9, il decay a 10<sup>-6</sup> e il flag nesterov a true e infine la MeanSquaredError quale funzione di loss.
+			e si voglia che il MLP abbia due layer nascosti entrambi con 100 neuroni e che si voglia usare la funzione di attivazione ReLU in uscita da tutti e tre i layer;
+			inoltre si vogliano eseguire 10 epoche di training con un batch size di 50 elementi usando l&apos;algoritmo di ottimizzazione SGD con learning rate pari a 0.01,
+			con il momentum a 0.9, il decay a 10<sup>-6</sup> e il flag nesterov a true e infine la MSELoss quale funzione di loss.
 			Per mettere in azione tutto questo si esegua il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fxy_fit.py \
   --trainds mytrain.csv \
-  --modelout mymodel \
+  --modelout mymodel.pth \
   --hlayers 100 100 \
-  --hactivations relu relu \
+  --hactivations 'ReLU()' 'ReLU()' \
   --epochs 10 \
   --batch_size 50 \
-  --optimizer 'SGD(decay=1e-6, momentum=0.9, nesterov=True)' \
-  --loss 'MeanSquaredError()'</code></pre>
-			al termine del quale la cartella <code>mymodel</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
+  --optimizer 'SGD(lr=0.01, weight_decay=1e-6, momentum=0.9, nesterov=True)' \
+  --loss 'MSELoss()'</code></pre>
+			al termine del quale il file <code>mymodel.pth</code> conterr&agrave; il modello del MLP addestrato sul dataset <code>mytrain.csv</code> secondo i parametri passati in linea di comando.
 		</p>
 
 		<h2>Predizione</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_predict.py" target="_blank"><code>fxy_predict.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_predict.py" target="_blank"><code>fxy_predict.py</code></a>
 			&egrave; quello di applicare il modello di MLP generato tramite <code>fxy_fit.py</code> al dataset di test (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato in un paragrafo precedente);
 			l&apos;esecuzione del programma produce in uscita un file csv con tre colonne (senza header): le prime due colonne contengono i valori delle variabili indipendenti $x$ e $y$ presi dal dataset di test
 			e la terza colonna contiene i valori predetti della variabile dipendente, ovverosia i valori della predizione che approssimano la funzione $f(x,y)$ corrispondenti a valori di $x$ e $y$ delle prime due colonne.
@@ -269,18 +270,19 @@
 			<pre><code class="shell">usage: fxy_predict.py [-h]
 --model MODEL_PATH
 --ds DATASET_FILENAME
---predictionout PREDICTION_DATA_FILENAME</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+--predictionout PREDICTION_DATA_FILENAME
+[--device DEVICE]</code></pre>
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_predict" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fxy_predict.py</h3>
 		<p>
 			Si supponga di avere a disposizione il dataset di test <code>mytest.csv</code> (ad esempio generato tramite <code>fxy_gen.py</code> come mostrato in un paragrafo precedente)
-			e il modello di MLP addestrato nella cartella <code>mymodel</code> (generato tramite <code>fxy_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
+			e il modello di MLP addestrato nel file <code>mymodel.pth</code> (generato tramite <code>fxy_fit.py</code> come mostrato nell&apos;esempio del paragrafo precedente); si esegua quindi il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fxy_predict.py \
-  --model mymodel \
+  --model mymodel.pth \
   --ds mytest.csv \
   --predictionout myprediction.csv
 </code></pre>
@@ -289,7 +291,7 @@
 
 		<h2>Visualizzazione del risultato</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/fxy_plot.py" target="_blank"><code>fxy_plot.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/fxy_plot.py" target="_blank"><code>fxy_plot.py</code></a>
 			&egrave; quello di visualizzare la superficie del dataset iniziale (che sia quello di test o di training) vicino alla superficie della predizione e questo consente la comparazione visuale delle due superfici.
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
@@ -301,7 +303,7 @@
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/two-variables-function-fitting/README.md#fxy_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
+			Si rimanda alla lettura del file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/blob/master/two-variables-function-fitting/README.md#fxy_plot" target="_blank">README.md</a> per il dettaglio esaustivo della semantica dei parametri supportati in linea di comando.
 			<br/>
 		</p>
 		<h3>Un esempio di uso del programma fxy_plot.py</h3>
@@ -317,13 +319,13 @@
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/two-variables-real-function-fitting-with-tensorflow/nn-2vrffwtf-example02.png" /></div>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/two-variables-real-function-fitting-with-pytorch/nn-2vrffwpt-example02.png" /></div>
 		<div class="photocaption">Grafico generato dal programma <code>fxy_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della funzione $f(x,y)=\sin \sqrt{x^2 + y^2}$</div>
 		<br/>
 
 		<h2>Esempi di uso in cascata dei quattro programmi</h2>
 		<p>
-			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-function-fitting/examples" target="_blank"><code>two-variables-function-fitting/examples</code></a>
+			Nella cartella <a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-function-fitting/examples" target="_blank"><code>two-variables-function-fitting/examples</code></a>
 			ci sono tre script shell che mostrano l&apos;uso dei quattro programmi in cascata in varie combinazioni
 			di parametri (architettura del MLP, funzioni di attivazione, algoritmo, funzione di loss, parametri di prodedura di training).
 			Per mandare in esecuzione i tre esempi eseguire i seguenti comandi:
@@ -336,7 +338,7 @@ $ sh example3.sh</code></pre>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-function-fitting">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-function-fitting">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
@@ -359,35 +361,35 @@ $ sh example3.sh</code></pre>
 										<h2>Menu</h2>
 									</header>
 									<ul>
-										<li><a href="../../../it/index.html">Home</a></li>
+										<li><a href="../../it/">Home</a></li>
 										<li>
 											<span class="opener">Reti&nbsp;Neurali</span>
 											<ul>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Computazione&nbsp;Quantistica</span>
 											<ul>
-												<li><a href="../../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
-												<li><a href="../../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Dataset</span>
 											<ul>
-												<li><a href="../../../it/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
 											</ul>
 										</li>
-										<li><a href="../../../it/info.html">Info</a></li>
+										<li><a href="../../it/info.html">Info</a></li>
 									</ul>
 								</nav>
 
@@ -395,16 +397,16 @@ $ sh example3.sh</code></pre>
 								<section>
                                     <div class="side-topics">
                                         <header class="align-center">
-                                            <h2><a href="../../../it/reti-neurali.html">Reti&nbsp;Neurali</a></h2>
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../it/reti-neurali.html" class="image"><span class="icon solid fa-sitemap"/></a>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
                                         </article>
                                         <header class="align-center">
-                                            <h2><a href="../../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
                                         </article>
                                     </div>
 								</section>
@@ -414,10 +416,10 @@ $ sh example3.sh</code></pre>
 									<p class="copyright">
 										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
 										<br/>
-										Clicka sui link per vedere i file <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
 										<br>
 										<br>
-										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
 									</p>
 								</footer>
 						</div>
@@ -425,11 +427,11 @@ $ sh example3.sh</code></pre>
 			</div>
 
 		<!-- Scripts -->
-			<script src="../../../assets/js/jquery.min.js"></script>
-			<script src="../../../assets/js/browser.min.js"></script>
-			<script src="../../../assets/js/breakpoints.min.js"></script>
-			<script src="../../../assets/js/util.js"></script>
-			<script src="../../../assets/js/main.js"></script>
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
 
 			<style>
 				a.cc-link

@@ -84,9 +84,9 @@
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="../../../assets/css/main.css" />
-		<link rel="shortcut icon" href="../../../favicon.ico" type="image/x-icon" />
-		<link rel="icon" href="../../../favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
 	</head>
 	<body class="is-preload">
 
@@ -99,10 +99,10 @@
 
 							<!-- Header -->
 								<header id="header">
-									<a href="../../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
 									<div style="text-align:right">
-										<a class="logo" href="../../../en/index.html">en</a>
-										<a class="logo" href="../../../it/index.html">it</a>
+										<a class="logo" href="../../en/">en</a>
+										<a class="logo" href="../../it/">it</a>
 									</div>
 									<ul class="icons">
 										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
@@ -124,7 +124,7 @@
 
 		<p>
 			Questo post fa parte di una serie di post sull&apos;approssimazione di oggetti matematici (funzioni, curve e superfici) tramite una rete neurale di tipo <em>MLP</em> (percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron);
-			per una introduzione sull&apos;argomento si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
+			per una introduzione sull&apos;argomento si veda il post <a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a>.<br />
 			<br />
 			L&apos;argomento di questo post &egrave; l&apos;approssimazione di una curva parametrica, con parametro $t$ appartenente a un intervallo chiuso, su un sistema di riferimento 3-D $Oxyz$ definita con una terna di funzioni $x(t) \colon [a,b] \to \rm I\!R$, $y(t) \colon [a,b] \to \rm I\!R$ e $z(t) \colon [a,b] \to \rm I\!R$
 			le quali restituiscono rispettivamente il valore della coordinata $x$, della coordinata $y$ e della coordinata $z$ al variare del parametro $t$;
@@ -156,7 +156,7 @@
 			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia PyTorch; richiede inoltre le librerie NumPy e MatPlotLib.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
-			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a> pubblicato sempre su questo sito web.
+			Lo stesso identico meccanismo &egrave; stato realizzato usando la tecnologia TensorFlow 2 (con Keras); si veda il post <a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a> pubblicato sempre su questo sito web.
 		</p>
 
 		<h2>Creazione dei dataset</h2>
@@ -336,7 +336,7 @@ np.cos(4 * t) / 4.0</code></pre>
 			<br/>
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../../posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch/nn-pcisfwpt-example03.png" /></div>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/parametric-curve-in-space-fitting-with-pytorch/nn-pcisfwpt-example03.png" /></div>
 		<div class="photocaption">Grafico generato dal programma <code>pmc3t_plot.py</code> che mostra l&apos;approssimazione effettuata dal MLP della curva $f(t) = \begin{bmatrix} x(t)= \cos t \\ y(t)= \sin t \\ z(t)= \frac{\cos 4t}{4} \\ \end{bmatrix}$</div>
 		<br/>
 
@@ -382,35 +382,35 @@ $ sh example5.sh
 										<h2>Menu</h2>
 									</header>
 									<ul>
-										<li><a href="../../../it/index.html">Home</a></li>
+										<li><a href="../../it/">Home</a></li>
 										<li>
 											<span class="opener">Reti&nbsp;Neurali</span>
 											<ul>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
-												<li><a href="../../../it/posts/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Computazione&nbsp;Quantistica</span>
 											<ul>
-												<li><a href="../../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
-												<li><a href="../../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Dataset</span>
 											<ul>
-												<li><a href="../../../it/posts/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
 											</ul>
 										</li>
-										<li><a href="../../../it/info.html">Info</a></li>
+										<li><a href="../../it/info.html">Info</a></li>
 									</ul>
 								</nav>
 
@@ -418,16 +418,16 @@ $ sh example5.sh
 								<section>
                                     <div class="side-topics">
                                         <header class="align-center">
-                                            <h2><a href="../../../it/reti-neurali.html">Reti&nbsp;Neurali</a></h2>
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../it/reti-neurali.html" class="image"><span class="icon solid fa-sitemap"/></a>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
                                         </article>
                                         <header class="align-center">
-                                            <h2><a href="../../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
                                         </header>
                                         <article>
-                                            <a href="../../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
                                         </article>
                                     </div>
 								</section>
@@ -437,10 +437,10 @@ $ sh example5.sh
 									<p class="copyright">
 										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
 										<br/>
-										Clicka sui link per vedere i file <a href="../../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
 										<br>
 										<br>
-										&copy; <a href="../../../en/info.html">Ettore Messina</a>. 
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
 									</p>
 								</footer>
 						</div>
@@ -448,11 +448,11 @@ $ sh example5.sh
 			</div>
 
 		<!-- Scripts -->
-			<script src="../../../assets/js/jquery.min.js"></script>
-			<script src="../../../assets/js/browser.min.js"></script>
-			<script src="../../../assets/js/breakpoints.min.js"></script>
-			<script src="../../../assets/js/util.js"></script>
-			<script src="../../../assets/js/main.js"></script>
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
 
 			<style>
 				a.cc-link
