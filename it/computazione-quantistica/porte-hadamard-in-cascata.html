@@ -58,6 +58,9 @@
 		<title>Porte Hadamard in cascata</title>
 		<meta name="description" content="Questa pagina mostra il comportamento di una sequenza in cascata dell'operatore quantistico Hadamard tramite il calcolo e le propriet&agrave; delle matrici hermetiane e unitarie." >
 		<meta name="keywords" content="porta hadamard, cascata, qubit, sovrapposizione, hilbert, matrice, hermetiana, unitaria, vettore, ibm experience, qiskit, q#, qasm, quantistico, meccanica" >
+		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/porte-hadamard-in-cascata.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/hadamard-gate-cascade.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/porte-hadamard-in-cascata.html" />
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -188,8 +191,8 @@
 						$$H^{-1}=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=H$$
 						e la verifica &egrave; un semplice calcolo
 						$$H^{-1}H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=\frac{1}{2} \left[\begin{matrix} 2 & 0 \\ 0 & 2 \end{matrix} \right] = \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
-						Vale dunque l&apos;equivalenza $$HH=HH^-1=HH^\dag=I$$
-			per cui vale per qualsiasi vettore  (usando la propriet&agrave; associativa del prodotto matriciale) $|\psi\rangle$ vale
+			Vale dunque l&apos;equivalenza $$HH=HH^{-1}=HH^\dag=I$$
+						per cui vale per qualsiasi vettore  (usando la propriet&agrave; associativa del prodotto matriciale) $|\psi\rangle$ vale
 						$$HH|\psi\rangle=I|\psi\rangle=|\psi\rangle$$
 						e quindi la doppia applicazione di una porta Hadamard in cascata porta il sistema allo stato precedente
 			la prima applicazione.
@@ -315,8 +318,8 @@ circuit.measure(q, c)</code></pre>
 		<h2>Risultati su simulatore Microsoft</h2>
 		<p>
 			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia la seguente distribuzione: 
-			bits 1, 2 and 4 are constant (always 0, 1 and 1 respectively)
-			while bits 0 and 3 combine in the 4 pairs 00 01 10 and 11 each with 25% probability.
+			i bit 1, 2 e 4 sono costanti (rispettivamente sempre 0, 1 e 1)
+			mentre le quattro combinazioni dei bit 0 e 3, ovverosia 00 01 10 and 11, hanno il 25% di probabilità ciascuna.
 			<br />
 			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
 		</p>

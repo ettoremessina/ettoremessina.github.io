@@ -26,8 +26,8 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head lang="en-US">
-		<meta http-equiv="content-language" content="en-US">
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
 		<meta name="author" content="Ettore Messina">	
 
 		<style>
@@ -58,6 +58,9 @@
 		<title>Cascade Hadamard Gates</title>
 		<meta name="description" content="This page shows the behavior of a cascade of the Hadamard quantum operator through the calculation and properties of the Hermetian and unitary matrices." >
 		<meta name="keywords" content="hadamard gate, cascade, qubit, superposition, hilbert, matrix, hermetian, unitary, vector, ibm experience, qiskit, q#, qasm, quantum, mechanics" >
+		<link rel="canonical" href="https://computationalmindset.com/en/quantum-computing/hadamard-gate-cascade.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/hadamard-gate-cascade.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/porte-hadamard-in-cascata.html" />
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -188,8 +191,8 @@
 						$$H^{-1}=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=H$$
 						and verification is a simple calculation
 						$$H^{-1}H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=\frac{1}{2} \left[\begin{matrix} 2 & 0 \\ 0 & 2 \end{matrix} \right] = \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
-						Applying the equivalence $$HH=HH^-1=HH^\dag=I$$ for each vector
-			(using the associative property of the matrix product) $|\psi\rangle$
+			Applying the equivalence $$HH=HH^{-1}=HH^\dag=I$$ for each vector
+						(using the associative property of the matrix product) $|\psi\rangle$
 						$$HH|\psi\rangle=I|\psi\rangle=|\psi\rangle$$
 						and therefore the double application of a Hadamard gate in cascade brings the system to the state before the first application.
 		</p>
