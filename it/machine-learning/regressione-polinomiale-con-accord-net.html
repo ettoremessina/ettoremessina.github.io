@@ -34,12 +34,12 @@
 		</script>
 
 
-		<title>Generazione di un numero casuale</title>
-		<meta name="description" content="La generazione di numeri casuali su un computer quantistico si ottiene sfruttando l&apos;impredicibilit&agrave; della misura di un qubit in sovrapposizione." >
-		<meta name="keywords" content="porta hadamard, casuale, random, qubit, sovrapposizione, matrice, vettore, ibm experience, qiskit, q#, qasm, quantistico, meccanica" >
-		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/random-number-generation.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
+		<title>Regressione polinomiale con Accord.NET</title>
+		<meta name="description" content="Approssimazione di una funzione reale di una variable utilizzando la regressione polinomiale implementata dal framework Accord.NET per .NET Core" >
+		<meta name="keywords" content="regressione, polonomiale, approssimazione, funzione, dataset, errore quadratico minimo, machine learning, accord.net, c#, .net core" >
+		<link rel="canonical" href="https://computationalmindset.com/it/machine-learning/regressione-polinomiale-con-accord-net.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/polynomial-regression-with-accord-net.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/regressione-polinomiale-con-accord-net.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -83,8 +83,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/",
-              "name": "Computazione Quantistica"
+              "@id": "https://computationalmindset.com/it/machine-learning/",
+              "name": "Machine Learning"
             }
           },
 
@@ -93,8 +93,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html",
-              "name": "Generazione di un numero casuale"
+              "@id": "https://computationalmindset.com/it/machine-learning/regressione-polinomiale-con-accord-net.html",
+              "name": "Regressione polinomiale con Accord.NET"
             }
 		  }
 		
@@ -163,244 +163,161 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Generazione di un numero casuale</h1>
+			<h1>Regressione polinomiale con Accord.NET</h1>
 		</header>
 
 		<p>
-			Generare numeri casuali su un computer quantistico non &egrave; cosa difficile in quanto l&apos;impredicibilit&agrave; della misura di un qubit
-			in stato di sovrapposizione &egrave; di fatto una forma di casualit&agrave; naturale.
-			Tradurre tale idea in codice &egrave; relativamente semplice: prendendo n qubit (quindi il numero casuale ottenuto da ogni esecuzione sar&agrave; 
-			un numero intero da 0 a 2<sup>n</sup> - 1) con stato iniziale uguale a $|0\rangle$, 
-			si applica su ciascuno degli n qubit la porta quantistica Hadamard e infine si effettua la misura. 
-			La porta Hadamard applicata a $|0\rangle$ porta il qubit nello stato di sovrapposizione:
-						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
-						e ci&ograve; significa che la misura avr&agrave; la probabilit&agrave; del 50% di essere uguale a 0 e del 50% di essere uguale a 1.
+			Questo post mostra un uso della classe <em>PolynomialRegression</em> del framework <em>Accord.NET</em>
+			con l&apos;obiettivo di dimostrare che la regressione polinomiale classica del machine learning pu&ograve; raggiungere interessanti livelli di accuratezza con tempi di learning estremamente brevi.<br />
+			Anche se le reti neurali di tipo MLP (Multi Layer Perceptron) possono essere considerate degli approssimatori universali di funzioni (si veda <a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a> su questo sito web),
+			per alcune tipologie di dataset, un classico algoritmo supervisionato di regressione di machine learning, come quello di regressione polinomiale di cui si tratta qui, pu&ograve; arrivare a livelli di accuratezza accettabili
+			e con un costo computazionale decisamente pi&ugrave; basso rispetto a quello di un MLP.<br />
+			Per approfondire invece l&apos;approssimazione di una funzione reale di una variable con un MLP si veda <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a> e <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a>.<br />
+			<br />
+			Nel mondo reale i dataset preesistono alla fase di apprendimento, infatti questi vengono ottenuti estraendo dati da database di produzione o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici e cos&igrave; via,
+			e quindi adoperati per le fasi di learning successive;
+			ma poich&eacute; qui il focus &egrave; l&apos;approssimazione polinomiale in s&eacute; e non l&apos;approssimazione di un fenomeno reale, i dataset utilizzati in questo post saranno generati sinteticamente:
+			questo ha il vantaggio di poter stressare l&apos;algoritmo e vedere per quali tipologie di dataset l&apos;algoritmo ha accuratezza accettabile e per quali invece l&apos;algoritmo fatica. 
 		</p>
 
-		<h2>Schema circuitale</h2>
-		<p>Considerando di avere a disposizione un computer quantistico con 5 qubit, lo schema circuitale che realizza quanto detto sopra &egrave; il seguente:</p>
-		<div class="betweentextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-circuit.png" /></div>
-		<br/>
+		<h3>Implementazione</h3>
+		<p>
+			Il codice descritto da questo post &egrave; scritto il C#, richiede <a href="https://dotnet.microsoft.com/" target="_blank">Microsoft .NET Core</a> 3.1 e il framework <a href="http://accord-framework.net/" target="_blank">Accord.NET</a> 3.8.0.<br/>
+			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
+			La classe pi&ugrave; importante del progetto &egrave; la classe <a href="https://github.com/ettoremessina/accord-net-experiments/blob/master/Prototypes/CSharp/Regressors/Wrappers/PolynomialLeastSquares1to1Regressor.cs" target="_blank"><code>PolynomialLeastSquares1to1Regressor</code></a> che &egrave; un wrapper della classe
+			<a href="http://accord-framework.net/docs/html/T_Accord_Statistics_Models_Regression_Linear_PolynomialRegression.htm" target="blank"><code>PolynomialRegression</code></a> di Accord.NET.<br/>
+			<pre><code class="cs">using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
+using Accord.Statistics.Models.Regression.Linear;
+using Accord.Math.Optimization.Losses;
+using Regressors.Entities;
+using Regressors.Exceptions;
 
-		<h2>Codice in QASM</h2>
-		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quantistico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="asm">OPENQASM 2.0;
-include "qelib1.inc";
-
-qreg q[5];
-creg c[5];
-
-h q[0];
-h q[1];
-h q[2];
-h q[3];
-h q[4];
-
-measure q[0] -> c[0];
-measure q[1] -> c[1];
-measure q[2] -> c[2];
-measure q[3] -> c[3];
-measure q[4] -> c[4];</code></pre>
-		<br/>
-	
-		<h2>Codice in Python con Qiskit</h2>
-		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quantistico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="python">q = QuantumRegister(5, 'q')
-c = ClassicalRegister(5, 'c')
-circuit = QuantumCircuit(q, c)
-
-circuit.h(q[0])
-circuit.h(q[1])
-circuit.h(q[2])
-circuit.h(q[3])
-circuit.h(q[4])
-
-circuit.measure(q, c)</code></pre>
-		<br/>
-	
-		<h2>Codice in Microsoft .NET Core Q# per simulatore quantistico</h2>
-		<p>Il seguente programma &egrave; la traduzione in Microsoft Q# Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato su un Linux con .NET Core, runtime Q# e simulatore quantistico Microsoft installati.</p>
-		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
-
-    open Microsoft.Quantum.Intrinsic;
-    open Microsoft.Quantum.Canon;
-    open Microsoft.Quantum.Measurement;
-
-    operation RandomNumberGenerator() : (Result, Result, Result, Result, Result)
+namespace Regressors.Wrappers
+{
+    public class PolynomialLeastSquares1to1Regressor
     {
-        using (q = Qubit[5])
+        private int _degree;
+        private bool _isRobust;
+        private PolynomialRegression _polynomialRegression;
+
+        public PolynomialLeastSquares1to1Regressor(int degree, bool isRobust = false)
         {
-            H(q[0]);
-            H(q[1]);
-            H(q[2]);
-            H(q[3]);
-            H(q[4]);
+            _degree = degree;
+            _isRobust = isRobust;
+        }
 
-            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
+        public double[] Weights
+        {
+            get
+            {
+                EnsureAlreadyTrained();
+                return _polynomialRegression.Weights;
+            }
+        }
 
-            ResetAll(q);
-            return result;
+        public double Intercept
+        {
+            get
+            {
+                EnsureAlreadyTrained();
+                return _polynomialRegression.Intercept;
+            }
+        }
+        private void EnsureAlreadyTrained()
+        {
+            if (_polynomialRegression == null)
+                throw new NotTrainedException();
+        }
+
+        public string StringfyLearnedPolynomial(string format = "e")
+        {
+            if (_polynomialRegression == null)
+                return string.Empty;
+            
+            return _polynomialRegression.ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        public void Learn(IList&lt;XtoY&gt; dsLearn)
+        {            
+            double [] inputs = dsLearn.Select(i =&gt; i.X).ToArray();
+            double [] outputs = dsLearn.Select(i =&gt; i.Y).ToArray();
+            var pls = new PolynomialLeastSquares() { Degree = _degree, IsRobust = _isRobust };
+            _polynomialRegression = pls.Learn(inputs, outputs);
+        }
+
+        public IEnumerable&lt;XtoY&gt; Predict(IEnumerable&lt;double&gt; xvalues)
+        {
+            EnsureAlreadyTrained();
+
+            double []xvaluesArray = xvalues.ToArray();
+            double [] yvaluesArray = _polynomialRegression.Transform(xvaluesArray);
+            for(int i = 0; i &lt; xvaluesArray.Length; ++i)
+            {
+                yield return new XtoY() {X = xvaluesArray[i], Y = yvaluesArray[i]};
+            }
+        }
+
+        public double ComputeError(IEnumerable&lt;XtoY&gt; ds, IEnumerable&lt;XtoY&gt; predicted)
+        {
+            double [] outputs = ds.Select(i =&gt; i.Y).ToArray();
+            double [] preds = predicted.Select(i =&gt; i.Y).ToArray();
+            double error = new SquareLoss(outputs).Loss(preds);
+            return error;
         }
     }
+}
 </code></pre>
-		<br/>
-
-		<h2>Risultati su IBM Q Experience</h2>
-		<p>
-			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot uguale a 8192 sia sul simulatore &apos;qasm_simulator&apos; di IBM che sul computer quantisco IBM &apos;ibmq_london&apos; di IBM
-			ottenendo il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			La non perfetta uniformit&agrave; mostrata nel caso dei computer quantistici reali rispetto ai simulatori &egrave; riconducibile a rumore.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
-		</p>
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos; (prime 20 combinazioni)</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos; (prime 20 combinazioni)</div>
-		<br />
-
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
-		<br />
-		<br />
-
-		<h2>Risultati su simulatore Microsoft</h2>
-		<p>
-			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
 		</p>
 
-		<div class="table-wrapper">
-			<table class="alt">
-				<thead>
-					<tr>
-						<th>Binario</th>
-						<th>Decimale</th>
-						<th>Conteggio</th>
-						<th>Probabilit&agrave; (%)</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-					<tr>
-						<td>00000</td><td>00</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>00001</td><td>01</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>00010</td><td>02</td><td>240</td><td>2.93%</td>
-					</tr>
-					<tr>
-						<td>00011</td><td>03</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>00100</td><td>04</td><td>237</td><td>2.89%</td>
-					</tr>
-					<tr>
-						<td>00101</td><td>05</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>00110</td><td>06</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>00111</td><td>07</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>01000</td><td>08</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>01001</td><td>09</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>01010</td><td>10</td><td>241</td><td>2.94%</td>
-					</tr>
-					<tr>
-						<td>01011</td><td>11</td><td>246</td><td>3.00%</td>
-					</tr>
-					<tr>
-						<td>01100</td><td>12</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>01101</td><td>13</td><td>264</td><td>3.22%</td>
-					</tr>
-					<tr>
-						<td>01110</td><td>14</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>01111</td><td>15</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>10000</td><td>16</td><td>223</td><td>2.72%</td>
-					</tr>
-					<tr>
-						<td>10001</td><td>17</td><td>244</td><td>2.98%</td>
-					</tr>
-					<tr>
-						<td>10010</td><td>18</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>10011</td><td>19</td><td>245</td><td>2.99%</td>
-					</tr>
-					<tr>
-						<td>10100</td><td>20</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>10101</td><td>21/td><td>248</td><td>3.03%</td>
-					</tr>
-					<tr>
-						<td>10110</td><td>22</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>10111</td><td>23</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>11000</td><td>24</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>11001</td><td>25</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>11010</td><td>26</td><td>292</td><td>3.56%</td>
-					</tr>
-					<tr>
-						<td>11011</td><td>27</td><td>227</td><td>2.77%</td>
-					</tr>
-					<tr>
-						<td>11100</td><td>28</td><td>278</td><td>3.39%</td>
-					</tr>
-					<tr>
-						<td>11101</td><td>29</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>11110</td><td>30</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>11111</td><td>31</td><td>260</td><td>3.17%</td>
-					</tr>
-
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="2">Totale:</td>
-						<td>8192</td>
-						<td>100.00%</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
-		<div class="photocaption">Risultato del programma scritto in Q# ed eseguito su Linux con .NET Core e simulatore quantistico Microsoft</div>
-		<br />
-		<br />
-
-		<h2>Download del codice completo</h2>
+		<h2>Caso di studio dell&apos;approssimazione polinomiale di una sinusoide</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/RandomNumberGenerator">GitHub</a>.
+			Dato il dataset sintetico generato con una sinusoide $f(x)=\sin x$ nell&apos;intervallo $[-2 \pi, 2 \pi]$, il primo tentativo di approssimazione &egrave; effettuato tentando con un polinomio di terzo grado;
+			da questo grafico:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_02_degree3.png" /></div>
+			<div class="photocaption">p(x) = -6.938440e-003x^3 + -1.123961e-004x^2 + 8.852045e-002x^1 + 8.879541e-004</div>
+			<br />
+			si evince palesemente che il risultato desiderato &egrave; assai lontato da quello desiderato e ha un errore quadratico medio di 0.35855442002271176.
+		</p>
+		<p>
+			Ragionando empiricamente (attenzione: questo ragionamento non &egrave; appricabile in generale), osservando che la funzione da approssimare ha 2 minimi e 2 massimi relativi nell&apos;intervallo considerato
+			ovverosia 5 tratti a direzione di crescita opposta, si osserva che serve almeno un polinomio di grado 5 per realizzare questi 5 tratti a direzione di crescita opposta.<br />
+			In effetti, tentando ad approssimare con un polinomio di quinto grado le cose iniziano ad andare meglio:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_02_degree5.png" /></div>
+			<div class="photocaption">p(x) = 1.481271e-003x^5 + 8.653159e-006x^4 + -7.195156e-002x^3 + -2.278718e-004x^2 + 6.388252e-001x^1 + 6.429388e-004</div>
+			<br />
+			e infatti l&apos;errore quadratico medio &egrave; di 0.047802033570042826.
+		</p>
+		<p>
+			Alzando il grado del polinomio a 10, si nota che ci si avvicina in maniera interessante a una approssimazione molto accurata:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_02_degree10.png" /></div>
+			<div class="photocaption">p(x) = 3.600998e-010x^10 + 1.030748e-006x^9 + -3.048007e-008x^8 + -1.432993e-004x^7 + 8.871355e-007x^6 + 7.507463e-003x^5 + -1.030648e-005x^4 + -1.614928e-001x^3 + 4.071080e-005x^2 + 9.908745e-001x^1 + -2.473974e-005</div>
+			<br />
+			e infatti l&apos;errore quadratico medio scende al valore molto basso di 1.730499971068361E-05.
+		</p>
+
+		<h2>Caso di studio dell&apos;approssimazione polinomiale di una funzione con una cuspide</h2>
+		<p>
+			Sia dato il dataset sintetico generato con la seguente funzione $f(x)=\sqrt{|x|}$ nell&apos;intervallo  $[-5, 5]$, che presenta una cuspide nell&apos;origine;
+			la regressione polinomiale ha difficolt&agrave; ad approssimare la cuspide come si evince dal seguente grafico che mostra un polinomio di decimo grado
+			che tenta di approssimare la funzione obiettivo:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_04_degree10.png" /></div>
+			<div class="photocaption">p(x) = 3.937716e-006x^10 + -2.624859e-018x^9 + -2.677173e-004x^8 + 1.265696e-016x^7 + 6.737778e-003x^6 + -1.993373e-015x^5 + -7.799737e-002x^4 + 1.137932e-014x^3 + 4.557707e-001x^2 + -1.714000e-014x^1 + 5.263100e-001</div>
+			<br />
+			e palesemente si osserva che intorno alla cuspide l&apos;approssimazione non riesce; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque interessante e vale 0.004819185301219476.
+		</p>
+		<p>
+			Anche provando con un polinomio di grado 20:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_04_degree20.png" /></div>
+			<div class="photocaption">p(x) = -1.484256e-010x^20 + 2.182564e-019x^19 + 1.919608e-008x^18 + -2.385482e-017x^17 + -1.064756e-006x^16 + 1.092940e-015x^15 + 3.310069e-005x^14 + -2.724916e-014x^13 + -6.325746e-004x^12 + 4.014962e-013x^11 + 7.671207e-003x^10 + -3.552878e-012x^9 + -5.887499e-002x^8 + 1.833481e-011x^7 + 2.773153e-001x^6 + -5.082524e-011x^5 + -7.577731e-001x^4 + 6.342430e-011x^3 + 1.180241e+000x^2 + -2.295607e-011x^1 + 3.844349e-00</div>
+			<br />
+			si migliora l&apos;approssimazione intorno alla cuspide ma non si riesce a risolverla; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque notevolmente basso e vale 0.0014078917181083847.
+		</p>
+
+		<h2 id="downloadcode">Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/accord-net-experiments/tree/master/Prototypes/CSharp/Regressors">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
