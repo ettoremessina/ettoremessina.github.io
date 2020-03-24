@@ -271,6 +271,33 @@ namespace Regressors.Wrappers
 </code></pre>
 		</p>
 
+		<h3>Esecuzione del codice</h3>
+		<p>
+			Su un sistema Linux, Mac o Windows ove .NET Core 3.1 e git client siano già installati, per scaricare il sorgente e mandare in esecuzione il programma, eseguire i seguenti comandi:
+<pre><code class="shell">git clone https://github.com/ettoremessina/accord-net-experiments
+cd accord-net-experiments/Prototypes/CSharp/Regressors
+dotnet build
+dotnet run</code></pre>
+			La prima volta il comando di build potrebbe impiegare qualche secondo di tempo per effettuale il download di alcuni pacchetti di Accord.Net da NuGet; per rieseguire il programma dalla seconda volta in poi
+			&egrave; sufficiente eseguire:<br /><br />
+<pre><code class="shell">dotnet run</code></pre>
+			Dopo ogni esecuzione nella cartella <code>out</code> vengono create nove cartelle, ciascuna corrispondente a un caso di test built-in (si veda la classe <code>PolynomialLeastSquares1to1RegressorTester</code>);
+			ciascuna cartella contiene quattro file:
+			<lu>
+				<li>Il file <code>learnds.csv</code> che &egrave; il dataset di learning in formato csv con header.</li>
+				<li>Il file <code>testds.csv</code> che &egrave; il dataset di test in formato csv con header.</li>
+				<li>Il file <code>prediction.csv</code> che &egrave; il file della predizione  in formato csv con header.</li>
+				<li>Lo script <code>plotgraph.m</code> per Octave.</li>
+			</lu>
+			<br />
+			Il file <code>prediction.csv</code> è ottenuto applicando le $x$ del dataset di test al regressore che ha imparato la curva;
+			si osservi che il passo di discretizzazione dei dataset di test <u>non</u> &egrave; un multiplo di quello di learning
+			per garantire che il dataset di test contenga la maggior parte dei dati non presenti nel dataset di learning, e questo rende pi&ugrave; interessante la predizione.<br />
+			Lo script <code>plotgraph.m</code>, se eseguito su Octave, produce un grafico con due curve: quella blu &egrave; il dataset di test, quella rossa &egrave; la predizione;
+			i grafici mostrati qui di seguito sono stati generati eseguendo tali script. In alternativa si possono importare i file csv in Excel o altri software di foglio elettronico
+			e generare i grafici tramite essi; infine &egrave; sempre possibile utilizzare servizi online di plotting di grafici a partire da file csv.
+		</p>
+
 		<h2>Caso di studio dell&apos;approssimazione polinomiale di una sinusoide</h2>
 		<p>
 			Dato il dataset sintetico generato con una sinusoide $f(x)=\sin x$ nell&apos;intervallo $[-2 \pi, 2 \pi]$, il primo tentativo di approssimazione &egrave; effettuato tentando con un polinomio di terzo grado;
