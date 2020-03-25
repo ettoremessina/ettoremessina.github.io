@@ -295,7 +295,21 @@ dotnet run</code></pre>
 			per garantire che il dataset di test contenga la maggior parte dei dati non presenti nel dataset di learning, e questo rende pi&ugrave; interessante la predizione.<br />
 			Lo script <code>plotgraph.m</code>, se eseguito su Octave, produce un grafico con due curve: quella blu &egrave; il dataset di test, quella rossa &egrave; la predizione;
 			i grafici mostrati qui di seguito sono stati generati eseguendo tali script. In alternativa si possono importare i file csv in Excel o altri software di foglio elettronico
-			e generare i grafici tramite essi; infine &egrave; sempre possibile utilizzare servizi online di plotting di grafici a partire da file csv.
+			e generare i grafici tramite essi; infine &egrave; sempre possibile utilizzare servizi online di plotting di grafici a partire da file csv.<br />
+			<br />
+			L&apos;output del programma produce un blocco di output per ciascuno dei nove casi di test build-in;
+			in particolare ogni blocco mostra il polinomio che approssima e l&apos;errore quadratico medio calcolato sul dataset di test. Qui in esempio del primo blocco di output:<br />
+			<br />
+			<pre><code class="cs">Started test #PLSR_01
+Generating learning dataset
+Generating test dataset
+Training
+Learned polynomial y(x) = 5.000000e-001x^3 + -2.000000e+000x^2 + -3.000000e+000x^1 + -1.000000e+000
+Predicting
+Error: 9.42921358148529E-24
+Saving
+Terminated test #PLSR_01
+</code></pre>			
 		</p>
 
 		<h2>Caso di studio dell&apos;approssimazione polinomiale di una sinusoide</h2>
@@ -340,6 +354,27 @@ dotnet run</code></pre>
 			<div class="photocaption">p(x) = -1.484256e-010x^20 + 2.182564e-019x^19 + 1.919608e-008x^18 + -2.385482e-017x^17 + -1.064756e-006x^16 + 1.092940e-015x^15 + 3.310069e-005x^14 + -2.724916e-014x^13 + -6.325746e-004x^12 + 4.014962e-013x^11 + 7.671207e-003x^10 + -3.552878e-012x^9 + -5.887499e-002x^8 + 1.833481e-011x^7 + 2.773153e-001x^6 + -5.082524e-011x^5 + -7.577731e-001x^4 + 6.342430e-011x^3 + 1.180241e+000x^2 + -2.295607e-011x^1 + 3.844349e-00</div>
 			<br />
 			si migliora l&apos;approssimazione intorno alla cuspide ma non si riesce a risolverla; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque notevolmente basso e vale 0.0014078917181083847.
+		</p>
+		<p>
+			Anche provando con un polinomio di grado 20:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_04_degree20.png" /></div>
+			<div class="photocaption">p(x) = -1.484256e-010x^20 + 2.182564e-019x^19 + 1.919608e-008x^18 + -2.385482e-017x^17 + -1.064756e-006x^16 + 1.092940e-015x^15 + 3.310069e-005x^14 + -2.724916e-014x^13 + -6.325746e-004x^12 + 4.014962e-013x^11 + 7.671207e-003x^10 + -3.552878e-012x^9 + -5.887499e-002x^8 + 1.833481e-011x^7 + 2.773153e-001x^6 + -5.082524e-011x^5 + -7.577731e-001x^4 + 6.342430e-011x^3 + 1.180241e+000x^2 + -2.295607e-011x^1 + 3.844349e-00</div>
+			<br />
+			si migliora l&apos;approssimazione intorno alla cuspide ma non si riesce a risolverla; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque notevolmente basso e vale 0.0014078917181083847.
+		</p>
+
+		<h2>Caso di studio dell&apos;approssimazione di un tratto di esponenziale</h2>
+		<p>
+			Anche se la funzione esponenziale non &egrave; approssimabile con un polinomio, contrariamente a quanto si possa pensare, su un tratto limitato l&apos;approssimazione raggiunge un grande livello di accuratezza.
+			Data la funzione esponenziale $f(x)=e^x$ nell&apos;intervallo  $[-5, 5]$,
+			la regressione polinomiale con un polinomio di quinto grado &egrave; gi&agrave; accettabile, con un errore quadratico medio pari a 0.9961909800481012, come mostra il grafico:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_03_degree5.png" /></div>
+			<div class="photocaption">p(x) = 2.069063e-002x^5 + 1.196676e-001x^4 + 7.493153e-003x^3 + -2.482972e-001x^2 + 1.470547e+000x^1 + 1.955036e+000</div>
+		</p>
+		<p>
+			Utilizzando un polinomio di decimo grado, l&apos;approssimazione diventa molto accurata, con un errore quadratico medio pari a 1.6342296507040001E-06:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_03_degree10.png" /></div>
+			<div class="photocaption">p(x) = 4.697166e-007x^10 + 4.930956e-006x^9 + 1.916581e-005x^8 + 1.422306e-004x^7 + 1.460971e-003x^6 + 8.937498e-003x^5 + 4.125903e-002x^4 + 1.640806e-001x^3 + 5.008296e-001x^2 + 1.003040e+000x^1 + 9.997306e-001</div>			
 		</p>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
