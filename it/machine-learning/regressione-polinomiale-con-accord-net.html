@@ -355,13 +355,6 @@ Terminated test #PLSR_01
 			<br />
 			si migliora l&apos;approssimazione intorno alla cuspide ma non si riesce a risolverla; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque notevolmente basso e vale 0.0014078917181083847.
 		</p>
-		<p>
-			Anche provando con un polinomio di grado 20:
-			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_04_degree20.png" /></div>
-			<div class="photocaption">p(x) = -1.484256e-010x^20 + 2.182564e-019x^19 + 1.919608e-008x^18 + -2.385482e-017x^17 + -1.064756e-006x^16 + 1.092940e-015x^15 + 3.310069e-005x^14 + -2.724916e-014x^13 + -6.325746e-004x^12 + 4.014962e-013x^11 + 7.671207e-003x^10 + -3.552878e-012x^9 + -5.887499e-002x^8 + 1.833481e-011x^7 + 2.773153e-001x^6 + -5.082524e-011x^5 + -7.577731e-001x^4 + 6.342430e-011x^3 + 1.180241e+000x^2 + -2.295607e-011x^1 + 3.844349e-00</div>
-			<br />
-			si migliora l&apos;approssimazione intorno alla cuspide ma non si riesce a risolverla; sull&apos;intero intervallo l&apos;errore quadratico medio &egrave; comunque notevolmente basso e vale 0.0014078917181083847.
-		</p>
 
 		<h2>Caso di studio dell&apos;approssimazione di un tratto di esponenziale</h2>
 		<p>
@@ -375,6 +368,21 @@ Terminated test #PLSR_01
 			Utilizzando un polinomio di decimo grado, l&apos;approssimazione diventa molto accurata, con un errore quadratico medio pari a 1.6342296507040001E-06:
 			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_03_degree10.png" /></div>
 			<div class="photocaption">p(x) = 4.697166e-007x^10 + 4.930956e-006x^9 + 1.916581e-005x^8 + 1.422306e-004x^7 + 1.460971e-003x^6 + 8.937498e-003x^5 + 4.125903e-002x^4 + 1.640806e-001x^3 + 5.008296e-001x^2 + 1.003040e+000x^1 + 9.997306e-001</div>			
+		</p>
+		
+		<h2>Un caso di studio difficile: la sinusoide smorzata</h2>
+		<p>
+			La funzione $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$, che è una sorta di sinusoide smorzata, nell&apos;intervallo $[-20, 20]$ non sembra facile da approssimare per via dei tanti minimi e massimi locali presenti;
+			per quanto detto sopra si tenta subito ad approssimare con un polinomio di alto grado, ad esempio un ventesimo grado; dal seguente grafico:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_09_degree20.png" /></div>
+			<div class="photocaption">p(x) = 2.438374e-021x^20 + -1.303248e-019x^19 + -2.737692e-018x^18 + 2.182637e-016x^17 + 6.129847e-016x^16 + -1.513625e-013x^15 + 4.547323e-013x^14 + 5.628751e-011x^13 + -3.185157e-010x^12 + -1.215171e-008x^11 + 8.477405e-008x^10 + 1.541180e-006x^9 + -1.160371e-005x^8 + -1.108299e-004x^7 + 8.318767e-004x^6 + 4.124021e-003x^5 + -2.845069e-002x^4 + -6.550661e-002x^3 + 3.595534e-001x^2 + 2.775935e-001x^1 + -7.192461e-001</div>
+			<br />
+			si noti che il grado 20 non è sufficiente, e l&apos;errore quadratico medio &egrave; alto e uguale a 29.906606603488548.
+		</p>
+		<p>
+			Utilizzando un polinomio di quarantesimo grado, l&apos;approssimazione diventa molto accurata, con un errore quadratico medio decisamente più basso pari a 0.03318409290980062:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/accord-net-polynomial-regression/PLSR_09_degree40.png" /></div>
+			<div class="photocaption">p(x) = 2.620011e-041x^40 + -2.261159e-040x^39 + -1.064515e-037x^38 + 9.291263e-037x^37 + 2.000472e-034x^36 + -1.767156e-033x^35 + -2.306009e-031x^34 + 2.063269e-030x^33 + 1.823227e-028x^32 + -1.653595e-027x^31 + -1.047264e-025x^30 + 9.635843e-025x^29 + 4.515541e-023x^28 + -4.218466e-022x^27 + -1.489064e-020x^26 + 1.413717e-019x^25 + 3.790980e-018x^24 + -3.661427e-017x^23 + -7.468664e-016x^22 + 7.347405e-015x^21 + 1.134298e-013x^20 + -1.138497e-012x^19 + -1.314822e-011x^18 + 1.349687e-010x^17 + 1.143662e-009x^16 + -1.205220e-008x^15 + -7.274557e-008x^14 + 7.920025e-007x^13 + 3.256202e-006x^12 + -3.704228e-005x^11 + -9.671991e-005x^10 + 1.175149e-003x^9 + 1.729315e-003x^8 + -2.354541e-002x^7 + -1.527679e-002x^6 + 2.660934e-001x^5 + 3.057082e-002x^4 + -1.386296e+000x^3 + 1.984571e-001x^2 + 2.097913e+000x^1 + -2.557841e-001</div>			
 		</p>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
