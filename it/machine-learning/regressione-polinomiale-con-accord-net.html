@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -149,13 +150,13 @@
 										<a class="logo" href="../../it/">it</a>
 									</div>
 									<ul class="icons">
-										<li><a href="https://github.com/ettoremessina" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
-										<li><a href="https://twitter.com/ettoremessina" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
 										<li><a href="https://www.facebook.com/MentalitaComputazionale/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
 										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
 										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
-										<li><a href="https://t.me/ettoremessina" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
-										<li><a href="https://medium.com/@ettoremessina" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://t.me/ettoremessina/" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
 										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
 									</ul>
 								</header>
@@ -172,7 +173,6 @@
 			Anche se le reti neurali di tipo MLP (Multi Layer Perceptron) possono essere considerate degli approssimatori universali di funzioni (si veda <a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a> su questo sito web),
 			per alcune tipologie di dataset, un classico algoritmo supervisionato di regressione di machine learning, come quello di regressione polinomiale di cui si tratta qui, pu&ograve; arrivare a livelli di accuratezza accettabili
 			e con un costo computazionale decisamente pi&ugrave; basso rispetto a quello di un MLP.<br />
-			Per approfondire invece l&apos;approssimazione di una funzione reale di una variable con un MLP si veda <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a> e <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a>.<br />
 			<br />
 			Nel mondo reale i dataset preesistono alla fase di apprendimento, infatti questi vengono ottenuti estraendo dati da database di produzione o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici e cos&igrave; via,
 			e quindi adoperati per le fasi di learning successive;
@@ -180,7 +180,7 @@
 			questo ha il vantaggio di poter stressare l&apos;algoritmo e vedere per quali tipologie di dataset l&apos;algoritmo ha accuratezza accettabile e per quali invece l&apos;algoritmo fatica. 
 		</p>
 
-		<h3>Implementazione</h3>
+		<h2>Implementazione</h2>
 		<p>
 			Il codice descritto da questo post &egrave; scritto il C#, richiede <a href="https://dotnet.microsoft.com/" target="_blank">Microsoft .NET Core</a> 3.1 e il framework <a href="http://accord-framework.net/" target="_blank">Accord.NET</a> 3.8.0.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
@@ -271,14 +271,14 @@ namespace Regressors.Wrappers
 </code></pre>
 		</p>
 
-		<h3>Esecuzione del codice</h3>
+		<h2>Esecuzione del codice</h2>
 		<p>
 			Su un sistema Linux, Mac o Windows ove .NET Core 3.1 e git client siano già installati, per scaricare il sorgente e mandare in esecuzione il programma, eseguire i seguenti comandi:
 <pre><code class="shell">git clone https://github.com/ettoremessina/accord-net-experiments
 cd accord-net-experiments/Prototypes/CSharp/Regressors
 dotnet build
 dotnet run</code></pre>
-			La prima volta il comando di build potrebbe impiegare qualche secondo di tempo per effettuale il download di alcuni pacchetti di Accord.Net da NuGet; per rieseguire il programma dalla seconda volta in poi
+			La prima volta il comando di build potrebbe impiegare qualche secondo di tempo per effettuale il download di alcuni pacchetti di Accord.NET da NuGet; per rieseguire il programma dalla seconda volta in poi
 			&egrave; sufficiente eseguire:<br /><br />
 <pre><code class="shell">dotnet run</code></pre>
 			Dopo ogni esecuzione nella cartella <code>out</code> vengono create nove cartelle, ciascuna corrispondente a un caso di test built-in (si veda la classe <code>PolynomialLeastSquares1to1RegressorTester</code>);
@@ -385,6 +385,12 @@ Terminated test #PLSR_01
 			<div class="photocaption">p(x) = 2.620011e-041x^40 + -2.261159e-040x^39 + -1.064515e-037x^38 + 9.291263e-037x^37 + 2.000472e-034x^36 + -1.767156e-033x^35 + -2.306009e-031x^34 + 2.063269e-030x^33 + 1.823227e-028x^32 + -1.653595e-027x^31 + -1.047264e-025x^30 + 9.635843e-025x^29 + 4.515541e-023x^28 + -4.218466e-022x^27 + -1.489064e-020x^26 + 1.413717e-019x^25 + 3.790980e-018x^24 + -3.661427e-017x^23 + -7.468664e-016x^22 + 7.347405e-015x^21 + 1.134298e-013x^20 + -1.138497e-012x^19 + -1.314822e-011x^18 + 1.349687e-010x^17 + 1.143662e-009x^16 + -1.205220e-008x^15 + -7.274557e-008x^14 + 7.920025e-007x^13 + 3.256202e-006x^12 + -3.704228e-005x^11 + -9.671991e-005x^10 + 1.175149e-003x^9 + 1.729315e-003x^8 + -2.354541e-002x^7 + -1.527679e-002x^6 + 2.660934e-001x^5 + 3.057082e-002x^4 + -1.386296e+000x^3 + 1.984571e-001x^2 + 2.097913e+000x^1 + -2.557841e-001</div>			
 		</p>
 
+		<h2>Alternative</h2>
+		<p>
+			Per esempi di regressione di una funzione reale di una variable con SVM in Weka si veda <a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a>.<br />
+			Per approfondire invece l&apos;approssimazione di una funzione reale di una variable con un MLP si veda <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a> e <a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a>.<br />
+		</p>
+
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
 			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/accord-net-experiments/tree/master/Prototypes/CSharp/Regressors">GitHub</a>.
@@ -413,6 +419,7 @@ Terminated test #PLSR_01
 										<li>
 											<span class="opener">Reti&nbsp;Neurali</span>
 											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
 												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
@@ -427,6 +434,7 @@ Terminated test #PLSR_01
 										<li>
 											<span class="opener">Computazione&nbsp;Quantistica</span>
 											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
 												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
 												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
 											</ul>
@@ -434,13 +442,17 @@ Terminated test #PLSR_01
 										<li>
 											<span class="opener">Machine&nbsp;Learning</span>
 											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
 												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
 											</ul>
 										</li>
 										<li>
 											<span class="opener">Dataset</span>
 											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
 												<li><a href="../../it/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Functions</a></li>
 											</ul>
 										</li>
 										<li><a href="../../it/info.html">Info</a></li>
