@@ -34,9 +34,9 @@
 		</script>
 
 
-		<title>Synthetic Words</title>
-		<meta name="description" content="The &apos;functions&apos; dataset contains csv and arff (Weka) files that are generated executing mathematical functions in a limited subset of the domain." >
-		<meta name="keywords" content="machine learning, deep learning, dataset, csv, arff, weka, functions, variable, domain, image" >
+		<title>&apos;Synthetic Words&apos; dataset</title>
+		<meta name="description" content="The &apos;functions&apos; dataset collection contains csv and arff (Weka) files that are generated executing mathematical functions in a limited subset of the domain." >
+		<meta name="keywords" content="machine learning, deep learning, dataset, csv, arff, weka, function, continuous function, variable, domain, codomain" >
 		<link rel="canonical" href="https://computationalmindset.com/en/datasets/functions-dataset.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/datasets/functions-dataset.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/datasets/functions-dataset.html" />
@@ -94,7 +94,7 @@
             "item":
             {
               "@id": "https://computationalmindset.com/en/datasets/functions-dataset.html",
-              "name": "Functions"
+              "name": "&apos;Functions&apos; dataset collection"
             }
 		  }
 		
@@ -113,6 +113,15 @@
 				font-size: 1.2em;
 			}
 		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
 
 
 
@@ -154,20 +163,195 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Functions</h1>
+			<h1>&apos;Functions&apos; dataset collection</h1>
 		</header>
 		<p>
 			
-    Collection of synthetic datasets generated applying continuous and limitated functions to a closed subset of domain;
+    Collection of synthetic datasets generated applying continuous and limitated functions to a closed subset of its own domain;
     there are datasets done with scalar and vectorial functions and/or one-variable and multivariate functions.
     Datasets are in .csv format with header (each header column corresponds to a name of a variable) and in some case there is also the .arff format (for Weka);
     there are training/learning files and test files: first ones are bigger than seconds ones and the major part of data contained in test files are not present in training/learning ones.
 
 		</p>
 
-		<h2 id="downloadcode">Download of the dataset</h2>
+		<h2>One-variable real-valued continuous and limited function datasets: &nbsp; $y=f(x) : {\rm I\!R} \to {\rm I\!R}$</h2>
+
+		<div class="table-wrapper">
+			<table class="alt">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Formula</th>
+						<th>Domain</th>
+						<th>Train Info</th>
+						<th class="align-center">Train Links</th>
+						<th>Test Info</th>
+						<th class="align-center">Test Links</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="valign-middle">RtoR/001</td>
+						<td class="valign-middle">$y=\frac{1}{2} x^3 - 2 x^2 - 3 x - 1$</td>
+						<td class="align-center valign-middle">$[-10, 10]$</td>
+						<td class="valign-middle">Instances: 2001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 446, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/002</td>
+						<td class="valign-middle">$y=\sin x$</td>
+						<td class="align-center valign-middle">$[-2 \pi, 2 \pi]$</td>
+						<td class="valign-middle">Instances: 1257, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 280, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/003</td>
+						<td class="valign-middle">$y=e^x$</td>
+						<td class="align-center valign-middle">$[-5, 5]$</td>
+						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/004</td>
+						<td class="valign-middle">$y=\sqrt{|x|}$</td>
+						<td class="align-center valign-middle">$[-5, 5]$</td>
+						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>					
+					<tr>
+						<td class="valign-middle">RtoR/005</td>
+						<td class="valign-middle">$y=\ln{|x|}$</td>
+						<td class="align-center valign-middle">$[-5, 5]$</td>
+						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/006</td>
+						<td class="valign-middle">$y=\arctan{|x|}$</td>
+						<td class="align-center valign-middle">$[-5, 5]$</td>
+						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/007</td>
+						<td class="valign-middle">$y=e^{\sin x}$</td>
+						<td class="align-center valign-middle">$[-2 \pi, 2 \pi]$</td>
+						<td class="valign-middle">Instances: 1257, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 280, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/008</td>
+						<td class="valign-middle">$y=\tanh x$</td>
+						<td class="align-center valign-middle">$[-5, 5]$</td>
+						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle">RtoR/009</td>
+						<td class="valign-middle">$y=\frac{\sin 2x}{e^\frac{x}{5}}$</td>
+						<td class="align-center valign-middle">$[-20, 20]$</td>
+						<td class="valign-middle">Instances: 4000, discretization: 0.01</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/learnds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/learnds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+						<td class="valign-middle">Instances: 889, discretization: 0.045</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/testds.csv" target="_blank"><img src="../../posts/datasets/functions/csv-128.png" style="max-width: 24px; max-height: 24px" ></a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/testds.arff" target="_blank"><img src="../../posts/datasets/functions/arff-256.png" style="max-width: 24px; max-height: 24px" ></a>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+
+		<h2 id="downloadcode">Download of the datasets</h2>
 		<p>
-			The dataset is available on <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/functions">GitHub</a>.
+			The datasets are available on <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/functions">GitHub</a>.
 			<br />
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
@@ -225,8 +409,8 @@
 											<span class="opener">Datasets</span>
 											<ul>
 												<li><a href="../../en/datasets/">INDEX</a></li>
-												<li><a href="../../en/datasets/synthetic-words-dataset.html">Synthetic Words</a></li>
-												<li><a href="../../en/datasets/functions-dataset.html">Functions</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
 											</ul>
 										</li>
 										<li><a href="../../en/info.html">Info</a></li>
