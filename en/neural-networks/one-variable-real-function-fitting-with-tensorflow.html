@@ -36,7 +36,7 @@
 
 		<title>One-variable real-valued function fitting with TensorFlow</title>
 		<meta name="description" content="To fit a real function of a variable by observing different multilayer perceptron models with TensorFlow without writing code but only via the command line." >
-		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, regression, function, one variable, activation, training, loss, optimization, command line" >
+		<meta name="keywords" content="machine learning, deep learning, neural network, tensorflow, multilayer perceptron, mlp, fitting, approximate, regression, function, one variable, activation, metric, training, loss, optimization, command line, tensorboard" >
 		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/one-variable-real-function-fitting-with-tensorflow.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/one-variable-real-function-fitting-with-tensorflow.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html" />
@@ -172,7 +172,7 @@
 			<br />
 			The topic of this post is the fitting of a continuous and limited real-valued function defined in a closed interval of the reals $$f(x) \colon [a,b] \to \rm I\!R$$ with a MLP
 			so that the user can test different combinations of MLP architectures, their own activation functions, training algorithm and loss function without writing code
-			but working only on the command line of the four Python scripts which separately implement the following features:
+			but working only on the command line of the six Python scripts which implement the following features:
 
 			<ul>
 				<li>
@@ -187,9 +187,12 @@
 				<li>
 					<em>Visualization of the result</em>
 				</li>
+				<li>
+					<em>Diagnostics</em>
+				</li>
 			</ul>
 
-			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2); it requires also NumPy and MatPlotLib libraries.<br/>
+			The related code requires the version 3 of Python and it uses TensorFlow 2 technology (for both CPU or GPU) with Keras (that is integrated inside TensorFlow 2); it requires also NumPy, MatPlotLib and ImageIO libraries.<br/>
 			To get the code please see the paragraph <a href='#downloadcode'>Download of the complete code</a> at the end of this post.<br/>
 			<br/>
 			The exact same mechanism was created using PyTorch technology; see the post <a href="../../en/neural-networks/one-variable-real-function-fitting-with-pytorch.html">One-variable real-valued function fitting with PyTorch</a> always published on this website.<bt />
@@ -204,7 +207,7 @@
 			it takes in command line the function to be approximated (in <em>lambda body</em> syntax), the interval of independent variable (begin, end and discretization step)
 			and it generates the dataset in an output csv file applying the function to the passed interval.
 			<br/>
-			In fact the output csv file has two columns (without header): first column contains the sorted values of independent variable $x$ within the passed interval discretized by discretization step;
+			In fact the output csv file has two columns (with header): first column contains the sorted values of independent variable $x$ within the passed interval discretized by discretization step;
 			second column contains the values of dependent variable, ie the values of function $f(x)$ correspondent to values of $x$ of first column.
 			<br/>
 			<br/>
@@ -264,12 +267,21 @@
 			<pre><code class="shell">usage: fx_fit.py [-h]
 --trainds TRAIN_DATASET_FILENAME
 --modelout MODEL_PATH
+[--valds VAL_DATASET_FILENAME]
+[--bestmodelmonitor BEST_MODEL_MONITOR]
 [--epochs EPOCHS]
 [--batch_size BATCH_SIZE]
 [--hlayers HIDDEN_LAYERS_LAYOUT [HIDDEN_LAYERS_LAYOUT ...]]
 [--hactivations ACTIVATION_FUNCTIONS [ACTIVATION_FUNCTIONS ...]]
+[--winitializers KERNEL_INITIALIZERS [KERNEL_INITIALIZERS ...]]
+[--binitializers BIAS_INITIALIZERS [BIAS_INITIALIZERS ...]]
 [--optimizer OPTIMIZER]
-[--loss LOSS]</code></pre>
+[--loss LOSS]
+[--metrics METRICS [METRICS ...]]
+[--dumpout DUMPOUT_PATH]
+[--logsout LOGSOUT_PATH]
+[--modelsnapout MODEL_SNAPSHOTS_PATH]
+[--modelsnapfreq MODEL_SNAPSHOTS_FREQ]</code></pre>
 			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_fit" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
@@ -297,7 +309,7 @@
 		<p>
 			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_predict.py" target="_blank"><code>fx_predict.py</code></a> Python program
 			is to apply the MLP model generated through <code>fx_fit.py</code> to an input dataset (for example the test dataset generated through <code>fx_gen.py</code> program as shown in a previous paragraph);
-			the execution of the program produces in output a csv file with two columns (without header): the first column contains the values of indepedent variable $x$ taken from test dataset
+			the execution of the program produces in output a csv file with two columns (with header): the first column contains the values of indepedent variable $x$ taken from test dataset
 			and the second column contains the predicted values of dependent variable, ie the values of the prediction correspondent to values of $x$ of first column.
 			<br/>
 			To get the program usage you can run this following command:
@@ -328,28 +340,29 @@
 
 		<h2>Visualization of the result</h2>
 		<p>
-			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_plot.py" target="_blank"><code>fx_plot.py</code></a> Python program
+			Goal of the <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_scatter.py" target="_blank"><code>fx_scatter.py</code></a> Python program
 			is to visualize the prediction curve superimposed on initial dataset curve (test or training, as you prefer) and it allows the visual comparison of the two curves.
 			<br/>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fx_plot.py --help</code></pre>
+			<pre><code class="shell">$ python fx_scatter.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fx_plot.py [-h]
+			<pre><code class="shell">usage: fx_scatter.py [-h]
 --ds DATASET_FILENAME
 --prediction PREDICTION_DATA_FILENAME
+[--title FIGURE_TITLE]
 [--savefig SAVE_FIGURE_FILENAME]</code></pre>
-			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_plot" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_scatter" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
 			<br/>
 		</p>
-		<h3>An example of using the program fx_plot.py</h3>
+		<h3>An example of using the program fx_scatter.py</h3>
 		<p>
 			Having the test dataset <code>mytest.csv</code> available (for example generated through <code>fx_gen.py</code> program as shown in a previous paragraph)
 			and the prediction csv file (generated through <code>fx_predict.py</code> program as shown in the previous paragraph), to generate the two xy-scatter charts, execute the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fx_plot.py \
+			<pre><code class="shell">$ python fx_scatter.py \
   --ds mytest.csv \
   --prediction myprediction.csv</code></pre>
 			which shows the two curves superimposed: in blue the input dataset, in red the prediction one.
@@ -357,14 +370,77 @@
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
 		</p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/one-variable-real-function-fitting-with-tensorflow/nn-ovffwtf-example09.png" /></div>
-		<div class="photocaption">Chart generated by the program <code>fx_plot.py</code> that shows the fitting of the function $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$ made by the MLP.</div>
+		<div class="photocaption">Chart generated by the program <code>fx_scatter.py</code> that shows the fitting of the function $f(x)=\frac{\sin 2x}{e^\frac{x}{5}}$ made by the MLP.</div>
 		<br/>
 
-		<h2>Examples of cascade use of the four programs</h2>
+		<h2>Diagnostics</h2>
+		<p>
+			The diagnostics consists of a series of techniques to analyze the behavior of MLP during the training phase,
+			so that the program <code>fx_fit.py</code> supports the following command line arguments in order to export information so that other programs can then analyze it:
+<pre><code class="shell">[--metrics METRICS [METRICS ...]]
+[--dumpout DUMPOUT_PATH]
+[--logsout LOGSOUT_PATH]
+[--modelsnapout MODEL_SNAPSHOTS_PATH]
+[--modelsnapfreq MODEL_SNAPSHOTS_FREQ]</code></pre>
+			<code>--metrics</code> is the list of metrics to be calculated on the training dataset and, if specified by argument <code>--valds</code>, also on the validation dataset.<br />
+			<code>--dumpout</code> is the argument to indicate the directory where to save the values of the loss function and the calculated metrics in csv format.<br />
+			<code>--logsout</code> is the argument to indicate the directory where to save the log files to allow TensorBoard to analyze them (both during the training phase and at the end of training).<br />
+			<code>--modelsnapout</code> is the argument to indicate the directory where to save the model of each <code>--modelsnapfreq</code> epochs; the first and last epochs are always saved if this argument is specified.<br />
+			<code>--modelsnapfreq</code> indicates how many times to save the model in the directory indicated by <code>--modelsnapout</code>.<br />
+		</p>
+		<p>
+			The value of the calculated metrics and the value of the loss function is available on the output stream of <code>fx_fit.py</code>.<br />
+			The information exported from <code>fx_fit.py</code> can be used by the following 3 programs:
+			<ul>
+				<li>TensorBoard</li>
+				<li>fx_diag.py</li>
+				<li>fx_video.py</li>
+			</ul>
+			To run TensorBoard launch the shell command:
+			<br />
+			<br />
+			<pre><code class="shell">$ tensorboard --logdir <em>path/to/logdir</em></code></pre>
+			where the directory passed to the parameter <code>--logdir</code> is the same directory generated by <code>fx_fit.py</code> specified by argument<code>--logsout</code>.<br />
+			See <a href="https://www.tensorflow.org/tensorboard" target="_blank">TensorBoard</a> for details.<br />
+			<br/>
+			The Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_diag.py" target="_blank"><code>fx_diag.py</code></a>
+			generate a series of graphs showing the curve of the loss function and the curves of the metrics calculated on the training dataset
+			and also on the validation dataset if this has been passed to <code>fx_fit.py</code> with the option <code>--valds</code>.<br />
+			To get the program usage you can run this following command:<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_diag.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fx_diag.py [-h] [--help] 
+--dump DUMP_PATH
+[--savefigdir SAVE_FIGURE_DIRECTORY]</code></pre>
+			Please read the file <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_diag" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.<br/>
+			<br/>
+			The Python program <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/fx_video.py" target="_blank"><code>fx_video.py</code></a>
+			generates an animated git that shows the prediction curve computed on an input dataset as the epochs change.<br />
+			To get the program usage you can run this following command:<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_video.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fx_videp.py [-h] [--help] 
+--modelsnap MODEL_SNAPSHOTS_PATH
+--ds DATASET_FILENAME
+--savevideo SAVE_GIF_VIDEO
+[--fps FPS]
+[--width WIDTH]
+[--height HEIGHT]</code></pre>
+			The directory passed all&apos;argument <code>--modelsnap</code> is the directory generated by <code>fx_fit-py</code> and specified via the parameter <code>--modelsnapout</code>.<br />
+			Please read the file  <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/blob/master/one-variable-function-fitting/README.md#fx_video" target="_blank">README.md</a> for a complete detail of the semantics of the parameters supported on the command line.
+		</p>
+
+		<h2>Examples of cascade use of these programs</h2>
 		<p>
 			In the folder <a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting/examples" target="_blank"><code>one-variable-function-fitting/examples</code></a>
-			there are nine shell scripts that show the use in cascade of the four programs in various combinations of parameters
-			(MLP architecture, activation functions, optimization algorithm, loss function, training procedure parameters)
+			there are nine shell scripts that show the use in cascade of these programs in various combinations of parameters
+			(MLP architecture, activation functions, optimization algorithm, loss function, metrics, best model, initializers, training procedure parameters, diagnostics)
 			To run the nine examples, run the following commands:
 <pre><code class="shell">$ cd one-variable-function-fitting/examples
 $ sh example1.sh
