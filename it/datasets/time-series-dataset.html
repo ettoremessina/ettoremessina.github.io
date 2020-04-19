@@ -35,12 +35,12 @@
 		</script>
 
 
-		<title>Generazione di un numero casuale</title>
-		<meta name="description" content="La generazione di numeri casuali su un computer quantistico si ottiene sfruttando l&apos;impredicibilit&agrave; della misura di un qubit in sovrapposizione." >
-		<meta name="keywords" content="porta hadamard, casuale, random, qubit, sovrapposizione, matrice, vettore, ibm experience, qiskit, q#, qasm, quantistico, meccanica" >
-		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/random-number-generation.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
+		<title>Dataset &apos;Synthetic Words&apos;</title>
+		<meta name="description" content="La collezione di dataset &apos;timeseries&apos; contiene file csv and arff (Weka) generati eseguendo functioni matematiche sulla variabile indipendente tempo per generare successioni temporali sintetiche." >
+		<meta name="keywords" content="machine learning, deep learning, dataset, csv, arff, weka, serie temporale, time series, forecast, univariata, multivariata, arima, sarima, stagionalit&agrave;, trend, rumore" >
+		<link rel="canonical" href="https://computationalmindset.com/it/datasets/time-series-dataset.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/datasets/time-series-dataset.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/datasets/time-series-dataset.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -84,8 +84,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/",
-              "name": "Computazione Quantistica"
+              "@id": "https://computationalmindset.com/it/datasets/",
+              "name": "Datasets"
             }
           },
 
@@ -94,8 +94,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html",
-              "name": "Generazione di un numero casuale"
+              "@id": "https://computationalmindset.com/it/datasets/time-series-dataset.html",
+              "name": "Collezione di dataset &apos;Time&nbsp;Series&apos;"
             }
 		  }
 		
@@ -165,252 +165,96 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Generazione di un numero casuale</h1>
+			<h1>Collezione di dataset &apos;Time&nbsp;Series&apos;</h1>
 		</header>
-
 		<p>
-			Generare numeri casuali su un computer quantistico non &egrave; cosa difficile in quanto l&apos;impredicibilit&agrave; della misura di un qubit
-			in stato di sovrapposizione &egrave; di fatto una forma di casualit&agrave; naturale.
-			Tradurre tale idea in codice &egrave; relativamente semplice: prendendo n qubit (quindi il numero casuale ottenuto da ogni esecuzione sar&agrave; 
-			un numero intero da 0 a 2<sup>n</sup> - 1) con stato iniziale uguale a $|0\rangle$, 
-			si applica su ciascuno degli n qubit la porta quantistica Hadamard e infine si effettua la misura. 
-			La porta Hadamard applicata a $|0\rangle$ porta il qubit nello stato di sovrapposizione:
-						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
-						e ci&ograve; significa che la misura avr&agrave; la probabilit&agrave; del 50% di essere uguale a 0 e del 50% di essere uguale a 1.
+			
+    Collezione di dataset sintetici generati applicando funzioni ai valori di una sequenza che rappresenta il tempo;
+    ci sono dataset fatti con funzioni scalari e vettoriali e/o di una o pi&ugrave; variabili.
+    I dataset sono in formato .csv con header (ogni colonna dell'header corrisponde al nome di una variabile) e in alcuni casi vi sono anche file in formato .arff (per Weka).
+
 		</p>
 
-		<h2>Schema circuitale</h2>
-		<p>Considerando di avere a disposizione un computer quantistico con 5 qubit, lo schema circuitale che realizza quanto detto sopra &egrave; il seguente:</p>
-		<div class="betweentextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-circuit.png" /></div>
-		<br/>
-
-		<h2>Codice in QASM</h2>
-		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quantistico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="asm">OPENQASM 2.0;
-include "qelib1.inc";
-
-qreg q[5];
-creg c[5];
-
-h q[0];
-h q[1];
-h q[2];
-h q[3];
-h q[4];
-
-measure q[0] -> c[0];
-measure q[1] -> c[1];
-measure q[2] -> c[2];
-measure q[3] -> c[3];
-measure q[4] -> c[4];</code></pre>
-		<br/>
-	
-		<h2>Codice in Python con Qiskit</h2>
-		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quantistico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="python">q = QuantumRegister(5, 'q')
-c = ClassicalRegister(5, 'c')
-circuit = QuantumCircuit(q, c)
-
-circuit.h(q[0])
-circuit.h(q[1])
-circuit.h(q[2])
-circuit.h(q[3])
-circuit.h(q[4])
-
-circuit.measure(q, c)</code></pre>
-		<br/>
-	
-		<h2>Codice in Microsoft .NET Core Q# per simulatore quantistico</h2>
-		<p>Il seguente programma &egrave; la traduzione in Microsoft Q# Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato su un Linux con .NET Core, runtime Q# e simulatore quantistico Microsoft installati.</p>
-		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
-
-    open Microsoft.Quantum.Intrinsic;
-    open Microsoft.Quantum.Canon;
-    open Microsoft.Quantum.Measurement;
-
-    operation RandomNumberGenerator() : (Result, Result, Result, Result, Result)
-    {
-        using (q = Qubit[5])
-        {
-            H(q[0]);
-            H(q[1]);
-            H(q[2]);
-            H(q[3]);
-            H(q[4]);
-
-            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
-
-            ResetAll(q);
-            return result;
-        }
-    }
-</code></pre>
-		<br/>
-
-		<h2>Risultati su IBM Q Experience</h2>
-		<p>
-			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot uguale a 8192 sia sul simulatore &apos;qasm_simulator&apos; di IBM che sul computer quantisco IBM &apos;ibmq_london&apos; di IBM
-			ottenendo il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			La non perfetta uniformit&agrave; mostrata nel caso dei computer quantistici reali rispetto ai simulatori &egrave; riconducibile a rumore.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
-		</p>
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos; (prime 20 combinazioni)</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos; (prime 20 combinazioni)</div>
-		<br />
-
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
-		<br />
-		<br />
-
-		<h2>Risultati su simulatore Microsoft</h2>
-		<p>
-			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
-		</p>
+		<h2 id="univariate">Dataset di serie temporali semplici (univariate) con valori in ${I\!R}$</h2>
 
 		<div class="table-wrapper">
 			<table class="alt">
 				<thead>
 					<tr>
-						<th>Binario</th>
-						<th>Decimale</th>
-						<th>Conteggio</th>
-						<th>Probabilit&agrave; (%)</th>
+						<th>ID</th>
+						<th>Formula</th>
+						<th>Dominio Temporale</th>
+						<th>Rumore</th>
+						<th>Info</th>
+						<th class="align-center">Link</th>
 					</tr>
 				</thead>
 				<tbody>
-					
 					<tr>
-						<td>00000</td><td>00</td><td>257</td><td>3.14%</td>
+						<td class="valign-middle">univariate/001</td>
+						<td class="valign-middle">$y=2 \sin \frac{t}{10}$</td>
+						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
+						<td class="align-center valign-middle">Nessuno</td>
+						<td class="valign-middle">Istanze: 200</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/001/learnts.csv" target="_blank">.csv</a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/001/learnts.arff" target="_blank">.arff</a>
+						</td>
 					</tr>
 					<tr>
-						<td>00001</td><td>01</td><td>265</td><td>3.24%</td>
+						<td class="valign-middle">univariate/002</td>
+						<td class="valign-middle">$y=\frac{2 \sin \frac{t}{3}}{e^\frac{t}{70}}$</td>
+						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
+						<td class="align-center valign-middle">Nessuno</td>
+						<td class="valign-middle">Istanze: 200</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/002/learnts.csv" target="_blank">.csv</a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/002/learnts.arff" target="_blank">.arff</a>
+						</td>
 					</tr>
 					<tr>
-						<td>00010</td><td>02</td><td>240</td><td>2.93%</td>
+						<td class="valign-middle">univariate/003</td>
+						<td class="valign-middle">$y=2 \sin \frac{t}{10} + \frac{3}{2} \cos \frac{t}{20}$</td>
+						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
+						<td class="align-center valign-middle">Nessuno</td>
+						<td class="valign-middle">Istanze: 200</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/003/learnts.csv" target="_blank">.csv</a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/003/learnts.arff" target="_blank">.arff</a>
+						</td>
 					</tr>
 					<tr>
-						<td>00011</td><td>03</td><td>255</td><td>3.11%</td>
+						<td class="valign-middle">univariate/004</td>
+						<td class="valign-middle">$y=\frac{t}{50} + \sin \frac{t}{10}$</td>
+						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
+						<td class="align-center valign-middle">Nessuno</td>
+						<td class="valign-middle">Istanze: 200</td>
+						<td class="align-center valign-middle size-of-symbols">
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.csv" target="_blank">.csv</a>
+							&nbsp;
+							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.arff" target="_blank">.arff</a>
+						</td>
 					</tr>
-					<tr>
-						<td>00100</td><td>04</td><td>237</td><td>2.89%</td>
-					</tr>
-					<tr>
-						<td>00101</td><td>05</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>00110</td><td>06</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>00111</td><td>07</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>01000</td><td>08</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>01001</td><td>09</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>01010</td><td>10</td><td>241</td><td>2.94%</td>
-					</tr>
-					<tr>
-						<td>01011</td><td>11</td><td>246</td><td>3.00%</td>
-					</tr>
-					<tr>
-						<td>01100</td><td>12</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>01101</td><td>13</td><td>264</td><td>3.22%</td>
-					</tr>
-					<tr>
-						<td>01110</td><td>14</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>01111</td><td>15</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>10000</td><td>16</td><td>223</td><td>2.72%</td>
-					</tr>
-					<tr>
-						<td>10001</td><td>17</td><td>244</td><td>2.98%</td>
-					</tr>
-					<tr>
-						<td>10010</td><td>18</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>10011</td><td>19</td><td>245</td><td>2.99%</td>
-					</tr>
-					<tr>
-						<td>10100</td><td>20</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>10101</td><td>21/td><td>248</td><td>3.03%</td>
-					</tr>
-					<tr>
-						<td>10110</td><td>22</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>10111</td><td>23</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>11000</td><td>24</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>11001</td><td>25</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>11010</td><td>26</td><td>292</td><td>3.56%</td>
-					</tr>
-					<tr>
-						<td>11011</td><td>27</td><td>227</td><td>2.77%</td>
-					</tr>
-					<tr>
-						<td>11100</td><td>28</td><td>278</td><td>3.39%</td>
-					</tr>
-					<tr>
-						<td>11101</td><td>29</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>11110</td><td>30</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>11111</td><td>31</td><td>260</td><td>3.17%</td>
-					</tr>
-
 				</tbody>
 				<tfoot>
-					<tr>
-						<td colspan="2">Totale:</td>
-						<td>8192</td>
-						<td>100.00%</td>
-					</tr>
 				</tfoot>
 			</table>
 		</div>
-		<div class="photocaption">Risultato del programma scritto in Q# ed eseguito su Linux con .NET Core e simulatore quantistico Microsoft</div>
-		<br />
-		<br />
 
-		<h2>Download del codice completo</h2>
+		<h2 id="downloadcode">Download dei dataset</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/RandomNumberGenerator">GitHub</a>.
-			<br/>
+			I dataset sono disponibili su <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/timeseries/">GitHub</a>.
+			<br />
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
 			<br/>
 			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
 			<br/>
 
-		</p>
+		</p>			
 	</section>
 
 						</div>
