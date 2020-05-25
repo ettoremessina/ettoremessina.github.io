@@ -1,0 +1,513 @@
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Operatori quantistici NOT e C-NOT</title>
+		<meta name="description" content="Gli operatori quantistici NOT (formalmente l'operatore Pauli-X) e C-NOT (controlled-NOT, detto anche XOR quantistico)." >
+		<meta name="keywords" content="not, c-not, cnot, xor, qubit, sovrapposizione, ibm experience, qiskit, q#, qasm, quantistico, meccanica" >
+		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/not-cnot-operators.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/computazione-quantistica/",
+              "name": "Computazione Quantistica"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html",
+              "name": "Operatori quantistici NOT e C-NOT"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina/" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<!--<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>-->
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	$\newcommand\dag\dagger$
+	<section>
+		<header class="main">
+			<h1>Operatori quantistici NOT e C-NOT</h1>
+		</header>
+
+		<p>
+			Gli operatori dei tradizionali linguaggi di programmazione di alto livello sono tradotti dai relativi compilatori in brevi sequenze di istruzioni in linguaggio macchina
+			e a loro volta tali istruzioni sono implementate all&apos;interno dei microprocessori con tecniche di microprogrammazione
+			le cui microistruzioni utilizzano operatori logici e matematici realizzati direttamente a livello circuitale. <br />
+			Ad esempio, in questo frammento di codice in linguaggio C:
+			<pre><code class="c">int v1, v2;
+//….
+int v = v1 ^ v2;</code></pre>
+			l&apos;espressione <code>v1 ^ v2</code> (cio&egrave; il calcolo <code>v1 xor v2</code> eseguito bit a bit) viene tradotta in assembly x86_64 così:<br />
+			<br />
+			<pre><code class="asm">mov eax, DWORD PTR [rbp-4]
+xor eax, DWORD PTR [rbp-8]
+mov DWORD PTR [rbp-12], eax</code></pre>
+			La prima istruzione <code>mov</code> copia il valore della variable v1 nel registro eax,
+			la seconda istruzione <code>xor</code> esegue l&apos;or esclusivo (lo xor appunto) bit a bit tra il registro eax e la variable v2 e salva il risultato sullo stesso registro eax,
+			l&apos;ultima istruzione <code>mov</code> assegna il valore del registro eax (che contiene il risultato dello xor bit a bit) alla variable v.<br />
+			<br />
+			La cosa che viene fatta notare &egrave; che lo <em>xor</em> è una istruzione implementata direttamente nel microprocessore ed esegue lo xor sui numeri interi a 32 bit (il registro eax contiene 32 bit)
+			e si pu&ograve; immaginare che ci siano nel chip del processore 32 microcircuiti che realizzano il calcolo dello xor, ciascuno circuito operante (in parallelo e indipendentemente dagli altri) su una coppia di bit (uno proveniente dal registro, l’altro dalla memoria).
+			A sua volta ogni microcircuito che calcola lo xor tra due bit &egrave; composto da transistor opportunamente collegati e infine tali transistor sono realizzati sfruttando la fisica dello stato solido che &egrave; alla base dei semiconduttori.<br />
+			<br />
+			Al di l&agrave; dei tecnicismi, la cosa che si vuole mettere in evidenza &egrave; che un operatore di un linguaggio di alto livello (l&apos;operatore ^ del C in questo esempio) su un processore ordinario (non quantistico)
+			si appoggia, nel suo livello pi&ugrave; basso di astrazione (inaccessibile allo sviluppatore), sulla fisica dello stato solido 
+			poiché tale &egrave; la fisicit&agrave; dello strato sottostante più basso (i transistor, appunto).<br />
+			<br />
+			Un ragionamento simile può essere fatto nella programmazione quantistica: scopo di questo post &egrave; mostrare come due operatori quantistici,
+			a partire da un linguaggio di alto livello, sono implementati sfruttando fenomeni di meccanica quantistica.<br />
+			In particolare il post mostra i fenomeni quantistici sottostanti gli operatori NOT (pi&ugrave; correttamente chiamato porta Pauli-X) e C-NOT (NOT Controllato, conosciuto anche come <em>xor quantistico</em>).
+		</p>
+
+		<h2>Il modello matematico del qubit</h2>
+		<p>
+			Il qubit &egrave; descritto matematicamente come uno spazio di Hilbert complesso bidimensionale. La base canonica di questo spazio si indica (usando la notazione di Dirac) con
+						$$\{|0\rangle,|1\rangle\}$$
+						che scritta nella forma della base dei vettori delle componenti &egrave;
+						$$\{\begin{bmatrix} 1 \\ 0 \\ \end{bmatrix},\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}\}$$
+						e ciascun elemento della base corrisponde rispettivamente ai bit classici 0 e 1.
+			<br/>
+			Come per ogni spazio vettoriale, ogni vettore dello spazio pu&ograve; essere scritto univocamente come combinazione lineare dei vettori della base
+						$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+						dove $\alpha$ e $\beta$ si chiamano <em>ampiezze di probabilit&agrave;</em> e devono essere tali da soddisfare $|\alpha|^2 + |\beta|^2 = 1$<br />
+			La meccanica quantistica dice che se si effettua una misura (rispetto alla base) si pu&ograve; soltanto ottenere lo stato $|0\rangle$ (corrispondente al bit 0)
+			con probabilit&agrave; $|\alpha|^2$ oppure lo stato $|1\rangle$ (corrispondente al bit 1) con probabilit&agrave; $|\beta|^2$.<br />
+		</p>
+
+		<h2>L&apos;operatore NOT</h2>
+		<p>
+			L&apos;operatore quantistico NOT, che da adesso sarà chiamato con il suo nome pi&ugrave; formale di <em><b>Pauli-X</em></b> agisce su un singolo qubit
+			e il suo scopo &egrave; invertire il qubit passato rispetto alla base canonica (operazione che corrisponde a una rotazione rispetto all&apos;asse X
+			sulla sfera di Bloch, si veda <a href="https://it.wikipedia.org/wiki/Sfera_di_Bloch" target='blank'>Sfera di Bloch su Wikipedia</a>)<br />
+			<br />
+			Matematicamente bisogna quindi trovare una matrice <em>hermetiana</em> e <em>unitaria</em> (perch&egrave; tutti gli operatori quantistci tali devono essere) 
+			che inverta gli stati in maniera tale che:
+			$$\alpha|0\rangle + \beta|1\rangle \rightarrow \beta|0\rangle + \alpha|1\rangle$$
+			Una tale matrice &egrave;
+						$$X=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right]$$
+						Che la matrice $X$ sia hermetiana &egrave; evidente: essa contiene solo elementi reali ed &egrave; simmetrica.<br />
+			&Egrave; unitaria perch&eacute; la sua trasposta coniugata (che &egrave; anche la trasposta essendo presenti solo elementi reali) coincide con la sua inversa
+			e la verifica &egrave; un semplice calcolo
+						$$XX^\dag=XX=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right]= \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
+									Analogamente si dimostra che $X^\dag X=I$ per cui vale $X^\dag=X^{-1}$
+						<br />
+			Dal punto di vista fisico la realizzazione della porta Pauli-X dipende da come il computer quantistico &egrave; realizzato dal punto di vista hardware;
+			non &egrave; scopo di questo post entrare nella realizzazione ingegneristica dei qubit, ma giusto per fissare le idee, se ad esempio il qubit fosse realizzato tramite spin di un elettrone,
+			la porta Pauli-X sarebbe realizzata provocando una rotazione di $\pi$ intorno all&apos;asse X dello spin dell&apos;elettrone.
+		</p>
+
+		<h3>Test della porta Pauli-X senza sovrapposizione</h3>
+		<p>
+			Si osservi il seguente frammento di codice Python con Qiskit scritto per essere eseguito all&apos;interno di un Jupyter Notebook 
+			utilizzando come backend sia il simulatore &apos;qasm_simulator&apos; di IBM che il computer quantistico &apos;ibmq_london&apos; di IBM.</p>
+			<pre><code class="python">q = QuantumRegister(3, 'q')
+c = ClassicalRegister(3, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.x(q[1])
+circuit.x(q[2])
+circuit.x(q[2])
+
+circuit.measure(q, c)</code></pre>
+			che corrisponde al seguente circuito quantistico:
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_1_paulix.png" /></div>
+			e il cui risultato eseguito con un numero di shot=8192 sul simulatore IBM &apos;qasm_simulator&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-paulix-qiskit_result_sim.png" /></div>
+			mentre il risultato eseguito sempre con un numero di shot=8192 sul computer quantistico IBM &apos;ibmq_london&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-paulix-qiskit_result_real.png" /></div>
+			che &egrave; del tutto equivalente al risultato ottenuto con il simulatore a meno di piccole differenze nella distribuzione delle probabilità riconducibili a rumori.<br />
+			<br />
+			Osservando il risultato possiamo avere la prova sperimentale di quanto affermato sopra riguardo al comportamento della porta Pauli-X
+			e possiamo concludere che in assenza di stati di sovrapposizione il comportamento della porta Pauli-X &egrave; del tutto paragonabile
+			all&apos;operatore NOT dei linguaggi tradizionali (come ad esempio l&apos;operatore <code>!</code> del C).</br>
+			Infatti:
+			<ui>
+				<li>
+					Il qubit 0 non subisce nessuna applicazione di alcun operatore, quindi esso inizia nello stato $|0\rangle$
+					e al momento della misura il suo stato vale ovviamente $|0\rangle$ con probabilit&agrave; del 100%.
+				</li>
+				<li>
+					Al qubit 1 &egrave; applicata la porta Pauli-X e il comportamento atteso &egrave; infatti quello di un operatore NOT tradizionale:
+					porta il qubit dallo stato inziale di $|0\rangle$ allo stato finale di $|1\rangle$ con probabilit&agrave; del 100%.
+				</li>
+				<li>
+					Al qubit 2 sono applicate due porte Pauli-X in cascata: anche questa volta il comportamento atteso:
+					la prima applicazione porta il qubit dallo stato iniziale di $|0\rangle$ allo stato di $|1\rangle$
+					e la seconda applicazione porta il qubit dallo stato di $|1\rangle$ allo stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
+					<br />
+					Questo ultimo non sorprende in quanto la matrice X, per quando detto sopra &egrave; hermetiana e unitaria e quindi una doppia applicazione in cascata corrisponde alla matrice identità.
+				</li>
+			</ui>
+		<br/>
+	
+		<h3>Test della porta Pauli-X con sovrapposizione</h3>
+		<p>
+			La sovrapposizione di stati &egrave; una peculiarit&agrave; dei qubit e non ha una corrispondenza nel bit ordinario.
+			Ci si pone infatti la seguente domanda: qual &egrave; il comportamento del qubit in stato di sovrapposizione se a esso viene applicato l&apos;operatore quantistico NOT, o che dir si voglia, la porta Pauli-X?<br />
+			Si dimostra facilmente che, dato un qubit in stato di sovrapposizione 			
+						$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+						la porta Pauli-X inverte che ampiezze di probabilit&agrave;, ovverosia il qubit dopo una applicazione della porta Pauli-X si porter&agrave; nello stato 
+						$$not |\psi\rangle=\beta|0\rangle + \alpha|1\rangle$$
+						La dimostrazione &egrave; la seguente: scrivendo l&apos;applicazione della porta al vettore nella forma dei vettori delle componenti rispetto alla base canonica
+			ed eseguendo un passaggio di calcolo
+						$$X|\psi\rangle=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} \alpha \\ \beta \end{matrix} \right] = \left[\begin{matrix} \beta \\ \alpha \end{matrix} \right] $$
+						e tornando nello spazio vettoriale dei qubit otteniamo appunto $\beta|0\rangle + \alpha|1\rangle$, ovverosia l&apos;inversione delle ampiezze di probabilit&agrave;.<br >
+			<br >
+			Passando al calcolatore, si sarebbe tentati di usare la porta Hadamard per mettere il qubit in una sovrapposizione di stati; ma ai fini dimostrativi non &egrave; molto utile
+						in quando applicando la porta Hadamard allo stato $|0\rangle$ accadrebbe che $\alpha$ e $\beta$ sarebbero entrambi uguali a $\frac{1}{\sqrt{2}}$
+			e l&apos;effetto inversione non si vedrebbe bene. Meglio quindi impostare $\alpha$ e $\beta$ con valori diversi.<br />			
+						Si osservi il seguente frammento di codice Python con Qiskit scritto per essere eseguito all&apos;interno di un Jupyter Notebook 
+			utilizzando come backend sia il simulatore &apos;qasm_simulator&apos; di IBM che il computer quantistico &apos;ibmq_london&apos; di IBM.</p>
+			<pre><code class="python">q = QuantumRegister(1, 'q')
+c = ClassicalRegister(1, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.ucrx(np.pi/3, , q0)
+
+circuit.measure(q, c)]</code></pre>
+			che corrisponde al seguente circuito quantistico:
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_paulix.png" /></div>
+			e il cui risultato eseguito con un numero di shot=8192 sul simulatore IBM &apos;qasm_simulator&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_sim.png" /></div>
+			mentre il risultato eseguito sempre con un numero di shot=8192 sul computer quantistico IBM &apos;ibmq_london&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_real.png" /></div>
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.<br />
+			<br />
+			L&apos;operatore <code>ucrx</code> con argomento $\frac\pi3$ effettua una rotazione di 60° intorno all&apos;asse X portanto $|\alpha|^2=\frac34$ e $|\beta|^2=\frac14$
+			e difatti se si va a misurare il qubit 0 si ha una probabilit&agrave; del 75% di ottenere lo stato $|0\rangle$ e del 25% di ottenere $|1\rangle$.<br />
+			<br />
+			Adesso si modifica il programma aggiungendo una porta Pauli-X a seguire l&apos;applicazione della porta <code>ucrx</code>.
+			Qui il codice:
+			<pre><code class="python">q = QuantumRegister(1, 'q')
+c = ClassicalRegister(1, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.ucrx(np.pi/3, , q0)
+circuit.x(q0)
+
+circuit.measure(q, c)]</code></pre>
+			che corrisponde al seguente circuito quantistico:
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_3_paulix.png" /></div>
+			e il cui risultato eseguito con un numero di shot=8192 sul simulatore IBM &apos;qasm_simulator&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-paulix-qiskit_result_sim.png" /></div>
+			mentre il risultato eseguito sempre con un numero di shot=8192 sul computer quantistico IBM &apos;ibmq_london&apos; &egrave; il seguente:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-paulix-qiskit_result_real.png" /></div>
+			da cui si vede chiaramente l&apos;effetto di inversione delle ampiezze di probabilit&agrave; provocato dell&apos;applicazione della porta Pauli-X:
+			andando a misurare il qubit 0 si ha una probabilit&agrave; del 25% di ottenere lo stato $|0\rangle$ e del 75% di ottenere $|1\rangle$.<br /><br />
+			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.<br />
+			<br />
+			Sopra si era detto che la porta Pauli-X effettua una rotazione di $\pi$ intorno all&apos;asse X della sfera di Bloch:
+			programmaticamente l&apos;operatore Pauli-X quindi &egrave; del tutto equivalente allo statement:
+			<center><code>circuit.ucrx([np.pi], [], q[<em>i</em>])</code></center>
+			dove <em>i</em> &egrave; l&apos;indice che qubit che si intende invertire.
+		</p>
+
+		<h2>L&apos;operatore C-NOT</h2>
+		<p>
+		
+			Facendo di nuovo un parallelo ideale con un linguaggio di programmazione di alto livello, si immagini di avere il seguente frammento di codice C:
+			<pre><code class="c">bool c, b;
+//….
+if (c)
+	b = !b;</code></pre>
+			il cui senso &egrave; molto semplice: valutare la condizione <em>c</em>, se essa vale true, invertire il valore booleano di <em>b</em>, altrimenti lasciare <em>b</em> inalterato.
+			Questo frammento di codice viene tradotto in assembly x86_64 così:<br />
+			<br />
+			<pre><code class="asm">cmp BYTE PTR [rbp-1], 0
+je .L2
+xor BYTE PTR [rbp-2], 1
+.L2:</code></pre>
+		In programmazione classica questo costrutto si chiama NOT condizionato o anche NOT controllato.<br />
+		La prima istruzione <code>cmp</code> effettua una comparazione tra il valore della variabile con la costante 0 e imposta a 1 un flag del processore se il confronto d&agrave; esito di uguaglianza,
+		altrimenti quel flag viene impostato a 0;
+		la seconda istruzione <code>je</code> &egrave; un salto condizionato (nel senso di controllato): salta a L2 se quel flag &egrave; 0 (e quindi se la variabile <em>c</em> vale 0, cio&egrave; false)
+		mentre la terza istruzione esegue uno <code>xor</code> tra la variabile <em>b</em> e il valore 1 (e per l&apos;algebra booleana corrisponde a fare un not) e quindi salva il risultato sulla variabile <em>b</em> stessa.<br />
+		<br />
+		Anche questa volta un costrutto relativamente semplice del linguaggio di alto livello &egrave; implementato con una piccola sequenza di istruzioni in linguaggio macchina
+		e a loro volta ogni istruzione, realizzata in microprogammazione, utilizza della circuiteria interna del processore (in questo caso il flag di confronto e il salto condizionato)
+		a sua volta costruita con dei semiconduttori (transitor) basati sulla fisica dello stato solido.</br >
+		Sui computer quantistici a spin, si &egrave; visto che la porta NOT (o meglio Pauli-X) &egrave; implementata tramite la rotazione dello spin;
+		la domanda che ci si pone adesso &egrave; se esiste un meccanismo quantistico di base su cui appoggiarsi per implementare un NOT controllato. La risposta &egrave; affermativa e il fenomeno si chiama <i>entanglement</i>.<br />
+
+		Matematicamente TBD TBD TBD TBD TBD TBD 
+		<br >
+		
+		TBD TBD TBD TBD TBD TBD TBD TBD TBD
+		</p>
+
+		<h3>Test della porta C-NOT senza sovrapposizione</h3>
+		<p>
+		</p>
+
+		<h3>Test della porta C-NOT con sovrapposizione</h3>
+		<p>
+		</p>
+
+		<h2>Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/RandomNumberGenerator">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html">Approssimazione di una funzione reale di una variabile con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html">Approssimazione di una funzione reale di una variabile con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html">Approssimazione di una curva parametrica su un piano con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html">Approssimazione di una curva parametrica su un piano con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html">Approssimazione di una curva parametrica nello spazio con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html">Approssimazione di una curva parametrica nello spazio con PyTorch</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html">Approssimazione di una funzione reale di due variabili con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html">Approssimazione di una funzione reale di due variabili con PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
