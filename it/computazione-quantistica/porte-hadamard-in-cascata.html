@@ -193,7 +193,8 @@
 			<br/>
 			Come per ogni spazio vettoriale, ogni vettore dello spazio pu&ograve; essere scritto univocamente come combinazione lineare dei vettori della base
 						$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
-						e la meccanica quantistica dice che se si effettua una misura (rispetto alla base) si pu&ograve; soltanto ottenere lo stato $|0\rangle$ (corrispondente al bit 0)
+						dove $\alpha$ e $\beta$ si chiamano <em>ampiezze di probabilit&agrave;</em> e devono essere tali da soddisfare $|\alpha|^2 + |\beta|^2 = 1$<br />
+			La meccanica quantistica dice che se si effettua una misura (rispetto alla base) si pu&ograve; soltanto ottenere lo stato $|0\rangle$ (corrispondente al bit 0)
 			con probabilit&agrave; $|\alpha|^2$ oppure lo stato $|1\rangle$ (corrispondente al bit 1) con probabilit&agrave; $|\beta|^2$.
 		</p>
 
@@ -229,13 +230,13 @@
 						che &egrave; appunto la matrice di partenza $H$.
 			<br/>
 			<br/>
-			&Egrave; unitaria perché la sua trasposta coniugata coincide con la sua inversa.
+			&Egrave; unitaria perch&eacute; la sua trasposta coniugata coincide con la sua inversa.
 			Si osservi intanto che
 						$$H^{-1}=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=H$$
 						e la verifica &egrave; un semplice calcolo
 						$$H^{-1}H=\frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right] \frac{1}{\sqrt{2}} \left[\begin{matrix} 1 & 1 \\ 1 & -1 \end{matrix} \right]=\frac{1}{2} \left[\begin{matrix} 2 & 0 \\ 0 & 2 \end{matrix} \right] = \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
 			Vale dunque l&apos;equivalenza $$HH=HH^{-1}=HH^\dag=I$$
-						per cui vale per qualsiasi vettore  (usando la propriet&agrave; associativa del prodotto matriciale) $|\psi\rangle$ vale
+						per cui vale per qualsiasi vettore (usando la propriet&agrave; associativa del prodotto matriciale) $|\psi\rangle$ vale
 						$$HH|\psi\rangle=I|\psi\rangle=|\psi\rangle$$
 						e quindi la doppia applicazione di una porta Hadamard in cascata porta il sistema allo stato precedente
 			la prima applicazione.
@@ -462,6 +463,7 @@ circuit.measure(q, c)</code></pre>
 												<li><a href="../../it/machine-learning/">INDICE</a></li>
 												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
 												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
 											</ul>
 										</li>
 										<li>

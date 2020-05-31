@@ -35,12 +35,12 @@
 		</script>
 
 
-		<title>Collezione di dataset &apos;Time&nbsp;Series&apos;</title>
-		<meta name="description" content="La collezione di dataset &apos;timeseries&apos; contiene file csv and arff (Weka) generati eseguendo functioni matematiche sulla variabile indipendente tempo per generare successioni temporali sintetiche." >
-		<meta name="keywords" content="machine learning, deep learning, dataset, csv, arff, weka, serie temporale, time series, forecast, univariata, multivariata, arima, sarima, stagionalit&agrave;, periodicit&agrave;, trend, rumore" >
-		<link rel="canonical" href="https://computationalmindset.com/it/datasets/time-series-dataset.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/datasets/time-series-dataset.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/datasets/time-series-dataset.html" />
+		<title>Forecast con SMO per SVM con kernel polinomiale in Weka</title>
+		<meta name="description" content="Forecast di un dataset sintetico con periodicit&agrave; e trend con SMO per SVM con kernel polinomiale in Weka" >
+		<meta name="keywords" content="forecast, predizione, SMO, SVM, polinomiale, serie storica, time series, kernel, dataset, errore quadratico medio, machine learning, Weka" >
+		<link rel="canonical" href="https://computationalmindset.com/it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -84,8 +84,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/datasets/",
-              "name": "Datasets"
+              "@id": "https://computationalmindset.com/it/machine-learning/",
+              "name": "Machine Learning"
             }
           },
 
@@ -94,8 +94,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/datasets/time-series-dataset.html",
-              "name": "Collezione di dataset &apos;Time&nbsp;Series&apos;"
+              "@id": "https://computationalmindset.com/it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html",
+              "name": "Forecast con SMO per SVM con kernel polinomiale in Weka"
             }
 		  }
 		
@@ -165,96 +165,97 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Collezione di dataset &apos;Time&nbsp;Series&apos;</h1>
+			<h1>Forecast con SMO per SVM con kernel polinomiale in Weka</h1>
 		</header>
-		<p>
-			
-    Collezione di dataset sintetici generati applicando funzioni ai valori di una sequenza che rappresenta il tempo;
-    ci sono dataset fatti con funzioni scalari e vettoriali e/o di una o pi&ugrave; variabili.
-    I dataset sono in formato .csv con header (ogni colonna dell'header corrisponde al nome di una variabile) e in alcuni casi vi sono anche file in formato .arff (per Weka).
 
+		<p>
+			Questo post mostra un uso in Weka del regressore <em>SMOreg</em> (Sequential Minimal Optimization) che &egrave; un efficiente algoritmo di machine learning per SVM (Macchine a Vettori di Supporto) per implementare approssimatori;
+			SMOreg pu&egrave; essere utilizzato anche per realizzare predizioni (forecast) su serie storiche (time series); il kernel utilizzato &egrave; semplice e precisamente è il <em>PolyKernel</em> (Kernel Polonomiale) e il grado del polinomio sar&agrave; 1.
+			L&apos;obiettivo &egrave; di dimostrare che il forecast del machine learning pu&ograve; raggiungere interessanti livelli di accuratezza con tempi di learning estremamente brevi.<br />
+			Anche se le reti neurali di tipo LSTM (Long Short Term Memory) sono considerate le tipologie di reti neurali pi&ugrave; adatte per il forecast,
+			un classico algoritmo supervisionato di forecast di machine learning, come quello presentato qui, pu&ograve; arrivare a livelli di accuratezza accettabili
+			e con un costo computazionale decisamente pi&ugrave; basso rispetto a quello di una rete LSTM.<br />
+			<br />
+			Nel mondo reale i dataset preesistono alla fase di apprendimento, infatti questi vengono ottenuti estraendo dati da database di produzione o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici e cos&igrave; via,
+			e quindi adoperati per le fasi di learning successive;
+			ma poich&eacute; qui il focus &egrave; il forecast in s&eacute; e non la predizione di un fenomeno reale, i dataset utilizzati in questo post sono stati generati sinteticamente a partire da funzioni matematiche:
+			questo ha il vantaggio di poter stressare l&apos;algoritmo e vedere per quali tipologie di dataset l&apos;algoritmo ha accuratezza accettabile e per quali invece l&apos;algoritmo fatica. 
 		</p>
 
-		<h2 id="univariate">Dataset di serie temporali semplici (univariate) con valori in ${I\!R}$</h2>
-
-		<div class="table-wrapper">
-			<table class="alt">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Formula</th>
-						<th>Dominio Temporale</th>
-						<th>Rumore</th>
-						<th>Info</th>
-						<th class="align-center">Link</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="valign-middle">univariate/001</td>
-						<td class="valign-middle">$y=2 \sin \frac{t}{10}$</td>
-						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
-						<td class="align-center valign-middle">Nessuno</td>
-						<td class="valign-middle">Istanze: 200</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/001/learnts.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/001/learnts.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">univariate/002</td>
-						<td class="valign-middle">$y=\frac{2 \sin \frac{t}{3}}{e^\frac{t}{70}}$</td>
-						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
-						<td class="align-center valign-middle">Nessuno</td>
-						<td class="valign-middle">Istanze: 200</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/002/learnts.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/002/learnts.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">univariate/003</td>
-						<td class="valign-middle">$y=2 \sin \frac{t}{10} + \frac{3}{2} \cos \frac{t}{20}$</td>
-						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
-						<td class="align-center valign-middle">Nessuno</td>
-						<td class="valign-middle">Istanze: 200</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/003/learnts.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/003/learnts.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">univariate/004</td>
-						<td class="valign-middle">$y=\frac{t}{50} + \sin \frac{t}{10}$</td>
-						<td class="align-center valign-middle">$t \in I\!N, 0 \leq t < 200$</td>
-						<td class="align-center valign-middle">Nessuno</td>
-						<td class="valign-middle">Istanze: 200</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
-		</div>
-
-		<h2 id="downloadcode">Download dei dataset</h2>
+		<h2>Sequenza completa di passi</h2>
 		<p>
-			I dataset sono disponibili su <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/timeseries/">GitHub</a>.
-			<br />
-			
-			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
-			<br/>
-			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
-			<br/>
-
-		</p>			
+			Lanciare il programma <a href="https://www.cs.waikato.ac.nz/ml/weka/" target="_blank">Weka</a> dell&apos;Universit&agrave; di Waikato (Nuova Zelanda);
+			in questo post la versione di Weka utilizzata &egrave; la 3.8.3, ma quanto detto funziona anche con versioni precedenti; Weka richiede che il runtime di <a href="https://www.java.com/" target="_blank">Java</a> sia correttamente installato.<br/>
+			Una volta lanciato il programma Weka, compare la seguente finestra:
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/weka-main.png" /></div>
+			si prema il bottone <em>Explorer</em> evidenziato in rosso.<br />
+			Quando la finestra <em>Weka Explorer</em> viene visualizzata:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/weka-explorer.png" /></div>
+			si prema il bottone <em>Open Url...</em>, evidenziato in rosso, per caricare il dataset in formato .arff
+			e in questa finestra:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-load-learnts.png" /></div>
+			incollare l&apos;url del dataset <a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.arff" target="_blank">004/learnts.arff</a> e premere <em>Ok</em>.<br />
+			Il dataset sintetico caricato &egrave; generato con la formula
+	$y=\frac{t}{50} + \sin \frac{t}{10}$</td>
+con $t \in I\!N, 0 \leq t < 200$;<br />			
+			la finestra <em>Weka explorer</em> (posizionata sul tab <em>Preprocess</em> si presenta cos&igrave;:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-processes.png" /></div>
+			Ai fini degli obiettivi di questo post possiamo ignorare questo tab, si apra quindi il tab <em>Forecast</em> come evidenziato in rosso
+			e l&apos;interfaccia utente appare cos&igrave;:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast.png" /></div>
+			e cambiare <em>Number of time units to forecast</em> a 200 (il numero di predizioni da calcolare),
+			<em>Time stamp</em> a <em>None</em> (poich&eacute; la serie temporale scelta non ha un campo esplicito per il tempo)
+			e <em>Periodicity</em> a <em>Detect automatically</em> (anche se sarebbe nota).<br />
+			Per scegliere l&apos;algoritmo di forecast in oggetto si vada nel tab <em>Advanced configuration</em>
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-advconf.png" /></div>
+			e si prema il bottome <em>Choose</em> e questa popup viene mostrata a video:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-choose.png" /></div>
+			e si scelga la voce <em>SMOreg</em> sotto la categoria <em>functions</em>; l&apos;interfaccia utente si presenta cos&igrave;:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-smoreg.png" /></div>
+			Si prema quindi sulla label SMOreg al fine di configurare i parametri dell&apos;algoritmo <em>Sequential Minimal Optimization</em> (abbreviato SMO):
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-params.png" /></div>
+			Precisamente &egrave; importante impostare il parametro <em>filterType</em> a <em>No normalization/standadization</em>;
+			per tutti gli altri parametri manterene il valore di default proposto; quindi premere <em>OK</em>.
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-smoreg-poly.png" /></div>
+			Si prema il bottone <em>Start</em> per effettuare il forecast; dopo qualche secondo di elaborazione la parte destra della finestra,
+			nel tab <em>Train future pred.</em>, Weka mostra il grafico della sequenza temporale del dataset (le ascisse da 0 a 200) e la predizione (ascisse oltre 200):
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-result1.png" /></div>
+			Si osservi che l&apos;apprendimento del trend &egrave; giusto e anche la periodicit&agrave; sembra giusta, ma tende a schiacciare l&apos;ampiezza con il crescere delle ascisse.<br />
+			Per correggere questo aspetto aprire nuovamente la configurazione parametri dell&apos;algoritmo SMOReg:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-params-bis.png" /></div>
+			a clickare sulla label <em>RegSMOImproved</em> come evidenziato in rosso; la seguente popup &egrave; mostrata:
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-improved-params.png" /></div>
+			impostare a 1.0E-5 i parametri <em>epsilonParameter</em> e <em>Tolerance</em>. Ritornare su Weka Explorer chiudendo le due popup aperte con il bottone <em>OK</em>
+			e premere nuovamente su <em>Start</em> per calcolare un nuovo forecast.
+		</p>
+		<p>
+			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-result2.png" /></div>
+			Come il grafico mostra chiaramente, il forecast ottenuto ha la stessa forma periodica e lo stesso trend della serie temporale iniziale.
+		</p>
 	</section>
 
 						</div>
