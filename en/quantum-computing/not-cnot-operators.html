@@ -468,8 +468,8 @@ xor BYTE PTR [rbp-2], 1
 		Mathematically the matrix that implements the C-NOT is the following:
 		$$CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]$$
 		That the $CNOT$ matrix implements the above truth table is obvious and simple calculations are enough to prove it.<br />
-		For example, if you look at the penultimate entry in the table, the input vectors are $|1\rangle$ $|0\rangle$ as the canonical base,
-		you get the two component vectors $$\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix} and \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}$$
+		For example, if you look at the penultimate entry in the table, the input vectors are $|1\rangle$ and $|0\rangle$ as the canonical base,
+		you get the two component vectors $$\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix} \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}$$
 		and concatenating them you get the following vector $$\begin{bmatrix} 0 \\ 1 \\ 1 \\ 0 \\ \end{bmatrix}$$
 		and multiplying the matrix by this vector:
 		$$
