@@ -294,7 +294,7 @@ circuit.measure(q, c)</code></pre>
 			and returning to the vector space of the qubits you get exactly $\beta|0\rangle + \alpha|1\rangle$, which is the inversion of probability amplitudes.<br />
 			<br />
 			Switching to the computer, you would be tempted to use the Hadamard gate to put the qubit in a superposition of states; but for demonstration purposes it is not very useful
-			when applying the Hadamard gate to the $|0\rangle$ state, it happens that $\alpha$ and $\beta$ are both equal to $\frac{1}{sqrt{2}}$.
+			when applying the Hadamard gate to the $|0\rangle$ state, it happens that $\alpha$ and $\beta$ are both equal to $\frac{1}{\sqrt{2}}$.
 			and the inversion effect would not look good. Better then set $\alpha$ and $\beta$ with different values.<br />			
 
 			Note the following snippet of Python code with Qiskit written to run inside a Jupyter Notebook 
@@ -469,7 +469,7 @@ xor BYTE PTR [rbp-2], 1
 		$$CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]$$
 		That the $CNOT$ matrix implements the above truth table is obvious and simple calculations are enough to prove it.<br />
 		For example, if you look at the penultimate entry in the table, the input vectors are $|1\rangle$ and $|0\rangle$ as the canonical base,
-		you get the two component vectors $$\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix} \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}$$
+		you get the two component vectors $$\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}, \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}$$
 		and concatenating them you get the following vector $$\begin{bmatrix} 0 \\ 1 \\ 1 \\ 0 \\ \end{bmatrix}$$
 		and multiplying the matrix by this vector:
 		$$
