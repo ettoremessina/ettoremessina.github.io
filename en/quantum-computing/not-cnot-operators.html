@@ -1,0 +1,768 @@
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>NOT and C-NOT quantum gates</title>
+		<meta name="description" content="The quantum gates NOT (i.e. the Pauli-X gate) and C-NOT (controlled-NOT, also called quantum XOR): how they work and how to use them" >
+		<meta name="keywords" content="not, c-not, cnot, xor, gate, gates, operator, operators, qubit, superposition, entanglement, ibm experience, qiskit, quantum computer, quantum mechanics" >
+		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/not-cnot-operators.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/quantum-computing/",
+              "name": "Quantum Computing"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/quantum-computing/not-cnot-operators.html",
+              "name": "NOT and C-NOT quantum gates"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina/" class="icon brands fa-telegram"><span class="label" target="_blank">Skype</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<!--<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>-->
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype"><span class="label" target="_blank">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	$\newcommand\dag\dagger$
+	<section>
+		<header class="main">
+			<h1>NOT and C-NOT quantum gates</h1>
+		</header>
+
+		<p>
+            The operators of traditional high-level programming languages are translated by the compilers into short sequences of machine language instructions
+            and in turn these instructions are implemented within microprocessors whose micro-instructions use logical and mathematical operators made directly at circuit level. <br />
+			For example, in this snippet of code in C language
+			<pre><code class="c">int v1, v2;
+//….
+int v = v1 ^ v2;</code></pre>
+			the expression <code>v1 ^ v2</code> (i.e. the <code>v1 xor v2</code> calculation performed bit by bit) is translated into assembly x86_64 as follows:<br />
+			<br />
+			<pre><code class="asm">mov eax, DWORD PTR [rbp-4]
+xor eax, DWORD PTR [rbp-8]
+mov DWORD PTR [rbp-12], eax</code></pre>
+			The first instruction <code>mov</code> copies the value of variable v1 to the eax register,
+			the second instruction <code>xor</code> executes the exclusive (the xor) bit by bit between the eax register and the variable v2 and saves the result on the same eax register
+			and finally the last <code>mov</code> instruction assigns the value of the eax register (which contains the result of the xor bit by bit) to the variable v.<br />
+			<br />
+            The thing that is noted is that the <em>xor</em> is an instruction implemented directly in the microprocessor and executes the xor on 32-bit integers (the eax register contains 32 bits)
+            and that in the processor there will be (at least) 32 microcircuits that perform the xor calculation, each circuit operating (in parallel and independently of the others) on a pair of bits (one from the register, the other from memory).
+            In turn, each microcircuit that calculates the xor between two bits is composed of transistors properly connected and finally these transistors are made using the solid state physics that is at the base of semiconductors.<br />
+			<br />
+			Beyond the technicalities, the thing that we want to put in evidence is that an operator of a language of high level (the operator ^ of C in this example) on an ordinary processor leans,
+            in its lowest level of abstraction (inaccessible to the developer), on the physics of the solid state because such is the physicality of the underlying lower layer(that of the transistors, precisely).<br />
+			<br />
+			A similar reasoning can be done in quantum programming: the purpose of this post is to show how two quantum operators,
+			starting from a high-level language, are implemented using appropriate phenomena described by quantum mechanics.<br />
+			In particular the post shows the quantum phenomena underlying the operators NOT (more correctly called Pauli-X gate) and C-NOT (NOT Controlled, also known as <em>quantum xor</em>).
+		</p>
+
+		<h2>The mathematical model of the qubit</h2>
+		<p>
+			The qubit is described mathematically as a two-dimensional complex Hilbert space. The canonical base of this space is indicated (using Dirac&apos;s notation) with
+			$$\{|0\rangle,|1\rangle\}$$
+			which written in the form of the base of the component vectors is
+			$$\{\begin{bmatrix} 1 \\ 0 \\ \end{bmatrix},\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix}\}$$
+			and each element of the base corresponds to the classical bits 0 and 1 respectively.
+			<br/>
+			As with any vector space, each space vector can be uniquely written as a linear combination of the base vectors
+			$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+			where $\alpha$ and $\beta$ are called <em>amplitudes of probability</em> and must be such that their squared modules (which are <em>density of probability</em>)
+			must satisfy the equality $|\alpha|^2 + |\beta|^2 = 1$<br />
+			Quantum mechanics says that if you take a measurement (relative to the base) you can only get the state $|0\rangle$ (corresponding to bit 0)
+			with probability $|\alpha|^2$ or state $|1\rangle$ (corresponding to bit 1) with probability $|\beta|^2$.<br />
+		</p>
+
+		<h2>The operator NOT</h2>
+		<p>
+            The quantum operator NOT, which from now on will be called with its most appropriate name <em>Pauli-X</em> gate acts on a single qubit
+			and its purpose is to invert the past qubit with respect to the canonical base (an operation that corresponds to a rotation with respect to the X-axis
+			on Bloch sphere, see <a href="https://en.wikipedia.org/wiki/Bloch_sphere" target='blank'>Bloch sphere on Wikipedia</a>)<br />
+			<br />
+			Mathematically it is therefore necessary to find a <em>hermetian</em> and <em>unitary</em> matrix (because all quantum operators must be such) 
+			that reverses states in such a way that:
+			$$\alpha|0\rangle + \beta|1\rangle \rightarrow \beta|0\rangle + \alpha|1\rangle$$
+			Such a matrix is
+			$$X=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right]$$
+			That the $X$ matrix is hermetian is obvious: it contains only real elements and is symmetrical.<br />
+			It is unitary because its conjugated transposition (which is also the transposition being present only real elements) coincides with its inverse
+			and verification is a simple calculation
+			$$XX^\dag=XX=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right]= \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
+			Similarly, it is shown that $X^\dag X=I$ per cui vale $X^\dag=X^{-1}$<br />
+			<br />
+			From a physical point of view the realization of the Pauli-X port depends on how the quantum computer is realized from the hardware point of view;
+			it is not the purpose of this post to enter into the engineering realization of qubits, but just to fix ideas, if for example the qubit was realized through the spin of an electron,
+			the Pauli-X gate would be made by causing a $\pi$ rotation around the X axis of the electron spin.
+		</p>
+
+		<h3>Test of Pauli-X gate on qubit in pure states</h3>
+		<p>
+            Observe the following snippet of Python code with Qiskit written to run inside a Jupyter Notebook
+            using both the IBM &apos;qasm_simulator&apos; and the IBM &apos;ibmq_london&apos; quantum computer as backend.
+			<pre><code class="python">q = QuantumRegister(3, 'q')
+c = ClassicalRegister(3, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.x(1)
+circuit.x(2)
+circuit.x(2)
+
+circuit.measure(q, c)</code></pre>
+			which corresponds to the following quantum circuit:<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_1_paulix.png" /></div>
+			and the result of which performed with a number of shots=8192 on the IBM simulator &apos;qasm_simulator&apos; is as follows:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-paulix-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is as follows:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-paulix-qiskit_result_real.png" /></div>
+			which is fully equivalent to the result obtained with the simulator unless there are small differences in the probability distribution attributable to noise.<br />
+			<br />
+			Observing the result we can have the experimental proof of what stated above about the behaviour of the Pauli-X gates
+			and we can conclude that in the absence of overlapping states the behavior of the Pauli-X gate is entirely comparable
+			to the NOT operator of traditional languages (such as the <code>!</code> operator of C).</br>
+			In fact:
+			<ui>
+				<li>
+					The qubit 0 is not changed by any operator, so it starts in the state $|0\rangle$
+					and at the time of measurement its condition is obviously equal to $|0\rangle$ with 100% probability.
+				</li>
+				<li>
+					The Pauli-X gate is applied to qubit 1 and the expected behaviour is in fact that of a traditional NOT operator:
+					it brings the qubit from the initial state of $|0\rangle$ to the final state of $|1\rangle$ with 100% probability.
+				</li>
+				<li>
+					Two cascading Pauli-X gates are applied to qubit 2; again the expected behavior:
+					the first application brings the qubit from the initial state of $|0\rangle$ to the state of $|1\rangle$
+					and the second application takes the qubit from the state of $1\rangle$ to the final state of $0\rangle$ with 100% probability.
+					<br />
+				</li>
+			</ui>
+		<p/>
+	
+		<h3>Test of Pauli-X gate on qubit in superposition of states</h3>
+		<p>
+			The superposition of states is a peculiarity of qubits and has no correspondence in ordinary bits.
+			In fact, next question is: what is the behavior of the qubit in superposition of states if the quantum operator NOT, that is the Pauli-X gate, is applied to it?
+			It is easily demonstrated that, given an qubit in superposition of states
+			$$|\psi\rangle=\alpha|0\rangle + \beta|1\rangle$$
+			the Pauli-X gate reverses that probability amplitudes, i.e. the qubit after a Pauli-X gate application will go into the state 
+			$$not |\psi\rangle=\beta|0\rangle + \alpha|1\rangle$$
+			The demonstration is the following: writing the gate application to the vector in the form of the vectors of the components with respect to the canonical base
+			and performing a calculation step
+			$$X|\psi\rangle=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} \alpha \\ \beta \end{matrix} \right] = \left[\begin{matrix} \beta \\ \alpha \end{matrix} \right] $$
+			and returning to the vector space of the qubits you get exactly $\beta|0\rangle + \alpha|1\rangle$, which is the inversion of probability amplitudes.<br />
+			<br />
+			Switching to the computer, you would be tempted to use the Hadamard gate to put the qubit in a superposition of states; but for demonstration purposes it is not very useful
+			when applying the Hadamard gate to the $|0\rangle$ state, it happens that $\alpha$ and $\beta$ are both equal to $\frac{1}{sqrt{2}}$.
+			and the inversion effect would not look good. Better then set $\alpha$ and $\beta$ with different values.<br />			
+
+			Note the following snippet of Python code with Qiskit written to run inside a Jupyter Notebook 
+			using both the IBM simulator &apos;qasm_simulator&apos; and the quantum computer &apos;ibmq_london&apos; from IBM as a backend.
+            <pre><code class="python">q = QuantumRegister(1, 'q')
+c = ClassicalRegister(1, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.ucrx([np.pi/3], [], 0)
+
+circuit.measure(q, c)</code></pre>
+			which corresponds to the following quantum circuit:<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_paulix.png" /></div>
+			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_real.png" /></div>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.<br />
+			<br />
+			The operator <code>ucrx</code> with argoment $\frac{\pi}{3}$ makes a rotation $\theta=\frac{\pi}{3}$ (i.e. 60°) around the $x$ axis on the qubit 0
+			so that $\alpha=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{3}}{2}=\cos \frac{\pi}{6}=\frac{\sqrt{3}}{2}$
+			and therefore the probability density (which is the square of the amplitude) is $|\alpha|^2=\frac{3}{4}=$0.75 and necessarily the probability density $|\beta|^2=\frac{1}{4}=$0.25
+			and in fact if you go to measure qubit 0 you have a 75% chance of getting the state $|0\rangle$ and 25% of getting $|1\rangle$.<br />
+			<br />
+			Now you modify the program by adding a Pauli-X gate to follow the application of gate <code>ucrx</code>.
+			Here is the code:<br /><br />
+			<pre><code class="python">q = QuantumRegister(1, 'q')
+c = ClassicalRegister(1, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.ucrx([np.pi/3], [], 0)
+circuit.x(0)
+
+circuit.measure(q, c)</code></pre>
+			which corresponds to the following quantum circuit:<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_3_paulix.png" /></div>
+			and the result of which performed with a number of shots=8192 on the IBM simulator &apos;qasm_simulator&apos; is as follows:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-paulix-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is as follows:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-paulix-qiskit_result_real.png" /></div>
+			from which you can clearly see the inversion effect of the probability amplitudes caused by the application of the Pauli-X gate:
+			going to measure qubit 0 you have a 25% probability of getting the state $|0\rangle$ and 75% of getting $|1\rangle$.<br /><br />
+			<b>Nota</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.<br />
+			<br />
+			It was said above that the Pauli-X gate rotates $\pi$ around the X axis of the Bloch sphere:
+			programmatically the Pauli-X operator is therefore fully equivalent to the statement:
+			<center><code>circuit.ucrx([np.pi], [], [<em>i</em>])</code></center>
+			where <em>i</em> is the index that qubit is intended to invert.
+		</p>
+
+		<h2>The operator C-NOT</h2>
+		<p>		
+			By again making an ideal parallel with a high-level programming language, imagine that you have the following snippet of C code:
+			<pre><code class="c">bool control, target;
+//….
+if (control)
+	target = !target;</code></pre>
+			whose meaning is very simple: evaluate the <em>control</em> condition, if it is true, reverse the boolean value of <em>target</em>, otherwise leave <em>target</em> unchanged.
+			This code snippet is translated into x86_64 assembly as follows:<br />
+			<br />
+			<pre><code class="asm">cmp BYTE PTR [rbp-1], 0
+je .L2
+xor BYTE PTR [rbp-2], 1
+.L2:</code></pre>
+		In classical programming this construct is called conditioned NOT or even controlled NOT.<br />
+		The first instruction <code>cmp</code> compares the value of the variable with the constant 0 and sets a processor flag to 1 if the comparison results in equality,
+		otherwise that flag is set to 0;
+		the second instruction <code>je</code> is a conditional jump (in the sense of controlled): it jumps to L2 if that flag is 0 (and therefore if the variable <em>c</em> is worth 0, i.e. false)
+		while the third instruction executes a <code>xor</code> between the variable <em>b</em> and the value 1 (and for Boolean algebra this is a not) and then saves the result on the variable <em>b</em> itself.<br />
+		<br />
+		Again a relatively simple high-level language construct is implemented with a small sequence of instructions in machine language
+		and in turn each instruction, realized in microprogamming, uses the internal circuitry of the processor (in this case the comparison flag and the conditional jump).
+		in turn built with (transient) semiconductors based on solid state physics.</br >
+		On quantum spin computers, it has been seen that the NOT (or rather Pauli-X) port is implemented through spin rotation;
+		the question now is whether there is a basic quantum mechanism to rely on to implement a controlled NOT.<br />
+		<br />
+		Before answering this question it is appropriate to go into the details of the C-NOT operator from a mathematical point of view.<br />
+		The truth table of the controlled NOT construct on a pair of ordinary bits is as follows:<br />
+		<br />
+		<center>
+			<table class="alt align-center" style="width:300px;">
+				<tbody>
+					<tr>
+						<td class="align-center" colspan="2">input</td>
+						<td class="align-center" colspan="2">output</td>
+					</tr>
+					<tr>
+						<td class="align-center">control</td>
+						<td class="align-center">target</td>
+						<td class="align-center">control</td>
+						<td class="align-center">target</td>
+					</tr>
+					<tr>
+						<td class="align-center">0</td>
+						<td class="align-center">0</td>
+						<td class="align-center">0</td>
+						<td class="align-center">0</td>
+					</tr>
+					<tr>
+						<td class="align-center">0</td>
+						<td class="align-center">1</td>
+						<td class="align-center">0</td>
+						<td class="align-center">1</td>
+					</tr>
+					<tr>
+						<td class="align-center">1</td>
+						<td class="align-center">0</td>
+						<td class="align-center">1</td>
+						<td class="align-center">1</td>
+					</tr>					
+					<tr>
+						<td class="align-center">1</td>
+						<td class="align-center">1</td>
+						<td class="align-center">1</td>
+						<td class="align-center">0</td>
+					</tr>					
+				</tbody>
+			</table>
+		</center>
+		Note that the value of <em>control</em> input is shown in unchanged output,
+		while the value of <em>target</em> is reversed if <em>control</em> is <em>1</em> otherwise it remains unchanged.<br />
+		<br />		
+
+		The truth table of the quantum construct C-NOT on a qubit pair without superposition of states is of course as follows:<br />
+		<br />
+		<center>
+			<table class="alt align-center" style="width:300px;">
+				<tbody>
+					<tr>
+						<td class="align-center" colspan="2">input</td>
+						<td class="align-center" colspan="2">output</td>
+					</tr>
+					<tr>
+						<td class="align-center">control</td>
+						<td class="align-center">target</td>
+						<td class="align-center">control</td>
+						<td class="align-center">target</td>
+					</tr>
+					<tr>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+					</tr>
+					<tr>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+					</tr>
+					<tr>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+					</tr>					
+					<tr>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|1\rangle$</td>
+						<td class="align-center">$|0\rangle$</td>
+					</tr>					
+				</tbody>
+			</table>
+		</center>
+
+		Mathematically the matrix that implements the C-NOT is the following:
+		$$CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]$$
+		That the $CNOT$ matrix implements the above truth table is obvious and simple calculations are enough to prove it.<br />
+		For example, if you look at the penultimate entry in the table, the input vectors are $|1\rangle$ 0 $|0\rangle$ as the canonical base,
+		you get the two component vectors $$\begin{bmatrix} 0 \\ 1 \\ \end{bmatrix} and \begin{bmatrix} 1 \\ 0 \\ \end{bmatrix}$$
+		and concatenating them you get the following vector $$\begin{bmatrix} 0 \\ 1 \\ 1 \\ 0 \\ \end{bmatrix}$$
+		and multiplying the matrix by this vector:
+		$$
+		\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right] \begin{bmatrix} 0 \\ 1 \\ 1 \\ 0 \\ \end{bmatrix}
+		= \begin{bmatrix} 0 \\ 1 \\ 0 \\ 1 \\ \end{bmatrix}
+		$$
+		which corresponds in the initial vector space to the vector pair ${|1\rangle}$ e ${|1\rangle}$ as you wanted to demonstrate.<br />
+		Similarly for all other items in the truth table it is shown that the $CNOT$ matrix actually implements the C-NOT operator.<br />
+		<br />
+
+		For the $CNOT$ matrix to be a valid quantum operator it must be hermetian and unitary. That it is hermetian is evident: it contains only real elements and is symmetrical.<br />
+		It is unitary because its conjugated transposition (which is also the transposition being present only real elements) coincides with its inverse
+		and the verification is a simple calculation
+		$$CNOT \cdot CNOT^\dag=CNOT \cdot CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right] \left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]= \left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{matrix} \right] = I$$
+		Similarly, it is shown that $CNOT^\dag \cdot CNOT=I$ which is $CNOT^\dag=CNOT^{-1}$
+		<br />
+		The time has come to answer the outstanding question, i.e. whether there is a quantum phenomenon on which to build the C-NOT construct;
+		in fact, the great advantage of quantum computation compared to traditional computation is that of being able to apply operators to qubits when they are in a superposition of states;
+		in order for the C-NOT operator to be applicable to qubits in such a situation without making any measurement (which would collapse into qubits in a pure state),
+        it must be realized natively exploiting some quantum phenomenon involving two qubits: such phenomenon exists, and it is called <i>entanglement</i>.
+        (for more information see <a href="https://en.wikipedia.org/wiki/Quantum_entanglement" target='blank'>Quantum entanglement on Wikipedia</a>)
+		</p>
+
+		<h3>Test of C-NOT gate on qubits in pure states</h3>
+		<p>
+			Note the following snippet of Python code with Qiskit written to run inside a Jupyter Notebook 
+			using both the IBM simulator &apos;qasm_simulator&apos; and the quantum computer &apos;ibmq_london&apos; from IBM as a backend.
+			<pre><code class="python">q = QuantumRegister(4, 'q')
+c = ClassicalRegister(4, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.cx(0, 1)
+circuit.x(3)
+circuit.cx(2, 3)
+
+circuit.measure(q, c)
+</code></pre>
+			which corresponds to the following quantum circuit:<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_1_cnot.png" /></div>
+			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-cnot-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-cnot-qiskit_result_real.png" /></div>
+            which is fully equivalent to the result obtained with the simulator unless there are small differences in the probability distribution attributable to noise.<br />
+            <br />
+			<br />
+			Observing the result we can have the experimental proof of what stated above about the behaviour of the C-NOT gate
+			with regard to the first two entries of the truth table shown above:
+			in fact the 4 qubits input corresponds to the inputs of the first two entries of the table, (${|0\rangle}$ e ${|0\rangle}$ for the first row and ${|0\rangle}$ e ${|1\rangle}$ for the second row)
+			and as far as the output is concerned, the following applies:
+			<ui>
+				<li>
+					Qubit 0 is the control of qubit 1 and it is not altered by anyone so it starts in the state $|0\rangle$
+					and at the time of measurement its value is obviously $|0\rangle$ with 100% probability.
+				</li>
+				<li>
+					Qubit 1 is in entanglement with qubit 0 so qubit 0 is the control and qubit 1 is the target;
+                    the expected behaviour is in fact that of a traditional C-NOT operator in the case of bit control equal to 0 (therefore the target does not change value):
+					in fact the qubit 1 from the initial state of $|0\rangle$ remains in the final state of $|0\rangle$ with 100% probability.
+				</li>
+				<li>
+					Qubit 2 is the control of qubit 3 and it is not altered by anyone so it starts in the state $|0\rangle$
+					and at the time of measurement his value is obviously $|0\rangle$ with 100% probability.
+				</li>
+				<li>
+					Qubit 3 is in entanglement with qubit 2 and qubit 2 it is the control and qubit 3 is the target;
+                    the expected behaviour is in fact that of a traditional C-NOT operator in the case of bit control equal to 0 (therefore the target does not change value):
+					in fact qubit 1 from the initial state of $|1\rangle$ remains final state of $|1\rangle$ with 100% probability.
+				</li>
+			</ui>
+		</p>
+		<p>
+			The following code fragment:
+			<pre><code class="python">q = QuantumRegister(4, 'q')
+c = ClassicalRegister(4, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.x(0)
+circuit.cx(0, 1)
+
+circuit.x(2)
+circuit.x(3)
+circuit.cx(2, 3)
+
+circuit.measure(q, c)
+</code></pre>
+			which corresponds to the following quantum circuit<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_cnot.png" /></div>
+			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-cnot-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-cnot-qiskit_result_real.png" /></div>
+			which is fully equivalent to the result obtained with the simulator unless there are small differences in the probability distribution attributable to noise.<br />
+			<br />
+            Observing the result we can have the experimental proof of what stated above about the behaviour of the C-NOT gate
+			with regard to the last two entries of the truth table shown above:			
+			in fact the 4 qubits input corresponds to the inputs of the last entries of the table, (${|1\rangle}$ e ${|0\rangle}$ for the penultimate row and ${|1\rangle}$ e ${|1\rangle}$ for the last row)
+			and as far as the output is concerned, the following applies:
+			<ui>
+				<li>
+					Qubit 0 is the control of qubit 1 and it is not altered by anyone so it starts in the state $|1\rangle$
+					and at the time of measurement its value is obviously $|1\rangle$ with 100% probability.
+				</li>
+				<li>
+					Qubit 1 is in entanglement with qubit 0 so qubit 0 is the control and qubit 1 is the target; 
+                    the expected behaviour is in fact that of a traditional C-NOT operator in the case of bit control equal to 1 (then the target reverses the value):
+					in fact the qubit 1 from the initial state of $|1\rangle$ change final state to $|0\rangle$ with 100% probability%.
+				</li>
+				<li>
+					Qubit 2 is the control of qubit 3 and it is not altered by anyone so it starts in the state $|1\rangle$
+					and at the time of measurement his value is obviously $|1\rangle$ with 100% probability
+				</li>
+				<li>
+					qubit 2 it is the control and qubit 3 is the target;
+                    the expected behaviour is in fact that of a traditional C-NOT operator in the case of bit control equal to 1 (then the target reverses the value):
+					in fact the qubit 3 from the initial state of $|1\rangle$ change final state to $|0\rangle$ with 100% probability%.
+				</li>
+			</ui>			
+			<br />
+            It is therefore possible to conclude that in the absence of superposition of states the behaviour of the C-NOT gate is completely comparable
+			to the NOT-controlled construct of traditional languages.</br>
+		<p/>
+
+		<h3>Test of C-NOT gate on qubits in superposition of states</h3>
+		<p>
+			We now ask ourselves the following question: what is the behavior of the C-NOT gate applied to two qubits in superposition of states?<br />
+			Given two qubits, the first of <em>control</em> and the second of <em>target</em> in entanglement and superposition of states
+			$$q _0=\alpha|0\rangle + \beta|1\rangle$$
+			$$q _1=\gamma|0\rangle + \delta|1\rangle$$
+			and rotate $\theta=\frac{\pi}{3}$ (i.e. 60°) around the $x$ axis on the qubit 0 and then $\alpha=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{3}}{2}=\cos \frac{\pi}{6}=\frac{\sqrt{3}}{2}$
+			and therefore the probability density $|\alpha|^2=\frac{3}{4}=0.75$ and necessarily the probability density $|\beta|^2=\frac{1}{4}=0.25$.<br />
+			In addition, a rotation of $\theta=\frac{\pi}{6}$ (i.e. 30°) around the $x$ axix on the qubit 1 and then $\gamma=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{6}}{2}=\cos \frac{\pi}{12}=\frac{\sqrt{6} + \sqrt{2}}{4}$
+			and therefore the probability density $|\gamma|^2=\frac{2 + \sqrt{3}}{4} \simeq 0.933013$ and necessarily the probability density $|\delta|^2=\frac{2 + \sqrt{3}}{4} \simeq 0.0669873$.
+			<br />
+			Moving on to the computer, look at the following snippet of Python code with Qiskit written to run inside a Jupyter Notebook 
+			using both the IBM simulator &apos;qasm_simulator&apos; and the quantum computer &apos;ibmq_london&apos; from IBM as a backend.
+			<pre><code class="python">q = QuantumRegister(2, 'q')
+c = ClassicalRegister(2, 'c')
+circuit = QuantumCircuit(q, c)
+
+circuit.ucrx([np.pi/3], [], 0)
+circuit.ucrx([np.pi/6], [], 1)
+circuit.cx(0, 1)
+
+circuit.measure(q[1], c[1])
+</code></pre>
+			which corresponds to the following quantum circuit:<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_3_cnot.png" /></div>
+			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-cnot-qiskit_result_sim.png" /></div>
+			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-cnot-qiskit_result_real.png" /></div>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.<br />
+			<br />
+			The output of the program consists in measuring qubit 1 (the target): the probability of getting $|0\rangle$ on qubit 1 output is given by the sum of the first and fourth rows of the truth table.
+			<br />
+			The probability of the first line is given by the product of the probability of qubit 0 to be $|0\rangle$ (which we know to be 0.75) and the probability of qubit 1 to be $|0\rangle$ (which we know to be about $0.933013$)
+			so about $0.699760$.<br />
+			<br />
+			The probability of the fourth line is given by the product of the probability of qubit 0 to be $|1\rangle$ (which we know to be 0.25) for the probability of qubit 1 to be $|1\rangle$ (which we know to be about $0.066987$)
+			so about $0.016746$.<br />
+			Summing the two probabilities, we calculate the probability of getting $|0\rangle$ on qubit 1 output which is $0.699760 + 0.016746 = 0.716220$ which is what is obtained experimentally (unless small deviations due to stochastic nature).
+			Similarly, it is calculated that the probability of obtaining $|1\rangle$ on qubit 1 output is equal to $0.283780$, very close to the experimentally determined probability.
+		</p>
+
+		<h2>DDownload of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/QuantumGates/NotCNotGates">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+												<li><a href="../../en/neural-networks/one-variable-real-function-fitting-with-tensorflow.html">One-variable real-valued function fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/one-variable-real-function-fitting-with-pytorch.html">One-variable real-valued function fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html">Parametric curve on plane fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html">Parametric curve on plane fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html">Parametric curve in space fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html">Parametric curve in space fitting with PyTorch</a></li>
+												<li><a href="../../en/neural-networks/two-variables-real-function-fitting-with-tensorflow.html">Two-variables real-valued function fitting with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/two-variables-real-function-fitting-with-pytorch.html">Two-variables real-valued function fitting with PyTorch</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+

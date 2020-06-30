@@ -217,8 +217,8 @@ mov DWORD PTR [rbp-12], eax</code></pre>
 
 		<h2>L&apos;operatore NOT</h2>
 		<p>
-			L&apos;operatore quantistico NOT, che da adesso sar&agrave; chiamato con il suo nome pi&ugrave; appropriato di <em>Pauli-X</em> agisce su un singolo qubit
-			e il suo scopo &egrave; invertire il qubit passato rispetto alla base canonica (operazione che corrisponde a una rotazione rispetto all&apos;asse X
+			L&apos;operatore quantistico NOT, che da adesso sar&agrave; chiamato con il suo nome pi&ugrave; appropriato di porta <em>Pauli-X</em> agisce su un singolo qubit
+			e il suo scopo &egrave; di invertire il qubit passato rispetto alla base canonica (operazione che corrisponde a una rotazione rispetto all&apos;asse X
 			sulla sfera di Bloch, si veda <a href="https://it.wikipedia.org/wiki/Sfera_di_Bloch" target='blank'>Sfera di Bloch su Wikipedia</a>)<br />
 			<br />
 			Matematicamente bisogna quindi trovare una matrice <em>hermetiana</em> e <em>unitaria</em> (perch&egrave; tutti gli operatori quantistci tali devono essere) 
@@ -230,14 +230,14 @@ mov DWORD PTR [rbp-12], eax</code></pre>
 			&Egrave; unitaria perch&eacute; la sua trasposta coniugata (che &egrave; anche la trasposta essendo presenti solo elementi reali) coincide con la sua inversa
 			e la verifica &egrave; un semplice calcolo
 			$$XX^\dag=XX=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right]= \left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right] = I$$
-			Analogamente si dimostra che $X^\dag X=I$ per cui vale $X^\dag=X^{-1}$
+			Analogamente si dimostra che $X^\dag X=I$ per cui vale $X^\dag=X^{-1}$<br />
 			<br />
 			Dal punto di vista fisico la realizzazione della porta Pauli-X dipende da come il computer quantistico &egrave; realizzato dal punto di vista hardware;
 			non &egrave; scopo di questo post entrare nella realizzazione ingegneristica dei qubit, ma giusto per fissare le idee, se ad esempio il qubit fosse realizzato tramite spin di un elettrone,
 			la porta Pauli-X sarebbe realizzata provocando una rotazione di $\pi$ intorno all&apos;asse X dello spin dell&apos;elettrone.
 		</p>
 
-		<h3>Test della porta Pauli-X su qubit non in sovrapposizione di stati</h3>
+		<h3>Test della porta Pauli-X su qubit in stato puro</h3>
 		<p>
 			Si osservi il seguente frammento di codice Python con Qiskit scritto per essere eseguito all&apos;interno di un Jupyter Notebook 
 			utilizzando come backend sia il simulatore &apos;qasm_simulator&apos; di IBM che il computer quantistico &apos;ibmq_london&apos; di IBM.
@@ -274,7 +274,7 @@ circuit.measure(q, c)</code></pre>
 					porta il qubit dallo stato inziale di $|0\rangle$ allo stato finale di $|1\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
-					Al qubit 2 sono applicate due porte Pauli-X in cascata: anche questa volta il comportamento atteso:
+					Al qubit 2 sono applicate due porte Pauli-X in cascata; anche questa volta il comportamento atteso:
 					la prima applicazione porta il qubit dallo stato iniziale di $|0\rangle$ allo stato di $|1\rangle$
 					e la seconda applicazione porta il qubit dallo stato di $|1\rangle$ allo stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
 					<br />
@@ -293,7 +293,7 @@ circuit.measure(q, c)</code></pre>
 			La dimostrazione &egrave; la seguente: scrivendo l&apos;applicazione della porta al vettore nella forma dei vettori delle componenti rispetto alla base canonica
 			ed eseguendo un passaggio di calcolo
 			$$X|\psi\rangle=\left[\begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix} \right] \left[\begin{matrix} \alpha \\ \beta \end{matrix} \right] = \left[\begin{matrix} \beta \\ \alpha \end{matrix} \right] $$
-			e tornando nello spazio vettoriale dei qubit otteniamo appunto $\beta|0\rangle + \alpha|1\rangle$, ovverosia l&apos;inversione delle ampiezze di probabilit&agrave;.<br />
+			e tornando nello spazio vettoriale dei qubit si ottiene appunto $\beta|0\rangle + \alpha|1\rangle$, ovverosia l&apos;inversione delle ampiezze di probabilit&agrave;.<br />
 			<br />
 			Passando al calcolatore, si sarebbe tentati di usare la porta Hadamard per mettere il qubit in una sovrapposizione di stati; ma ai fini dimostrativi non &egrave; molto utile
 			in quando applicando la porta Hadamard allo stato $|0\rangle$ accade che $\alpha$ e $\beta$ sono entrambi uguali a $\frac{1}{\sqrt{2}}$
@@ -305,9 +305,9 @@ circuit.measure(q, c)</code></pre>
 c = ClassicalRegister(1, 'c')
 circuit = QuantumCircuit(q, c)
 
-circuit.ucrx(np.pi/3, , 0)
+circuit.ucrx([np.pi/3], [], 0)
 
-circuit.measure(q, c)]</code></pre>
+circuit.measure(q, c)</code></pre>
 			che corrisponde al seguente circuito quantistico:<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_paulix.png" /></div>
 			e il cui risultato eseguito con un numero di shot=8192 sul simulatore IBM &apos;qasm_simulator&apos; &egrave; il seguente:<br />
@@ -318,21 +318,21 @@ circuit.measure(q, c)]</code></pre>
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_real.png" /></div>
 			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.<br />
 			<br />
-			L&apos;operatore <code>ucrx</code> con argomento $\frac{\pi}{3}$ effettua una rotazione $\theta=\frac{\pi}{3}$ (ovverosia 60° gradi) intorno all&apos;asse $x$ sul qubit 0
+			L&apos;operatore <code>ucrx</code> con argomento $\frac{\pi}{3}$ effettua una rotazione $\theta=\frac{\pi}{3}$ (ovverosia 60°) intorno all&apos;asse $x$ sul qubit 0
 			per cui $\alpha=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{3}}{2}=\cos \frac{\pi}{6}=\frac{\sqrt{3}}{2}$
-			e quindi la densit&agrave; di probabilit&agrave; (che &egrave; il quadrato dell&apos;ampiezza) &egrave; $|\alpha|^2=\frac{3}{4}=0.75$ e necessariamente la densit&agrave; di probabilit&agrave; $|\beta|^2=\frac{1}{4}=0.25$.
+			e quindi la densit&agrave; di probabilit&agrave; (che &egrave; il quadrato dell&apos;ampiezza) &egrave; $|\alpha|^2=\frac{3}{4}=0.75$ e necessariamente la densit&agrave; di probabilit&agrave; $|\beta|^2=\frac{1}{4}=0.25$
 			e difatti se si va a misurare il qubit 0 si ha una probabilit&agrave; del 75% di ottenere lo stato $|0\rangle$ e del 25% di ottenere $|1\rangle$.<br />
 			<br />
 			Adesso si modifica il programma aggiungendo una porta Pauli-X a seguire l&apos;applicazione della porta <code>ucrx</code>.
-			Qui il codice:
+			Qui il codice:<br /><br />
 			<pre><code class="python">q = QuantumRegister(1, 'q')
 c = ClassicalRegister(1, 'c')
 circuit = QuantumCircuit(q, c)
 
-circuit.ucrx(np.pi/3, , 0)
+circuit.ucrx([np.pi/3], [], 0)
 circuit.x(0)
 
-circuit.measure(q, c)]</code></pre>
+circuit.measure(q, c)</code></pre>
 			che corrisponde al seguente circuito quantistico:<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_3_paulix.png" /></div>
 			e il cui risultato eseguito con un numero di shot=8192 sul simulatore IBM &apos;qasm_simulator&apos; &egrave; il seguente:<br />
@@ -467,7 +467,7 @@ xor BYTE PTR [rbp-2], 1
 			</table>
 		</center>
 
-		Matematicamente la matrice che implementa il C-NOT &egrave la seguente;
+		Matematicamente la matrice che implementa il C-NOT &egrave; la seguente:
 		$$CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]$$
 		Che la matrice $CNOT$ implementi la tabella di verit&agrave; di cui sopra &egrave; evidente e bastano dei semplici calcoli per dimostralo.<br />
 		Ad esempio, osservando la penultima voce della tabella, rapprentanto i vettori di input $|1\rangle$ 0 $|0\rangle$ nella base canonica
@@ -482,7 +482,7 @@ xor BYTE PTR [rbp-2], 1
 		Analogamente per tutte le altre voci della tabella di verit&agrave; si dimostra che la matrice $CNOT$ implementa effettivamente l&apos;operatore C-NOT.<br />
 		<br />
 
-		Affich&egrave; la matrice $CNOT$ sia un valido operatore quantistico deve essere hermetiana e unitaria. Che sia hermetiana &egrave; evidente: essa contiene solo elementi reali ed &egrave; simmetrica.<br />
+		Affich&eacute; la matrice $CNOT$ sia un valido operatore quantistico deve essere hermetiana e unitaria. Che sia hermetiana &egrave; evidente: essa contiene solo elementi reali ed &egrave; simmetrica.<br />
 		&Egrave; unitaria perch&eacute; la sua trasposta coniugata (che &egrave; anche la trasposta essendo presenti solo elementi reali) coincide con la sua inversa
 		e la verifica &egrave; un semplice calcolo
 		$$CNOT \cdot CNOT^\dag=CNOT \cdot CNOT=\left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right] \left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \end{matrix} \right]= \left[\begin{matrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{matrix} \right] = I$$
@@ -494,7 +494,7 @@ xor BYTE PTR [rbp-2], 1
 		tale fenomeno esiste, e si chiama chiama <i>entanglement</i> (per approfondimenti si veda <a href="https://it.wikipedia.org/wiki/Entanglement_quantistico" target='blank'>Entanglement quantistico su Wikipedia</a>)
 		</p>
 
-		<h3>Test della porta C-NOT senza sovrapposizione</h3>
+		<h3>Test della porta C-NOT su qubit in stati puri</h3>
 		<p>
 			Si osservi il seguente frammento di codice Python con Qiskit scritto per essere eseguito all&apos;interno di un Jupyter Notebook 
 			utilizzando come backend sia il simulatore &apos;qasm_simulator&apos; di IBM che il computer quantistico &apos;ibmq_london&apos; di IBM.
@@ -520,7 +520,7 @@ circuit.measure(q, c)
 			<br />
 			Osservando il risultato possiamo avere la prova sperimentale di quanto affermato sopra riguardo al comportamento della porta C-NOT
 			per quanto riguarda le prime due voci della tabella di verit&agrave; mostrata sopra:
-			infatti l&apos;input ai 4 qubit corrisponde agli input delle prime due voci della tabella (${|0\rangle}$ e ${|0\rangle}$ per la prima riga e ${|0\rangle}$ e ${|1\rangle}$ per la seconda riga)
+			infatti l&apos;input ai 4 qubit corrisponde agli input delle prime due voci della tabella, (${|0\rangle}$ e ${|0\rangle}$ per la prima riga e ${|0\rangle}$ e ${|1\rangle}$ per la seconda riga)
 			e per quanto riguarda l&apos;output vale quanto segue:
 			<ui>
 				<li>
@@ -528,15 +528,17 @@ circuit.measure(q, c)
 					e al momento della misura il suo stato vale ovviamente $|0\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
-					Il qubit 1 &egrave; in entanglement con il qubit 0 per cui il qubit 0 &egrave; il control e il qubit 1 &egrave; il target; il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 0 (quindi il target non cambia valore):
-					infatti il qubit 1 dallo stato inziale di $|0\rangle$ rimane stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
+					Il qubit 1 &egrave; in entanglement con il qubit 0 per cui il qubit 0 &egrave; il control e il qubit 1 &egrave; il target;
+					il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 0 (quindi il target non cambia valore):
+					infatti il qubit 1 dallo stato inziale di $|0\rangle$ rimane nello stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
 					Il qubit 2 &egrave; il control del qubit 3 e non subisce alcuna variazione quindi esso inizia nello stato $|0\rangle$
 					e al momento della misura il suo stato vale ovviamente $|0\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
-					Il qubit 3 &egrave; in entanglement con il qubit 2 per cui il qubit 2 &egrave; il control e il qubit 3 &egrave; il target; il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 0 (quindi il target non cambia valore):
+					Il qubit 3 &egrave; in entanglement con il qubit 2 per cui il qubit 2 &egrave; il control e il qubit 3 &egrave; il target;
+					il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 0 (quindi il target non cambia valore):
 					infatti il qubit 1 dallo stato inziale di $|1\rangle$ rimane stato finale di $|1\rangle$ con probabilit&agrave; del 100%.
 				</li>
 			</ui>
@@ -568,7 +570,7 @@ circuit.measure(q, c)
 			<br />
 			Osservando il risultato possiamo avere la prova sperimentale di quanto affermato sopra riguardo al comportamento della porta C-NOT
 			per quanto riguarda le ultime due righe della tabella di verit&agrave; mostrata sopra:
-			infatti l&apos;input ai 4 qubit corrisponde agli input delle ultime due voci della tabella (${|1\rangle}$ e ${|0\rangle}$ per la penultima riga e ${|1\rangle}$ e ${|1\rangle}$ per l&apos;ultima riga)
+			infatti l&apos;input ai 4 qubit corrisponde agli input delle ultime due voci della tabella, (${|1\rangle}$ e ${|0\rangle}$ per la penultima riga e ${|1\rangle}$ e ${|1\rangle}$ per l&apos;ultima riga)
 			e per quanto riguarda l&apos;output vale quanto segue:
 			<ui>
 				<li>
@@ -576,7 +578,8 @@ circuit.measure(q, c)
 					e al momento della misura il suo stato vale ovviamente $|1\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
-					Il qubit 1 &egrave; in entanglement con il qubit 0 per cui il qubit 0 &egrave; il control e il qubit 1 &egrave; il target; il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 1 (quindi il target inverte il valore):
+					Il qubit 1 &egrave; in entanglement con il qubit 0 per cui il qubit 0 &egrave; il control e il qubit 1 &egrave; il target;
+					il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 1 (quindi il target inverte il valore):
 					infatti il qubit 1 dallo stato inziale di $|1\rangle$ cambia stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
@@ -584,8 +587,9 @@ circuit.measure(q, c)
 					e al momento della misura il suo stato vale ovviamente $|1\rangle$ con probabilit&agrave; del 100%.
 				</li>
 				<li>
-					Il qubit 3 &egrave; in entanglement con il qubit 2 per cui il qubit 2 &egrave; il control e il qubit 3 &egrave; il target; il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 1 (quinid il target inverte il valore):
-					infatti il qubit 1 dallo stato inziale di $|1\rangle$ cambia stato finale di $|0\rangle$ con probabilit&agrave; del 100%.
+					Il qubit 3 &egrave; in entanglement con il qubit 2 per cui il qubit 2 &egrave; il control e il qubit 3 &egrave; il target;
+					il comportamento atteso &egrave; infatti quello di un operatore C-NOT tradizionale nel caso del bit control uguale a 1 (quinid il target inverte il valore):
+					infatti il qubit 3 dallo stato inziale di $|1\rangle$ cambia stato finale in $|0\rangle$ con probabilit&agrave; del 100%.
 				</li>
 			</ui>			
 			<br />
@@ -599,9 +603,9 @@ circuit.measure(q, c)
 			Dati due qubit, il primo di <em>control</em> e il secondo di <em>target</em> in entanglement e in sovrapposizione di stati
 			$$q _0=\alpha|0\rangle + \beta|1\rangle$$
 			$$q _1=\gamma|0\rangle + \delta|1\rangle$$
-			e si effettui una rotazione di $\theta=\frac{\pi}{3}$ (ovverosia 60° gradi) intorno all&apos;asse $x$ sul qubit 0 e quindi $\alpha=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{3}}{2}=\cos \frac{\pi}{6}=\frac{\sqrt{3}}{2}$
+			e si effettui una rotazione di $\theta=\frac{\pi}{3}$ (ovverosia 60°) intorno all&apos;asse $x$ sul qubit 0 e quindi $\alpha=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{3}}{2}=\cos \frac{\pi}{6}=\frac{\sqrt{3}}{2}$
 			e quindi la densit&agrave; di probabilit&agrave; $|\alpha|^2=\frac{3}{4}=0.75$ e necessariamente la densit&agrave; di probabilit&agrave; $|\beta|^2=\frac{1}{4}=0.25$.<br />
-			Si effettui inoltre una rotazione di $\theta=\frac{\pi}{6}$ (ovverosia 30° gradi) intorno all&apos;asse $x$ sul qubit 1 e quindi $\gamma=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{6}}{2}=\cos \frac{\pi}{12}=\frac{\sqrt{6} + \sqrt{2}}{4}$
+			Si effettui inoltre una rotazione di $\theta=\frac{\pi}{6}$ (ovverosia 30°) intorno all&apos;asse $x$ sul qubit 1 e quindi $\gamma=\cos \frac{\theta}{2}=\cos \frac{\frac{\pi}{6}}{2}=\cos \frac{\pi}{12}=\frac{\sqrt{6} + \sqrt{2}}{4}$
 			e quindi la densit&agrave; di probabilit&agrave; $|\gamma|^2=\frac{2 + \sqrt{3}}{4} \simeq 0.933013$ e necessariamente l&apos;ampiezza di probabilit&agrave; $|\delta|^2=\frac{2 + \sqrt{3}}{4} \simeq 0.0669873$.
 			<br />
 			Passando al calcolatore, si osservi il seguente frammento di codice Python con Qiskit scritto per essere eseguito all&apos;interno di un Jupyter Notebook 
@@ -628,13 +632,13 @@ circuit.measure(q[1], c[1])
 			<br />
 			L&apos;output del programma consiste nella misura del qubit 1 (il target): la probabilit&agrave; di ottenere $|0\rangle$ sul qubit 1 in uscita &egrave; data dalla somma della prima e quarta riga della tabella di verit&agrave.
 			<br />
-			La probabilit&agrave; della prima riga &egrave; data dal prodotto della probabilit&agrave; del qubit 0 di essere $|0\rangle$ (che sappiamo essere 0.75) per la probabilit&agrave; che il qubit 1 di essere $|0\rangle$ (che sappiamo essere circa $0.933013$)
+			La probabilit&agrave; della prima riga &egrave; data dal prodotto della probabilit&agrave; del qubit 0 di essere $|0\rangle$ (che sappiamo essere 0.75) per la probabilit&agrave; del qubit 1 di essere $|0\rangle$ (che sappiamo essere circa $0.933013$)
 			e quindi circa $0.699760$.<br />
 			<br />
-			La probabilit&agrave; della quarta riga &egrave; data dal prodotto della probabilit&agrave; del qubit 0 di essere $|1\rangle$ (che sappiamo essere 0.25) per la probabilit&agrave; che il qubit 1 di essere $|1\rangle$ (che sappiamo essere circa $0.066987$)
+			La probabilit&agrave; della quarta riga &egrave; data dal prodotto della probabilit&agrave; del qubit 0 di essere $|1\rangle$ (che sappiamo essere 0.25) per la probabilit&agrave; del qubit 1 di essere $|1\rangle$ (che sappiamo essere circa $0.066987$)
 			e quindi circa $0.016746$.<br />
 			Sommando le due probabilit&agrave; si calcola la probabilit&agrave; di ottenere $|0\rangle$ sul qubit 1 in uscita che &egrave; quindi $0.699760 + 0.016746 = 0.716220$ che &egrave; quanto ottenuto sperimentalmente (a meno di piccoli scostamenti dovuta alla natura stocastica).
-			Analogamente si calcola che la probabilit&agrave; di ottenere $|1\rangle$ sul qubit 1 in uscita &egrave; pari a $0.283780$, assai vicino alla probabilit&agrave; determinata sperimentalmente.
+			Analogamente si calcola che la probabilit&agrave; di ottenere $|1\rangle$ sul qubit 1 in uscita &egrave; pari a $0.283780$, assai vicina alla probabilit&agrave; determinata sperimentalmente.
 		</p>
 
 		<h2>Download del codice completo</h2>
