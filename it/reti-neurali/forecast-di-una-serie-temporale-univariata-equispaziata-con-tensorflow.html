@@ -1,0 +1,1185 @@
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Forecast di una serie temporale univariata ed equispaziata con TensorFlow</title>
+		<meta name="description" content="Forecast di serie temporale univariata ed equispaziata tramite varie tassonomie di reti neurali implementate con TensorFlow senza scrivere codice ma solo tramite linea di comando." >
+		<meta name="keywords" content="machine learning, deep learning, rete neurale, reti neurali, tensorflow, lstm, bidirezionali, convoluzionali, cnn, ConvLSTM, long short term memory, forecast, serie temporali, serie storiche, linea di comando" >
+		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/reti-neurali/",
+              "name": "Reti Neurali"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html",
+              "name": "Forecast di una serie temporale univariata ed equispaziata con TensorFlow"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina/" class="icon brands fa-telegram" target="_blank"><span class="label">Skype</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype" target="_blank"> <span class="label">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Forecast di una serie temporale univariata ed equispaziata con TensorFlow</h1>
+		</header>
+
+		<p>
+			Questo post tratta del forecast di una serie temporale univariata ed equispaziata tramite varie tassonomie di reti neurali implementate con TensorFlow.
+			Il codice illustrato qui consente all&apos;utilizzatore di poter testare diverse combinazioni di tipologie di rete
+			(LSTM, LSTM Bidirezionali, Convoluzionali, ConvLSTM, Dense e alcune loro combinazioni in cascata)
+			operando esclusivamente sulla linea di comando di una suite di programmi Python che implementano le seguenti funzionalit&agrave;:
+
+			<ul>
+				<li>
+					<em>Creazione dei dataset</em>
+				</li>
+				<li>
+					<em>Definizione della tassonomia della rete + configurazione degli iperparametri</em>
+				</li>
+				<li>
+					<em>Predizione (Forecast)</em>
+				</li>
+				<li>
+					<em>Generazione del grafico dei risultati</em>
+				</li>
+				<li>
+					<em>Generazione di un video sul processo di learning della rete</em>
+				</li>
+				<li>
+					<em>Diagnostica</em>
+				</li>
+			</ul>
+
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la tecnologia TensorFlow 2.x (sia per CPU che per GPU) con Keras (che &egrave; gi&agrave; integrato dentro TensorFlow 2.x); richiede inoltre le librerie NumPy, MatPlotLib, Pandas e ImageIO.<br/>
+			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
+			<br/>
+        </p>
+
+		<h2>Creazione dei dataset</h2>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/uvests_gen.py" target="_blank"><code>uvests_gen.py</code></a>
+			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
+			il programma prende in linea di comando la funzione generatrice della serie temporale in sintassi <em>lambda body</em> sulla variabile indipendente $t$, l&apos;intervallo della variabile indipendente (inizio, fine e passo di discretizzazione)
+			e genera il dataset in un file nel formato csv applicando la funzione all&apos;intervallo passato.
+			<br/>
+			Il file csv in uscita ha una sola colonna (con header) che contiene i valori della variabile dipendente $y=f(t)$, ovverosia i valori della funzione $f(t)$ corrispondenti al valore di $t$ nell&apos;intervallo specificato;
+			la variabile indipendente $t$ (il tempo) non &egrave; esplicitamente presente sul file in quanto il tempo nelle serie temporali equispaziate &egrave; implicito.<br/>
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python uvests_gen.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">uusage: uvests_gen.py [-h] [--version] --tsout TS_OUTPUT_FILENAME --funct
+                     FUNC_T_BODY [--tbegin TIME_BEGIN] [--tend TIME_END]
+                     [--tstep TIME_STEP] [--noise NOISE_BODY]
+
+uvests_gen.py generates an univariate equally spaced time series
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --tsout TS_OUTPUT_FILENAME
+                        univariate equally spaced time series output file (in
+                        csv format)
+  --funct FUNC_T_BODY   func(t) body (lamba format)
+  --tbegin TIME_BEGIN   time begin (default:0)
+  --tend TIME_END       time end (default:100)
+  --tstep TIME_STEP     time step (default: 1.0)
+  --noise NOISE_BODY    noise(sz) body (lamba format)</code></pre>
+
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tsout</b>: percorso (relativo o assoluto) del file csv da generare, che conterr&agrave; la serie temporale univariata ed equispaziata.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funct</b>: la funzione generatrice $y=f(t)$ della serie temporale in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tbegin e --tend</b>: intervallo della variabile $t$ tra <code>--tbegin</code> (incluso) e <code>--tend</code> (escluso).<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstep</b>: passo di discretizzazione della variable indipendente $t$; il valore di default &egrave; 1.0.<br />
+					<br />
+				</li>
+				<li>
+					<b>--noise</b>: la funzione generatrice di rumore in formato <em>lamba body</em>, ove $sz$ &egrave; il numero di elementi della serie.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma uvests_gen.py</h3>
+		<p>
+			Si supponga di voler generare una serie temporale per il training nell&apos;intervallo $t \in [0,200)$ generata dalla seguente funzione $$f(t)=2 \sin \frac{t}{10}$$
+			con un passo di discretizzazione sulla variabile $t$ di $0.5$ e con un rumore bianco di ampiezza $0.02$ con una distribuzione normale di media $0$ e deviazione standard $1$.
+			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, la funzione generatrice si traduce in sintassi lambda body Python cos&igrave;:
+			<pre><code class="python">2.0 * np.sin(t/10.0)</code></pre>
+			mentre il rumore si traduce in sintassi lambda body Python cos&igrave;:
+			<br />
+			<br />
+			<pre><code class="python">0.02 * np.random.normal(0, 1, sz)</code></pre>
+			Per generare il dataset di training, si esegua quindi il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python uvests_gen.py \
+  --tsout mytrain.csv \
+  --funct "2.0 * np.sin(t/10.0)" \
+  --tbegin 0 \
+  --tend 200 \
+  --tstep 0.5 \
+  --noise "0.02 * np.random.normal(0, 1, sz)"</code></pre>
+			mentre per generare il dataset di test, nell&apos;intervallo $t \in [200,400)$, si esegua il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python uvests_gen.py \
+  --tsout myactual.csv \
+  --funct "2.0 * np.sin(t/10.0)" \
+  --tbegin 200.0 \
+  --tend 400.0 \
+  --tstep 0.5</code></pre>
+			Si osservi che il passo di discretizzazione del dataset di test deve essere identico a quello di training
+			in quanto l&apos;equidistanza temporale si applica anche ai valori della serie temporalmente posteriore alla serie di training
+			(che sia quindi quella di test o di forecast).
+			Inoltre la serie temporale di test inizia esattamente dove la serie di training termina, ovverosia devono essere serie temporali congiunte.
+			Infine la serie temporale di test &egrave; generata senza rumore.
+		</p>
+
+		<h2>Definizione della tassonomia della rete + configurazione degli iperparametri</h2>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_fit.py" target="_blank"><code>fc_uvests_fit.py</code></a>
+			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente una rete neurale ed effettuare il suo addestramento.<br/>
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fc_uvests_fit.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fc_uvests_fit.py [-h] [--version] --tstrain TRAIN_TIMESERIES_FILENAME
+                        --modelout MODEL_PATH [--samplelength SAMPLE_LENGTH]
+                        [--subsamplelength SUB_SAMPLE_LENGTH]
+                        [--bestmodelmonitor BEST_MODEL_MONITOR]
+                        [--epochs EPOCHS] [--batchsize BATCH_SIZE]
+                        [--convlstmlayers CONVLSTM_LAYERS_LAYOUT [CONVLSTM_LAYERS_LAYOUT ...]]
+                        [--cnnlayers CNN_LAYERS_LAYOUT [CNN_LAYERS_LAYOUT ...]]
+                        [--lstmlayers LSTM_LAYERS_LAYOUT [LSTM_LAYERS_LAYOUT ...]]
+                        [--denselayers DENSE_LAYERS_LAYOUT [DENSE_LAYERS_LAYOUT ...]]
+                        [--optimizer OPTIMIZER] [--loss LOSS]
+                        [--metrics METRICS [METRICS ...]]
+                        [--dumpout DUMPOUT_PATH] [--logsout LOGSOUT_PATH]
+                        [--modelsnapout MODEL_SNAPSHOTS_PATH]
+                        [--modelsnapfreq MODEL_SNAPSHOTS_FREQ]
+
+fc_uvests_fit.py builds a model to fit an univariate equally spaced time
+series using a configurable neural network
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --tstrain TRAIN_TIMESERIES_FILENAME
+                        univariate equally spaced time series file (in csv
+                        format) for training
+  --modelout MODEL_PATH
+                        output model directory
+  --samplelength SAMPLE_LENGTH
+                        length of the sample in terms of number of time steps
+  --subsamplelength SUB_SAMPLE_LENGTH
+                        length of the sub sample in terms of number of time
+                        steps (it must be a divisor of samplelength; used when
+                        a ConvLSTM layer is present or when both Cnn and LSTM
+                        layers are present, otherwise ignored)
+  --bestmodelmonitor BEST_MODEL_MONITOR
+                        quantity name to monitor in order to save the best
+                        model
+  --epochs EPOCHS       number of epochs
+  --batchsize BATCH_SIZE
+                        batch size
+  --convlstmlayers CONVLSTM_LAYERS_LAYOUT [CONVLSTM_LAYERS_LAYOUT ...]
+                        ConvLSTM layer layout
+  --cnnlayers CNN_LAYERS_LAYOUT [CNN_LAYERS_LAYOUT ...]
+                        CNN layer layout
+  --lstmlayers LSTM_LAYERS_LAYOUT [LSTM_LAYERS_LAYOUT ...]
+                        LSTM layer layout
+  --denselayers DENSE_LAYERS_LAYOUT [DENSE_LAYERS_LAYOUT ...]
+                        Dense layer layout
+  --optimizer OPTIMIZER
+                        optimizer algorithm
+  --loss LOSS           loss function name
+  --metrics METRICS [METRICS ...]
+                        list of metrics to compute
+  --dumpout DUMPOUT_PATH
+                        dump directory (directory to store loss and metric
+                        values)
+  --logsout LOGSOUT_PATH
+                        logs directory for TensorBoard
+  --modelsnapout MODEL_SNAPSHOTS_PATH
+                        output model snapshots directory
+  --modelsnapfreq MODEL_SNAPSHOTS_FREQ
+                        frequency in terms of epochs to make the snapshot of
+                        model</code></pre>
+
+			Dove:<br />
+			<br />
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstrain</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale da utilizzare per il training;
+					questo file pu&ograve; essere generato in modo sintetico dal precedente programma <code>uvests_gen.py</code> oppure essere una serie temporale non generata sinteticamente
+					ma ottenuta realmente misurando a intervalli regolari di tempo un fenomeno.<br />
+					<br />
+				</li>
+				<li>
+					<b>--modelout</b>: percorso (relativo o assoluto) della directory dove salvare il modello nel formato nativo di Keras per TensorFlow.<br />
+					<br />
+				</li>
+				<li>
+					<b>--samplelength</b>: lunghezza dei campioni in termini di numero di passi di tempo.<br />
+					<br />
+				</li>
+				<li>
+					<b>--subsamplelength</b>: lunghezza dei sottocampioni, sempre in termini di numero di passi di tempo. Questo parametro &egrave; obbligatorio se il primo layer nascosto della rete (quello dopo il layer di input) &egrave; di tipo ConvLSTM oppure CNN-LSTM,
+					altrimenti tale parametro &egrave; ignorato; quando &egrave; necessario deve essere un divisore di <code>--samplelength</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--bestmodelmonitor</b>: il nome della metrica da utilizzare per salvare nella directory specificata da <code>--modelout</code> il modello
+					con il miglior valore di questa metrica incontrato al trascorrere delle epoche; se non specificato verr&agrave; salvato il modello all&apos;ultima epoca.<br />
+					<br />
+				</li>
+				<li>
+					<b>--epochs</b>: numero di epoche del processo di training.<br />
+					<br />
+				</li>
+				<li>
+					<b>--batchsize</b>: lunghezza dei batch usati nel processo di training.<br />
+					<br />
+				</li>
+				<li>
+					<b>--convlstmlayers</b>: configurazione dei layer di tipo ConvLSTM; le tipologie supportate sono:
+					<ul>
+						<li>
+							<b>convlstm(<em>filters</em>, <em>kernel_size</em>, <em>activation</em>, <em>kinit</em>, <em>binit</em>)</b>:
+							aggiunge un layer ConvLSTM2D nel layout dei layer di tipo ConvLSTM con i parametri specificati (kinit e binit, che sono gli inizializzatori del kernel e del bias, sono opzionali).
+						</li>
+						<li>
+							<b>dropout(<em>rate</em>)</b>:
+							aggiunge un layer Dropout nel layout dei layer di tipo ConvLSTM con il rate specificato.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>--cnnlayers</b>: configurazione dei layer di tipo CNN; le tipologie supportate sono:
+					<ul>
+						<li>
+							<b>conv(<em>filters</em>, <em>kernel_size</em>, <em>activation</em>, <em>kinit</em>, <em>binit</em>)</b>:
+							aggiunge un layer Conv1D nel layout dei layer di tipo CNN con i parametri specificati (kinit e binit, che sono gli inizializzatori del kernel e del bias, sono opzionali).
+						</li>
+						<li>
+							<b>maxpool(<em>pool_size</em>)</b>:
+							aggiunge un layer MaxPooling1D nel layout dei layer di tipo CNN con la dimensione del pool specificata.
+						</li>
+						<li>
+							<b>dropout(<em>rate</em>)</b>:
+							aggiunge un layer Dropout nel layout dei layer di tipo CNN con il rate specificato.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>--lstmlayers</b>: configurazione dei layer di tipo LSTM; le tipologie supportate sono:
+					<ul>
+						<li>
+							<b>lstm(<em>units</em>, <em>activation</em>, <em>kinit</em>, <em>binit</em>)</b>:
+							aggiunge un layer LSTM nel layout dei layer di tipo LSTM con i parametri specificati (kinit e binit, che sono gli inizializzatori del kernel e del bias, sono opzionali).
+						</li>
+						<li>
+							<b>lstmbi(<em>units</em>, <em>activation</em>, <em>kinit</em>, <em>binit</em>)</b>:
+							aggiunge un layer Bidirectional LSTM nel layout dei layer di tipo LSTM on i parametri specificati (kinit e binit, che sono gli inizializzatori del kernel e del bias, sono opzionali).
+						</li>
+						<li>
+							<b>dropout(<em>rate</em>)</b>:
+							aggiunge un layer Dropout nel layout dei layer di tipo LSTM con il rate specificato.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>--denselayers</b>: configurazione dei layer di tipo Dense; le tipologie supportate sono:
+					<ul>
+						<li>
+							<b>dense(<em>units</em>, <em>activation</em>, <em>kinit</em>, <em>binit</em>)</b>:
+							aggiunge un layer Dense nel layout dei layer di tipo Dense con i parametri specificati (kinit e binit, che sono gli inizializzatori del kernel e del bias, sono opzionali).
+						</li>
+						<li>
+							<b>dropout(<em>rate</em>)</b>:
+							aggiunge un layer Dropout nel layout dei layer di tipo Dense con il rate specificato.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>--optimizer</b>: chiamata al costruttore dell&apos;ottimizzatore usato dal processo di training; si veda il reference di <a target="_blank" href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers">TensorFlow 2.x Optimizators</a> per dettagli
+					sui parametri supportati dai costruttori degli algoritmi. Il default &egrave; Adam(), gli algoritmi disponibili sono:
+					<ul>
+						<li>Adadelta()</li>
+						<li>Adagrad()</li>
+						<li>Adam()</li>
+						<li>Adamax()</li>
+						<li>Ftrl()</li>
+						<li>Nadam()</li>
+						<li>RMSprop()</li>
+						<li>SGD()</li>
+					</ul>
+				</li>
+				<li>
+					<b>--loss</b>: Chiamata al costruttore della funzione di loss (costo) usata dal processo di training; si veda il reference di <a target="_blank" href="https://www.tensorflow.org/api_docs/python/tf/keras/losses">TensorFlow 2.x Loss Functions</a> per dettagli
+					sui parametri supportati dai costruttori delle funzioni di loss. Il default &egrave; MeanSquaredError(), le funzioni di loss disponibili sono:
+					<ul>
+						<li>BinaryCrossentropy()</li>
+						<li>CategoricalCrossentropy()</li>
+						<li>CategoricalHinge()</li>
+						<li>CosineSimilarity()</li>
+						<li>Hinge()</li>
+						<li>Huber()</li>
+						<li>KLDivergence()</li>
+						<li>LogCosh()</li>
+						<li>MeanAbsoluteError()</li>
+						<li>MeanAbsolutePercentageError()</li>
+						<li>MeanSquaredError()</li>
+						<li>MeanSquaredLogarithmicError()</li>
+						<li>Poisson()</li>
+						<li>Reduction()</li>
+						<li>SparseCategoricalCrossentropy()</li>
+						<li>SquaredHinge()</li>
+					</ul>
+				</li>
+				<li>
+					<b>--metrics</b>: sequenza di nomi di metriche; si veda la documentazione di <a href="https://www.tensorflow.org/api_docs/python/tf/keras/metrics/" target="_blank">TensorFlow 2.x Metrics</a>; comunque le metriche che hanno senso in questo constesto sono:
+					<ul>
+						<li>mean_squared_error</li>
+						<li>mean_squared_logarithmic_error</li>
+						<li>mean_absolute_error</li>
+						<li>mean_absolute_percentage_error</li>
+					</ul>
+				</li>
+				<li>
+					<b>--dumpout</b>: percorso (relativo o assoluto) della directory dove salvare i valori delle metriche e della funzione di loss allo scorrere delle epoche;
+					il programma <code>nn_dumps_scatter.py</code> utilizzer&agrave; il contenuto di questa directory per visualizzare i grafici delle metriche e della funzione di loss.<br />
+					<br />
+				</li>
+				<li>
+					<b>--logsout</b>: percorso (relativo o assoluto) della directory dove salvare i log della fase di training
+					affinch&eacute; li si possa analizzare tramite <a href="https://www.tensorflow.org/tensorboard" target="_blank">TensorBoard</a><br />
+					<br />
+				</li>
+				<li>
+					<b>--modelsnapout</b>: percorso (relativo o assoluto) della directory dove salvare uno snapshot del modello coorrente alla i-esima epoca;
+					la frequenza con cui effettuare il salvataggio &egrave; specificata dal parametro <code>--modelsnapfreq</code>.
+					Il programma <code>fc_uvests_video.py</code>, utilizzando gli snapshot dei modelli salvati ogni <code>--modelsnapfreq</code> epoche, genera un video
+					per mostrare come la rete impara al trascorrere delle epoche.<br />
+					<br />
+				</li>
+				<li>
+					<b>--modelsnapfreq</b>: indica ogni quante epoche effettuare un salvataggio del modello della directory indicata da <code>--modelsnapout</code>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma fc_uvests_fit.py</h3>
+		<p>
+			Dopo aver generato tramite <code>uvests_gen.py</code> la serie di training, si intente adesso creare una rete neurale con un layer LSTM
+			seguto da due layer Dense ed effettuare un training con 100 epoche con batch size di 40 valori usando l&apos;ottimizzatore Adam e MeanSquaredError quale funzione di loss.<br/>
+			Si esegua quindi il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fc_uvests_fit.py \
+     --tstrain mytrain.csv \
+     --samplelength 12 \
+     --modelout mymodel \
+     --lstmlayers "lstm(200, 'tanh')" \
+     --denselayers "dense(80, 'tanh')" "dense(80, 'tanh')" \
+     --epochs 100 \
+     --batchsize 40 \
+     --optimizer "Adam(learning_rate=1e-3, epsilon=1e-07)" \
+     --loss "MeanSquaredError()"</code></pre>
+			Al termine dell&apos;esecuzione del programma la directory <code>mymodel</code> conterr&agrave; il modello della rete con la tassonomia specificata e addestrata secondo gli iperparametri passati in linea di comando.
+		</p>
+
+		<h2>Predizione (Forecast)</h2>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_predict.py" target="_blank"><code>fc_uvests_predict.py</code></a>
+			&egrave; di calcolare la predizione (il forecast) della serie temporale imparata nella fase di training.<br/>
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fc_uvests_predict.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fc_uvests_predict.py [-h] [--version] --model MODEL_PATH --tstrain
+                            TIMESERIES_FILENAME [--tsactual ACTUAL_FILENAME]
+                            [--strategy recursive,walk_forward]
+                            [--samplelength SAMPLE_LENGTH]
+                            [--subsamplelength SUB_SAMPLE_LENGTH]
+                            [--fclength FORECAST_LENGTH]
+							--tsforecastout FORECAST_DATA_FILENAME
+							[--error ERROR]
+
+fc_uvests_predict.py compute forecasting of an univariate equally spaced time
+series
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --model MODEL_PATH    model directory path
+  --tstrain TIMESERIES_FILENAME
+                        univariate equally spaced time series file (in csv
+                        format) used for training
+  --tsactual ACTUAL_FILENAME
+                        actual univariate equally spaced time series file (in
+                        csv format)
+  --strategy recursive,walk_forward
+                        recursive uses previous predictions as input for
+                        future predictions, walk_forward uses actual as input
+                        for future predictions (default: recursive)
+  --samplelength SAMPLE_LENGTH
+                        length of the sample in terms of number of time steps
+                        used for training
+  --subsamplelength SUB_SAMPLE_LENGTH
+                        length of the sub sample in terms of number of time
+                        steps used for training (it must be a divisor of
+                        samplelength; used when a ConvLSTM layer is present or
+                        when both CNN and LSTM layers are present, otherwise
+                        ignored)
+  --fclength FORECAST_LENGTH
+                        length of forecast (number of values to predict)
+  --tsforecastout FORECAST_DATA_FILENAME
+                        output forecast data file (in csv format)
+  --error ERROR         error function name
+			</code></pre>
+
+			Dove:<br />
+			<br />
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--model</b>: percorso (relativo o assoluto) della directory del modello salvato da <code>fc_uvests_fit.py</code> e specificato dall&apos;argomento <code>--modelout</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstrain</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale utilizzata per il training,
+					ovverosia quella passata al precedente programma <code>fc_uvests_fit.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tsactual</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale di test;
+					&egrave; obbligatoria se <code>--strategy</code> &egrave; <code>walk_forward</code>; se presente tale serie viene considerata immediatamente seguente a quella di training.<br />
+					<br />
+				</li>
+				<li>
+					<b>--strategy</b>: indica la strategia di predizione: i valori ammessi sono <code>recursive</code> e <code>walk_forward</code>.
+					<ul>
+						<li>
+							<b>recursive</b>: i valori della predizione sono usati come input per calcolare i valori di forecast successivi.
+						</li>
+						<li>
+							<b>walk_forward</b>: i valori della serie specificata in <code>--tsactual</code> sono usati come input per calcolare il forecast.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>--samplelength</b>: lunghezza dei campioni in termini di numero di passi di tempo.
+					Deve essere lo stesso identico valore passato a <code>fc_uvests_fit.py</code> tramite l&apos;argomento <code>--samplelength</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--subsamplelength</b>: lunghezza dei sottocampioni, sempre in termini di numero di passi di tempo. Questo parametro &egrave; obbligatorio se il primo layer nascosto della rete (quello dopo il layer di input) &egrave; di tipo ConvLSTM oppure CNN-LSTM,
+					altrimenti tale parametro &egrave; ignorato; quando obbligatorio deve essere lo stesso identico valore passato a <code>fc_uvests_fit.py</code> tramite l&apos;argomento <code>--subsamplelength</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--fclength</b>: indica il numero di predizioni da effettuare;
+					se <code>--strategy</code> &egrave; <code>walk_forward</code>, la lunghezza della serie specificata in <code>--tsactual</code> deve contenere un numero di elementi maggiore o uguale al valore passato in <code>--fclength</code><br />
+					<br />
+				</li>
+				<li>
+					<b>--tsforecastout</b>: percorso (relativo o assoluto) del file csv da generare che conterr&agrave; la predizione, ovverosia la serie temporale di forecast (naturalmente univariata ed equispaziata allo stesso modo della serie temporale di training).<br />
+					<br />
+				</li>
+				<li>
+					<b>--error</b>: il nome della funzione di errore da calcolare tra la serie temporale di forecast e la serie temporale di test.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma fc_uvests_predict.py</h3>
+		<p>
+			Dopo aver effettuato la creazione del modello tramite <code>fc_uvests_fit.py</code> si intente finalmente calcolare il forecast
+			e confrontare il forecast predetto con la serie temporale di test e quindi calcolare il valore dell&apos;errore tra le due serie.
+			Si esegua quindi il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fc_uvests_predict.py \
+    --tstrain mytrain.csv \
+    --tsactual myactual.csv \
+    --strategy recursive \
+    --samplelength 12 \
+    --fclength 400 \
+    --model mymodel \
+    --tsforecastout myforecast.csv \
+    --error "MeanSquaredError()"</code></pre>
+			Al termine dell&apos;esecuzione del programma il file <code>myforecast.csv</code> conterr&agrave; la serie temporale di forecast.
+		</p>
+
+		<h2>Generazione del grafico dei risultati</h2>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/fc_uvests_scatter.py" target="_blank"><code>fc_uvests_scatter.py</code></a>
+			&egrave; di visualizzare graficamente la serie di training (punti blu), la serie di forecast (punti rossi) e opzionalmente la serie temporale di test (punti verdi).<br />
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fc_uvests_scatter.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fc_uvests_scatter.py [-h] [--version] --tstrain TIMESERIES_FILENAME
+                            --tsforecast FORECAST_FILENAME
+                            [--tsactual ACTUAL_FILENAME]
+                            [--title FIGURE_TITLE] [--tlabel T_AXIS_LABEL]
+                            [--ylabel Y_AXIS_LABEL]
+                            [--labelfontsize LABEL_FONT_SIZE] [--width WIDTH]
+                            [--height HEIGHT] [--savefig SAVE_FIGURE_FILENAME]
+
+fc_uvests_scatter.py shows two joined x/y scatter graphs:
+	the blue one is the univariate equally spaced time series
+	the red one is the forecast
+	the optional green one is the actual univariate equally spaced time series
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --tstrain TIMESERIES_FILENAME
+                        univariate equally spaced time series file (in csv format) used for training
+  --tsforecast FORECAST_FILENAME
+                        forecast file (in csv format)
+  --tsactual ACTUAL_FILENAME
+                        univariate equally spaced actual file (in csv format)
+  --title FIGURE_TITLE  if present, it set the title of chart
+  --tlabel T_AXIS_LABEL
+                        label of t axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --width WIDTH         width of animated git (in inch)
+  --height HEIGHT       height of animated git (in inch)
+  --savefig SAVE_FIGURE_FILENAME
+                        if present, the chart is saved on a file instead to be shown on screen</code></pre>
+
+			Dove:<br />
+			<br />
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstrain</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale utilizzata per il training,
+					ovverosia quella passata al precedente programma <code>fc_uvests_fit.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tsforecast</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale di forecast;
+					questo file &egrave; generato dal precedente programma <code>fc_uvests_predict.py</code> ed &egrave; il file specificato nell&apos;argomento <code>--tsforecastout</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tsactual</b>: percorso (relativo o assoluto) del file csv (con header) che contiene la serie temporale di test;
+					&egrave; obbligatoria se <code>--strategy</code> &egrave; <code>walk_forward</code> e se presente tale serie viene considerata immediatamente seguente a quella di training.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: imposta il titolo del grafico.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tlabel</b>: imposta l&apos;etichetta dell&apos;asse $t$ del grafico (le ascisse).<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: imposta l&apos;etichetta dell&apos;asse $y$ del grafico (le ordinate).<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: imposta la grandezza del font dei testi presenti nell&apos;immagine.<br />
+					<br />
+				</li>
+				<li>
+					<b>--width</b>: imposta la larghezza dell&apos;immagine generata, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--height</b>: imposta l&apos;altezza dell&apos;immagine generata, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>: percorso (relativo o assoluto) del file immagine (in formato png) da salvare;
+					se non presente il grafico &egrave; mostrato a video in una finestra.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma fc_uvests_scatter.py</h3>
+		<p>
+			Dopo aver effettuato la creazione del modello tramite <code>fc_uvests_fit.py</code>, si intente finalmente calcolare il forecast
+			e confrontare il forecast predetto con la serie temporale di test e quindi calcolare il valore di l&apos;errore tra le due serie.
+			Si esegua quindi il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fc_uvests_scatter.py \
+    --tstrain mytrain.csv \
+    --tsforecast myforecast.csv \
+    --tsactual myactual.csv \
+    --title "My example" \
+    --tlabel "t" \
+    --ylabel "y" \
+    --savefig myexample.png</code></pre>
+			Al termine dell&apos;esecuzione del programma il file <code>myexample.png</code> conterr&agrave; il grafico delle tre serie temporali.
+			<br/>
+			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
+			<div class="belowtextlines"><img src="../../posts/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow/nn-uests-example1.png" /></div>
+			<div class="photocaption">Esempio di immagine generata dal programma <code>fc_uvests_scatter.py</code>.</div>
+		</p>
+
+		<h2>Generazione di un video sul processo di learning della rete</h2>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_video.py" target="_blank"><code>fc_uvests_video.py</code></a>
+			&egrave; di generare un video (precisamente una git animata) che mostri la predizione (il forecast) allo scorrere delle epoche durante la fase di training.<br/>
+			Per la generazione di tale video &egrave; necessario passare al comando <code>fc_uvests_fit.py</code> gli argomenti <code>--modelsnapout</code> e <code>--modelsnapfreq</code>.
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fc_uvests_video.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fc_uvests_video.py [-h] [--version] --modelsnap MODEL_SNAPSHOTS_PATH
+                          --tstrain TIMESERIES_FILENAME
+                          [--tsactual ACTUAL_FILENAME]
+                          [--strategy recursive,walk_forward]
+                          [--samplelength SAMPLE_LENGTH]
+                          [--subsamplelength SUB_SAMPLE_LENGTH]
+                          [--fclength FORECAST_LENGTH] --savevideo
+                          SAVE_GIF_VIDEO [--title FIGURE_TITLE_PREFIX]
+                          [--tlabel T_AXIS_LABEL] [--ylabel Y_AXIS_LABEL]
+                          [--labelfontsize LABEL_FONT_SIZE]
+                          [--frameperseconds FRAME_PER_SECONDS]
+                          [--width WIDTH] [--height HEIGHT]
+
+fc_uvests_video.py generates an animated git that shows the forecast curve
+computed on an input univariate equally spaced time series as the epochs
+change.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --modelsnap MODEL_SNAPSHOTS_PATH
+                        model snapshots directory (generated by uts_fit.py
+                        with option --modelsnapout)
+  --tstrain TIMESERIES_FILENAME
+                        univariate equally spaced time series file (in csv
+                        format) used for training
+  --tsactual ACTUAL_FILENAME
+                        actual univariate equally spaced time series file (in
+                        csv format)
+  --strategy recursive,walk_forward
+                        recursive uses previous predictions as input for
+                        future predictions, walk_forward uses actual as input
+                        for future predictions (default: recursive)
+  --samplelength SAMPLE_LENGTH
+                        length of the sample in terms of number of time steps
+                        used for training
+  --subsamplelength SUB_SAMPLE_LENGTH
+                        length of the sub sample in terms of number of time
+                        steps used for training (it must be a divisor of
+                        samplelength; used when a ConvLSTM layer is present or
+                        when both CNN and LSTM layers are present, otherwise
+                        ignored)
+  --fclength FORECAST_LENGTH
+                        length of forecast (number of values to predict)
+  --savevideo SAVE_GIF_VIDEO
+                        the animated .gif file name to generate
+  --title FIGURE_TITLE_PREFIX
+                        if present, it set the prefix title of chart
+  --tlabel T_AXIS_LABEL
+                        label of t axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --frameperseconds FRAME_PER_SECONDS
+                        frame per seconds
+  --width WIDTH         width of animated git (in inch)
+  --height HEIGHT       height of animated git (in inch)</pre></code>
+
+  			Dove:<br />
+			<br />
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstrain</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tsactual</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--strategy</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--samplelength</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--subsamplelength</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--fclength</b>: si veda l&apos;omonimo argomento di <code>fc_uvests_predict.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--savevideo</b>: percorso (relativo o assoluto) del file video (in formato git animata) da generare.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: imposta il titolo del video.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tlabel</b>: imposta l&apos;etichetta dell&apos;asse $t$ del grafico (le ascisse) contenuto nel video.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: imposta l&apos;etichetta dell&apos;asse $y$ del grafico (le ordinate) contenuto nel video.<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: imposta la grandezza del font dei testi presenti nel video.<br />
+					<br />
+				</li>
+				<li>
+					<b>--frameperseconds</b>: imposta il numero di frame per secondo del video.<br />
+					<br />
+				</li>				
+				<li>
+					<b>--width</b>: imposta la larghezza del video, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--height</b>: imposta l&apos;altezza del video, in inch<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma fc_uvests_video.py</h3>
+		<p>
+			Rieseguendo prima il programma <code>fc_uvests_fit.py</code> aggiungendo gli argomenti <code>--modelsnapout</code> e <code>--modelsnapfreq</code>,
+			passando ad esempio rispettivamente <code>mysnaps</code> e <code>5</code> 
+			e successivamente eseguire il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fc_uvests_video.py \
+  --modelsnap mysnaps \
+  --tstrain mytrain.csv \
+  --tsactual myactual.csv \
+  --strategy recursive \
+  --samplelength 12 \
+  --fclength 400 \
+  --savevideo myvideo.gif \
+  --title "My example" \
+  --tlabel "t" \
+  --ylabel "y"</code></pre>
+			Al termine dell&apos;esecuzione del programma il file <code>myvideo.gif</code> conterr&agrave; una gif animata che mostra una sequenza di frame
+			e ogni frame mostra il grafico del forecast calcolato con il modello disponibile alla i-esima epoca.
+		</p>
+
+		<h2>Diagnostica</h2>
+		<p>
+			La suite offre quattro tecniche per effettuare diagnostica; la prima &egrave; evidente e sono i messaggi utente scritti
+			sullo standard output e sullo standard error dei vari programmi; la seconda &egrave; la generazione del video descritta sopra,
+			in quanto quel video consente di osservare come la rete neurale stia imparando con il passare delle epoche.<br />
+			La terza tecnica &egrave; di utilizzare TensorBoard: &egrave; necessario eseguire il programma <code>fc_uvests_fit.py</code> con l&apos;argomento <code>--logsout</code>
+			in cui si specifica una directory ove il programma scriver&agrave; i log file che TensorBoard analizza sia durante che al termine della fase di training.
+			Si veda la pagina di <a href="https://www.tensorflow.org/tensorboard" target="_blank">TensorBoard</a> per dettagli.<br />
+			<br />
+			La quarta tecnica &egrave; quella di far calcolare delle metriche alil programma <code>fc_uvests_fit.py</code> specificando l&apos;argomento <code>--metrics</code>;
+			il valore delle metriche calcolato ad ogni epoca &egrave; visualizzato sullo standard output, cos&igrave; come il valore della funzione di loss,
+			ma specificando un percorso di una directory nell&apos;argomento <code>--dumpout</code> i valori della funzione di loss e delle metriche sono salvati
+			in file csv in tale directory; tali file sono poi visualizzabili graficamente utilizzando il programma <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/nn_dumps_scatter.py" target="_blank"><code>nn_dumps_scatter.py</code></a>.
+
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python nn_dumps_scatter.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: nn_dumps_scatter.py [-h] [--version] --dump DUMP_PATH
+                        [--savefigdir SAVE_FIGURE_DIRECTORY]
+
+nn_dumps_scatter.py shows the loss and metric plots with data generated by
+fc_uvests_fit.py with argument --dumpout
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --dump DUMP_PATH      dump directory (generated by any fitting/training
+                        programs of this suite that support --dumpout argument)
+  --savefigdir SAVE_FIGURE_DIRECTORY
+                        if present, the charts are saved on files in
+                        savefig_dir folder instead to be shown on screen</code></pre>
+
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dump</b>: percorso (relativo o assoluto) della directory dove <code>fc_uvests_fit.py</code> (tramite l&apos;argomento <code>--dumpout</code>)
+					ha salvato i valori delle metriche e della funzione di loss allo scorrere delle epoche.<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>: percorso (relativo o assoluto) di una directory ove salvare le immagini dei grafici (in formato png);
+					se non presente i grafici sono mostrato a video in finestre.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3>Un esempio di uso del programma nn_dumps_scatter.py</h3>
+		<p>
+			Rieseguendo prima il programma <code>fc_uvests_fit.py</code> aggiungendo l&apos;argomento <code>--dumpout</code>
+			passando ad esempio <code>mydump</code> e successivamente eseguire il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python nn_dumps_scatter.py \
+	--dump mydump
+	--savefigdir mydiagnostic</code></pre>
+			Verrano create nella directory mydiagnostic delle immagini che mostrano i grafici delle metriche scelte e della funzione di loss
+			al trascorrere delle epoche.
+		<p>
+
+		<h2>Esempi di uso in cascata dei programmi della suite</h2>
+		<p>
+			Nella cartella <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/examples" target="_blank"><code>examples</code></a>
+			ci sono alcuni programmi shell che mostrano l&apos;uso dei programmi della suite in cascata in varie combinazioni
+			di iperparametri, dataset e forecast.<br />
+			<br />
+			<b>Nota</b>: Data la natura stocastica di questi esempi (dovuta alla parte di training), i singoli specifici risultati possono variare. Si consideri di eseguire i singoli esempi pi&ugrave; volte.
+		</p>
+		
+		<h2 id="downloadcode">Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/time-series-and-neural-networks/tree/master/forecast/univariate-equally-spaced/tensorflow">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
