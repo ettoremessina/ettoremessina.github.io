@@ -202,7 +202,7 @@
 
 		<h2>Creazione dei dataset</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/uvests_gen.py" target="_blank"><code>uvests_gen.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series/blob/master/common/uvests_gen.py" target="_blank"><code>uvests_gen.py</code></a>
 			&egrave; di generare i dataset (di training e/o di test) da utilizzare nelle fasi successive;
 			il programma prende in linea di comando la funzione generatrice della serie temporale in sintassi <em>lambda body</em> sulla variabile indipendente $t$, l&apos;intervallo della variabile indipendente (inizio, fine e passo di discretizzazione)
 			e genera il dataset in un file nel formato csv applicando la funzione all&apos;intervallo passato.
@@ -304,7 +304,7 @@ optional arguments:
 
 		<h2>Definizione della tassonomia della rete + configurazione degli iperparametri</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_fit.py" target="_blank"><code>fc_uvests_fit.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_fit.py" target="_blank"><code>fc_uvests_fit.py</code></a>
 			&egrave;, in accordo con i parametri passati in linea di comando, creare dinamicamente una rete neurale ed effettuare il suo addestramento.<br/>
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
@@ -569,7 +569,7 @@ optional arguments:
 
 		<h2>Predizione (Forecast)</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_predict.py" target="_blank"><code>fc_uvests_predict.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_predict.py" target="_blank"><code>fc_uvests_predict.py</code></a>
 			&egrave; di calcolare la predizione (il forecast) della serie temporale imparata nella fase di training.<br/>
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
@@ -702,7 +702,7 @@ optional arguments:
 
 		<h2>Generazione del grafico dei risultati</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/fc_uvests_scatter.py" target="_blank"><code>fc_uvests_scatter.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series/blob/master/common/fc_uvests_scatter.py" target="_blank"><code>fc_uvests_scatter.py</code></a>
 			&egrave; di visualizzare graficamente la serie di training (punti blu), la serie di forecast (punti rossi) e opzionalmente la serie temporale di test (punti verdi).<br />
 			<br/>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
@@ -826,7 +826,7 @@ optional arguments:
 
 		<h2>Generazione di un video sul processo di learning della rete</h2>
 		<p>
-			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_video.py" target="_blank"><code>fc_uvests_video.py</code></a>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/time-series/blob/master/forecast/univariate-equally-spaced/tensorflow/fc_uvests_video.py" target="_blank"><code>fc_uvests_video.py</code></a>
 			&egrave; di generare un video (precisamente una git animata) che mostri la predizione (il forecast) allo scorrere delle epoche durante la fase di training.<br/>
 			Per la generazione di tale video &egrave; necessario passare al comando <code>fc_uvests_fit.py</code> gli argomenti <code>--modelsnapout</code> e <code>--modelsnapfreq</code>.
 			<br/>
@@ -998,7 +998,7 @@ optional arguments:
 			La quarta tecnica &egrave; quella di far calcolare delle metriche alil programma <code>fc_uvests_fit.py</code> specificando l&apos;argomento <code>--metrics</code>;
 			il valore delle metriche calcolato ad ogni epoca &egrave; visualizzato sullo standard output, cos&igrave; come il valore della funzione di loss,
 			ma specificando un percorso di una directory nell&apos;argomento <code>--dumpout</code> i valori della funzione di loss e delle metriche sono salvati
-			in file csv in tale directory; tali file sono poi visualizzabili graficamente utilizzando il programma <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/common/nn_dumps_scatter.py" target="_blank"><code>nn_dumps_scatter.py</code></a>.
+			in file csv in tale directory; tali file sono poi visualizzabili graficamente utilizzando il programma <a href="https://github.com/ettoremessina/time-series/blob/master/common/nn_dumps_scatter.py" target="_blank"><code>nn_dumps_scatter.py</code></a>.
 
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
 			<pre><code class="shell">$ python nn_dumps_scatter.py --help</code></pre>
@@ -1058,7 +1058,7 @@ optional arguments:
 
 		<h2>Esempi di uso in cascata dei programmi della suite</h2>
 		<p>
-			Nella cartella <a href="https://github.com/ettoremessina/time-series-and-neural-networks/blob/master/forecast/univariate-equally-spaced/tensorflow/examples" target="_blank"><code>examples</code></a>
+			Nella cartella <a href="https://github.com/ettoremessina/time-series/blob/master/forecast/univariate-equally-spaced/tensorflow/examples" target="_blank"><code>examples</code></a>
 			ci sono alcuni programmi shell che mostrano l&apos;uso dei programmi della suite in cascata in varie combinazioni
 			di iperparametri, dataset e forecast.<br />
 			<br />
@@ -1067,7 +1067,7 @@ optional arguments:
 		
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/time-series-and-neural-networks/tree/master/forecast/univariate-equally-spaced/tensorflow">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/time-series/tree/master/forecast/univariate-equally-spaced/tensorflow">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
