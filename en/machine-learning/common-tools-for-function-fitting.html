@@ -219,7 +219,7 @@
 			<br/>
 			<pre><code class="shell">usage: fx_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcx
                  FUNC_X_BODY [--xbegin RANGE_BEGIN] [--xend RANGE_END]
-                 [--xstep RANGE_STEP]
+                 [--xstep RANGE_STEP] [--noise NOISE_BODY]
 
 fx_gen.py generates a synthetic dataset file calling a one-variable real
 function in an interval
@@ -232,7 +232,8 @@ optional arguments:
   --funcx FUNC_X_BODY   f(x) body (lamba format)
   --xbegin RANGE_BEGIN  begin range (default:-5.0)
   --xend RANGE_END      end range (default:+5.0)
-  --xstep RANGE_STEP    step range (default: 0.01)</code></pre>
+  --xstep RANGE_STEP    step range (default: 0.01)
+  --noise NOISE_BODY    noise(sz) body (lamba format)</code></pre>
 			Where:
 			<ul>
 				<li>
@@ -244,7 +245,7 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--tsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
+					<b>--dsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
 					<br />
 				</li>
 				<li>
@@ -257,6 +258,11 @@ optional arguments:
 				</li>
 				<li>
 					<b>--xstep</b>: the discretization step of the independent variable $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--noise</b>: the noise generator functon <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--xbegin</code> and <code>--xend</code>.<br />
 					<br />
 				</li>
 			</ul>
@@ -297,6 +303,7 @@ optional arguments:
                   FUNC_XY_BODY [--xbegin RANGE_XBEGIN] [--xend RANGE_XEND]
                   [--ybegin RANGE_YBEGIN] [--yend RANGE_YEND]
                   [--xstep RANGE_XSTEP] [--ystep RANGE_YSTEP]
+				  [--noise NOISE_BODY]
 
 fxy_gen.py generates a synthetic dataset file calling a two-variables real
 function on a rectangle
@@ -315,7 +322,8 @@ optional arguments:
                         begin y range (default:-5.0)
   --yend RANGE_YEND     end y range (default:+5.0)
   --xstep RANGE_XSTEP   step range of x (default: 0.01)
-  --ystep RANGE_YSTEP   step range of y (default: 0.01)</code></pre>
+  --ystep RANGE_YSTEP   step range of y (default: 0.01)
+  --noise NOISE_BODY    noise(sz) body (lamba format)</code></pre>
 			Where:
 			<ul>
 				<li>
@@ -327,7 +335,7 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--tsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
+					<b>--dsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
 					<br />
 				</li>
 				<li>
@@ -348,6 +356,12 @@ optional arguments:
 				</li>
 				<li>
 					<b>--ystep</b>: the discretization step of the independent variable $y$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--noise</b>: the noise generator functon <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized rectagle between <code>--xbegin</code> and <code>--xend</code> for <code>--ybegin</code> and <code>--yend</code>.
+						interval between <code>--xbegin</code> and <code>--xend</code>.<br />
 					<br />
 				</li>
 			</ul>
@@ -371,7 +385,184 @@ optional arguments:
   --xstep 0.075 \
   --ystep 0.075</code></pre>
 		</p>
+		<br />
 
+		<h3 id="pmc2t_gen">pmc2t_gen.py</h3>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-on-plane/common/pmc2t_gen.py" target="_blank"><code>pmc2t_gen.py</code></a> Python program
+			is to generate a synthetic dataset in csv format starting from a couple of real-valued functions of one real-valued variable $t$, called parameter:<br/>
+			it takes in command line the two component functions to be approximated (in <em>lambda body</em> syntax), the interval of independent parameter $t$ (begin, end and discretization step)
+			and it generates the dataset in an output csv file applying the two functions to the passed interval of the parameter $t$.
+			<br/>
+			In fact the output csv file has three columns (with header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
+			second and third columns contain respectively the values of the components $x$ and $y$, ie the values of functions $x(t)$ and $y(t)$ correspondent to values of $t$ of first column.
+			<br/>
+			To get the program usage you can run this following command:
+			<br/>
+			<pre><code class="shell">$ python pmc2t_gen.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcxt
+                    FUNCX_T_BODY --funcyt FUNCY_T_BODY [--tbegin RANGE_BEGIN]
+                    [--tend RANGE_END] [--tstep RANGE_STEP]
+                    [--xnoise XNOISE_BODY] [--ynoise YNOISE_BODY]
+
+pmc2t_gen.py generates a synthetic dataset file that contains the points of a
+parametric curve on plane calling a couple of one-variable real functions in
+an interval
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --dsout DS_OUTPUT_FILENAME
+                        dataset output file (csv format)
+  --funcxt FUNCX_T_BODY
+                        x=x(t) body (lamba format)
+  --funcyt FUNCY_T_BODY
+                        y=y(t) body (lamba format)
+  --tbegin RANGE_BEGIN  begin range (default:-5.0)
+  --tend RANGE_END      end range (default:+5.0)
+  --tstep RANGE_STEP    step range (default: 0.01)
+  --xnoise XNOISE_BODY  noise(sz) body (lamba format) on x
+  --ynoise YNOISE_BODY  noise(sz) body (lamba format) on y</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcxt</b>: the generator function $x=fx(t)$ of the time dataset in <em>lamba body</em> format where $t$ is the independent variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcyt</b>: the generator function $y=fy(t)$ of the time dataset in <em>lamba body</em> format where $t$ is the independent variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tbegin e --tend</b>: the closed interval of the variable $t$, between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstep</b>: the discretization step of the independent variable $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xnoise</b>: the noise generator functon on $x$ variable in <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ynoise</b>: the noise generator functon on $y$ variable in <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3 id="pmc3t_gen">pmc3t_gen.py</h3>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-in-space/common/pmc3t_gen.py" target="_blank"><code>pmc3t_gen.py</code></a> Python program
+			is to generate a synthetic dataset in csv format starting from a triple of real-valued functions of one real-valued variable $t$, called parameter<br/>
+			it takes in command line the three component functions to be approximated (in <em>lambda body</em> syntax), the interval of independent parameter $t$ (begin, end and discretization step)
+			and it generates the dataset in an output csv file applying the three functions to the passed interval of the parameter $t$.
+			<br/>
+			In fact the output csv file has four columns (with header): first column contains the sorted values of independent parameter $t$ within the passed interval discretized by discretization step;
+			second, third and fourth columns contain respectively the values of the components $x$, $y$ and $z$, ie the values of functions $x(t)$, $y(t)$ and $z(t)$ correspondent to values of $t$ of first column.
+			<br/>
+			To get the program usage you can run this following command:
+			<br/>
+			<pre><code class="shell">$ python pmc3t_gen.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc3t_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcxt
+                    FUNCX_T_BODY --funcyt FUNCY_T_BODY --funczt FUNCZ_T_BODY
+                    [--tbegin RANGE_BEGIN] [--tend RANGE_END]
+                    [--tstep RANGE_STEP] [--xnoise XNOISE_BODY]
+                    [--ynoise YNOISE_BODY] [--znoise ZNOISE_BODY]
+
+pmc3t_gen.py generates a synthetic dataset file that contains the points of a
+parametric curve in space calling a a triple of one-variable real functions in
+an interval
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --dsout DS_OUTPUT_FILENAME
+                        dataset output file (csv format)
+  --funcxt FUNCX_T_BODY
+                        x=x(t) body (lamba format)
+  --funcyt FUNCY_T_BODY
+                        y=y(t) body (lamba format)
+  --funczt FUNCZ_T_BODY
+                        z=z(t) body (lamba format)
+  --tbegin RANGE_BEGIN  begin range (default:-5.0)
+  --tend RANGE_END      end range (default:+5.0)
+  --tstep RANGE_STEP    step range (default: 0.01)
+  --xnoise XNOISE_BODY  noise(sz) body (lamba format) on x
+  --ynoise YNOISE_BODY  noise(sz) body (lamba format) on y
+  --znoise ZNOISE_BODY  noise(sz) body (lamba format) on z</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dsout</b>: path (relative or absolute) of the csv file to be generated and got executing the dataset generator function.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcxt</b>: the generator function $x=fx(t)$ of the time dataset in <em>lamba body</em> format where $t$ is the independent variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcyt</b>: the generator function $y=fy(t)$ of the time dataset in <em>lamba body</em> format where $t$ is the independent variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcyt</b>: the generator function $z=fz(t)$ of the time dataset in <em>lamba body</em> format where $t$ is the independent variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tbegin e --tend</b>: the closed interval of the variable $t$, between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstep</b>: the discretization step of the independent variable $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xnoise</b>: the noise generator functon on $x$ variable in <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ynoise</b>: the noise generator functon on $y$ variable in <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--znoise</b>: the noise generator functon on $z$ variable in <em>lamba body</em> format,
+						where $sz$ is the number of elements of the discretized interval between <code>--tbegin</code> and <code>--tend</code>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
 		<br />
 
 		<h2>Comparative display of datasets</h2>
@@ -620,6 +811,188 @@ optional arguments:
 		and alongside the graph of the original function to the left in blue.</div>
 		<br/>
 
+		<h3 id="pmc2t_scatter">pmc2t_scatter.py</h3>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-on-plane/common/pmc2t_scatter.py" target="_blank"><code>pmc2t_scatter.py</code></a> Python program
+			is to display the scatter graph of the prediction of a parametric curve on plane
+			overlapped the scatter graph of the input dataset of the original parametric curve and allow the visual comparison of the two graphs.
+			<br/>
+			<br/>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python pmc2t_scatter.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_scatter.py [-h] [--version] --ds DATASET_FILENAME --prediction
+                        PREDICTION_DATA_FILENAME [--title FIGURE_TITLE]
+                        [--xlabel X_AXIS_LABEL] [--ylabel Y_AXIS_LABEL]
+                        [--labelfontsize LABEL_FONT_SIZE] [--width WIDTH]
+                        [--height HEIGHT] [--savefig SAVE_FIGURE_FILENAME]
+
+pmc2t_scatter.py shows two overlapped x/y scatter graphs on plane: the blue
+one is the input dataset of parametric curve, the red one is the prediction of
+parametric curve
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --ds DATASET_FILENAME
+                        dataset file (csv format)
+  --prediction PREDICTION_DATA_FILENAME
+                        prediction data file (csv format)
+  --title FIGURE_TITLE  if present, it set the title of chart
+  --xlabel X_AXIS_LABEL
+                        label of x axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --width WIDTH         width of whole figure (in inch)
+  --height HEIGHT       height of whole figure (in inch)
+  --savefig SAVE_FIGURE_FILENAME
+                        if present, the figure is saved on a file instead to
+                        be shown on screen</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: path (relative or absolute) to input dataset file; the color of its related scatter graph is blue.<br />
+					<br />
+				</li>
+				<li>
+					<b>--prediction</b>: path (relative or absolute) to prediction file (always in csv format); the color of its related scatter graph is red.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: title of the figure, centered at the top.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xlabel</b>: $x$ axis caption.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: $y$ axis caption.<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: sets the font of the texts in the figure.<br />
+					<br />
+				</li>
+				<li>
+					<b>--width</b>: sets the width of the generated figure, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--height</b>: sets the height of the generated figure, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>:
+					if it is present, it is the path (relative or absolute) of the figure file in .png format to be saved;
+					if not present, the graph is shown on screen in a window.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+		<br />
+
+		<h3 id="pmc3t_scatter">pmc3t_scatter.py</h3>
+		<p>
+			Goal of the <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-in-space/common/pmc3t_scatter.py" target="_blank"><code>fxy_scatter.py</code></a> Python program
+			is to display the scatter graph of the prediction of a parametric curve in space
+			overlapped the scatter graph of the input dataset of the original parametric curve and allow the visual comparison of the two graphs.
+			<br/>
+			<br/>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python pmc3t_scatter.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">  -h, --help            show this help message and exit
+  --version             show program&aposMs version number and exit
+  --ds DATASET_FILENAME
+                        dataset file (csv format)
+  --prediction PREDICTION_DATA_FILENAME
+                        prediction data file (csv format)
+  --title FIGURE_TITLE  if present, it set the title of chart
+  --xlabel X_AXIS_LABEL
+                        label of x axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --zlabel Z_AXIS_LABEL
+                        label of z axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --width WIDTH         width of whole figure (in inch)
+  --height HEIGHT       height of whole figure (in inch)
+  --savefig SAVE_FIGURE_FILENAME
+                        if present, the figure is saved on a file instead to
+                        be shown on screen
+</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: path (relative or absolute) to input dataset file; the color of its related scatter graph is blue.<br />
+					<br />
+				</li>
+				<li>
+					<b>--prediction</b>: path (relative or absolute) to prediction file (always in csv format); the color of its related scatter graph is red.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: title of the figure, centered at the top.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xlabel</b>: $x$ axis caption.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: $y$ axis caption.<br />
+					<br />
+				</li>
+				<li>
+					<b>--zlabel</b>: $z$ axis caption.<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: sets the font of the texts in the figure.<br />
+					<br />
+				</li>
+				<li>
+					<b>--width</b>: sets the width of the generated figure, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--height</b>: sets the height of the generated figure, in inch<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>:
+					if it is present, it is the path (relative or absolute) of the figure file in .png format to be saved;
+					if not present, the graph is shown on screen in a window.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+		<br />
+
 		<h2>Diagnostics</h2>
 		<p>
 			This chapter explains the diagnostic tools provided by this repository for the fitting of functions;
@@ -752,6 +1125,7 @@ optional arguments:
 											<ul>
 												<li><a href="../../en/machine-learning/">INDEX</a></li>
 												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
 												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
 												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
 												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>

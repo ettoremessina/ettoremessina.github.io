@@ -37,12 +37,12 @@
 		</script>
 
 
-		<title>Fitting functions with a configurable XGBoost regressor</title>
-		<meta name="description" content="Fitting of functions with a configurable XGBoost regressor" >
-		<meta name="keywords" content="regression, xgboost, approximation, fit, fitting, function, dataset, machine learning" >
-		<link rel="canonical" href="https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html" />
+		<title>_post_ml_fitfnwcxsvr_title_</title>
+		<meta name="description" content="Fitting of functions with a configurable Support Vector Regressor" >
+		<meta name="keywords" content="regression, svr, support vector regressor, support vector machine, approximation, fit, fitting, function, dataset, machine learning" >
+		<link rel="canonical" href="_website_url_en_ml_fitfnwcsrv_" />
+		<link rel="alternate" hreflang="en" href="_website_url_en_ml_fitfnwcsvr_" />
+		<link rel="alternate" hreflang="it" href="_website_url_it_ml_fitfnwcsvr_" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -90,14 +90,13 @@
               "name": "Machine Learning"
             }
           },
-
           {
             "@type": "ListItem",
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html",
-              "name": "Fitting functions with a configurable XGBoost regressor"
+              "@id": "_website_url_en_ml_fitfnwcsvr_",
+              "name": "Fitting functions with a configurable Support Vector Regressor"
             }
 		  }
 		
@@ -167,97 +166,105 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Fitting functions with a configurable XGBoost regressor</h1>
+			<h1>Fitting functions with a configurable Support Vector Regressor</h1>
 		</header>
 
 		<p>
-			This post deals with the approximation of scalar mathematical functions to one or more real variables using a <em>XGBoost</em> regressor
+			This post deals with the approximation of real mathematical functions to one or more real variables using a <em>Support Vector Regressor</em>
 			without writing code but only acting on the command line of Python scripts that implement the functionality of:
-
 			<ul>
 				<li>
-					<em>Regressor Configuration and Training</em>
+					<em>Regressor Configuration and training</em>
 				</li>
 				<li>
 					<em>Prediction and error calculation</em>
 				</li>
 			</ul>
 
-			The goal is to demonstrate that regression with XGBoost achieve low error values with extremely short learning times.
-			Although MLP (Multi Layer Perceptron) type neural networks can be considered universal function approximators (see <a target="_blank" href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a> on this website),
-			the XGBoost regressor can arrive at lower error values than an MLP
-			and with a significantly lower computational cost than that of an MLP.<br />
-			<br />
-			In the real world the datasets pre-exist the learning phase, in fact these are obtained by extracting data from production databases or Excel files, from the output of measuring instruments,
-			from data-loggers connected to electronic sensors and so on, and then used for the next stages of learning;
-			but since the focus here is the regression itself and not the fitting of a real phenomenon, the datasets used in this post have been synthetically generated from mathematical functions:
-			this has the advantage of being able to stress the algorithm and see for which types of datasets the algorithm has acceptable error values and for which instead the algorithm is struggling.<br />
-			<br />
-			The code described by this post requires Python version 3 and uses the XGBoost library; it also requires the SciKit-Learn, NumPy, Pandas, MatPlotLib and JobLib libraries.<!-- e ImageIO --><br/>
+			The code described by this post requires Python version 3 and uses the SciKit-Learn library; it also requires the NumPy, Pandas, MatPlotLib and JobLib libraries.<br/>
 			To get the code please see the paragraph <a href="#downloadcode">Download of the complete code</a> at the end of this post.<br/>
 			<br/>
-			For the generation of synthetic training, validation and test datasets, common tools will be used:
-			<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for real-valued scalar generator functions of a real-valued variable
-			and <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar generator functions of two real-valued variables.<br />
-			Also for the visualization of the results, and precisely for the comparison of the test dataset with the prediction, the general tools will be used:
-			<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_scatter"><code>fx_scatter.py</code></a> for real-valued scalar generator functions of a real-valued variable
-			e <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_scatter"><code>fxy_scatter.py</code></a> for the real-valued scalar generator functions of two real-valued variables.<br />
+			For the generation of synthetic training and test datasets, the following common tools (available in the repository) will be used:
+			<ul>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for the real-valued scalar functions of one real-valued variable $f(x) \colon [a,b] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar functions of two real-valued variables $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_gen"><code>pcm2t_gen.py</code></a> for parametric curves on the plane, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_gen"><code>pmc3t_gen.py</code></a> for parametric curves in space, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R \times \rm I\!R}$
+				</li>
+			</ul>			
+			Also for the visualization of the results, and precisely for the comparison of the test dataset with the prediction, the following common tools (always available in the repository) will be used:
+			<ul>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_scatter"><code>fx_scatter.py</code></a> for the real scalar generator functions of one real variable
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_scatter"><code>fxy_scatter.py</code></a> for the real scalar generator functions of two real variables
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_scatter"><code>pmc2t_scatter.py</code></a> for parametric curves on the plane
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_scatter"><code>pmc3t_scatter.py</code></a> for parametric curves in space
+				</li>
+			</ul>
 		</p>
 
-		<h2>Regressor Configuration and Training</h2>
+		<h2>Regressor Configuration and training</h2>
 		<p>
-			In this chapter the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a> is presented
-			and it is technically a wrapper of the class <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRFRegressor"><code>XGBRFRegressor</code></a>
-			of the <em>XGBoost</em> library and whose purpose is to allow the use of the regression of the underlying regressor to fit functions
+			In this chapter two programs are presented:  <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> and
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>
+			which technically are wrappers respectively of the classes
+			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a> and
+			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>
+			of the SciKit-Learn library and their purpose is to allow the use of the underlying regressors to fit functions
 			without having to write code but only acting on the command line.<br />
-			In fact through the argument <code>--xgbparams</code> the user passes a series of hyper-parameters to adjust the behavior of the&apos;underlying XGBoost regressor algorithm
+			In fact through the argument <code>--svrparams</code> the user passes a series of hyper-parameters to adjust the behavior of the&apos;underlying SVR algorithm
 			and others to configure its learning phase.
 			In addition to the parameters of the underlying regressor the program supports its own arguments to allow the user to pass
-			the training dataset and optionally the validation dataset, on which file to save the trained model, the metrics to calculate during the training,
-			constraints for regularization (e.g. <em>early stop</em>) and parameters for diagnostic.<br />
+			the training dataset and on which file to save the trained model.<br />
 			<br />
-			The program <code>fit_func_miso.py</code>, as well as the underlying XGBoost regressor, is of type <em>M.I.S.O.</em>, i.e. <em>Multiple Input Single Output</em>:
-			it is designed to fit a function of the form $y=f(x_1, ..., x_n)$ where the number of independent variables is arbitrarily large
-			while the output dependent variable is only one.<br />
-			The format of the input datasets is in csv format (with header), with n + 1 columns, of which the first n ones contain the values of the n independent variables and
-			the last column, the n+1, containing the values of the dependent variable.
+			Both programs are of type <em>M.I.M.O.</em>, that is <em>Multiple Input Multiple Output</em>:
+			are designed to approximate a function of the shape $f(x) \colon \rm I\!R^n \to \rm I\!R^m$ using in the implementation
+			the <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor"><code>sklearn.multioutput.MultiOutputRegressor</code></a> class.<br />
+			The format of the input datasets is in csv format (with header), with $n+m$ columns, of which the first $n$ columns contain the values of the $n$ independent variables and
+			the last $m$ containing the values of the dependent variables.
 		</p>
 
-		<h3 id="fit_func_miso">Usage of the fit_func_miso.py program</h3>
+		<h3 id="fit_func_esvr">Usage of the fit_func_esvr.py program</h3>
 		<p>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fit_func_miso.py --help</code></pre>
+			<pre><code class="shell">$ python fit_func_esvr.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fit_func_miso.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
-                        --modelout MODEL_FILE [--valds VAL_DATASET_FILENAME]
-                        [--metrics VAL_METRICS [VAL_METRICS ...]]
-                        [--dumpout DUMPOUT_PATH]
-                        [--earlystop EARLY_STOPPING_ROUNDS]
-                        [--xgbparams XGB_PARAMS]
+			<pre><code class="shell">usage: fit_func_esvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                        --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
+                        MODEL_FILE [--dumpout DUMPOUT_PATH]
+                        [--svrparams SVR_PARAMS]
 
-fit_func_miso.py fits a multiple-input single-output scalar function dataset
-using a configurable XGBoost
+fit_func_esvr.py fits a multiple-input multiple-output function dataset using
+a configurable Epsilon-Support Vector Regressor
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program&apos;s version number and exit
   --trainds TRAIN_DATASET_FILENAME
                         Train dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
   --modelout MODEL_FILE
                         Output model file
-  --valds VAL_DATASET_FILENAME
-                        Validation dataset file (csv format)
-  --metrics VAL_METRICS [VAL_METRICS ...]
-                        List of built-in evaluation metrics to apply to
-                        validation dataset
-  --dumpout DUMPOUT_PATH
-                        Dump directory (directory to store metric values)
-  --earlystop EARLY_STOPPING_ROUNDS
-                        Number of round for early stopping
-  --xgbparams XGB_PARAMS
-                        Parameters of XGBoost constructor</code></pre>
+  --svrparams SVR_PARAMS
+                        Parameters of Epsilon-Support Vector Regressor
+                        constructor</code></pre>
 			Where:
 			<ul>
 				<li>
@@ -275,30 +282,81 @@ optional arguments:
 					<br />
 				</li>
 				<li>
+					<b>--outputdim</b>:
+						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
+						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
+					<br />
+				</li>
+				<li>
 					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in joblib format (.jl).<br />
 					<br />
 				</li>
 				<li>
-					<b>--valds</b>: path (relative or absolute) of a two-column csv file (with header) that contains the dataset to be used for validation.<br />
+					<b>--svrparams</b>:
+						list of parameters to pass to the regression algorithm below;
+						see documentation of <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3 id="fit_func_nusvr">Usage of the fit_func_nusvr.py program</h3>
+		<p>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python fit_func_nusvr.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fit_func_nusvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                         --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
+                         MODEL_FILE [--dumpout DUMPOUT_PATH]
+                         [--svrparams SVR_PARAMS]
+
+fit_func_nusvr.py fits a multiple-input multiple-output function dataset using
+a configurable Nu-Support Vector Regressor
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --trainds TRAIN_DATASET_FILENAME
+                        Train dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
+  --modelout MODEL_FILE
+                        Output model file
+  --svrparams SVR_PARAMS
+                        Parameters of Nu-Support Vector Regressor constructor</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
 					<br />
 				</li>
 				<li>
-					<b>--metrics</b>: list of metrics to be calculated on the training dataset and, if present, also on the validation dataset;
-					the list of supported metrics is defined in <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/parameter.html">XGBoost Parameters</a>.
-					under <em>eval_metric</em>.<br />
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
 					<br />
 				</li>
 				<li>
-					<b>--dumpout</b>: path (relative or absolute) of the directory where to save the metric values as the ages go by;
-					the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#dumps_scatter"><code>dumps_scatter.py</code></a> will use the contents of this directory to display the metric graphs.<br />
+					<b>--trainds</b>: path (relative or absolute) of a two-column csv file (with header) that contains the dataset to be used for the training;
+					this file can be generated synthetically e.g. via the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a>.
+					or be a dataset actually obtained by measuring a scalar and real phenomenon that depends on a single real-valued variable.<br />
 					<br />
 				</li>
 				<li>
-					<b>--earlystop</b>: how many iterations can be performed before the algorithm begins to enter the overfitting phase.<br />
+					<b>--outputdim</b>:
+						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
+						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
 					<br />
 				</li>
 				<li>
-					<b>--xgbparams</b>: list of parameters to pass to XGBoost regression algorithm; see documentation of <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRegressor"><code>XGBRegressor</code></a>.<br />
+					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in joblib format (.jl).<br />
+					<br />
+				</li>
+				<li>
+					<b>--svrparams</b>:
+						list of parameters to pass to the regression algorithm below;
+						see documentation of <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>.<br />
 					<br />
 				</li>
 			</ul>
@@ -306,35 +364,40 @@ optional arguments:
 
 		<h2>Prediction and error calculation</h2>
 		<p>
-			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/predict_func_miso.py" target="_blank"><code>predict_func_miso.py</code></a> is presented
-			and whose purpose is to make predictions on a test dataset applying it to a previously trained XGBoost regressor model
-			via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a>,
+			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/predict_func.py" target="_blank"><code>predict_func.py</code></a> is presented
+			and whose purpose is to make predictions on a test dataset applying it to a previously trained e-SVR or nu-SVR model
+			respectively via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> or
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>,
 			always without having to write code but only through the command line.<br />
 			In fact, this program supports arguments through which the user passes the previously trained model, the test dataset
 			and the error measurements to be calculated between the predictions and the true values.<br />
-			The format of the incoming test datasets is identical to the one of the program <code>fit_func_miso.py</code>; of course here the last column
-			(the value of the dependent variable) is only used to compare the predicted values with the true values by calculating passed error measurements.<br />
+			The format of the incoming test datasets is identical to that of the training programs mentioned above; obviously here the last columns
+			(those of dependent variables) are only used to compare the predicted values with the true values by calculating passed error measurements.<br />
 		</p>
 
-		<h3 id="predict_func_miso">Usage of the predict_func_miso.py program</h3>
+		<h3 id="predict_func_miso">Usage of the predict_func.py program</h3>
 		<p>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python predict_func_miso.py --help</code></pre>
+			<pre><code class="shell">$ python predict_func.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: predict_func_miso.py [-h] [--version] --model MODEL_FILE --ds
-                            DF_PREDICTION --predictionout PREDICTION_DATA_FILE
-                            [--measures MEASURES [MEASURES ...]]
+			<pre><code class="shell">usage: predict_func.py [-h] [--version] --model MODEL_FILE --ds DF_PREDICTION
+                       --outputdim NUM_OF_DEPENDENT_COLUMNS --predictionout
+                       PREDICTION_DATA_FILE
+                       [--measures MEASURES [MEASURES ...]]
 
-predict_func_miso.py makes prediction of the values of a multiple-input
-single-output (scalar) function with a pretrained XGBoost model
+predict_func.py makes prediction of the values of a multiple-input multiple-
+output function with a pretrained Standard Vector Regressor model
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program&apos;s version number and exit
   --model MODEL_FILE    model file
   --ds DF_PREDICTION    dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
   --predictionout PREDICTION_DATA_FILE
                         prediction data file (csv format)
   --measures MEASURES [MEASURES ...]
@@ -351,11 +414,17 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--model</b>: path (relative or absolute) to the file in joblib (.jl) format of the model generated by <code>fit_func_miso.py</code>.<br />
+					<b>--model</b>: path (relative or absolute) to the file in joblib (.jl) format of the model generated by a training program mentioned above.<br />
 					<br />
 				</li>
 				<li>
 					<b>--ds</b>: path (relative or absolute) of the csv file (with header) that contains the input dataset on which to calculate the prediction.<br />
+					<br />
+				</li>
+				<li>
+					<b>--outputdim</b>:
+						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
+						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
 					<br />
 				</li>
 				<li>
@@ -372,55 +441,57 @@ optional arguments:
 
 		<h2>An example of using of all the programs</h3>
 		<p>
-			Suppose you want to approximate the function $$f(x)=x sin \frac{1}{x}$$ in the range $[-0.4,0.4]$ 
+			Suppose you want to approximate the function $$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$$ in the range $[-10.0,10.0]$.
 			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
-			<pre><code class="python">x * np.sin(1 / x)</code></pre>
+			<pre><code class="python">0.5*x**3 - 2*x**2 - 3*x - 1</code></pre>
 			To generate the training dataset, run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytrain.csv \
-  --funcx "x * np.sin(1 / x)" \
-  --xbegin -0.4 \
-  --xend 0.4 \
-  --xstep 0.00031</code></pre>
+  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
+  --xbegin -10.0 \
+  --xend 10.0 \
+  --xstep 0.01</code></pre>
 			instead to generate the test dataset, run the following command:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytest.csv \
-  --funcx "x * np.sin(1 / x)" \
-  --xbegin -0.4 \
-  --xend 0.4 \
-  --xstep 0.00073</code></pre>
+  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
+  --xbegin -10.0 \
+  --xend 10.0 \
+  --xstep 0.0475</code></pre>
 			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
 			because the training, to be accurate, it must be run on more data.
 			Also note that it is appropriate for the discretization step of the test dataset is <u>not</u> a multiple of the training one
 			in order to ensure that the test dataset contains most of the data that is not present in training dataset, and this makes prediction more interesting.
 			<br />
-			To this we intend to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py" target="_blank"><code>fit_func_miso.py</code></a>
-			passing to the underlying regressor: n_estimators: 100, max_depth: 7;
+			To this we intend to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py" target="_blank"><code>fit_func_esvr.py</code></a>
+			passing to the underlying regressor: kernel: rbf, C: 100, gamma: 0.1, epsilon: 0.1;
 			then run the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fit_func_miso.py \
+			<pre><code class="shell">$ python fit_func_esvr.py \
   --trainds mytrain.csv \
   --modelout mymodel.jl \
-  --xgbparams "'n_estimators': 100, 'max_depth': 7"</code></pre>
-			and at the end of the execution the saved mymodel.jl file contains the model of the XGBoost regressor configured and trained.<br />
+  --outputdim 1 \
+  --svrparams "'kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1"</code></pre>
+			and at the end of the execution the saved mymodel.jl file contains the model of the e-svr regressor configured and trained.<br />
 			<br />
 			Now we intend to perform the prediction and calculation of the error using the measurements <em>mean_absolute_error</em> and <em>mean_squared_error</em>;
 			then execute the following command:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python predict_func_miso.py \
+			<pre><code class="shell">$ python predict_func.py \
   --model mymodel.jl \
   --ds mytest.csv \
+  --outputdim 1 \
   --predictionout mypred.csv \
   --measures mean_absolute_error mean_squared_error</code></pre>
   			and at the end of the execution the saved mypred.csv file contains the prediction performed by applying the model on the test data;
 			the output of the program displays the error measures passed through the argument <code>--measures</code>
-			and they are very small: the first one around $1.5 \cdot 10^{-3}$ and the second one around $5.5 \cdot 10^{-6}$<br />
+			and are acceptable: the first around $0.4$ and the second around $1.9$.<br />
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.
 			<br />
 			Finally you want to make the comparative display of the test dataset with the prediction;
@@ -430,30 +501,65 @@ optional arguments:
 			<pre><code class="shell">$ python fx_scatter.py \
   --ds mytest.csv \
   --prediction mypred.csv \
-  --title "XGBoost (estimators: 100, max depth: 7)" \
+  --title "e-svr ('kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1)" \
   --xlabel "x" \
-  --ylabel "y=x sin(1/x)"</code></pre>
+  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
 			that shows the dispersion graphs of the test dataset and the superimposed prediction: in blue the one of the test dataset, in red the prediction.
-			The comparison of the two graphs clearly shows that the approximation has reached very high levels, as the low error measurements already indicated;
-			only around zero is some inaccuracy observed and is due to the oscillation of the function that is there very strong.<br />
+			The comparison of the two graphs clearly shows that the approximation has reached very high levels.<br />
 			<br />
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.
 		</p>
-		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-with-configurable-xgboost/ml-fitfnwcxgb-example10.png" /></div>
-		<div class="photocaption">Figure with dispersion graphs generated by the program <code>fx_scatter.py</code> showing the fitting in red overlay of the function $f(x)=x sin \frac{1}{x}$
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-with-configurable-svr/ml-fitfnwcsvr-example1.png" /></div>
+		<div class="photocaption">Figure with dispersion graphs generated by the program <code>fx_scatter.py</code> showing the fitting in red overlay of the function $f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$
 		and the original function below in blue.</div>
 		<br />
 		<p>
-			In the folders <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/xgboost/examples"><code>one-variable-function/examples</code></a>
-			and <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/xgboost/examples"><code>two-variables-function/examples</code></a>
-			there are shell scripts that show the use of these programs in cascade respectively for datasets generated with real-valued scalar functions of a real-valued variable
-			and for datasets generated with real-valued scalar functions of two real-valued variables.
+			If you want to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py" target="_blank"><code>fit_func_nusvr.py</code></a>
+			switching to the underlying regressor: C: 10, gamma: auto
+			then execute the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fit_func_nusvr.py \
+  --trainds mytrain.csv \
+  --modelout mymodel.jl \
+  --outputdim 1 \
+  --svrparams "'C': 10, 'gamma': 'auto'"</code></pre>
+			then run the prediction using the <code>predict_func.py</code> command with the same parameters as above
+			and finally to generate the dispersion graphs run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_scatter.py \
+  --ds mytest.csv \
+  --prediction mypred.csv \
+  --title "nu-svr ('C': 10, 'gamma': 'auto')" \
+  --xlabel "x" \
+  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
+
+			The repository contains examples in shell scripts that show the use of these cascading programs:
+			<ul>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/svr/examples"><code>one-variable-function/svr/examples</code></a>
+					for examples on the fitting of real-valued scalar functions of one real-valued variable via <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/svr/examples"><code>two-variables-function/svr/examples</code></a> p
+					for examples on the fitting of real-valued scalar functions of two real-valued variables via <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-on-plane/svr/examples"><code>parametric-curve-on-plane/svr/examples</code></a>
+					for examples about fitting parametric curves on the plane via <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-in-space/svr/examples"><code>parametric-curve-in-space/svr/examples</code></a>
+					for examples about fitting parametric curves on the space via <em>SVR</em>.
+				</li>
+			</ul>
 		</p>
 		<br/>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/xgboost/">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/svr/">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.

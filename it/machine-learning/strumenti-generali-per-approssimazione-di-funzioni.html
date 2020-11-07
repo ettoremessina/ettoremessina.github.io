@@ -218,7 +218,7 @@
 			<br/>
 			<pre><code class="shell">usage: fx_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcx
                  FUNC_X_BODY [--xbegin RANGE_BEGIN] [--xend RANGE_END]
-                 [--xstep RANGE_STEP]
+                 [--xstep RANGE_STEP] [--noise NOISE_BODY]
 
 fx_gen.py generates a synthetic dataset file calling a one-variable real
 function in an interval
@@ -231,7 +231,8 @@ optional arguments:
   --funcx FUNC_X_BODY   f(x) body (lamba format)
   --xbegin RANGE_BEGIN  begin range (default:-5.0)
   --xend RANGE_END      end range (default:+5.0)
-  --xstep RANGE_STEP    step range (default: 0.01)</code></pre>
+  --xstep RANGE_STEP    step range (default: 0.01)
+  --noise NOISE_BODY    noise(sz) body (lamba format)</code></pre>
 			Dove:
 			<ul>
 				<li>
@@ -256,6 +257,11 @@ optional arguments:
 				</li>
 				<li>
 					<b>--xstep</b>: passo di discretizzazione della variable indipendente $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--noise</b>: la funzione generatrice di rumore in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi dell&apos;intervallo discretizzato tra <code>--xbegin</code> e <code>--xend</code>.<br />
 					<br />
 				</li>
 			</ul>
@@ -296,6 +302,7 @@ optional arguments:
                   FUNC_XY_BODY [--xbegin RANGE_XBEGIN] [--xend RANGE_XEND]
                   [--ybegin RANGE_YBEGIN] [--yend RANGE_YEND]
                   [--xstep RANGE_XSTEP] [--ystep RANGE_YSTEP]
+                  [--noise NOISE_BODY]
 
 fxy_gen.py generates a synthetic dataset file calling a two-variables real
 function on a rectangle
@@ -314,7 +321,8 @@ optional arguments:
                         begin y range (default:-5.0)
   --yend RANGE_YEND     end y range (default:+5.0)
   --xstep RANGE_XSTEP   step range of x (default: 0.01)
-  --ystep RANGE_YSTEP   step range of y (default: 0.01)</code></pre>
+  --ystep RANGE_YSTEP   step range of y (default: 0.01)
+  --noise NOISE_BODY    noise(sz) body (lamba format)</code></pre>
 			Dove:
 			<ul>
 				<li>
@@ -349,6 +357,11 @@ optional arguments:
 					<b>--ystep</b>: passo di discretizzazione della variable indipendente $y$.<br />
 					<br />
 				</li>
+				<li>
+					<b>--noise</b>: la funzione generatrice di rumore in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi del rettangolo discretizzato tra <code>--xbegin</code> e <code>--xend</code> per <code>--ybegin</code> e <code>--yend</code>.<br />
+					<br />
+				</li>
 			</ul>
 		</p>
 		
@@ -370,8 +383,184 @@ optional arguments:
   --xstep 0.075 \
   --ystep 0.075</code></pre>
 		</p>
-
 		<br />
+
+		<h3 id="pmc2t_gen">pmc2t_gen.py</h3>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-on-plane/common/pmc2t_gen.py" target="_blank"><code>pmc2t_gen.py</code></a>
+			&egrave; di generare una dataset a partire da una coppia di funzioni reali di una variabile $t$, detta parametro:
+			prende in linea di comando le due funzioni componenti da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo del parametro indipendente $t$ (inizio, fine e passo di discretizzazione)
+			e genera il dataset in un file nel formato csv applicando le due funzione all&apos;intervallo del parametro $t$ passato.
+			<br/>
+			Il file csv in uscita ha infatti tre colonne (con header): la prima colonna contiene i valori, ordinati in modo crescente, del parametro indipendente $t$ nell&apos;intervallo desiderato con il passo di discretizzazione specificato;
+			la seconda colonna e terza colonna contengono rispettivamente i valori delle componenti $x$ e $y$, ovverosia i valori delle funzioni $x(t)$ e $y(t)$ corrispondenti al valore di $t$ della prima colonna.
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<br/>
+			<pre><code class="shell">$ python pmc2t_gen.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcxt
+                    FUNCX_T_BODY --funcyt FUNCY_T_BODY [--tbegin RANGE_BEGIN]
+                    [--tend RANGE_END] [--tstep RANGE_STEP]
+                    [--xnoise XNOISE_BODY] [--ynoise YNOISE_BODY]
+
+pmc2t_gen.py generates a synthetic dataset file that contains the points of a
+parametric curve on plane calling a couple of one-variable real functions in
+an interval
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --dsout DS_OUTPUT_FILENAME
+                        dataset output file (csv format)
+  --funcxt FUNCX_T_BODY
+                        x=x(t) body (lamba format)
+  --funcyt FUNCY_T_BODY
+                        y=y(t) body (lamba format)
+  --tbegin RANGE_BEGIN  begin range (default:-5.0)
+  --tend RANGE_END      end range (default:+5.0)
+  --tstep RANGE_STEP    step range (default: 0.01)
+  --xnoise XNOISE_BODY  noise(sz) body (lamba format) on x
+  --ynoise YNOISE_BODY  noise(sz) body (lamba format) on y</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dsout</b>: percorso (relativo o assoluto) del file csv da generare ed &egrave; ottenuto eseguendo la funzione generatrice del dataset.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcxt</b>: la funzione generatrice $x=fx(t)$ del dataset in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcyt</b>: la funzione generatrice $y=fy(t)$ del dataset in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tbegin e --tend</b>: intervallo chiuso della variabile indipendente $t$ tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstep</b>: passo di discretizzazione della variable indipendente $t$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xnoise</b>: la funzione generatrice di rumore sulla variable $x$ in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi dell&apos;intervallo discretizzato tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ynoise</b>: la funzione generatrice di rumore sulla variable $y$ in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi del discretizzato tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3 id="pmc3t_gen">pmc3t_gen.py</h3>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-in-space/common/pmc3t_gen.py" target="_blank"><code>pmc3t_gen.py</code></a>
+			&egrave; di generare una dataset a partire da una tripla di funzioni reali di una variabile $t$, detta parametro:
+			prende in linea di comando le tre funzioni componenti da approssimare (in sintassi <em>lambda body</em>), l&apos;intervallo del parametro indipendente $t$ (inizio, fine e passo di discretizzazione)
+			e genera il dataset in un file nel formato csv applicando le tre funzione all&apos;intervallo del parametro $t$ passato.
+			<br/>
+			Il file csv in uscita ha infatti quattro colonne (con header): la prima colonna contiene i valori, ordinati in modo crescente, del parametro indipendente $t$ nell&apos;intervallo desiderato con il passo di discretizzazione specificato;
+			la seconda colonna, terza e quarta colonna contengono rispettivamente i valori delle componenti $x$, $y$ e $z$, ovverosia i valori delle funzioni $x(t)$, $y(t)$ e $z(t)$ corrispondenti al valore di $t$ della prima colonna.
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<br/>
+			<pre><code class="shell">$ python pmc3t_gen.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc3t_gen.py [-h] [--version] --dsout DS_OUTPUT_FILENAME --funcxt
+                    FUNCX_T_BODY --funcyt FUNCY_T_BODY --funczt FUNCZ_T_BODY
+                    [--tbegin RANGE_BEGIN] [--tend RANGE_END]
+                    [--tstep RANGE_STEP] [--xnoise XNOISE_BODY]
+                    [--ynoise YNOISE_BODY] [--znoise ZNOISE_BODY]
+
+pmc3t_gen.py generates a synthetic dataset file that contains the points of a
+parametric curve in space calling a a triple of one-variable real functions in
+an interval
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --dsout DS_OUTPUT_FILENAME
+                        dataset output file (csv format)
+  --funcxt FUNCX_T_BODY
+                        x=x(t) body (lamba format)
+  --funcyt FUNCY_T_BODY
+                        y=y(t) body (lamba format)
+  --funczt FUNCZ_T_BODY
+                        z=z(t) body (lamba format)
+  --tbegin RANGE_BEGIN  begin range (default:-5.0)
+  --tend RANGE_END      end range (default:+5.0)
+  --tstep RANGE_STEP    step range (default: 0.01)
+  --xnoise XNOISE_BODY  noise(sz) body (lamba format) on x
+  --ynoise YNOISE_BODY  noise(sz) body (lamba format) on y
+  --znoise ZNOISE_BODY  noise(sz) body (lamba format) on z</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dsout</b>: percorso (relativo o assoluto) del file csv da generare ed &egrave; ottenuto eseguendo la funzione generatrice del dataset.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcxt</b>: la funzione generatrice $x=fx(t)$ del dataset in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funcyt</b>: la funzione generatrice $y=fy(t)$ del dataset in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--funczt</b>: la funzione generatrice $z=fz(t)$ del dataset in formato <em>lamba body</em> ove $t$ &egrave; la variabile indipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tbegin e --tend</b>: intervallo chiuso della variabile indipendente $t$ tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--tstep</b>: passo di discretizzazione della variable indipendente $t$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xnoise</b>: la funzione generatrice di rumore sulla variable $x$ in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi dell&apos;intervallo discretizzato tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ynoise</b>: la funzione generatrice di rumore sulla variable $y$ in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi del discretizzato tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--znoise</b>: la funzione generatrice di rumore sulla variable $z$ in formato <em>lamba body</em>, ove $sz$ &egrave;
+						il numero di elementi del discretizzato tra <code>--tbegin</code> e <code>--tend</code>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
 
 		<h2>Visualizzazione comparata dei dataset</h2>
 		<p>
@@ -615,6 +804,180 @@ optional arguments:
 		e la funzione originale accanto in blu a sinistra.</div>
 		<br/>
 
+		<h3 id="pmc2t_scatter">pmc2t_scatter.py</h3>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-on-plane/common/pmc2t_scatter.py" target="_blank"><code>pmc2t_scatter.py</code></a>
+			&egrave; quello di visualizzare il grafico a dispersione della predizione di una curva parametrica sul piano
+			sovrapposto al grafico a dispersione del dataset di input della curva parametrica originale e consentire la comparazione visuale dei due grafici.
+			<br/>
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python pmc2t_scatter.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: pmc2t_scatter.py [-h] [--version] --ds DATASET_FILENAME --prediction
+                        PREDICTION_DATA_FILENAME [--title FIGURE_TITLE]
+                        [--xlabel X_AXIS_LABEL] [--ylabel Y_AXIS_LABEL]
+                        [--labelfontsize LABEL_FONT_SIZE] [--width WIDTH]
+                        [--height HEIGHT] [--savefig SAVE_FIGURE_FILENAME]
+
+pmc2t_scatter.py shows two overlapped x/y scatter graphs on plane: the blue
+one is the input dataset of parametric curve, the red one is the prediction of
+parametric curve
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --ds DATASET_FILENAME
+                        dataset file (csv format)
+  --prediction PREDICTION_DATA_FILENAME
+                        prediction data file (csv format)
+  --title FIGURE_TITLE  if present, it set the title of chart
+  --xlabel X_AXIS_LABEL
+                        label of x axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --width WIDTH         width of whole figure (in inch)
+  --height HEIGHT       height of whole figure (in inch)
+  --savefig SAVE_FIGURE_FILENAME
+                        if present, the figure is saved on a file instead to
+                        be shown on screen</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: percorso (relativo o assoluto) del dataset di input; il suo grafico a dispersione &egrave; di colore blu.<br />
+					<br />
+				</li>
+				<li>
+					<b>--prediction</b>: percorso (relativo o assoluto) del file di predizione (sempre in formato csv); il suo grafico a dispersione &egrave; di colore rosso.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: titolo del grafico, centrato in alto.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xlabel</b>: testo dell&apos;asse $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: testo dell&apos;asse $y$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: dimensione del font di tutte le label presenti nell&apos;intera figura.<br />
+					<br />
+				</li>
+				<li>
+					<b>--width e --height</b>: larghezza e altezza dell&apos;intera figura (in pollici).<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>:
+						se presente, &egrave; il percorso (relativo o assoluto) del file in formato .png in cui &egrave; salvata l&apos;intera figura;
+					    se non presente, il grafico &egrave; visualizzato a video.<br />
+					<br />
+				</li>				
+			</ul>
+		</p>
+		<br />
+
+		<h3 id="pmc3t_scatter">pmc3t_scatter.py</h3>
+		<p>
+			Scopo del programma Python <a href="https://github.com/ettoremessina/function-fitting/blob/master/parametric-curve-in-space/common/pmc3t_scatter.py" target="_blank"><code>fxy_scatter.py</code></a>
+			&egrave; quello di visualizzare il grafico a dispersione di una curva parametrica nello spazio
+			sovrapposto al grafico a dispersione del dataset di input della curva parametrica originale e consentire la comparazione visuale dei due grafici.
+			<br/>
+			<br/>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python pmc3t_scatter.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">  -h, --help            show this help message and exit
+  --version             show program&aposMs version number and exit
+  --ds DATASET_FILENAME
+                        dataset file (csv format)
+  --prediction PREDICTION_DATA_FILENAME
+                        prediction data file (csv format)
+  --title FIGURE_TITLE  if present, it set the title of chart
+  --xlabel X_AXIS_LABEL
+                        label of x axis
+  --ylabel Y_AXIS_LABEL
+                        label of y axis
+  --zlabel Z_AXIS_LABEL
+                        label of z axis
+  --labelfontsize LABEL_FONT_SIZE
+                        label font size
+  --width WIDTH         width of whole figure (in inch)
+  --height HEIGHT       height of whole figure (in inch)
+  --savefig SAVE_FIGURE_FILENAME
+                        if present, the figure is saved on a file instead to
+                        be shown on screen
+</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: percorso (relativo o assoluto) del dataset di input; il suo grafico a dispersione &egrave; di colore blu.<br />
+					<br />
+				</li>
+				<li>
+					<b>--prediction</b>: percorso (relativo o assoluto) del file di predizione (sempre in formato csv); il suo grafico a dispersione &egrave; di colore rosso.<br />
+					<br />
+				</li>
+				<li>
+					<b>--title</b>: titolo del grafico, centrato in alto.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xlabel</b>: testo dell&apos;asse $x$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ylabel</b>: testo dell&apos;asse $y$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--zlabel</b>: testo dell&apos;asse $z$.<br />
+					<br />
+				</li>
+				<li>
+					<b>--labelfontsize</b>: dimensione del font di tutte le label presenti nell&apos;intera figura.<br />
+					<br />
+				</li>
+				<li>
+					<b>--width e --height</b>: larghezza e altezza dell&apos;intera figura (in pollici).<br />
+					<br />
+				</li>
+				<li>
+					<b>--savefig</b>:
+						se presente, &egrave; il percorso (relativo o assoluto) del file in formato .png in cui &egrave; salvata l&apos;intera figura;
+					    se non presente, il grafico &egrave; visualizzato a video.<br />
+					<br />
+				</li>				
+			</ul>
+		</p>
+		<br />
+
 		<h2>Diagnostica</h2>
 		<p>
 			Questo capitolo illustra gli strumenti per la diagnostica messi a disposizione da questo repository per l&apos;approssimazione delle funzioni;
@@ -747,6 +1110,7 @@ optional arguments:
 											<ul>
 												<li><a href="../../it/machine-learning/">INDICE</a></li>
 												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
 												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
 												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
 												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>

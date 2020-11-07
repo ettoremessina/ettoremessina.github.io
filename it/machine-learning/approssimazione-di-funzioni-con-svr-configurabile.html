@@ -35,12 +35,12 @@
 		</script>
 
 
-		<title>Approssimazione di funzioni tramite un regressore XGBoost configurabile</title>
-		<meta name="description" content="Approssimazione di funzioni tramite un regressore XGBoost configurabile" >
-		<meta name="keywords" content="regressione, xgboost, approssimazione, funzione, dataset, machine learning" >
-		<link rel="canonical" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html" />
+		<title>Approssimazione di funzioni tramite un Support Vector Regressor configurabile</title>
+		<meta name="description" content="Approssimazione di funzioni tramite un Support Vector Regressor configurabile" >
+		<meta name="keywords" content="regressione, svr, support vector regressor, support vector machine, approssimazione, funzione, dataset, machine learning" >
+		<link rel="canonical" href="_website_url_it_ml_fitfnwcsvr_" />
+		<link rel="alternate" hreflang="en" href="_website_url_en_ml_fitfnwcsvr_" />
+		<link rel="alternate" hreflang="it" href="_website_url_it_ml_fitfnwcsvr_" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -88,14 +88,13 @@
               "name": "Machine Learning"
             }
           },
-
           {
             "@type": "ListItem",
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html",
-              "name": "Approssimazione di funzioni tramite un regressore XGBoost configurabile"
+              "@id": "_website_url_it_ml_fitfnwcsvr_",
+              "name": "Approssimazione di funzioni tramite un Support Vector Regressor configurabile"
             }
 		  }
 		
@@ -165,98 +164,106 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Approssimazione di funzioni tramite un regressore XGBoost configurabile</h1>
+			<h1>Approssimazione di funzioni tramite un Support Vector Regressor configurabile</h1>
 		</header>
 
 		<p>
-			Questo post tratta dell&apos;approssimazione di funzioni matematiche scalari a una o pi&ugrave; variabili reali tramite un regressore <em>XGBoost</em>
-			senza scrivere codice ma agendo solamente sulla linea di comando di script Python che implementano le funzionalit&agrave; di:
-			
+			Questo post tratta l&apos;approssimazione di funzioni matematiche reali, sia scalari che vettoriali, a una o pi&ugrave; variabili reali tramite il <em>Support Vector Regressor</em>
+			senza scrivere codice ma agendo solo sulla linea di comando di script Python che implementano le funzionalit&agrave; di:		
 			<ul>
 				<li>
-					<em>Configurazione del regressore e Addestramento</em>
+					<em>Configurazione del regressore e addestramento</em>
 				</li>
 				<li>
 					<em>Predizione e calcolo dell&apos;errore</em>
 				</li>
 			</ul>
 
-			L&apos;obiettivo &egrave; di dimostrare che la regressione con XGBoost raggiungere bassi valori di errore con tempi di learning estremamente brevi.
-			Anche se le reti neurali di tipo MLP (Multi Layer Perceptron) possono essere considerate degli approssimatori universali di funzioni (si veda <a target="_blank" href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a> su questo sito web),
-			il regressore XGBoost pu&ograve; arrivare a valori di errore pi&ugrave; bassi rispetto a quelli di un MLP
-			e con un costo computazionale decisamente pi&ugrave; basso rispetto a quello di un MLP.<br />
-			<br />
-			Nel mondo reale i dataset preesistono alla fase di apprendimento, infatti questi vengono ottenuti estraendo dati da database di produzione o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici e cos&igrave; via,
-			e quindi adoperati per le fasi di learning successive;
-			ma poich&eacute; qui il focus &egrave; la regressione in s&eacute; e non l&apos;approssimazione di un fenomeno reale, i dataset utilizzati in questo post sono stati generati sinteticamente a partire da funzioni matematiche:
-			questo ha il vantaggio di poter stressare l&apos;algoritmo e vedere per quali tipologie di dataset l&apos;algoritmo ha valori di errore accettabili e per quali invece l&apos;algoritmo fatica.<br />
-			<br />
-			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la libreria <em>XGBoost</em>; richiede inoltre le librerie SciKit-Learn, NumPy, Pandas, MatPlotLib e JobLib.<!-- e ImageIO --><br/>
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la libreria <em>SciKit-Learn</em>; richiede inoltre le librerie NumPy, Pandas, MatPlotLib e JobLib.
 			Per ottenere il codice si veda il paragrafo <a href="#downloadcode">Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
-			Per quanto riguarda la generazione dei dataset sintetici di training, di validation e di test si far&agrave; uso degli strumenti generali:
-			<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_gen"><code>fx_gen.py</code></a> per le funzioni generatrici scalari reali di una variabile reale
-			e <a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_gen"><code>fxy_gen.py</code></a> per le funzioni generatrici scalari reali di due variabili reali.<br />
-			Anche per la visualizzazione dei risultati, e precisamente per la comparazione del dataset di test con la predizione, si far&agrave; uso degli strumenti generali:
-			<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_scatter"><code>fx_scatter.py</code></a> per le funzioni scalari reali di una variabile reale
-			e <a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_scatter"><code>fxy_scatter.py</code></a> per le funzioni scalari reali di due variabili reali.<br />
-			<br />
+			Per quanto riguarda la generazione dei dataset sintetici di training e di test si far&agrave; uso dei seguenti strumenti (presenti nel repository):
+			<ul>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_gen"><code>fx_gen.py</code></a> per le funzioni generatrici scalari reali di una variabile reale $f(x) \colon [a,b] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_gen"><code>fxy_gen.py</code></a> per le funzioni generatrici scalari reali di due variabili reali $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#pmc2t_gen"><code>pcm2t_gen.py</code></a> per le curve parametriche sul piano, quindi funzioni vettoriali reali $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#pmc3t_gen"><code>pmc3t_gen.py</code></a> per le curve parametriche nello spazio, quindi funzioni vettoriali reali $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R \times \rm I\!R}$
+				</li>
+			</ul>
+			Per la visualizzazione dei risultati, e precisamente per la comparazione del dataset di test con la predizione, si far&agrave; uso dei seguenti strumenti (sempre presenti nel repository):
+			<ul>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_scatter"><code>fx_scatter.py</code></a> per le funzioni scalari reali di una variabile reale
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_scatter"><code>fxy_scatter.py</code></a> per le funzioni scalari reali di due variabili reali
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#pmc2t_scatter"><code>pmc2t_scatter.py</code></a> per le curve parametriche sul piano
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#pmc3t_scatter"><code>pmc3t_scatter.py</code></a> per le curve parametriche nello spazio
+				</li>
+			</ul>
 		</p>
 
-		<h2>Configurazione del regressore e Addestramento</h2>
+		<h2>Configurazione del regressore e addestramento</h2>
 		<p>
-			In questo capitolo viene presentato il programma <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a>
-			che &egrave; tecnicamente un wrapper della classe <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRFRegressor"><code>XGBRFRegressor</code></a>
-			della libreria <em>XGBoost</em> e il cui fine &egrave; di consentire l&apos;utilizzazione della regressione del regressore sottostante per approssimare funzioni
+			In questo capitolo vengono presentati due programmi: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> e
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>
+			che tecnicamente sono wrapper rispettivamente delle classi della libreria SciKit-Learn
+			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a> e
+			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>
+			che implementano gli algoritmi epsilon-Support-Vector-Regressor e nu-Support-Vector-Regressor</em> e
+			il fine dei due programmi &egrave; di consentire l&apos;utilizzazione dei regressori sottostanti per approssimare funzioni
 			senza dover scrivere codice ma agendo solo sulla linea di comando.<br />
-			Infatti tramite l&apos;argomento <code>--xgbparams</code> l&apos;utente passa una serie di iper parametri per regolare il comportamento dell&apos;algoritmo del regressore XGBoost sottostante
+			Infatti tramite l&apos;argomento <code>--svrparams</code> l&apos;utente passa una serie di iper parametri per regolare il comportamento dell&apos;algoritmo SVR sottostante
 			e altri per configurare l&apos;apprendimento dello stesso.
-			Oltre ai parametri del regressore sottostante il programma supporta dei propri argomenti per permettere all&apos;utente di passare
-			il dataset di training ed eventualmente quello di validazione, su quale file salvare il modello addestrato, le metriche da calcolare durante il training,
-			vincoli per la regolarizzazione (ad esempio l&apos;<em>early stop</em>) e parametrri per la diagnostica.<br />
+			Oltre ai parametri del regressore sottostante i due programmi supportano dei propri argomenti per consentire all&apos;utente di passare
+			il dataset di training e il file ove salvare il modello addestrato.<br />
 			<br />
-			Il programma <code>fit_func_miso.py</code>, cos&igrave; come il regressore XGBoost sottostante, &egrave; di tipo <em>M.I.S.O.</em>, cio&egrave; <em>Multiple Input Single Output</em>:
-			&egrave; progettato per approssimare una funzione della forma $y=f(x_1, ..., x_n)$ dove il numero delle variabili indipendenti &egrave; arbitrariamente grande
-			mentre la variabile dipendete in uscita &egrave; solamente una.<br />
-			Il formato dei dataset in ingresso &egrave; in formato csv (con header), con n + 1 colonne, di cui le prime n contengono i valori delle n variabili indipendenti e
-			l&apos;ultima colonna, la n+1, contenente i valori della variabile dipendente.
+			Entrambi i programmi sono di tipo <em>M.I.M.O.</em>, cio&egrave; <em>Multiple Input Multiple Output</em>:
+			sono progettati per approssimare una funzione della forma $f(x) \colon \rm I\!R^n \to \rm I\!R^m$ utilizzando nell&apos;implementazione
+			la classe <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor"><code>sklearn.multioutput.MultiOutputRegressor</code></a>.<br />
+			Il formato dei dataset in ingresso &egrave; in formato csv (con header), con $n + m$ colonne, di cui le prime $n$ colonne contengono i valori delle $n$ variabili indipendenti e
+			le ultime $m$ contenenti i valori della variabili dipendenti.
 		</p>
 
-		<h3 id="fit_func_miso">Usage del programma fit_func_miso.py</h3>
+		<h3 id="fit_func_esvr">Usage del programma fit_func_esvr.py</h3>
 		<p>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python fit_func_miso.py --help</code></pre>
+			<pre><code class="shell">$ python fit_func_esvr.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fit_func_miso.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
-                        --modelout MODEL_FILE [--valds VAL_DATASET_FILENAME]
-                        [--metrics VAL_METRICS [VAL_METRICS ...]]
-                        [--dumpout DUMPOUT_PATH]
-                        [--earlystop EARLY_STOPPING_ROUNDS]
-                        [--xgbparams XGB_PARAMS]
+			<pre><code class="shell">usage: fit_func_esvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                        --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
+                        MODEL_FILE [--dumpout DUMPOUT_PATH]
+                        [--svrparams SVR_PARAMS]
 
-fit_func_miso.py fits a multiple-input single-output scalar function dataset
-using a configurable XGBoost
+fit_func_esvr.py fits a multiple-input multiple-output function dataset using
+a configurable Epsilon-Support Vector Regressor
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program&apos;s version number and exit
   --trainds TRAIN_DATASET_FILENAME
                         Train dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
   --modelout MODEL_FILE
                         Output model file
-  --valds VAL_DATASET_FILENAME
-                        Validation dataset file (csv format)
-  --metrics VAL_METRICS [VAL_METRICS ...]
-                        List of built-in evaluation metrics to apply to
-                        validation dataset
-  --dumpout DUMPOUT_PATH
-                        Dump directory (directory to store metric values)
-  --earlystop EARLY_STOPPING_ROUNDS
-                        Number of round for early stopping
-  --xgbparams XGB_PARAMS
-                        Parameters of XGBoost constructor</code></pre>
+  --svrparams SVR_PARAMS
+                        Parameters of Epsilon-Support Vector Regressor
+                        constructor</code></pre>
 			Dove:
 			<ul>
 				<li>
@@ -268,9 +275,15 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--trainds</b>: percorso (relativo o assoluto) del file csv a due colonne (con header) che contiene il dataset da utilizzare per il training;
-					questo file pu&ograve; essere generato in modo sintetico ad esempio tramite il programma <a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_gen"><code>fx_gen.py</code></a>
-					oppure essere un dataset ottenuto realmente misurando un fenomeno scalare e reale che dipende da una sola variabile reale.<br />
+					<b>--trainds</b>: percorso (relativo o assoluto) del file csv a $n+m$ colonne (con header) che contiene il dataset da utilizzare per il training;
+					questo file pu&ograve; essere generato in modo sintetico ad esempio tramite uno dei programmi di cui sopra
+					oppure essere un dataset del mondo reale che mappa $n$ variabili indipendenti su $m$ variabili dipendenti.<br />
+					<br />
+				</li>
+				<li>
+					<b>--outputdim</b>:
+						il numero $n$ delle variabili indipendenti che devono corrispondere alle prime $n$ colonne del dataset csv;
+						il resto delle colonne a destra sono considerante di conseguenza la $m$ variabili dipendenti.<br />
 					<br />
 				</li>
 				<li>
@@ -278,26 +291,71 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--valds</b>: percorso (relativo o assoluto) del file csv a due colonne (con header) che contiene il dataset da utilizzare per il validation.<br />
+					<b>--svrparams</b>:
+						lista di parametri da passare all&apos;algoritmo di regressione sottostante;
+						si veda la documentazione di <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3 id="fit_func_nusvr">Usage del programma fit_func_nusvr.py</h3>
+		<p>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fit_func_nusvr.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fit_func_nusvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                         --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
+                         MODEL_FILE [--dumpout DUMPOUT_PATH]
+                         [--svrparams SVR_PARAMS]
+
+fit_func_nusvr.py fits a multiple-input multiple-output function dataset using
+a configurable Nu-Support Vector Regressor
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --trainds TRAIN_DATASET_FILENAME
+                        Train dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
+  --modelout MODEL_FILE
+                        Output model file
+  --svrparams SVR_PARAMS
+                        Parameters of Nu-Support Vector Regressor constructor</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
 					<br />
 				</li>
 				<li>
-					<b>--metrics</b>: lista di metriche da calcolare sul dataset di training e, se presente, anche su quello di validation;
-					la lista delle metriche supportate &egrave; definita in <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/parameter.html">XGBoost Parameters</a>
-					alla voce <em>eval_metric</em>.<br />
-					<br />
-				</li>
-				<li>			
-					<b>--dumpout</b>: percorso (relativo o assoluto) della directory dove salvare i valori delle metriche allo scorrere delle epoche;
-					il programma <a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#dumps_scatter"><code>dumps_scatter.py</code></a> utilizzer&agrave; il contenuto di questa directory per visualizzare i grafici delle metriche.<br />
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
 					<br />
 				</li>
 				<li>
-					<b>--earlystop</b>: quante iterazioni possono essere eseguite prima che l&apos;algoritmo inizi a entrare nella fase di overfitting.<br />
+					<b>--trainds</b>: percorso (relativo o assoluto) del file csv a $n$+$m$ colonne (con header) che contiene il dataset da utilizzare per il training;
+					questo file pu&ograve; essere generato in modo sintetico ad esempio tramite uno dei programmi di cui sopra
+					oppure essere un dataset del mondo reale che mappa $n$ variabili indipendenti su $m$ variabili dipendenti.<br />
 					<br />
 				</li>
 				<li>
-					<b>--xgbparams</b>: lista di parametri da passare all&apos;algoritmo di regressione di XGBoost; si veda la documentazione di <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRegressor"><code>XGBRegressor</code></a>.<br />
+					<b>--outputdim</b>:
+						il numero $n$ delle variabili indipendenti che devono corrispondere alle prime $n$ colonne del dataset csv;
+						il resto delle colonne a destra sono considerante di conseguenza la $m$ variabili dipendenti.<br />
+					<br />
+				</li>
+				<li>
+					<b>--modelout</b>: percorso (relativo o assoluto) al file dove salvare il modello addestrato nel formato joblib (.jl).<br />
+					<br />
+				</li>
+				<li>
+					<b>--svrparams</b>:
+						lista di parametri da passare all&apos;algoritmo di regressione sottostante;
+						si veda la documentazione di <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>.<br />
 					<br />
 				</li>
 			</ul>
@@ -305,35 +363,40 @@ optional arguments:
 
 		<h2>Predizione e calcolo dell&apos;errore</h2>
 		<p>
-			In questo capitolo viene invece presentato il programma <a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/predict_func_miso.py" target="_blank"><code>predict_func_miso.py</code></a>
-			il cui scopo &egrave; quello di effettuare le predizioni su un dataset di test applicandolo a un modello di regressore XGBoost addestrato precedentemente
-			tramite il programma <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a>,
+			In questo capitolo viene invece presentato il programma <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/predict_func.py" target="_blank"><code>predict_func.py</code></a>
+			il cui scopo &egrave; quello di effettuare le predizioni su un dataset di test applicandolo a un modello e-SVR oppure nu-SVR addestrato precedentemente
+			rispettivamente tramite il programma <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> o
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>
 			sempre senza dover scrivere codice ma tramite la sola linea di comando.<br />
 			Infatti tale programma supporta argomenti tramite i quali l&apos;utente passa il modello addestrato precentemente, il dataset di test
 			e le misure di errore da calcolare tra la predizione e il valore vero.<br />
-			Il formato dei dataset di test in ingresso &egrave; identico a quello del programma <code>fit_func_miso.py</code>; ovviamente qui l&apos;ultima colonna
-			(il valore della variabile dipendente) viene adoperata solo per confrontare i valori predetti con i valori veri calcolando le misure di errore passate.<br />
+			Il formato dei dataset di test in ingresso &egrave; identico a quello dei programmi di training di cui sopra; ovviamente qui le ultime colonne
+			(quelle delle variabili dipendenti) vengono adoperata solo per confrontare i valori predetti con i valori veri calcolando le misure di errore passate.<br />
 		</p>
 
-		<h3 id="predict_func_miso">Usage del programma predict_func_miso.py</h3>
+		<h3 id="predict_func">Usage del programma predict_func.py</h3>
 		<p>
 			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
-			<pre><code class="shell">$ python predict_func_miso.py --help</code></pre>
+			<pre><code class="shell">$ python predict_func.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: predict_func_miso.py [-h] [--version] --model MODEL_FILE --ds
-                            DF_PREDICTION --predictionout PREDICTION_DATA_FILE
-                            [--measures MEASURES [MEASURES ...]]
+			<pre><code class="shell">usage: predict_func.py [-h] [--version] --model MODEL_FILE --ds DF_PREDICTION
+                       --outputdim NUM_OF_DEPENDENT_COLUMNS --predictionout
+                       PREDICTION_DATA_FILE
+                       [--measures MEASURES [MEASURES ...]]
 
-predict_func_miso.py makes prediction of the values of a multiple-input
-single-output (scalar) function with a pretrained XGBoost model
+predict_func.py makes prediction of the values of a multiple-input multiple-
+output function with a pretrained Standard Vector Regressor model
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program&apos;s version number and exit
   --model MODEL_FILE    model file
   --ds DF_PREDICTION    dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
   --predictionout PREDICTION_DATA_FILE
                         prediction data file (csv format)
   --measures MEASURES [MEASURES ...]
@@ -350,11 +413,17 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--model</b>: percorso (relativo o assoluto) al file nel formato joblib (.jl) del modello generato da <code>fit_func_miso.py</code>.<br />
+					<b>--model</b>: percorso (relativo o assoluto) al file nel formato joblib (.jl) del modello generato da uno dei programmi di training sopra descritti.<br />
 					<br />
 				</li>
 				<li>
 					<b>--ds</b>: percorso (relativo o assoluto) del file csv (con header) che contiene il dataset di input su cui calcolare la predizione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--outputdim</b>:
+						il numero $n$ delle variabili indipendenti che devono corrispondere alle prime $n$ colonne del dataset csv;
+						il resto delle colonne a destra sono considerante di conseguenza la $m$ variabili dipendenti.<br />
 					<br />
 				</li>
 				<li>
@@ -371,88 +440,125 @@ optional arguments:
 
 		<h2>Un esempio di uso di tutti i programmi</h3>
 		<p>
-			Si supponga di voler approssimare nell&apos;intervallo $[-0.4,0.4]$ la seguente funzione $$f(x)=x sin \frac{1}{x}$$
+			Si supponga di voler approssimare nell&apos;intervallo $[-0.10,10.0]$ la seguente funzione $$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$$
 			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
-			<pre><code class="python">x * np.sin(1 / x)</code></pre>
+			<pre><code class="python">0.5*x**3 - 2*x**2 - 3*x - 1</code></pre>
 			Per generare il dataset di training, si esegua quindi il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytrain.csv \
-  --funcx "x * np.sin(1 / x)" \
-  --xbegin -0.4 \
-  --xend 0.4 \
-  --xstep 0.00031</code></pre>
+  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
+  --xbegin -10.0 \
+  --xend 10.0 \
+  --xstep 0.01</code></pre>
 			mentre per generare il dataset di test, si esegua il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_gen.py \
   --dsout mytest.csv \
-  --funcx "x * np.sin(1 / x)" \
-  --xbegin -0.4 \
-  --xend 0.4 \
-  --xstep 0.00073</code></pre>
+  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
+  --xbegin -10.0 \
+  --xend 10.0 \
+  --xstep 0.0475</code></pre>
 			Si osservi che il passo di discretizzazione del dataset di test &egrave; pi&ugrave; grande di quello di training e questo &egrave; normale 
 			in quanto l&apos;addestramento, per essere accurato, deve essere eseguito su una maggiore quantit&agrave; di dati.
 			Inoltre si osservi che &egrave; opportuno che il passo di discretizzazione del dataset di test <u>non</u> sia un multiplo di quello di training
 			per garantire che il dataset di test contenga la maggior parte dei dati non presenti nel dataset di training, e questo rende pi&ugrave; interessante la predizione.<br />
 			<br />
-			A questo si intende effettuare una regressione tramite <a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py" target="_blank"><code>fit_func_miso.py</code></a>
-			passando al regressore sottostante i seguenti argomenti: n_estimators: 100, max_depth: 7;
+			A questo si intende effettuare una regressione tramite <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py" target="_blank"><code>fit_func_esvr.py</code></a>
+			passando al regressore sottostante i seguenti argomenti: kernel: rbf, C: 100, gamma: 0.1, epsilon: 0.1;
 			quindi si esegua quindi il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python fit_func_miso.py \
+			<pre><code class="shell">$ python fit_func_esvr.py \
   --trainds mytrain.csv \
   --modelout mymodel.jl \
-  --xgbparams "'n_estimators': 100, 'max_depth': 7"</code></pre>
-			e alla fine dell&apos;esecuzione il file mymodel.jl salvato contiene il modello del regressore XGBoost configurato e addestrato.<br />
+  --outputdim 1 \
+  --svrparams "'kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1"</code></pre>
+			e alla fine dell&apos;esecuzione il file mymodel.jl salvato contiene il modello del regressore e-svr configurato e addestrato.<br />
 			<br />
 			Adesso si intende effettuare la predizione e il calcolo dell&apos;errore usando le misure <em>mean_absolute_error</em> e <em>mean_squared_error</em>;
 			quindi si esegua quindi il seguente comando:
 			<br/>
 			<br/>
-			<pre><code class="shell">$ python predict_func_miso.py \
+			<pre><code class="shell">$ python predict_func.py \
   --model mymodel.jl \
   --ds mytest.csv \
+  --outputdim 1 \
   --predictionout mypred.csv \
   --measures mean_absolute_error mean_squared_error</code></pre>
   			e alla fine dell&apos;esecuzione il file mypred.csv salvato contiene la predizione eseguita applicando il modello sui dati di test;
-			l&apos;output del programma visualizza le misure di errore passate tramite l&apos;argomento <code>--measures</code>
-			e sono molto piccole: la prima intorno a $1.5 \cdot 10^{-3}$ e la seconda intorno a $5.5 \cdot 10^{-6}$<br />
+			l&apos;output del programma visualizza lo score molto molto vicino a 1 e le misure di errore passate tramite l&apos;argomento <code>--measures</code>
+			e sono accettabili: la prima intorno a $0.4$ e la seconda intorno a $1.9$<br />
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
 			<br />
-			Infine si desidera intende effettuare la visualizzazione comparata del dataset di test con la predizione;
+			Infine si intende effettuare la visualizzazione comparata del dataset di test con la predizione;
 			si esegua perci&ograve; il seguente comando:
 			<br/>
 			<br/>
 			<pre><code class="shell">$ python fx_scatter.py \
   --ds mytest.csv \
   --prediction mypred.csv \
-  --title "XGBoost (estimators: 100, max depth: 7)" \
+  --title "e-svr ('kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1)" \
   --xlabel "x" \
-  --ylabel "y=x sin(1/x)"</code></pre>
+  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
 			che mostra i grafici a dispersione del dataset di test e la predizione sovrapposti: in blu quello del dataset di test, in rosso la predizione.
-			La comparazione dei due grafici evidenzia chiaramente che l&apos;approssimazione ha raggiunto livelli molto elevati, come del resto le basse misure dell&apos;errore gi&agrave; indicavano;
-			solamente intorno allo zero si osserva qualche imprecisione ed &egrave; dovuta all&apos;oscillazione della funzione che &egrave; l&igrave; molto forte.<br />
+			La comparazione dei due grafici evidenzia chiaramente che l&apos;approssimazione ha raggiunto livelli molto elevati.<br />
 			<br />
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.
 		</p>
-		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-with-configurable-xgboost/ml-fitfnwcxgb-example10.png" /></div>
-		<div class="photocaption">Figura con grafici a dispersione generata dal programma <code>fx_scatter.py</code> che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione $f(x)=x sin \frac{1}{x}$
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-with-configurable-svr/ml-fitfnwcsvr-example1.png" /></div>
+		<div class="photocaption">Figura con grafici a dispersione generata dal programma <code>fx_scatter.py</code> che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione $f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$
 		e la funzione originale sottostante in blu.</div>
 		<br />
 		<p>
-			Nelle cartelle <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/xgboost/examples"><code>one-variable-function/examples</code></a>
-			e <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/xgboost/examples"><code>two-variables-function/examples</code></a>
-			ci sono script shell che mostrano l&apos;uso di questi programmi in cascata rispettivamente per dataset generati con funzioni scalari reali di una variabile reale
-			e per dataset generati con funzioni scalari reali di due variabili reali.
+			Se si intende invece effettuare una regressione tramite <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py" target="_blank"><code>fit_func_nusvr.py</code></a>
+			passando al regressore sottostante i seguenti argomenti: C: 10, gamma: auto
+			si esegua quindi il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fit_func_nusvr.py \
+  --trainds mytrain.csv \
+  --modelout mymodel.jl \
+  --outputdim 1 \
+  --svrparams "'C': 10, 'gamma': 'auto'"</code></pre>
+			quindi eseguire la predizione usando il comando <code>predict_func.py</code> con gli stessi parametri di sopra
+			e infine per generare i grafici a dispersione eseguire il seguente comando:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fx_scatter.py \
+  --ds mytest.csv \
+  --prediction mypred.csv \
+  --title "nu-svr ('C': 10, 'gamma': 'auto')" \
+  --xlabel "x" \
+  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
+
+			Il repository contiene degli esempi in script shell che mostrano l&apos;uso di questi programmi in cascata:
+			<ul>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/svr/examples"><code>one-variable-function/svr/examples</code></a>
+					per esempi sull&apos;approssimazione di funzioni scalari reali di una variabile reale tramite <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/svr/examples"><code>two-variables-function/svr/examples</code></a> p
+					per esempi sull&apos;approssimazione di funzioni scalari reali di due variabili reali tramite <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-on-plane/svr/examples"><code>parametric-curve-on-plane/svr/examples</code></a>
+					per esempi sull&apos;approssimazione di curve parametriche sul piano tramite <em>SVR</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-in-space/svr/examples"><code>parametric-curve-in-space/svr/examples</code></a>
+					per esempi sull&apos;approssimazione di curve parametriche nello spazio tramite <em>SVR</em>.
+				</li>
+			</ul>
 		</p>
 		<br/>
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/xgboost/">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/svr/">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
