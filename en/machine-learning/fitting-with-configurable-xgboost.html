@@ -171,56 +171,80 @@
 		</header>
 
 		<p>
-			This post deals with the approximation of scalar mathematical functions to one or more real variables using a <em>XGBoost</em> regressor
+			This post deals with the approximation of both scalar and vector real-valued mathematical functions to one or more real-valued variables using a <em>XGBoost</em> regressor
 			without writing code but only acting on the command line of Python scripts that implement the functionality of:
 
 			<ul>
 				<li>
-					<em>Regressor Configuration and Training</em>
+					<em>Regressor Configuration and training</em>
 				</li>
 				<li>
 					<em>Prediction and error calculation</em>
 				</li>
 			</ul>
 
-			The goal is to demonstrate that regression with XGBoost achieve low error values with extremely short learning times.
-			Although MLP (Multi Layer Perceptron) type neural networks can be considered universal function approximators (see <a target="_blank" href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a> on this website),
-			the XGBoost regressor can arrive at lower error values than an MLP
-			and with a significantly lower computational cost than that of an MLP.<br />
-			<br />
-			In the real world the datasets pre-exist the learning phase, in fact these are obtained by extracting data from production databases or Excel files, from the output of measuring instruments,
-			from data-loggers connected to electronic sensors and so on, and then used for the next stages of learning;
-			but since the focus here is the regression itself and not the fitting of a real phenomenon, the datasets used in this post have been synthetically generated from mathematical functions:
-			this has the advantage of being able to stress the algorithm and see for which types of datasets the algorithm has acceptable error values and for which instead the algorithm is struggling.<br />
-			<br />
-			The code described by this post requires Python version 3 and uses the XGBoost library; it also requires the SciKit-Learn, NumPy, Pandas, MatPlotLib and JobLib libraries.<!-- e ImageIO --><br/>
+			The code described by this post requires Python version 3 and uses the XGBoost library; it also requires the SciKit-Learn, NumPy, Pandas, MatPlotLib and JobLib libraries.
 			To get the code please see the paragraph <a href="#downloadcode">Download of the complete code</a> at the end of this post.<br/>
 			<br/>
-			For the generation of synthetic training, validation and test datasets, common tools will be used:
-			<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for real-valued scalar generator functions of a real-valued variable
-			and <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar generator functions of two real-valued variables.<br />
-			Also for the visualization of the results, and precisely for the comparison of the test dataset with the prediction, the general tools will be used:
-			<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_scatter"><code>fx_scatter.py</code></a> for real-valued scalar generator functions of a real-valued variable
-			e <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_scatter"><code>fxy_scatter.py</code></a> for the real-valued scalar generator functions of two real-valued variables.<br />
+			For the generation of synthetic training and test datasets, the following common tools (available in the repository) will be used:
+			<ul>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for the real-valued scalar functions of one real-valued variable $f(x) \colon [a,b] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar functions of two real-valued variables $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_gen"><code>pcm2t_gen.py</code></a> for parametric curves on the plane, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_gen"><code>pmc3t_gen.py</code></a> for parametric curves in space, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R \times \rm I\!R}$
+				</li>
+			</ul>			
+			Also for the visualization of the results, and precisely for the comparison of the test dataset with the prediction, the following common tools (always available in the repository) will be used:
+			<ul>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_scatter"><code>fx_scatter.py</code></a> for the real scalar generator functions of one real variable
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_scatter"><code>fxy_scatter.py</code></a> for the real scalar generator functions of two real variables
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_scatter"><code>pmc2t_scatter.py</code></a> for parametric curves on the plane
+				</li>
+				<li>
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_scatter"><code>pmc3t_scatter.py</code></a> for parametric curves in space
+				</li>
+			</ul>
 		</p>
 
-		<h2>Regressor Configuration and Training</h2>
+		<h2>Regressor Configuration and training</h2>
 		<p>
-			In this chapter the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a> is presented
-			and it is technically a wrapper of the class <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRFRegressor"><code>XGBRFRegressor</code></a>
-			of the <em>XGBoost</em> library and whose purpose is to allow the use of the regression of the underlying regressor to fit functions
+			In this chapter the programs
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a> and
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_mimo.py"><code>fit_func_mimo.py</code></a> are presented
+			and they are technically wrappers of the class <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRFRegressor"><code>XGBRFRegressor</code></a>
+			of the <em>XGBoost</em> library and which purpose is to allow the use of the regression of the underlying regressor to fit functions
 			without having to write code but only acting on the command line.<br />
-			In fact through the argument <code>--xgbparams</code> the user passes a series of hyper-parameters to adjust the behavior of the&apos;underlying XGBoost regressor algorithm
+			In fact through the argument <code>--xgbparams</code> the user passes a series of hyper-parameters to adjust the behavior of the underlying XGBoost regressor algorithm
 			and others to configure its learning phase.
-			In addition to the parameters of the underlying regressor the program supports its own arguments to allow the user to pass
+			In addition to the parameters of the underlying regressor the two programs support their own arguments to allow the user to pass
 			the training dataset and optionally the validation dataset, on which file to save the trained model, the metrics to calculate during the training,
 			constraints for regularization (e.g. <em>early stop</em>) and parameters for diagnostic.<br />
 			<br />
 			The program <code>fit_func_miso.py</code>, as well as the underlying XGBoost regressor, is of type <em>M.I.S.O.</em>, i.e. <em>Multiple Input Single Output</em>:
-			it is designed to fit a function of the form $y=f(x_1, ..., x_n)$ where the number of independent variables is arbitrarily large
+			it is designed to fit a function of the form $f \colon \rm I\!R^n \to \rm I\!R$ where the number of independent variables is arbitrarily large
 			while the output dependent variable is only one.<br />
 			The format of the input datasets is in csv format (with header), with n + 1 columns, of which the first n ones contain the values of the n independent variables and
 			the last column, the n+1, containing the values of the dependent variable.
+			<br />
+			The program <code>fit_func_mimo.py</code>, using in the implementation
+			the <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor"><code>sklearn.multioutput.MultiOutputRegressor</code></a> class,
+			is of type <em>M.I.M.O.</em>, i.e. <em>Multiple Input multiple Output</em>:
+			it is designed to fit a function of the form $f \colon \rm I\!R^n \to \rm I\!R^m$ where the number of independent variables is arbitrarily large
+			while the output dependent variable is only one.<br />
+			The format of the input datasets is in csv format (with header), with $n+m$ columns, of which the first $n$ columns contain the values of the $n$ independent variables and
+			the last $m$ containing the values of the dependent variables.
 		</p>
 
 		<h3 id="fit_func_miso">Usage of the fit_func_miso.py program</h3>
@@ -304,16 +328,87 @@ optional arguments:
 			</ul>
 		</p>
 
+		<h3 id="fit_func_mimo">Usage of the fit_func_mism.py program</h3>
+		<p>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python fit_func_mimo.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fit_func_mimo.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                        --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
+                        MODEL_FILE [--dumpout DUMPOUT_PATH]
+                        [--xgbparams XGB_PARAMS]
+
+fit_func_mimo.py fits a multiple-input single-output (scalar) function dataset
+using a configurable XGBoost
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --trainds TRAIN_DATASET_FILENAME
+                        Train dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
+  --modelout MODEL_FILE
+                        Output model file
+  --dumpout DUMPOUT_PATH
+                        Dump directory (directory to store metric values)
+  --xgbparams XGB_PARAMS
+                        Parameters of XGBoost constructor</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--trainds</b>: path (relative or absolute) of a two-column csv file (with header) that contains the dataset to be used for the training;
+					this file can be generated synthetically e.g. via the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a>.
+					or be a dataset actually obtained by measuring a scalar and real phenomenon that depends on a single real-valued variable.<br />
+					<br />
+				</li>
+				<li>
+					<b>--outputdim</b>:
+						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
+						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
+					<br />
+				</li>
+				<li>
+					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in joblib format (.jl).<br />
+					<br />
+				</li>
+				<li>
+					<b>--dumpout</b>: path (relative or absolute) of the directory where to save the metric values as the ages go by;
+					the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#dumps_scatter"><code>dumps_scatter.py</code></a> will use the contents of this directory to display the metric graphs.<br />
+					<br />
+				</li>
+				<li>
+					<b>--xgbparams</b>: list of parameters to pass to XGBoost regression algorithm; see documentation of <a target="_blank" href="https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRegressor"><code>XGBRegressor</code></a>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
 		<h2>Prediction and error calculation</h2>
 		<p>
-			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/predict_func_miso.py" target="_blank"><code>predict_func_miso.py</code></a> is presented
-			and whose purpose is to make predictions on a test dataset applying it to a previously trained XGBoost regressor model
-			via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a>,
+			In this chapter the programs
+			<a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/predict_func_miso.py" target="_blank"><code>predict_func_miso.py</code></a> and
+			<a href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/predict_func_miso.py" target="_blank"><code>predict_func_miso.py</code></a> are presented
+			and which purpose is to make predictions on a test dataset applying it to a previously trained XGBoost regressor model
+			respectively via the programs
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_miso.py"><code>fit_func_miso.py</code></a> and
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/xgboost/fit_func_mimo.py"><code>fit_func_mimo.py</code></a>,
 			always without having to write code but only through the command line.<br />
-			In fact, this program supports arguments through which the user passes the previously trained model, the test dataset
+			In fact, the two programs support arguments through which the user passes the previously trained model, the test dataset
 			and the error measurements to be calculated between the predictions and the true values.<br />
-			The format of the incoming test datasets is identical to the one of the program <code>fit_func_miso.py</code>; of course here the last column
-			(the value of the dependent variable) is only used to compare the predicted values with the true values by calculating passed error measurements.<br />
+			The format of the incoming test datasets is identical to the ones rispectively of the programs <code>fit_func_miso.py</code> and <code>fit_func_mimo.py</code>;
+			of course the last columns (related to the dependent variables) are only used to compare the predicted values with the true values by calculating passed error measurements.<br />
 		</p>
 
 		<h3 id="predict_func_miso">Usage of the predict_func_miso.py program</h3>
@@ -356,6 +451,70 @@ optional arguments:
 				</li>
 				<li>
 					<b>--ds</b>: path (relative or absolute) of the csv file (with header) that contains the input dataset on which to calculate the prediction.<br />
+					<br />
+				</li>
+				<li>
+					<b>--predictionout</b>: path (relative or absolute) of the csv file to generate that will contain the prediction, that is the approximation of the function applied to the input dataset.<br />
+					<br />
+				</li>
+				<li>
+					<b>--measures</b>: list of measurements to be calculated by comparing the true values of the input dataset and the predicted output values;
+					the list of supported metrics is defined in <a target="_blank" href="https://scikit-learn.org/stable/modules/classes.html#regression-metrics">SciKit Learn Regression Metrics</a>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h3 id="predict_func_mimo">Usage of the predict_func_mimo.py program</h3>
+		<p>
+			To get the program usage you can run this following command:
+			<pre><code class="shell">$ python predict_func_mimo.py --help</code></pre>
+			and the output got is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: predict_func_mimo.py [-h] [--version] --model MODEL_FILE --ds
+                            DF_PREDICTION --outputdim NUM_OF_DEPENDENT_COLUMNS
+                            --predictionout PREDICTION_DATA_FILE
+                            [--measures MEASURES [MEASURES ...]]
+
+predict_func_mimo.py makes prediction of the values of a multiple-input
+single-output (scalar) function with a pretrained XGBoost model
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program&apos;s version number and exit
+  --model MODEL_FILE    model file
+  --ds DF_PREDICTION    dataset file (csv format)
+  --outputdim NUM_OF_DEPENDENT_COLUMNS
+                        Output dimension (alias the number of dependent
+                        columns, that must be last columns)
+  --predictionout PREDICTION_DATA_FILE
+                        prediction data file (csv format)
+  --measures MEASURES [MEASURES ...]
+                        List of built-in sklearn regression metrics to compare
+                        prediction with input dataset</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--model</b>: path (relative or absolute) to the file in joblib (.jl) format of the model generated by <code>fit_func_miso.py</code>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: path (relative or absolute) of the csv file (with header) that contains the input dataset on which to calculate the prediction.<br />
+					<br />
+				</li>
+				<li>
+					<b>--outputdim</b>:
+						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
+						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
 					<br />
 				</li>
 				<li>
@@ -444,10 +603,25 @@ optional arguments:
 		and the original function below in blue.</div>
 		<br />
 		<p>
-			In the folders <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/xgboost/examples"><code>one-variable-function/examples</code></a>
-			and <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/xgboost/examples"><code>two-variables-function/examples</code></a>
-			there are shell scripts that show the use of these programs in cascade respectively for datasets generated with real-valued scalar functions of a real-valued variable
-			and for datasets generated with real-valued scalar functions of two real-valued variables.
+			The repository contains examples in shell scripts that show the use of these cascading programs:
+			<ul>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/xgboost/examples"><code>one-variable-function/xgboost/examples</code></a>
+					for examples on the fitting of real-valued scalar functions of one real-valued variable via <em>XGBoost</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/xgboost/examples"><code>two-variables-function/xgboost/examples</code></a> p
+					for examples on the fitting of real-valued scalar functions of two real-valued variables via <em>XGBoost</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-on-plane/xgboost/examples"><code>parametric-curve-on-plane/xgboost/examples</code></a>
+					for examples about fitting parametric curves on the plane via <em>XGBoost</em>.
+				</li>
+				<li>
+					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-in-space/xgboost/examples"><code>parametric-curve-in-space/xgboost/examples</code></a>
+					for examples about fitting parametric curves on the space via <em>XGBoost</em>.
+				</li>
+			</ul>
 		</p>
 		<br/>
 

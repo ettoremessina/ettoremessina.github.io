@@ -187,7 +187,7 @@
 			For the generation of synthetic training and test datasets, the following common tools (available in the repository) will be used:
 			<ul>
 				<li>
-					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for the real-valued scalar functions of one real-valued variable $f(x) \colon [a,b] \to {\rm I\!R}$
+					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a> for the real-valued scalar functions of one real-valued variable $f \colon [a,b] \to {\rm I\!R}$
 				</li>
 				<li>
 					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar functions of two real-valued variables $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
@@ -231,7 +231,7 @@
 			the training dataset and on which file to save the trained model.<br />
 			<br />
 			Both programs are of type <em>M.I.M.O.</em>, that is <em>Multiple Input Multiple Output</em>:
-			are designed to approximate a function of the shape $f(x) \colon \rm I\!R^n \to \rm I\!R^m$ using in the implementation
+			are designed to approximate a function of the shape $f \colon \rm I\!R^n \to \rm I\!R^m$ using in the implementation
 			the <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor"><code>sklearn.multioutput.MultiOutputRegressor</code></a> class.<br />
 			The format of the input datasets is in csv format (with header), with $n+m$ columns, of which the first $n$ columns contain the values of the $n$ independent variables and
 			the last $m$ containing the values of the dependent variables.
@@ -365,7 +365,7 @@ optional arguments:
 		<h2>Prediction and error calculation</h2>
 		<p>
 			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/predict_func.py" target="_blank"><code>predict_func.py</code></a> is presented
-			and whose purpose is to make predictions on a test dataset applying it to a previously trained e-SVR or nu-SVR model
+			and which purpose is to make predictions on a test dataset applying it to a previously trained e-SVR or nu-SVR model
 			respectively via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> or
 			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>,
 			always without having to write code but only through the command line.<br />

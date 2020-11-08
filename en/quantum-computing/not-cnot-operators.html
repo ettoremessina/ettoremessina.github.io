@@ -173,7 +173,7 @@
 
 		<p>
             The operators of traditional high-level programming languages are translated by the compilers into short sequences of machine language instructions
-            and in turn these instructions are implemented within microprocessors whose micro-instructions use logical and mathematical operators made directly at circuit level. <br />
+            and in turn these instructions are implemented within microprocessors which micro-instructions use logical and mathematical operators made directly at circuit level. <br />
 			For example, in this snippet of code in C language
 			<pre><code class="c">int v1, v2;
 //….
@@ -310,7 +310,7 @@ circuit.ucrx([np.pi/3], [], 0)
 circuit.measure(q, c)</code></pre>
 			which corresponds to the following quantum circuit:<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_paulix.png" /></div>
-			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			and which result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
 			<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-paulix-qiskit_result_sim.png" /></div>
 			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
@@ -358,7 +358,7 @@ circuit.measure(q, c)</code></pre>
 //….
 if (control)
 	target = !target;</code></pre>
-			whose meaning is very simple: evaluate the <em>control</em> condition, if it is true, reverse the boolean value of <em>target</em>, otherwise leave <em>target</em> unchanged.
+			which meaning is very simple: evaluate the <em>control</em> condition, if it is true, reverse the boolean value of <em>target</em>, otherwise leave <em>target</em> unchanged.
 			This code snippet is translated into x86_64 assembly as follows:<br />
 			<br />
 			<pre><code class="asm">cmp BYTE PTR [rbp-1], 0
@@ -511,7 +511,7 @@ circuit.measure(q, c)
 </code></pre>
 			which corresponds to the following quantum circuit:<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_1_cnot.png" /></div>
-			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			and which result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
 			<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-1-cnot-qiskit_result_sim.png" /></div>
 			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
@@ -562,7 +562,7 @@ circuit.measure(q, c)
 </code></pre>
 			which corresponds to the following quantum circuit<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_2_cnot.png" /></div>
-			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			and which result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
 			<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-2-cnot-qiskit_result_sim.png" /></div>
 			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
@@ -624,7 +624,7 @@ circuit.measure(q[1], c[1])
 </code></pre>
 			which corresponds to the following quantum circuit:<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-circuit_3_cnot.png" /></div>
-			and whose result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
+			and which result executed with a number of shots=8192 on the IBM &apos;qasm_simulator&apos; is the following:<br />
 			<br />
 			<div class="betweentextlines"><img src="../../posts/quantum-computing/not-cnot-operators/qc-notcnoto-src-3-cnot-qiskit_result_sim.png" /></div>
 			while the result always executed with a number of shots=8192 on the IBM quantum computer &apos;ibmq_london&apos; is the following:<br />
