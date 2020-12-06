@@ -1,0 +1,650 @@
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Ordinary differential equation solvers</title>
+		<meta name="description" content="Examples of use of some ordinary differential equation solvers implemented by libraries frequently used in scientific applications in general and expecially in machine learning and deep learning." >
+		<meta name="keywords" content="neural networks, ordinary differential equations, ode, numerical approximation, numerical solution, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/",
+              "name": "Neural Networks"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html",
+              "name": "Ordinary differential equation solvers"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://twitter.com/ettoremessina/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.instagram.com/etmessina/" class="icon brands fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://t.me/ettoremessina/" class="icon brands fa-telegram"><span class="label" target="_blank">Skype</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="skype:ettore-messina?chat" class="icon brands fa-skype"><span class="label" target="_blank">Skype</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Ordinary differential equation solvers</h1>
+		</header>
+		<p>
+        <!--
+        TorchDyn
+        SymPy
+        -->
+			This post shows the use of some <em>Ordinary Differential Equation</em> (abbreviated ODE) solvers
+            implemented by libraries frequently used in scientific applications in general and especially in machine learning and deep learning.
+            The resolution techniques shown here are numerical and not analytical techniques, as this site deals with computation.
+            Moreover this post is published under the category of neural networks: although not all the techniques shown here
+            use technologies of deep learning, its purpose is to be proactive to the topic on the relationship between neural networks and differential equations.<br />
+            <br />
+            The post is organized as a sort of Rosetta Stele:
+            <!-- 
+            three problems are presented with <em> initial condition</em>.
+            (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>) to increasing complexity,
+            precisely an equation of the first order, a system of two equations of the first order and an equation of the second order, each with its own initial conditions given.
+            After the presentation of each problem
+            Of these three problems
+            -->
+            one problem is presented consisting of a differential equation with <em> initial condition</em> (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>)
+            After the presentation of this problem follows the list of its resolutions with the various libraries used. 
+            Of this problem the analytical solution is also known and this allows to compare the quality of the numerical solutions obtained.<br />
+            <br />
+            All the various code fragments described in this post require Python version 3 and the MatPlotLib and NumPy libraries
+            while individually require an additional library (and its own dependencies) in accordance with the solver used.<br/>
+			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
+			<br/>
+        </p>
+
+		<h2>Conventions</h2>
+		<p>
+            In this post the conventions used are as follows:
+            <ul>
+                <li>$t$ is the independent variable</li>
+                <li>$x$ is the unknown function</li>
+                <li>$y$ is the second unknown function in the case of systems of two equations</li>
+                <li>
+                $x$ and $y$ are intended to be functions of $t$, so $x=x(t)$ and $y=y(t)$,
+                but the use of this compact notation, in addition to having a greater readability at a mathematical level
+                makes it easier to "translate" the equation into code
+                </li>
+                <li>$x'$ is the first derivative of x with respect to $t$ and of course $y'$ is the first derivative of y with respect to $t$</li>
+                <li>$x''$ is the second derivative of x with respect to $t$ and of course $y''$ is the second derivative of y with respect to $t$</li>
+            </ul>
+        </p>
+
+		<h2>First order ODE with IVP</h2>
+		<p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'+x=\sin t + 3 \cos 2t
+                \\ 
+                x(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            whose analytical solution is:
+            
+            $$ x(t) = \frac{1}{2} \sin t − \frac{1}{2} \cos t + \frac{3}{5} \cos 2t + \frac{6}{5} \sin 2t − \frac{1}{10}e^{-t} $$
+
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%E2%80%B2%2Bx%3Dsin+t%2B3+cos+2t%3B+x%280%29%3D0" target="_brank">Wolfram Alpha</a>.
+            <br />
+            Implementations of the following resolutions require the differential equation to be written explicitly in the form $x&apos;=F(x,t)$
+            and then it becomes:
+            
+            $$ x'=\sin t + 3 \cos 2t - x$$
+
+        </p>
+
+        <h3>Scipy</h3>
+        <p>
+            <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
+            to numerically solve ordinary differential equations with initial value.<br />
+            The explicit form of the above equation in Python with NumPy is implemented as follows:
+            <pre><code class="python">lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>scipy.integrate.solve_ivp</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+from scipy.integrate import solve_ivp
+
+ode_fn1 = lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x
+
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
+t_begin=0.
+t_end=10.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = 0.
+
+x_an_sol = an_sol(t_space)
+
+method = 'RK45' #available methods: 'RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA'
+num_sol = solve_ivp(ode_fn1, [t_begin, t_end], [x_init], method=method, dense_output=True)
+x_num_sol = num_sol.sol(t_space).T
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical')
+plt.plot(t_space, x_num_sol, label='numerical')
+plt.title('ODE 1st order IVP solved by SciPy with method=' + method)
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/ode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_scipy_1.png" /></div>
+		<div class="photocaption">
+            Comparison of the analytical solution with the numerical solution obtained by <code>scipy.integrate.solve_ivp</code>.<br />
+            The two curves are practically overlapped.
+        </div>
+        </br >
+        </br >
+
+        <h3>TensorFlow Probability</h3>
+        <p>
+            <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
+            to numerically solve ordinary differential equations with initial value.<br />
+            The explicit form of the above equation in Python with TensorFlow Probability is implemented as follows:
+            <pre><code class="python">lambda t, x: tf.math.sin(t) + tf.constant(3.) * tf.math.cos(tf.constant(2.) * t) - x</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfp.math.ode.BDF</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+import tensorflow_probability as tfp
+
+ode_fn1 = lambda t, x: tf.math.sin(t) + tf.constant(3.) * tf.math.cos(tf.constant(2.) * t) - x
+
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
+
+t_begin=0.
+t_end=10.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+t_init = tf.constant(t_begin)
+x_init = tf.constant(0.)
+
+x_an_sol = an_sol(t_space)
+
+num_sol = tfp.math.ode.BDF().solve(ode_fn1, t_init, x_init,
+	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical')
+plt.plot(num_sol.times, num_sol.states, label='numerical')
+plt.title('ODE 1st order IVP solved by TensorFlow Probability with BDF')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/ode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfp_1.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>tfp.math.ode.BDF</code></div>.
+        </br >
+        </br >
+
+        <h3>TorchDiffEq</h3>
+        <p>
+            <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
+            to numerically solve ordinary differential equations with initial value.<br />
+            The explicit form of the above equation in Python with Torch is implemented as follows:
+            <pre><code class="python">lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>torchdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+from torchdiffeq import odeint
+
+ode_fn1 = lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x
+
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
+
+t_begin=0.
+t_end=10.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = torch.tensor([0.])
+
+x_an_sol = an_sol(t_space)
+
+x_num_sol = odeint(ode_fn1, x_init, torch.tensor(t_space))
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical')
+plt.plot(t_space, x_num_sol, label='numerical')
+plt.title('ODE 1st order IVP solved by TorchDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/ode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_1.png" /></div>
+		<div class="photocaption">
+            Comparison of the analytical solution with the numerical solution obtained by <code>torchdiffeq.odeint</code>.<br />
+            The two curves are practically overlapped.
+        </div>
+        </br >
+        </br >
+
+        <h3>TensorFlowDiffEq</h3>
+        <p>
+            <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> is a library that replicates with TensorFlow what <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> achieves with Torch.
+            TensorFlowDiffEq uses the <code>tfdiffeq.odeint</code> function to numerically solve ordinary differential equations with initial value.<br />
+            The explicit form of the above equation in Python with Tensorflow is implemented as follows:
+            <pre><code class="python">lambda t, x: tf.math.sin(t) + 3. * tf.math.cos(2. * t) - x</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+from tfdiffeq import odeint
+
+ode_fn1 = lambda t, x: tf.math.sin(t) + 3. * tf.math.cos(2. * t) - x
+
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
+
+t_begin=0.
+t_end=10.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = tf.constant([0.])
+
+x_an_sol = an_sol(t_space)
+
+x_num_sol = odeint(ode_fn1, x_init, tf.constant(t_space))
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical')
+plt.plot(t_space, x_num_sol, label='numerical')
+plt.title('ODE 1st order IVP solved by TensorFlowDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/ode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfdeq_1.png" /></div>
+		<div class="photocaption">
+            Comparison of the analytical solution with the numerical solution obtained by <code>tfdiffeq.odeint</code>.<br />
+            The two curves are practically overlapped.
+        </div>
+        </br >
+        </br >
+
+        <h3>NeuroDiffEq</h3>
+        <p>
+            <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> is a library that uses a neural network implemented via PyTorch
+            to numerically solve a differential equation with initial value.<br />
+            The NeuroDiffEq solver has a number of differences from previous solvers. First of all the differential equation must be represented in implicit form:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'+x-\sin t - 3 \cos 2t = 0
+                \\ 
+                x(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            moreover the function <code>diff(x, t, order)</code> allows to indicate the derivative and finally the lambda (or function) representing the equation has the $t$ and the $x$ inverted position.
+            For what just said the implicit form of the above equation in Python with Torch and NeuroDiffEq is implemented as follows:
+            <pre><code class="python">lambda x, t: diff(x, t, order=1) + x - torch.sin(t) - 3. * torch.cos(2. * t)</code></pre>
+            <br />
+            The library NeuroDiffEq uses the <code>neurodiffeq.ode.solve</code> function to approximate the solution;
+            this function takes in input (optionally) a neural network, the training algorithm and other hyperparameters.<br />
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical solution obtained by <code>neurodiffeq.ode.solve</code>.
+            in the range $[0.0,2.0]$ with the following settings:
+            <ul>
+                <li>Fully Connected neural network (abbreviated FC, also known as MLP for multilayer perceptron) with 6 layers, 50 neurons per layer and Tanh as activation function;</li>
+                <li>SGD as optimization algorithm with learing rate set to 0.001;</li>
+                <li>batch size set to 30, max number of epochs set to 1000, best model flag set to True.</br >
+            </ul>
+            <b>Nota</b>: By changing the structure of the network, modifying the hyperparameters and using a different algorithm of course you get a different approximation.</br >
+			<b>Nota</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.<br/>
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+import torch
+
+from neurodiffeq import diff
+from neurodiffeq.ode import solve
+from neurodiffeq.ode import IVP
+from neurodiffeq.ode import Monitor
+import neurodiffeq.networks as ndenw
+
+ode_fn1 = lambda x, t: diff(x, t, order=1) + x - torch.sin(t) - 3. * torch.cos(2. * t)
+
+an_sol = lambda t : (1./2.) * np.sin(t) - (1./2.) * np.cos(t) + \
+                    (3./5.) * np.cos(2.*t) + (6./5.) * np.sin(2.*t) - \
+                    (1./10.) * np.exp(-t)
+
+t_begin=0.
+t_end=2.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = IVP(t_0=t_begin, x_0=0.0)
+
+x_an_sol = an_sol(t_space)
+
+net = ndenw.FCNN(n_hidden_layers=6, n_hidden_units=50, actv=torch.nn.Tanh)
+optimizer = torch.optim.SGD(net.parameters(), lr=0.001)
+num_sol, loss_sol = solve(ode_fn1, x_init, t_min=t_begin, t_max=t_end,
+	batch_size=30,
+	max_epochs=1000,
+	return_best=True,
+	net=net,
+	optimizer=optimizer,
+	monitor=Monitor(t_min=t_begin, t_max=t_end, check_every=10))
+x_num_sol = num_sol(t_space, as_type='np')
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical')
+plt.plot(t_space, x_num_sol, label='numerical')
+plt.title('ODE 1st order IVP solved by NeuroDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/NeuroDiffEq/ode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_ndeq_1.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>neurodiffeq.ode.solve</code>.</div>
+        <br />
+        <br />
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_monitor_ndeq_1.png" /></div>
+		<div class="photocaption">Graph of the monitor at the end of the training performed by <code>neurodiffeq.ode.solve</code>.</div>
+        </br >
+        </br >
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
