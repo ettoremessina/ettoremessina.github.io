@@ -39,7 +39,7 @@
 
 		<title>Ordinary differential equation solvers</title>
 		<meta name="description" content="Examples of use of some ordinary differential equation solvers implemented by libraries frequently used in scientific applications in general and expecially in machine learning and deep learning." >
-		<meta name="keywords" content="neural networks, ordinary differential equations, ode, numerical approximation, numerical solution, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
+		<meta name="keywords" content="neural networks, ordinary differential equations, ode, system, systems, solver, numerical approximation, numerical solution, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
 		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
@@ -546,6 +546,11 @@ plt.show()
             \end{cases}
             \end{equation} $$
 
+            and in matrix form:
+            
+            $$A=\left[\begin{matrix} -1 & 1 \\ 4 & -1 \end{matrix} \right]$$
+            $$\left[\begin{matrix} x' \\ y' \end{matrix} \right] = A \left[\begin{matrix} x \\ y \end{matrix} \right] $$ 
+
         </p>
 
         <h3>Scipy</h3>
@@ -618,7 +623,7 @@ plt.show()
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
             to numerically solve a system of ordinary differential equations with initial values.<br />
-            The explicit form of the above equation in Python with TensorFlow Probability is implemented as follows:
+            The explicit form of the above pair of equations in Python with TensorFlow Probability is implemented as follows:
             <pre><code class="python">def ode_fn(t, XY):
 	x=XY[0]
 	y=XY[1]

@@ -37,7 +37,7 @@
 
 		<title>Risolutori di equazioni differenziali ordinarie</title>
 		<meta name="description" content="Esempi d&apos;uso di alcuni risolutori di equazioni differenziali ordinarie frequentemente utilizzati nel calcolo scientifico e soprattutto nel machine learning e deep learning." >
-		<meta name="keywords" content="reti neurali, equazioni differenziali ordinarie, ode, approssimazione numerica, soluzione numerica, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
+		<meta name="keywords" content="reti neurali, equazioni differenziali ordinarie, ode, sistema, sistemi, risolutore, approssimazione numerica, soluzione numerica, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
 		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
@@ -328,7 +328,7 @@ plt.show()
         <h3>TorchDiffEq</h3>
         <p>
             <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> utilizza la funzione <code>torchdiffeq.odeint</code>
-            per risolvere numericamente le equazioni differenziali ordinarie con valore iniziale.<br />
+            per risolvere numericamente una equazione differenziale ordinaria del primo ordine con valore iniziale.<br />
             La forma esplicita dell&apos;equazione di cui sopra in Python con Torch si implementa cos&igrave;:
             <pre><code class="python">lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x</code></pre>
             <br />
@@ -544,6 +544,11 @@ plt.show()
             \end{cases}
             \end{equation} $$
 
+            e in forma matriciale:
+            
+            $$A=\left[\begin{matrix} -1 & 1 \\ 4 & -1 \end{matrix} \right]$$
+            $$\left[\begin{matrix} x' \\ y' \end{matrix} \right] = A \left[\begin{matrix} x \\ y \end{matrix} \right] $$ 
+
         </p>
 
         <h3>Scipy</h3>
@@ -614,7 +619,7 @@ plt.show()
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> utilizza la classe <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a>
             per risolvere numericamente un sistema di equazioni differenziali ordinarie del primo ordine con valori iniziali.<br />
-            La forma esplicita dell&apos;equazione di cui sopra in Python con TensorFlow Probability si implementa cos&igrave;:
+            La forma esplicita della coppia di equazioni di cui sopra in Python con TensorFlow Probability si implementa cos&igrave;:
             <pre><code class="python">def ode_fn(t, XY):
 	x=XY[0]
 	y=XY[1]
