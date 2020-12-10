@@ -206,7 +206,7 @@
             </ul>
         </p>
 
-		<h2 id="ODE1stIVP">First order ODE with IVP</h2>
+		<h2 id="ode1">First order ODE with IVP</h2>
 		<p>
             Let the following Cauchy problem be given:
             
@@ -274,7 +274,7 @@ plt.show()
             Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/ode_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_scipy_1.png" /></div>
-		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>scipy.integrate.solve_ivp</code>.<br /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>scipy.integrate.solve_ivp</code>.</div>
         </br >
         </br >
 
@@ -330,7 +330,7 @@ plt.show()
         <h3>TorchDiffEq</h3>
         <p>
             <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
-            to numerically solve ordinary differential equations with initial value.<br />
+            to numerically solve an ordinary differential equation of first order with initial value.<br />
             The explicit form of the above equation in Python with Torch is implemented as follows:
             <pre><code class="python">lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x</code></pre>
             <br />
@@ -370,7 +370,7 @@ plt.show()
             Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/ode_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_1.png" /></div>
-		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>torchdiffeq.odeint</code>.<br /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>torchdiffeq.odeint</code>.</div>
         </br >
         </br >
 
@@ -417,7 +417,7 @@ plt.show()
             Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/ode_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfdeq_1.png" /></div>
-		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>tfdiffeq.odeint</code>.<br /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>tfdiffeq.odeint</code>.</div>
         </br >
         </br >
 
@@ -507,7 +507,7 @@ plt.show()
         </br >
         </br >
 
-		<h2 id="SysODEs1stIVP">System of two ODEs of first order with IVP</h2>
+		<h2 id="sys1">System of two ODEs of first order with IVP</h2>
 		<p>
             Let the following system of two ordinary differential equations with initial values  be given:
             
@@ -548,15 +548,14 @@ plt.show()
 
             and in matrix form:
             
-            $$A=\left[\begin{matrix} -1 & 1 \\ 4 & -1 \end{matrix} \right]$$
-            $$\left[\begin{matrix} x' \\ y' \end{matrix} \right] = A \left[\begin{matrix} x \\ y \end{matrix} \right] $$ 
+            $$\left[\begin{matrix} x' \\ y' \end{matrix} \right] = \left[\begin{matrix} -1 & 1 \\ 4 & -1 \end{matrix} \right] \left[\begin{matrix} x \\ y \end{matrix} \right] $$ 
 
         </p>
 
         <h3>Scipy</h3>
         <p>
             <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
-            to numerically solve a system of ordinary first order differential equations with initial values.<br />
+            to numerically solve a system of ordinary first order differential equations of first order with initial values.<br />
             The explicit form of the above pair of equations in Python with NumPy is implemented as follows:
             <pre><code class="python">def ode_fn(t, XY):
 	x=XY[0]
@@ -622,7 +621,7 @@ plt.show()
         <h3>TensorFlow Probability</h3>
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
-            to numerically solve a system of ordinary differential equations with initial values.<br />
+            to numerically solve a system of ordinary differential equations of first order with initial values.<br />
             The explicit form of the above pair of equations in Python with TensorFlow Probability is implemented as follows:
             <pre><code class="python">def ode_fn(t, XY):
 	x=XY[0]
@@ -686,6 +685,74 @@ plt.show()
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfp_2.png" /></div>
 		<div class="photocaption">Comparison of the analytical solution of the system with the numerical solution obtained by <code>tfp.math.ode.BDF</code></div>.
+        </br >
+        </br >
+
+        <h3>TorchDiffEq</h3>
+        <p>
+            <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
+            to numerically solve a system of ordinary differential equations of first order with initial value.<br />
+            The explicit form of the above pair of equations in Python with Torch is implemented as follows:
+            <pre><code class="python">def ode_fn(t, XY):
+	x=XY[0]
+	y=XY[1]
+	dx_dt= torch.Tensor([- x + y])
+	dy_dt= torch.Tensor([4. * x - y])
+	return torch.cat([dx_dt, dy_dt])</code></pre>
+            <br />
+            Alternatively, the system represented in matrix form in Python with Torch is implemented as follows:<br />
+            <br />
+            <pre><code class="python">A = torch.Tensor([[-1., 1.],
+                  [4., -1.]])
+def ode_fn(t, XY):
+	return A @ XY</code></pre>
+            <br />
+            Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>torchdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+from torchdiffeq import odeint
+
+def ode_fn(t, XY):
+	x=XY[0]
+	y=XY[1]
+	dx_dt= torch.Tensor([- x + y])
+	dy_dt= torch.Tensor([4. * x - y])
+	return torch.cat([dx_dt, dy_dt])
+
+an_sol_x = lambda t : np.exp(t) + np.exp(-3. * t)
+an_sol_y = lambda t : 2. * np.exp(t) - 2. * np.exp(-3. * t)
+
+t_begin=0.
+t_end=5.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = torch.Tensor([2.])
+y_init = torch.Tensor([0.])
+
+x_an_sol = an_sol_x(t_space)
+y_an_sol = an_sol_y(t_space)
+
+x_num_sol = odeint(ode_fn, torch.cat([x_init, y_init]), torch.Tensor(t_space)).numpy()
+
+plt.figure()
+plt.plot(t_space, x_an_sol, label='analytical x')
+plt.plot(t_space, y_an_sol, label='analytical y')
+plt.plot(t_space, x_num_sol[:,0], label='numerical x')
+plt.plot(t_space, x_num_sol[:,1], label='numerical y')
+plt.title('System of two ODEs 1st order IVP solved by TorchDiffEq')
+plt.xlabel('t')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/sysode_1st_ord_ivp_01.py">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/msysode_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_2.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution os the system with the numerical solution obtained by <code>torchdiffeq.odeint</code>.</div>
         </br >
         </br >
 
