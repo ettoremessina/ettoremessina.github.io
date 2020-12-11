@@ -809,7 +809,10 @@ y_init = tf.constant([0.])
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-x_num_sol = odeint(ode_fn, tf.convert_to_tensor([x_init, y_init], dtype=tf.float64), tf.constant(t_space)).numpy()
+x_num_sol = odeint(
+    ode_fn, 
+    tf.convert_to_tensor([x_init, y_init], dtype=tf.float64), 
+    tf.constant(t_space)).numpy()
 
 plt.figure()
 plt.plot(t_space, x_an_sol, label='analytical x')
