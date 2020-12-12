@@ -263,8 +263,8 @@ num_sol = solve_ivp(ode_fn, [t_begin, t_end], [x_init], method=method, dense_out
 x_num_sol = num_sol.sol(t_space).T
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by SciPy with method=' + method)
 plt.xlabel('t')
 plt.ylabel('x')
@@ -312,8 +312,8 @@ num_sol = tfp.math.ode.BDF().solve(ode_fn, t_init, x_init,
 	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(num_sol.times, num_sol.states, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(num_sol.times, num_sol.states, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by TensorFlow Probability with BDF')
 plt.xlabel('t')
 plt.ylabel('x')
@@ -359,8 +359,8 @@ x_an_sol = an_sol(t_space)
 x_num_sol = odeint(ode_fn, x_init, torch.tensor(t_space))
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by TorchDiffEq')
 plt.xlabel('t')
 plt.ylabel('x')
@@ -406,8 +406,8 @@ x_an_sol = an_sol(t_space)
 x_num_sol = odeint(ode_fn, x_init, tf.constant(t_space))
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by TensorFlowDiffEq')
 plt.xlabel('t')
 plt.ylabel('x')
@@ -435,11 +435,11 @@ plt.show()
             \end{cases}
             \end{equation} $$
 
-            moreover the function <code>diff(x, t, order)</code> allows to indicate the derivative and finally the lambda (or function) representing the equation has the $t$ and the $x$ inverted position.
+            moreover the function <code>diff(x, t, order)</code> allows to indicate the first derivative and finally the lambda (or function) representing the equation has the $t$ and the $x$ inverted position.
             For what just said the implicit form of the above equation in Python with Torch and NeuroDiffEq is implemented as follows:
             <pre><code class="python">lambda x, t: diff(x, t, order=1) + x - torch.sin(t) - 3. * torch.cos(2. * t)</code></pre>
             <br />
-            The library NeuroDiffEq uses the <code>neurodiffeq.ode.solve</code> function to approximate the solution;
+            The library NeuroDiffEq uses the <code>neurodiffeq.ode.solve</code> function to approximate the solution of the equation;
             this function takes in input (optionally) a neural network, the training algorithm and other hyperparameters.<br />
             <br />
             Below is an example of Python code that compares the analytical solution with the numerical solution obtained by <code>neurodiffeq.ode.solve</code>.
@@ -488,8 +488,8 @@ num_sol, loss_sol = solve(ode_fn, x_init, t_min=t_begin, t_max=t_end,
 x_num_sol = num_sol(t_space, as_type='np')
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical')
-plt.plot(t_space, x_num_sol, label='numerical')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
 plt.title('ODE 1st order IVP solved by NeuroDiffEq')
 plt.xlabel('t')
 plt.ylabel('x')
@@ -557,7 +557,7 @@ plt.show()
             <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
             to numerically solve a system of ordinary first order differential equations of first order with initial values.<br />
             The explicit form of the above pair of equations in Python with NumPy is implemented as follows:
-            <pre><code class="python">def ode_fn(t, XY):
+            <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -569,7 +569,7 @@ plt.show()
             <pre><code class="python">A = [[-1., 1.],
     [4., -1.]]
 
-ode_fn = lambda t, XY : A @ XY</code></pre>
+ode_sys = lambda t, XY : A @ XY</code></pre>
             <br />
             Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
             Below is an example of Python code that compares the analytical solution of the system with the numerical one obtained by <code>scipy.integrate.solve_ivp</code>:</br >
@@ -579,7 +579,7 @@ import matplotlib.pyplot as plt
 
 from scipy.integrate import solve_ivp
 
-def ode_fn(t, XY):
+def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -600,24 +600,24 @@ x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
 method = 'RK45' #available methods: 'RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA'
-num_sol = solve_ivp(ode_fn, [t_begin, t_end], [x_init, y_init], method=method, dense_output=True)
+num_sol = solve_ivp(ode_sys, [t_begin, t_end], [x_init, y_init], method=method, dense_output=True)
 XY_num_sol = num_sol.sol(t_space)
 x_num_sol = XY_num_sol[0].T
 y_num_sol = XY_num_sol[1].T
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical x')
-plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(t_space, x_num_sol, label='numerical x')
-plt.plot(t_space, y_num_sol, label='numerical y')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical x')
+plt.plot(t_space, y_num_sol, linewidth=1, label='numerical y')
 plt.title('System of 2 ODEs 1st order IVP solved by SciPy with method=' + method)
 plt.xlabel('t')
 plt.legend()
 plt.show()
 
 </code></pre>
-            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/sysode_1st_ord_ivp_01.py">GitHub</a>.<br />
-            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/msysode_1st_ord_ivp_01.py">GitHub</a>.
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/sys_1st_ord_ivp_01.py">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/msys_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_scipy_2.png" /></div>
 		<div class="photocaption">
@@ -631,7 +631,7 @@ plt.show()
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
             to numerically solve a system of ordinary differential equations of first order with initial values.<br />
             The explicit form of the above pair of equations in Python with TensorFlow Probability is implemented as follows:
-            <pre><code class="python">def ode_fn(t, XY):
+            <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -642,8 +642,7 @@ plt.show()
             <br />
             <pre><code class="python">A = tf.constant([[-1., 1.], [4., -1.]])
 
-def ode_fn(t, X):
-	return tf.linalg.matvec(A, X)</code></pre>
+ode_sys = lambda t, XY : tf.linalg.matvec(A, XY)</code></pre>
             <br />
             Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
             Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfp.math.ode.BDF</code>:</br >
@@ -654,7 +653,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_probability as tfp
 
-def ode_fn(t, XY):
+def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -675,21 +674,21 @@ y_init = tf.constant(0.)
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-num_sol = tfp.math.ode.BDF().solve(ode_fn, t_init, [x_init, y_init],
+num_sol = tfp.math.ode.BDF().solve(ode_sys, t_init, [x_init, y_init],
 	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical x')
-plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(num_sol.times, num_sol.states[0], label='numerical x')
-plt.plot(num_sol.times, num_sol.states[1], label='numerical y')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(num_sol.times, num_sol.states[0], linewidth=1, label='numerical x')
+plt.plot(num_sol.times, num_sol.states[1], linewidth=1, label='numerical y')
 plt.title('System of two ODEs 1st order IVP solved by TFP with BDF')
 plt.xlabel('t')
 plt.legend()
 plt.show()
 </code></pre>
-            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/sysode_1st_ord_ivp_01.py">GitHub</a>.<br />
-            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/msysode_1st_ord_ivp_01.py">GitHub</a>.
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/sys_1st_ord_ivp_01.py">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/msys_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfp_2.png" /></div>
 		<div class="photocaption">Comparison of the analytical solution of the system with the numerical solution obtained by <code>tfp.math.ode.BDF</code></div>.
@@ -701,7 +700,7 @@ plt.show()
             <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
             to numerically solve a system of ordinary differential equations of first order with initial value.<br />
             The explicit form of the above pair of equations in Python with Torch is implemented as follows:
-            <pre><code class="python">def ode_fn(t, XY):
+            <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= torch.Tensor([- x + y])
@@ -713,7 +712,7 @@ plt.show()
             <pre><code class="python">A = torch.Tensor([[-1., 1.],
                   [4., -1.]])
 
-ode_fn = lambda t, XY : A @ XY</code></pre>
+ode_sys = lambda t, XY : A @ XY</code></pre>
             <br />
             Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
             Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>torchdiffeq.odeint</code>:</br >
@@ -724,7 +723,7 @@ import matplotlib.pyplot as plt
 import torch
 from torchdiffeq import odeint
 
-def ode_fn(t, XY):
+def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= torch.Tensor([- x + y])
@@ -744,20 +743,20 @@ y_init = torch.Tensor([0.])
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-x_num_sol = odeint(ode_fn, torch.cat([x_init, y_init]), torch.Tensor(t_space)).numpy()
+num_sol = odeint(ode_sys, torch.cat([x_init, y_init]), torch.Tensor(t_space)).numpy()
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical x')
-plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(t_space, x_num_sol[:,0], label='numerical x')
-plt.plot(t_space, x_num_sol[:,1], label='numerical y')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical x')
+plt.plot(t_space, num_sol[:,1], linewidth=1, label='numerical y')
 plt.title('System of two ODEs 1st order IVP solved by TorchDiffEq')
 plt.xlabel('t')
 plt.legend()
 plt.show()
 </code></pre>
-            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/sysode_1st_ord_ivp_01.py">GitHub</a>.<br />
-            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/msysode_1st_ord_ivp_01.py">GitHub</a>.
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/sys_1st_ord_ivp_01.py">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/msys_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_2.png" /></div>
 		<div class="photocaption">Comparison of the analytical solution os the system with the numerical solution obtained by <code>torchdiffeq.odeint</code>.</div>
@@ -769,7 +768,7 @@ plt.show()
             <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> uses the <code>tfdiffeq.odeint</code> function
             to numerically solve a system of ordinary differential equations of first order with initial value.<br />
             The explicit form of the above pair of equations in Python with TensorFlow is implemented as follows:
-            <pre><code class="python">def ode_fn(t, XY):
+            <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -782,7 +781,7 @@ plt.show()
                  [4., -1.]],
                  dtype=tf.float64)
 
-ode_fn = lambda t, XY : A @ XY</code></pre>
+ode_sys = lambda t, XY : A @ XY</code></pre>
             <br />
             Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
             Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfdiffeq.odeint</code>:</br >
@@ -793,7 +792,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tfdiffeq import odeint
 
-def ode_fn(t, XY):
+def ode_sys(t, XY):
 	x=XY[0]
 	y=XY[1]
 	dx_dt= - x + y
@@ -813,26 +812,133 @@ y_init = tf.constant([0.])
 x_an_sol = an_sol_x(t_space)
 y_an_sol = an_sol_y(t_space)
 
-x_num_sol = odeint(
-    ode_fn, 
+num_sol = odeint(
+    ode_sys, 
     tf.convert_to_tensor([x_init, y_init], dtype=tf.float64), 
     tf.constant(t_space)).numpy()
 
 plt.figure()
-plt.plot(t_space, x_an_sol, label='analytical x')
-plt.plot(t_space, y_an_sol, label='analytical y')
-plt.plot(t_space, x_num_sol[:,0], label='numerical x')
-plt.plot(t_space, x_num_sol[:,1], label='numerical y')
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical x')
+plt.plot(t_space, num_sol[:,1], linewidth=1, label='numerical y')
 plt.title('System of two ODEs 1st order IVP solved by TensorFlowDiffEq')
 plt.xlabel('t')
 plt.legend()
 plt.show()
 </code></pre>
-            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/sysode_1st_ord_ivp_01.py">GitHub</a>.<br />
-            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/msysode_1st_ord_ivp_01.py">GitHub</a>.
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/sys_1st_ord_ivp_01.py">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/msys_1st_ord_ivp_01.py">GitHub</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_2.png" /></div>
 		<div class="photocaption">Comparison of the analytical solution os the system with the numerical solution obtained by <code>tfdiffeq.odeint</code>.</div>
+        </br >
+        </br >
+
+        <h3>NeuroDiffEq</h3>
+        <p>
+            <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> is a library that uses a neural network implemented via PyTorch
+            to numerically solve a system of differential equations with initial values.<br />
+            As said above, the NeuroDiffEq solver has a number of differences from previous solvers. First of all the system of differential equations must be represented in implicit form:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x' + x − y = 0
+                \\
+                y' - 4x + y = 0
+                \\
+                x(0)=2
+                \\
+                y(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            moreover the function <code>diff(x, t, order)</code> allows to indicate the first derivative of $x$ with respect to $t$ and <code>diff(x, t, order)</code> the first derivative of $y$ with respect to $t$.
+            Finally, the lambda (or function) that represents the system takes as input three parameters in the order $x$, $y$ and $t$ respectively and returns an array
+            with size equal to the number of equations (in this case two-dimensional) to return the value of the left-hand expressions of the equations.<br />
+            For what just said the implicit form of the above system in Python with Torch and NeuroDiffEq is implemented as follows:
+            <pre><code class="python">lambda x, y, t: [diff(x, t, order=1) + x - y, diff(y, t, order=1) - 4. * x + y ]</code></pre>
+            <br />
+            The library NeuroDiffEq uses the <code>neurodiffeq.ode.solve_system</code> function to approximate the solution of the system;
+            this function takes in input (optionally) a neural network, the training algorithm and other hyperparameters.<br />
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical solution obtained by <code>neurodiffeq.ode.solve_system</code>.
+            in the range $[0.0,2.0]$ with the following settings:
+            <ul>
+                <li>Fully Connected neural network (abbreviated FC, also known as MLP for multilayer perceptron) with 3 layers, 50 neurons per layer and SinActv as activation function;</li>
+                <li>Adam as optimization algorithm with learing rate set to 0.003;</li>
+                <li>batch size set to 200, max number of epochs set to 1200, best model flag set to True.</br >
+            </ul>
+            <b>Nota</b>: By changing the structure of the network, modifying the hyperparameters and using a different algorithm of course you get a different approximation.</br >
+			<b>Nota</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.<br/>
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+import torch
+
+from neurodiffeq import diff
+from neurodiffeq.ode import solve_system
+from neurodiffeq.ode import IVP
+from neurodiffeq.ode import Monitor
+import neurodiffeq.networks as ndenw
+
+ode_sys = lambda x, y, t: [diff(x, t, order=1) + x - y, diff(y, t, order=1) - 4. * x + y ]
+
+an_sol_x = lambda t : np.exp(t) + np.exp(-3. * t)
+an_sol_y = lambda t : 2. * np.exp(t) - 2. * np.exp(-3. * t)
+
+t_begin=0.
+t_end=2.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = IVP(t_0=t_begin, x_0=2.0)
+y_init = IVP(t_0=t_begin, x_0=0.0)
+
+x_an_sol = an_sol_x(t_space)
+y_an_sol = an_sol_y(t_space)
+
+batch_size=200
+
+net = ndenw.FCNN(
+	n_input_units=1,
+        n_output_units=2,
+	n_hidden_layers=3, 
+	n_hidden_units=50, 
+	actv=ndenw.SinActv)
+
+optimizer = torch.optim.Adam(net.parameters(), lr=0.003)
+ 
+num_sol, history = solve_system(
+	ode_system=ode_sys,
+	conditions=[x_init, y_init], 
+	t_min=t_begin, 
+	t_max=t_end,
+	batch_size=batch_size,
+	max_epochs=1200,
+	return_best=True,
+	single_net = net,
+	optimizer=optimizer,
+	monitor=Monitor(t_min=t_begin, t_max=t_end, check_every=10))
+num_sol = num_sol(t_space, as_type='np')
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol, '--', linewidth=2, label='analytical y')
+plt.plot(t_space, num_sol[0], linewidth=1, label='numerical x')
+plt.plot(t_space, num_sol[1], linewidth=1, label='numerical y')
+plt.title('System of two ODEs 1st order IVP solved by NeuroDiffEq')
+plt.xlabel('t')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/NeuroDiffEq/sys_1st_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_ndeq_2.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>neurodiffeq.ode.solve_system</code>.</div>
+        <br />
+        <br />
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_monitor_ndeq_2.png" /></div>
+		<div class="photocaption">Graph of the monitor at the end of the training performed by <code>neurodiffeq.ode.solve_system</code>.</div>
         </br >
         </br >
 
