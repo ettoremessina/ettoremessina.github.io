@@ -178,8 +178,8 @@
             use technologies of deep learning, its purpose is to be proactive to the topic on the relationship between neural networks and differential equations.<br />
             <br />
             The post is organized as a sort of Rosetta Stele:
-            two problems are presented with <em>initial condition</em> (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>),
-            precisely an equation of the first order and a system of two equations of the first order <!--and an equation of the second order,--> each with its own initial conditions given
+            three problems are presented with <em>initial condition</em> (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>),
+            precisely an equation of the first order, a system of two equations of the first order and an equation of the second order each with its own initial conditions given
             and follows the list of its resolutions with the various libraries used. 
             Of each problem the analytical solution is also known and this allows to compare the quality of the numerical solutions obtained.<br />
             <br />
@@ -614,7 +614,6 @@ plt.title('System of 2 ODEs 1st order IVP solved by SciPy with method=' + method
 plt.xlabel('t')
 plt.legend()
 plt.show()
-
 </code></pre>
             Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/sys_1st_ord_ivp_01.py">GitHub</a>.<br />
             Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/msys_1st_ord_ivp_01.py">GitHub</a>.
@@ -939,6 +938,169 @@ plt.show()
         <br />
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_monitor_ndeq_2.png" /></div>
 		<div class="photocaption">Graph of the monitor at the end of the training performed by <code>neurodiffeq.ode.solve_system</code>.</div>
+        </br >
+        </br >
+
+		<h2 id="ode2">Second order ODE with IVP</h2>
+		<p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'' + x' + 2x = 0
+                \\ 
+                x(0)=1
+                \\ 
+                x'(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            whose analytical solution is:
+            
+            $$ x(t) = e^{\frac{-t}{2}} (\cos {\sqrt{7} \frac{t}{2}} + \frac{\sin {\sqrt{7} \frac{t}{2}}}{\sqrt{7}}) $$
+
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%E2%80%B3%2Bx%E2%80%B2%2B2x%3D0%3B+x%280%29%3D1%3B+x%27%280%29%3D0" target="_brank">Wolfram Alpha</a>.
+            <br />
+            Implementations of the following resolutions require the differential equation of second order
+            to be written explicitly in the form as a system of two equations of first order as follows:
+            $$ \begin{equation}
+            \begin{cases}
+                y=x&apos;
+                \\ 
+                y&apos;=F(x, y, t)
+            \end{cases}
+            \end{equation} $$
+            and then the initial Cauchy problem is written equivalently in the following way:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                y = x'
+                \\
+                y'= -y - 2x = 0
+                \\ 
+                x(0)=1
+                \\ 
+                y(0)=0
+            \end{cases}
+            \end{equation} $$
+
+        </p>
+
+        <h3>Scipy</h3>
+        <p>
+            <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
+            to numerically solve an ordinary first order differential equation with initial value,
+            that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
+            The explicit form of the above system in Python with NumPy is implemented as follows:
+            <pre><code class="python">def ode_sys(t, X):
+        x=X[0]
+        dx_dt=X[1]
+        d2x_dt2=-dx_dt - 2*x
+        return [dx_dt, d2x_dt2]</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>scipy.integrate.solve_ivp</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+from scipy.integrate import solve_ivp
+
+def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return [dx_dt, d2x_dt2]
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = 1.
+dxdt_init = 0.
+
+x_an_sol = an_sol_x(t_space)
+
+method = 'RK45' #available methods: 'RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA'
+num_sol = solve_ivp(ode_sys, [t_begin, t_end], [x_init, dxdt_init], method=method, dense_output=True)
+X_num_sol = num_sol.sol(t_space)
+x_num_sol = X_num_sol[0].T
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by SciPy with method=' + method)
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/SciPy/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_scipy_3.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution of the second order equation with the numerical solution obtained by <code>scipy.integrate.solve_ivp</code>.</div>
+        </br >
+        </br >
+
+        <h3>TensorFlow Probability</h3>
+        <p>
+            <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
+            to numerically solve an ordinary differential equation with initial value,
+            that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
+            The explicit form of the above equation in Python with TensorFlow Probability is implemented as follows:
+            <pre><code class="python">def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return [dx_dt, d2x_dt2]</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfp.math.ode.BDF</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+import tensorflow_probability as tfp
+
+def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return [dx_dt, d2x_dt2]
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+t_init = tf.constant(t_begin)
+x_init = tf.constant(1.)
+dxdt_init = tf.constant(0.)
+
+x_an_sol = an_sol_x(t_space)
+
+num_sol = tfp.math.ode.BDF().solve(ode_sys, t_init, [x_init, dxdt_init],
+	solution_times=tfp.math.ode.ChosenBySolver(tf.constant(t_end)) )
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(num_sol.times, num_sol.states[0], linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by TFP with BDF')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowProbability/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfp_3.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution of the second order equation with the numerical solution obtained by <code>tfp.math.ode.BDF</code></div>.
         </br >
         </br >
 
