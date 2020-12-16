@@ -281,7 +281,7 @@ plt.show()
         <h3>TensorFlow Probability</h3>
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
-            to numerically solve an ordinary differential equation with initial value.<br />
+            to numerically solve an ordinary first order differential equation with initial value.<br />
             The explicit form of the above equation in Python with TensorFlow Probability is implemented as follows:
             <pre><code class="python">lambda t, x: tf.math.sin(t) + tf.constant(3.) * tf.math.cos(tf.constant(2.) * t) - x</code></pre>
             <br />
@@ -330,7 +330,7 @@ plt.show()
         <h3>TorchDiffEq</h3>
         <p>
             <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
-            to numerically solve an ordinary differential equation of first order with initial value.<br />
+            to numerically solve an ordinary first order differential equation of first order with initial value.<br />
             The explicit form of the above equation in Python with Torch is implemented as follows:
             <pre><code class="python">lambda t, x: torch.sin(t) + 3. * torch.cos(2. * t) - x</code></pre>
             <br />
@@ -377,7 +377,7 @@ plt.show()
         <h3>TensorFlowDiffEq</h3>
         <p>
             <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> is a library that replicates with TensorFlow what <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> achieves with Torch.
-            TensorFlowDiffEq uses the <code>tfdiffeq.odeint</code> function to numerically solve ordinary differential equations with initial value.<br />
+            TensorFlowDiffEq uses the <code>tfdiffeq.odeint</code> function to numerically solve ordinary first order differential equations with initial value.<br />
             The explicit form of the above equation in Python with Tensorflow is implemented as follows:
             <pre><code class="python">lambda t, x: tf.math.sin(t) + 3. * tf.math.cos(2. * t) - x</code></pre>
             <br />
@@ -424,7 +424,7 @@ plt.show()
         <h3>NeuroDiffEq</h3>
         <p>
             <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> is a library that uses a neural network implemented via PyTorch
-            to numerically solve a differential equation with initial value.<br />
+            to numerically solve a first order differential equation with initial value.<br />
             The NeuroDiffEq solver has a number of differences from previous solvers. First of all the differential equation must be represented in implicit form:
             
             $$ \begin{equation}
@@ -628,7 +628,7 @@ plt.show()
         <h3>TensorFlow Probability</h3>
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
-            to numerically solve a system of ordinary differential equations of first order with initial values.<br />
+            to numerically solve a system of ordinary first order differential equations with initial values.<br />
             The explicit form of the above pair of equations in Python with TensorFlow Probability is implemented as follows:
             <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
@@ -697,7 +697,7 @@ plt.show()
         <h3>TorchDiffEq</h3>
         <p>
             <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
-            to numerically solve a system of ordinary differential equations of first order with initial value.<br />
+            to numerically solve a system of ordinary first order differential equations with initial values.<br />
             The explicit form of the above pair of equations in Python with Torch is implemented as follows:
             <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
@@ -765,7 +765,7 @@ plt.show()
         <h3>TensorFlowDiffEq</h3>
         <p>
             <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> uses the <code>tfdiffeq.odeint</code> function
-            to numerically solve a system of ordinary differential equations of first order with initial value.<br />
+            to numerically solve a system of ordinary first order differential equations with initial values.<br />
             The explicit form of the above pair of equations in Python with TensorFlow is implemented as follows:
             <pre><code class="python">def ode_sys(t, XY):
 	x=XY[0]
@@ -989,7 +989,7 @@ plt.show()
         <h3>Scipy</h3>
         <p>
             <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
-            to numerically solve an ordinary first order differential equation with initial value,
+            to numerically solve a system of ordinary first order differential equations with initial values,
             that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
             The explicit form of the above system in Python with NumPy is implemented as follows:
             <pre><code class="python">def ode_sys(t, X):
@@ -1048,9 +1048,9 @@ plt.show()
         <h3>TensorFlow Probability</h3>
         <p>
             <a href="https://www.tensorflow.org/probability/" target="_blank">TensorFlow Probability</a> uses the <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/math/ode/BDF" target="_blank"><code>tfp.math.ode.BDF</code></a> class
-            to numerically solve an ordinary differential equation with initial value,
+            to numerically solve a system of ordinary first order differential equations with initial values,
             that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
-            The explicit form of the above equation in Python with TensorFlow Probability is implemented as follows:
+            The explicit form of the above system in Python with TensorFlow Probability is implemented as follows:
             <pre><code class="python">def ode_sys(t, X):
 	x=X[0]
 	dx_dt=X[1]
@@ -1101,6 +1101,123 @@ plt.show()
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfp_3.png" /></div>
 		<div class="photocaption">Comparison of the analytical solution of the second order equation with the numerical solution obtained by <code>tfp.math.ode.BDF</code></div>.
+        </br >
+        </br >
+
+        <h3>TorchDiffEq</h3>
+        <p>
+            <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> uses the <code>torchdiffeq.odeint</code> function
+            to numerically solve a system of ordinary first order differential equations with initial values,
+            that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
+            The explicit form of the above system in Python with Torch is implemented as follows:
+            <pre><code class="python">def ode_sys(t, X):
+	x=torch.Tensor([X[0]])
+	dx_dt=torch.Tensor([X[1]])
+	d2x_dt2=torch.Tensor([-dx_dt - 2*x])
+	return torch.cat([dx_dt, d2x_dt2])</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>torchdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+from torchdiffeq import odeint
+
+def ode_sys(t, X):
+	x=torch.Tensor([X[0]])
+	dx_dt=torch.Tensor([X[1]])
+	d2x_dt2=torch.Tensor([-dx_dt - 2*x])
+	return torch.cat([dx_dt, d2x_dt2])
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = torch.Tensor([1.])
+dxdt_init = torch.Tensor([0.])
+
+x_an_sol = an_sol_x(t_space)
+
+num_sol = odeint(ode_sys, torch.cat([x_init, dxdt_init]), torch.Tensor(t_space)).numpy()
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by TorchDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_3.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution of the second order equation with the numerical solution obtained by <code>torchdiffeq.odeint</code>.</div>
+        </br >
+        </br >
+
+        <h3>TensorFlowDiffEq</h3>
+        <p>
+            <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> uses the <code>tfdiffeq.odeint</code> function
+            to numerically solve a system of ordinary differential equations of first order with initial values,
+            that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
+            The explicit form of the above system in Python with Tensorflow is implemented as follows:
+            <pre><code class="python">def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return tf.stack([dx_dt, d2x_dt2])</code></pre>
+            <br />
+            Below is an example of Python code that compares the analytical solution with the numerical one obtained by <code>tfdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+from tfdiffeq import odeint
+
+def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return tf.stack([dx_dt, d2x_dt2])
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = tf.constant([1.])
+dxdt_init = tf.constant([0.])
+
+x_an_sol = an_sol_x(t_space)
+
+num_sol = odeint(
+	ode_sys, 
+	tf.convert_to_tensor([x_init, dxdt_init], dtype=tf.float64), 
+	tf.constant(t_space)).numpy()
+
+plt.figure()
+plt.plot(t_space, x_an_sol,'--', linewidth=2, label='analytical')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by TensorFlowDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfdeq_3.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution of the second order with the numerical solution obtained by <code>tfdiffeq.odeint</code>.</div>
         </br >
         </br >
 

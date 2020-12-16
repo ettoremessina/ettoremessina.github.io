@@ -1100,6 +1100,123 @@ plt.show()
         </br >
         </br >
 
+        <h3>TorchDiffEq</h3>
+        <p>
+            <a href="https://github.com/rtqichen/torchdiffeq/" target="_blank">TorchDiffEq</a> utilizza la funzione <code>torchdiffeq.odeint</code>
+            per risolvere numericamente un sistema di equazioni differenziali ordinarie del primo ordine con valori iniziali
+            che,  per quanto detto prima, &egrave; equivalente all&apos;equazione del secondo ordine con le stesse condizioni iniziali.<br />
+            La forma esplicita del sistema di cui sopra di cui sopra in Python con Torch si implementa cos&igrave;:
+            <pre><code class="python">def ode_sys(t, X):
+	x=torch.Tensor([X[0]])
+	dx_dt=torch.Tensor([X[1]])
+	d2x_dt2=torch.Tensor([-dx_dt - 2*x])
+	return torch.cat([dx_dt, d2x_dt2])</code></pre>
+            <br />
+            Qui di seguito un esempio di codice Python che confronta la soluzione analitica con quella numerica ottenuta tramite <code>torchdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import torch
+from torchdiffeq import odeint
+
+def ode_sys(t, X):
+	x=torch.Tensor([X[0]])
+	dx_dt=torch.Tensor([X[1]])
+	d2x_dt2=torch.Tensor([-dx_dt - 2*x])
+	return torch.cat([dx_dt, d2x_dt2])
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = torch.Tensor([1.])
+dxdt_init = torch.Tensor([0.])
+
+x_an_sol = an_sol_x(t_space)
+
+num_sol = odeint(ode_sys, torch.cat([x_init, dxdt_init]), torch.Tensor(t_space)).numpy()
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by TorchDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TorchDiffEq/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tdeq_3.png" /></div>
+		<div class="photocaption">Comparazione della soluzione analitica dell&apos;equazione del secondo ordine con la soluzione numerica ottenuta tramite <code>torchdiffeq.odeint</code>.</div>
+        </br >
+        </br >
+
+        <h3>TensorFlowDiffEq</h3>
+        <p>
+            <a href="https://github.com/titu1994/tfdiffeq/" target="_blank">TensorFlowDiffEq</a> utilizza la funzione <code>tfdiffeq.odeint</code>
+            per risolvere numericamente un sistema di equazioni differenziali ordinarie del primo ordine con valori iniziali
+            che,  per quanto detto prima, &egrave; equivalente all&apos;equazione del secondo ordine con le stesse condizioni iniziali.<br />
+            La forma esplicita del sistema di cui sopra in Python con Tensorflow si implementa cos&igrave;:
+            <pre><code class="python">def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return tf.stack([dx_dt, d2x_dt2])</code></pre>
+            <br />
+            Qui di seguito un esempio di codice Python che confronta la soluzione analitica con quella numerica ottenuta tramite <code>tfdiffeq.odeint</code>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+import tensorflow as tf
+from tfdiffeq import odeint
+
+def ode_sys(t, X):
+	x=X[0]
+	dx_dt=X[1]
+	d2x_dt2=-dx_dt - 2*x
+	return tf.stack([dx_dt, d2x_dt2])
+
+an_sol_x = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = tf.constant([1.])
+dxdt_init = tf.constant([0.])
+
+x_an_sol = an_sol_x(t_space)
+
+num_sol = odeint(
+	ode_sys, 
+	tf.convert_to_tensor([x_init, dxdt_init], dtype=tf.float64), 
+	tf.constant(t_space)).numpy()
+
+plt.figure()
+plt.plot(t_space, x_an_sol,'--', linewidth=2, label='analytical')
+plt.plot(t_space, num_sol[:,0], linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by TensorFlowDiffEq')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/TensorFlowDiffEq/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfdeq_3.png" /></div>
+		<div class="photocaption">Comparazione della soluzione analitica dell&apos;equazione del secondo ordine con la soluzione numerica ottenuta tramite <code>tfdiffeq.odeint</code>.</div>
+        </br >
+        </br >
+
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
 			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos">GitHub</a>.
