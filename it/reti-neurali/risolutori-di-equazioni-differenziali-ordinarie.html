@@ -422,18 +422,14 @@ plt.show()
         <h3>NeuroDiffEq</h3>
         <p>
             <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> &egrave; una libreria che utilizza una rete neurale implementata tramite PyTorch
-            per risolvere numericamente una equazione differenziale con valore iniziale.<br />
+            per risolvere numericamente una equazione differenziale del primo ordine con valore iniziale.<br />
             Il risolutore NeuroDiffEq presenta una serie di differenze rispetto ai precedenti risolutori. Innanzitutto l&apos;equazione differenziale va rappresentata in forma implicita:
             
             $$ \begin{equation}
-            \begin{cases}
                 x'+x-\sin t - 3 \cos 2t = 0
-                \\ 
-                x(0)=0
-            \end{cases}
             \end{equation} $$
 
-            inoltre la funzione <code>diff(x, t, order)</code> consente di indicare la derivata prima e infine la lambda (o la funzione) che rappresenta l&apos;equazione ha la $t$ e la $x$ inverite di posizione.
+            inoltre la funzione <code>diff(x, t, order)</code> consente di indicare la derivata prima e infine la lambda (o la funzione) che rappresenta l&apos;equazione ha la $t$ e la $x$ invertite di posizione.
             Per quanto appena detto la forma implicita dell&apos;equazione di cui sopra in Python con Torch e NeuroDiffEq si implementa cos&igrave;:
             <pre><code class="python">lambda x, t: diff(x, t, order=1) + x - torch.sin(t) - 3. * torch.cos(2. * t)</code></pre>
             <br />
@@ -833,7 +829,7 @@ plt.show()
         <h3>NeuroDiffEq</h3>
         <p>
             <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> &egrave; una libreria che utilizza una rete neurale implementata tramite PyTorch
-            per risolvere numericamente un sistema di equazioni differenziali con valori iniziali.<br />
+            per risolvere numericamente un sistema di equazioni differenziali del primo ordine con valori iniziali.<br />
             Come gi&agrave; detto sopra, il risolutore NeuroDiffEq presenta una serie di differenze rispetto ai precedenti risolutori. Innanzitutto il sistema di equazioni differenziali va rappresentata in forma implicita:
             
             $$ \begin{equation}
@@ -841,10 +837,6 @@ plt.show()
                 x' + x − y = 0
                 \\
                 y' - 4x + y = 0
-                \\
-                x(0)=2
-                \\
-                y(0)=0
             \end{cases}
             \end{equation} $$
 
@@ -1214,6 +1206,92 @@ plt.show()
         </p>
 		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_tfdeq_3.png" /></div>
 		<div class="photocaption">Comparazione della soluzione analitica dell&apos;equazione del secondo ordine con la soluzione numerica ottenuta tramite <code>tfdiffeq.odeint</code>.</div>
+        </br >
+        </br >
+
+        <h3>NeuroDiffEq</h3>
+        <p>
+            <a href="https://github.com/odegym/neurodiffeq/" target="_blank">NeuroDiffEq</a> &egrave; una libreria che utilizza una rete neurale implementata tramite PyTorch
+            per risolvere numericamente una equazione differenziale del secondo ordine con valori iniziali.<br />
+            Il risolutore NeuroDiffEq presenta una serie di differenze rispetto ai precedenti risolutori.
+            Innanzitutto non &egrave; necessario riscrivere l&apos;equazione del secondo ordine in un equivalente sistema di equazioni del primo ordine
+            poich&eacute; la libreria supporta nativamente le derivate di ordine superiore a uno,
+            infatti la funzione <code>diff(x, t, order)</code> consente di indicare la derivata prima passando order=1 e la derivata seconda passando order=2.<br />
+            Per quanto detto sopra, questa libreria prende in input l&apos;equazione in forma forma implicita, ovverosia:
+            
+            $$ \begin{equation}
+                x'' + x' + 2x = 0
+            \end{equation} $$
+
+            e tenendo conto che la lambda (o la funzione) che rappresenta l&apos;equazione ha la $t$ e la $x$ invertite di posizione rispetto a tutte le altre librerie viste prima,
+            la forma implicita dell&apos;equazione di cui sopra in Python con Torch e NeuroDiffEq si implementa cos&igrave;:
+            <pre><code class="python">ode_fn = lambda x, t: diff(x, t, order=2) + diff(x, t, order=1) + 2. * x</code></pre>
+            <br />
+            La libreria NeuroDiffEq utilizza la funzione <code>neurodiffeq.ode.solve</code> per eseguire l&apos;approssimazione della soluzione dell&apos;equazione;
+            tale funzione prende in input (opzionalmente) una rete neurale, l&apos;algoritmo di training e altri iperparametri.<br />
+            <br />
+            Qui di seguito un esempio di codice Python che confronta la soluzione analitica con quella numerica ottenuta tramite <code>neurodiffeq.ode.solve</code>
+            nell&apos;intervallo $[0.0,12.0]$ con le seguenti impostazioni:
+            <ul>
+                <li>rete neurale Fully Connected (abbreviata FC, detta anche MLP per multilayer perceptron) con 6 layer, 50 neuroni per layer e Tanh quale funzione di attivazione;</li>
+                <li>algoritmo di ottimizzazione Adam con learing rate impostato a 0.002;</li>
+                <li>batch size uguale a 200, numero massimo di epoche 500, flag best model impostato a True.</br >
+            </ul>
+            <b>Nota</b>: Cambiando la struttura della rete, modificando gli iperparametri e usando un diverso algoritmo naturalmente si ottiene una approssimazione differente.</br >
+			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+import torch
+
+from neurodiffeq import diff
+from neurodiffeq.ode import solve
+from neurodiffeq.ode import IVP
+from neurodiffeq.ode import Monitor
+import neurodiffeq.networks as ndenw
+
+ode_fn = lambda x, t: diff(x, t, order=2) + diff(x, t, order=1) + 2. * x
+
+an_sol = lambda t : \
+	np.exp(-t/2.) * (np.cos(np.sqrt(7) * t / 2.) + \
+	np.sin(np.sqrt(7) * t / 2.)/np.sqrt(7.))
+
+t_begin=0.
+t_end=12.
+t_nsamples=100
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+x_init = IVP(t_0=t_begin, x_0=1.0, x_0_prime=0.0)
+
+x_an_sol = an_sol(t_space)
+
+net = ndenw.FCNN(n_hidden_layers=6, n_hidden_units=50, actv=torch.nn.Tanh)
+optimizer = torch.optim.Adam(net.parameters(), lr=0.002)
+num_sol, loss_sol = solve(ode_fn, x_init, t_min=t_begin, t_max=t_end,
+	batch_size=200,
+	max_epochs=500,
+	return_best=True,
+	net=net,
+	optimizer=optimizer,
+	monitor=Monitor(t_min=t_begin, t_max=t_end, check_every=10))
+x_num_sol = num_sol(t_space, as_type='np')
+
+plt.figure()
+plt.plot(t_space, x_an_sol, '--', linewidth=2, label='analytical')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical')
+plt.title('ODE 2nd order IVP solved by NeuroDiffEq by FCNN')
+plt.xlabel('t')
+plt.ylabel('x')
+plt.legend()
+plt.show()
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/NeuroDiffEq/ode_2nd_ord_ivp_01.py">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_result_ndeq_3.png" /></div>
+		<div class="photocaption">Comparazione della soluzione analitica dell&apos;equazione del secondo ordine con la soluzione numerica ottenuta tramite <code>neurodiffeq.ode.solve</code>.</div>
+        <br />
+        <br />
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers/nn_odesolvers_monitor_ndeq_3.png" /></div>
+		<div class="photocaption">Grafico del monitor al termine dell&apos;addestramento eseguito da <code>neurodiffeq.ode.solve</code>.</div>
         </br >
         </br >
 
