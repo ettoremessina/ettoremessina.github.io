@@ -1,0 +1,610 @@
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Ordinary differential equation solvers in Julia</title>
+		<meta name="description" content="Examples of use of ordinary differential equation solvers implemented by DifferentialEquations.jl native package of Julia ecosystem." >
+		<meta name="keywords" content="ordinary differential equations, ode, system, systems, solver, numerical approximation, numerical solution, Julia, DifferentialEquations" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers-in-julia.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers-in-julia.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/",
+              "name": "Neural Networks"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers-in-julia.html",
+              "name": "Ordinary differential equation solvers in Julia"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Ordinary differential equation solvers in Julia</h1>
+		</header>
+		<p>
+			This post shows the use of the <em>ordinary differential equation</em> (abbreviated ODE) solvers
+            implemented by the <em>DifferentialEquations.jl</em> native package of Julia ecosystem.
+            The resolution techniques shown here are numerical and not analytical techniques, as this site deals with computation.
+            Moreover this post is published under the category of neural networks: although not all the techniques shown here
+            use technologies of deep learning, its purpose is to be proactive to the topic on the relationship between neural networks and differential equations.<br />
+            <br />
+            The post extends the Rosetta Stele started in the post <a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a>
+            as it presents the same three problems there (and there solved in Python) and shows how the same problems are solved here in Julia.<br />
+            The three problems are an equation of the first order, a system of two equations of the first order and an equation of the second order each with its own initial conditions
+            (or Cauchy&apos;s conditions, abbreviated IVP for <em>Initial Value Problem</em>) and below their solutions. 
+            Of each problem the analytical solution is also known and this allows to compare the quality of the numerical solutions obtained.<br />
+            <br />
+            All the various code fragments described in this post require Julia version 1.5.3 and the following packages: DifferentialEquations, StaticArrays e Plots.<br/>
+			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
+			<br/>
+        </p>
+
+		<h2>Conventions</h2>
+		<p>
+            In this post the conventions used are as follows:
+            <ul>
+                <li>$t$ is the independent variable</li>
+                <li>$x$ is the unknown function</li>
+                <li>$y$ is the second unknown function in the case of systems of two equations</li>
+                <li>
+                $x$ and $y$ are intended to be functions of $t$, so $x=x(t)$ and $y=y(t)$,
+                but the use of this compact notation, in addition to having a greater readability at a mathematical level
+                makes it easier to "translate" the equation into code
+                </li>
+                <li>$x'$ is the first derivative of x with respect to $t$ and of course $y'$ is the first derivative of y with respect to $t$</li>
+                <li>$x''$ is the second derivative of x with respect to $t$ and of course $y''$ is the second derivative of y with respect to $t$</li>
+            </ul>
+        </p>
+
+		<h2 id="ode1">First order ODE with IVP</h2>
+		<p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'+x=\sin t + 3 \cos 2t
+                \\ 
+                x(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            whose analytical solution is:
+            
+            $$ x(t) = \frac{1}{2} \sin t − \frac{1}{2} \cos t + \frac{3}{5} \cos 2t + \frac{6}{5} \sin 2t − \frac{1}{10}e^{-t} $$
+
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%E2%80%B2%2Bx%3Dsin+t%2B3+cos+2t%3B+x%280%29%3D0" target="_brank">Wolfram Alpha</a>.
+            <br />
+            Implementations of the following resolutions require the differential equation to be written explicitly in the form $x&apos;=F(x,t)$
+            and then it becomes:
+            
+            $$ x'=\sin t + 3 \cos 2t - x$$
+
+        </p>
+
+        <h3>Solution with DifferentialEquations.jl package</h3>
+        <p>
+            <a href="https://diffeq.sciml.ai/stable/" target="_blank">DifferentialEquations.jl</a> uses the <a href="https://diffeq.sciml.ai/stable/types/ode_types/" target="_blank"><code>ODEProblem</code></a> class
+            and the <a href="https://diffeq.sciml.ai/stable/solvers/ode_solve/" target="_blank"><code>solve</code></a> function
+            to numerically solve an ordinary first order differential equation with initial value.<br />
+            The explicit form of the above equation in Julia with DifferentialEquations is implemented as follows:
+            <pre><code class="julia">ode_fn(x,p,t) = sin(t) + 3.0 * cos(2.0 * t) - x</code></pre>
+            <br />
+            Below is an example of Julia code that compares the analytical solution with the numerical one obtained by <code>ODEProblem</code> and <code>solve</code>:</br >
+            </br >
+            <pre><code class="julia">using DifferentialEquations
+using Plots
+
+ode_fn(x,p,t) = sin(t) + 3.0 * cos(2.0 * t) - x
+
+an_sol(t) = (1.0/2.0) * sin(t) - (1.0/2.0) * cos(t) +
+            (3.0/5.0) * cos(2.0*t) + (6.0/5.0) * sin(2.0*t) -
+            (1.0/10.0) * exp(-t)
+
+t_begin=0.0
+t_end=10.0
+tspan = (t_begin,t_end)
+x_init=0.0
+
+prob = ODEProblem(ode_fn, x_init, tspan)
+num_sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8)
+
+plot(num_sol.t, an_sol.(num_sol.t),
+    linewidth=2, ls=:dash,
+    title="ODE 1st order IVP solved by D.E. package",
+    xaxis="t", yaxis="x",
+    label="analytical",
+    legend=true)
+plot!(num_sol,
+    linewidth=1,
+    label="numerical")
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/julia/DifferentialEquations/ode_1st_ord_ivp_01.jl">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers-in-julia/nn_odesolvejl_result_de_1.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution with the numerical solution obtained by <code>ODEProblem</code> and <code>solve</code>.</div>
+        </br >
+        </br >        
+
+		<h2 id="sys1">System of two ODEs of first order with IVP</h2>
+		<p>
+            Let the following system of two ordinary differential equations with initial values  be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x' + x − y = 0
+                \\
+                y' - 4x + y = 0
+                \\
+                x(0)=2
+                \\
+                y(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            whose analytical solution is:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x(t) = e^t + e^{-3 t}
+                \\
+                y(t) = 2 e^t - 2 e^{-3 t}
+            \end{cases}
+            \end{equation} $$
+
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%E2%80%B2%2Bx%E2%88%92y%3D0%3B+y%E2%80%B2%E2%88%924x%2By%3D0%3B+x%280%29%3D2%3B+y%280%29%3D0" target="_brank">Wolfram Alpha</a>.
+            <br />
+            Implementations of the following resolutions require the differential equations to be written explicitly in the forms $x&apos;=F_1(x,y,t)$ and $y&apos;=F_2(x,y,t)$
+            and then the two equations become:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x' = y - x 
+                \\
+                y' = 4x - y
+            \end{cases}
+            \end{equation} $$
+
+            and in matrix form:
+            
+            $$\left[\begin{matrix} x' \\ y' \end{matrix} \right] = \left[\begin{matrix} -1 & 1 \\ 4 & -1 \end{matrix} \right] \left[\begin{matrix} x \\ y \end{matrix} \right] $$ 
+
+        </p>
+
+        <h3>Solution with DifferentialEquations.jl package</h3>
+        <p>
+            <a href="https://diffeq.sciml.ai/stable/" target="_blank">DifferentialEquations.jl</a> uses the <a href="https://diffeq.sciml.ai/stable/types/ode_types/" target="_blank"><code>ODEProblem</code></a> clas
+            and the <a href="https://diffeq.sciml.ai/stable/solvers/ode_solve/" target="_blank"><code>solve</code></a> function
+            to numerically solve a system of ordinary first order differential equations of first order with initial values.<br />
+            The explicit form of the above pair of equations in Julia with DifferentialEquations is implemented as follows:
+            <pre><code class="julia">function ode_fn(du,u,p,t)
+    x, y = u
+    du[1] = y - x
+    du[2] = 4.0 * x - y
+end</code></pre>
+            <br />
+            Alternatively, the system represented in matrix form in Julia with DifferentialEquations is implemented as follows:<br />
+            <br />
+            <pre><code class="julia">A = @SMatrix [-1.0 1.0
+              4.0 -1.0]
+
+function ode_fn(du,u,p,t)
+    du[[true, true]] = A * u
+end</code></pre>
+            <br />
+            Note that the second argument is an array of size two, which is as much as the number of unknown functions.<br />
+            Below is an example of Julia code that compares the analytical solution of the system with the numerical one obtained by <code>ODEProblem</code> and <code>solve</code>:</br >
+            </br >
+            <pre><code class="julia">using StaticArrays
+using DifferentialEquations
+using Plots
+
+A = @SMatrix [-1.0 1.0
+              4.0 -1.0]
+
+function ode_fn(du,u,p,t)
+    du[[true, true]] = A * u
+end
+
+an_sol_x(t) = exp(t) + exp(-3.0 * t)
+an_sol_y(t) = 2.0 * exp(t) - 2.0 * exp(-3.0 * t)
+
+t_begin=0.0
+t_end=5
+tspan = (t_begin,t_end)
+x_init=2.0
+y_init=0.0
+
+prob = ODEProblem(ode_fn, [x_init, y_init], tspan)
+num_sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8)
+x_num_sol = [u[1] for u in num_sol.u]
+y_num_sol = [u[2] for u in num_sol.u]
+
+plot(num_sol.t, an_sol_x.(num_sol.t),
+    linewidth=2, ls=:dash,
+    title="System of 2 ODEs 1st order IVP solved by D.E. package",
+    xaxis="t",
+    label="analytical x",
+    legend=true)
+plot!(num_sol.t, an_sol_y.(num_sol.t),
+    linewidth=2, ls=:dash,
+    label="analytical y",
+    legend=true)
+plot!(num_sol.t, x_num_sol,
+    linewidth=1,
+    label="numerical x")
+plot!(num_sol.t, y_num_sol,
+    linewidth=1,
+    label="numerical y")
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/julia/DifferentialEquations/sys_1st_ord_ivp_01.jl">GitHub</a>.<br />
+            Here the link for the matrix form variation on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/julia/DifferentialEquations/msys_1st_ord_ivp_01.jl">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers-in-julia/nn_odesolvejl_result_de_2.png" /></div>
+		<div class="photocaption">
+            Comparison of the analytical solution of the system with the numerical solution obtained by <code>ODEProblem</code> and <code>solve</code>.<br />
+        </div>
+        </br >
+        </br >
+
+		<h2 id="ode2">Second order ODE with IVP</h2>
+		<p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'' + x' + 2x = 0
+                \\ 
+                x(0)=1
+                \\ 
+                x'(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            whose analytical solution is:
+            
+            $$ x(t) = e^{\frac{-t}{2}} (\cos {\sqrt{7} \frac{t}{2}} + \frac{\sin {\sqrt{7} \frac{t}{2}}}{\sqrt{7}}) $$
+
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%E2%80%B3%2Bx%E2%80%B2%2B2x%3D0%3B+x%280%29%3D1%3B+x%27%280%29%3D0" target="_brank">Wolfram Alpha</a>.
+            <br />
+            Implementations of the following resolutions require the differential equation of second order
+            to be written explicitly in the form as a system of two equations of first order as follows:
+            $$ \begin{equation}
+            \begin{cases}
+                y=x&apos;
+                \\ 
+                y&apos;=F(x, y, t)
+            \end{cases}
+            \end{equation} $$
+            and then the initial Cauchy problem is written equivalently in the following way:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                y = x'
+                \\
+                y'= -y - 2x = 0
+                \\ 
+                x(0)=1
+                \\ 
+                y(0)=0
+            \end{cases}
+            \end{equation} $$
+
+        </p>
+
+        <h3>Solution with DifferentialEquations.jl package</h3>
+        <p>
+            <a href="https://diffeq.sciml.ai/stable/" target="_blank">DifferentialEquations.jl</a> uses the <a href="https://diffeq.sciml.ai/stable/types/dynamical_types/" target="_blank"><code>SecondOrderODEProblem</code></a> class
+            and the <a href="https://diffeq.sciml.ai/stable/solvers/ode_solve/" target="_blank"><code>solve</code></a> function
+            to numerically solve a second order differential equation with initial values.
+            The explicit form of the above equation in Julia with DifferentialEquations is implemented as follows:
+            <pre><code class="julia">function ode_fn(dx,x,p,t)
+    -dx -2.0 * x
+end</code></pre>
+            <br />
+            Below is an example of Julia code that compares the analytical solution with the numerical one obtained by <code>SecondOrderODEProblem</code> and <code>solve</code>:</br >
+            </br >
+            <pre><code class="julia">using DifferentialEquations
+using Plots
+
+function ode_fn(dx,x,p,t)
+    -dx -2.0 * x
+end
+
+an_sol(t) = exp(-t/2.0) *
+            (cos(sqrt(7.0) * t / 2.0) + sin(sqrt(7.0) * t / 2.0)/sqrt(7.0))
+
+t_begin=0.0
+t_end=12.0
+tspan = (t_begin,t_end)
+x_init=1.0
+dxdt_init=0.0
+
+prob = SecondOrderODEProblem(ode_fn, dxdt_init, x_init, tspan)
+num_sol = solve(prob, Tsit5(), reltol=1e-8, abstol=1e-8)
+x_num_sol = [u[2] for u in num_sol.u]
+
+plot(num_sol.t, an_sol.(num_sol.t),
+    linewidth=2, ls=:dash,
+    title="ODE 2nd order IVP solved by D.E. package",
+    xaxis="t", yaxis="x",
+    label="analytical",
+    legend=true)
+plot!(num_sol.t, x_num_sol,
+    linewidth=1,
+    label="numerical")
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/julia/DifferentialEquations/ode_2nd_ord_ivp_01.jl">GitHub</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/neural-networks/ordinary-differential-equation-solvers-in-julia/nn_odesolvejl_result_de_3.png" /></div>
+		<div class="photocaption">Comparison of the analytical solution of the second order equation with the numerical solution obtained by <code>SecondOrderODEProblem</code> and <code>solve</code>.</div>
+        </br >
+        </br >
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/julia/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+

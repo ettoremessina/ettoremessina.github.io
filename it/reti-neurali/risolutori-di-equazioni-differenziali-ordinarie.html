@@ -37,7 +37,7 @@
 
 		<title>Risolutori di equazioni differenziali ordinarie in Python</title>
 		<meta name="description" content="Esempi d&apos;uso di alcuni risolutori di equazioni differenziali ordinarie implementati con librerie per Python frequentemente utilizzate nel calcolo scientifico e soprattutto nel machine learning e deep learning." >
-		<meta name="keywords" content="reti neurali, equazioni differenziali ordinarie, ode, sistema, sistemi, risolutore, approssimazione numerica, soluzione numerica, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
+		<meta name="keywords" content="reti neurali, equazioni differenziali ordinarie, ode, sistema, sistemi, risolutore, approssimazione numerica, soluzione numerica, Python, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
 		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
@@ -170,16 +170,16 @@
         SymPy
         -->
 			Questo post mostra l&apos;utilizzo di alcuni risolutori di <em>equazioni differenziali ordinarie</em> (abbreviato ODE per <em>Ordinary Differential Equation</em>)
-            implementati da librerie frequentemente adoperate nelle applicazioni scientifiche in generale e soprattutto nel machine learning e nel deep learning.
+            implementati da librerie per Python frequentemente adoperate nelle applicazioni scientifiche in generale e soprattutto nel machine learning e nel deep learning.
             Le tecniche di risoluzione qui mostrate sono tecniche numeriche e non analitiche, in quanto questo sito si occupa di computazione.
             Inoltre questo post &egrave; pubblicato sotto la categoria delle reti neurali: anche se non tutte le tecniche qui mostrate
             adoperano tecnologie di deep learning, il suo scopo &egrave; quello essere propedeudico all&apos;argomento sulla relazione tra le reti neurali e le equazioni differenziali.<br />
             <br />
-            Il post &egrave; organizzato come una sorta di Stele di Rosetta: 
-            sono presentati tre problemi con <em>condizione iniziale</em> (o condizione di Cauchy, abbreviato IVP per <em>Initial Value Problem</em>),
-            precisamente una equazione del primo ordine, un sistema di due equazioni del primo ordine e una equazione del secondo ordine ciascuno con le proprie condizioni iniziali date
-            e a seguire la lista delle risoluzioni degli stessi con le varie librerie utilizzate. 
+            Il post &egrave; organizzato come una sorta di Stele di Rosetta: sono presentati tre problemi,
+            precisamente una equazione del primo ordine, un sistema di due equazioni del primo ordine e una equazione del secondo ordine ciascuno con le proprie <em>condizioni iniziali</em>
+            (o condizioni di Cauchy, abbreviato IVP per <em>Initial Value Problem</em>) e a seguire la lista delle soluzioni degli stessi con le varie librerie utilizzate. 
             Di ciascun problema &egrave; nota anche la soluzione analitica e questo permette di confrontare la qualit&agrave; delle soluzioni numeriche ottenute.<br />
+            La Stele di Rosetta continua nel post <a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html">Risolutori di equazioni differenziali ordinarie in Julia</a> ove si mostra la soluzione degli stessi problemi in Julia.<br />
             <br />
             Tutti i vari frammenti di codice descritti in questo post richiedono la versione 3 di Python e le librerie MatPlotLib e NumPy
             mentre singolarmente richiedono una ulteriore libreria addizionale (ed eventuali sue dipendenze) in accordo con il risolutore utilizzato.<br/>
@@ -1297,7 +1297,7 @@ plt.show()
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
@@ -1327,8 +1327,9 @@ plt.show()
 											<ul>
 												<li><a href="../../it/reti-neurali/">INDICE</a></li>
 												<li><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html">Risolutori di equazioni differenziali ordinarie in Python</a></li>
+												<li><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html">Risolutori di equazioni differenziali ordinarie in Julia</a></li>
 												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
-												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
 											</ul>
 										</li>
 										<li>

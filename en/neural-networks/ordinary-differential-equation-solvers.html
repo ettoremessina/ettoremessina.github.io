@@ -39,7 +39,7 @@
 
 		<title>Ordinary differential equation solvers in Python</title>
 		<meta name="description" content="Examples of use of some ordinary differential equation solvers implemented by libraries for Python frequently used in scientific applications in general and expecially in machine learning and deep learning." >
-		<meta name="keywords" content="neural networks, ordinary differential equations, ode, system, systems, solver, numerical approximation, numerical solution, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
+		<meta name="keywords" content="neural networks, ordinary differential equations, ode, system, systems, solver, numerical approximation, numerical solution, Python, SciPy, TensorFlow Probability, TorchDiffEq, TensorFlowDiffEq, NeuroDiffEq" >
 		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html" />
@@ -167,17 +167,17 @@
 			<h1>Ordinary differential equation solvers in Python</h1>
 		</header>
 		<p>
-			This post shows the use of some <em>Ordinary Differential Equation</em> (abbreviated ODE) solvers
-            implemented by libraries frequently used in scientific applications in general and especially in machine learning and deep learning.
+			This post shows the use of some <em>ordinary differential equation</em> (abbreviated ODE) solvers
+            implemented by libraries for Python frequently used in scientific applications in general and especially in machine learning and deep learning.
             The resolution techniques shown here are numerical and not analytical techniques, as this site deals with computation.
             Moreover this post is published under the category of neural networks: although not all the techniques shown here
             use technologies of deep learning, its purpose is to be proactive to the topic on the relationship between neural networks and differential equations.<br />
             <br />
-            The post is organized as a sort of Rosetta Stele:
-            three problems are presented with <em>initial condition</em> (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>),
-            precisely an equation of the first order, a system of two equations of the first order and an equation of the second order each with its own initial conditions given
-            and follows the list of its resolutions with the various libraries used. 
+            The post is organized as a sort of Rosetta Stele: three problems are presented
+            namely an equation of the first order, a system of two equations of the first order and an equation of the second order each with its own <em>initial conditions</em>
+            (or Cauchy&apos;s condition, abbreviated IVP for <em>Initial Value Problem</em>) and below the list of their solutions with the various libraries used. 
             Of each problem the analytical solution is also known and this allows to compare the quality of the numerical solutions obtained.<br />
+            The Rosetta Stone continues in the post <a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a> where it shows the solution of the same problems in Julia.<br />.
             <br />
             All the various code fragments described in this post require Python version 3 and the MatPlotLib and NumPy libraries
             while individually require an additional library (and its own dependencies) in accordance with the solver used.<br/>
@@ -229,7 +229,7 @@
 
         <h3>Scipy</h3>
         <p>
-            <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
+            <a href="https://www.scipy.org/" target="_blank">Scipy</a> uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
             to numerically solve an ordinary first order differential equation with initial value.<br />
             The explicit form of the above equation in Python with NumPy is implemented as follows:
             <pre><code class="python">lambda t, x: np.sin(t) + 3. * np.cos(2. * t) - x</code></pre>
@@ -546,7 +546,7 @@ plt.show()
 
         <h3>Scipy</h3>
         <p>
-            <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
+            <a href="https://www.scipy.org/" target="_blank">Scipy</a> uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
             to numerically solve a system of ordinary first order differential equations of first order with initial values.<br />
             The explicit form of the above pair of equations in Python with NumPy is implemented as follows:
             <pre><code class="python">def ode_sys(t, XY):
@@ -976,7 +976,7 @@ plt.show()
 
         <h3>Scipy</h3>
         <p>
-            <a href="https://www.scipy.org/" target="_blank">Scipy</a> scipy uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
+            <a href="https://www.scipy.org/" target="_blank">Scipy</a> uses the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" target="_blank"><code>scipy.integrate.solve_ivp</code></a> function
             to numerically solve a system of ordinary first order differential equations with initial values,
             that, because of what was said before, is equivalent to the second-order equation with the same initial conditions.<br />
             The explicit form of the above system in Python with NumPy is implemented as follows:
@@ -1297,7 +1297,7 @@ plt.show()
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
@@ -1327,8 +1327,9 @@ plt.show()
 											<ul>
 												<li><a href="../../en/neural-networks/">INDEX</a></li>
 												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></li>
 												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
-												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
 											</ul>
 										</li>
 										<li>
