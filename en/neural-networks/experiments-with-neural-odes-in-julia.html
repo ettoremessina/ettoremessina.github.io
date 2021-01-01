@@ -1,0 +1,596 @@
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Experiments with Neural ODEs in Julia</title>
+		<meta name="description" content="Examples of using Neural ODEs in Julia using the DifferentialEquations, Flux, DiffEqFlux packages of the Julia ecosystem." >
+		<meta name="keywords" content="Neural ODEs, ordinary differential equations, ode, numerical approximation, numerical solution, Julia, DifferentialEquations, Flux, DiffEqFlux" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/",
+              "name": "Neural Networks"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html",
+              "name": "Experiments with Neural ODEs in Julia"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Experiments with Neural ODEs in Julia</h1>
+		</header>
+		<p>
+            <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviated <em>Neural ODEs</em>) is a paper that introduces a new family of neural networks
+            in which some hidden layers (or even the only layer in the simplest cases) are implemented with an ordinary differential equation solver. <br />
+            This post shows an example written in Julia (there will be more in the future) that uses some ideas described in the paper <em>Neural ODEs</em> to solve a problem of approximating the mapping
+            between an input and an output in a given scenario.<br />
+            <br />
+            All of the various code snippets described in this post require Julia version 1.5.3 and the following packages: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
+			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
+			<br/>
+        </p>
+
+		<h2>Conventions</h2>
+		<p>
+            In this post the conventions used are as follows:
+            <ul>
+                <li>$t$ is the independent variable</li>
+                <li>$x$ is the unknown function</li>
+                <li>$y$ is the second unknown function</li>
+                <li>
+                $x$ and $y$ are intended to be functions of $t$, so $x=x(t)$ and $y=y(t)$,
+                but the use of this compact notation, in addition to having a greater readability at a mathematical level
+                makes it easier to "translate" the equation into code
+                </li>
+                <li>$x'$ is the first derivative of x with respect to $t$ and of course $y'$ is the first derivative of y with respect to $t$</li>
+                <!--<li>$x''$ is the second derivative of x with respect to $t$ and of course $y''$ is the second derivative of y with respect to $t$</li>-->
+            </ul>
+        </p>
+
+		<h2 id="exp1">Experiment #1: to train a system of ODEs to satisfy an objective</h2>
+        <p>
+            A multilayer perceptron (abbreviated MLP) is an appropriate tool for learning a nonlinear relationship between inputs and outputs whose law is not known.<br />
+            On the other hand, there are cases where one has a priori knowledge of the law that correlates inputs and outputs, for example in the form of a parametric system of differential equations:
+            in this situation a neural network of type MLP does not allow to use such knowledge while a network of type Neural ODEs does.<br />
+        </p>
+
+		<h3>The application scenario</h3>
+        <p>
+            The application scenario is as follows:<br />
+            <ul></ul>
+            <b>A priori knowledge:</b>
+            <ul>
+                <li>A dataset that contains the inputs and outputs</li>
+                <li>A law that associates input and output in the form of a parametric system of differential equations</li>
+            </ul>
+            <b>Objective:</b>
+            <ul>
+                <li>Determine appropriate parameter values so that the system obtained by replacing the formal parameters with the determined values best approximates the mapping between input and output.</li>
+            </ul>
+            The same scenario was applied in the post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#lets_put_an_ode_into_a_neural_net_framework">DiffEqFlux.jl – A Julia Library for Neural Differential Equations</a>
+            on Julia&apos;s official blog where the law is the Lotka-Volterra system of equations that describes the population dynamics of prey and predators.<br />.
+            In this post, the law is intentionally not a famous law, but is the parametric system of two first-order equations and eight parameters shown in the following paragraph.
+        </p>
+
+ 		<h3>The problem to be solved</h3>
+        <p>
+            Let the following parametric system of two ordinary differential equations with initial values be given
+            which represents the law describing the behavior of a hypothetical dynamical system:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x' = a_1x + b_1y + c_1e^{-d_1t}
+                \\
+                y'= a_2x + b_2y + c_2e^{-d_2t}
+                \\ 
+                x(0)=0
+                \\
+                y(0)=0
+            \end{cases}
+            \end{equation} $$
+
+            Obviously this is a demo whose purpose is to test the goodness of the method, so to prepare the dataset
+            we arbitrarily set eight parameter values, for example these:
+            
+        $$ \left[\begin{matrix}a_1 \\ b_1 \\ c_1 \\ d_1 \\ a_2 \\ b_2 \\ c_2 \\ d_2 \end{matrix} \right] = 
+           \left[\begin{matrix}1.11 \\ 2.43 \\ -3.66 \\ 1.37 \\ 2.89 \\ -1.97 \\ 4.58 \\ 2.86 \end{matrix} \right] $$
+
+            and knowing that with such parameter values the analytical solution is as follows:
+            
+            $$ \begin{equation}
+                \begin{array}{l}
+                x(t) = \\
+                \;\; -1.38778 \cdot 10^{-17} \; e^{-8.99002 t} - \\
+                \;\; 2.77556 \cdot 10^{-17} \; e^{-7.50002 t} + \\
+                \;\; 3.28757 \; e^{-3.49501 t} - \\
+                \;\; 3.18949  \; e^{-2.86 t} + \\
+                \;\; 0.258028 \; e^{-1.37 t} - \\
+                \;\; 0.356108 \; e^{2.63501 t} + \\
+                \;\; 4.44089 \cdot 10^{-16} \; e^{3.27002 t} + \\
+                \;\; 1.11022 \cdot 10^{-16} \; e^{4.76002 t} \\
+                \\
+                y(t) = \\
+                \;\; -6.23016 \; e^{-3.49501 t} + \\
+                \;\; 5.21081 \; e^{-2.86 t} + \\
+                \;\; 1.24284 \; e^{-1.37 t} - \\
+                \;\; 0.223485 \; e^{2.63501 t} + \\
+                \;\; 2.77556 \cdot 10^{-17} \; e^{4.76002 t} \\
+                \end{array}
+            \end{equation} $$
+
+            (verifiable online via <a href="https://www.wolframalpha.com/input/?i=x%27+%3D+1.11+x+%2B+2.43+y+%2B+-3.66+e%5E%28-1.37+t%29%3B+y%27+%3D+2.89+x+-1.97+y+%2B+4.58+e%5E+%28-2.86+t%29%3B+x%280%29%3D0%3B+y%280%29%3D0%3B
+" target="_brank">Wolfram Alpha</a>)
+            you are able to prepare the dataset: the input is a discretized interval of time from $0$ to $1.5$ step $0.01$,
+            while the output consists of the analytical solutions $x=x(t)$ and $y=y(t)$ for each $t$ belonging to the input.<br />
+            Once the dataset is prepared, we forget about the values of the parameters and the analytical solution and we pose the problem
+            of how to train a neural network to determine an appropriate set of values for the eight parameters in order to best approximate
+            the non-linear mapping between input and output of the dataset.<br />            
+            <br />
+        </p>
+
+ 		<h3>Solution implementation</h3>
+        <p>
+            The parametric system of differential equations is already written in explicit form, and in Julia with DifferentialEquations it is implemented like this:
+            <pre><code class="julia">function parametric_ode_system!(du,u,p,t)
+  x, y = u
+  a1, b1, c1, d1, a2, b2, c2, d2 = p
+  du[1] = dx = a1*x + b1*y + c1*exp(-d1*t)
+  du[2] = dy = a2*x + b2*y + c2*exp(-d2*t)
+end</code></pre>
+            The settings are:
+            <ul>
+                <li>Input: $t \in [0, 1.5]$ passo di discretizzazione $0.01$</li>
+                <li>Condizioni al contorno: $x(0)=0; y(0)=0$</li>
+                <li>Valori iniziali del parametri qualsiasi; per comodit&agrave; qui si impostano tutti uguali a $1$</li>
+            </ul>
+            Turned into code:<br />
+            <br />
+            <pre><code class="julia">tbegin=0.0
+tend=1.5
+tstep=0.01
+trange = tbegin:tstep:tend
+u0 = [0.0,0.0]
+tspan = (tbegin,tend)
+p = ones(8)</code></pre>
+
+            The neural network consists of a single <em>ODE solver</em> type layer:<br />
+            <br />
+            <pre><code class="julia">prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
+
+function net()
+    solve(prob, Tsit5(), p=p, saveat=trange)
+end</code></pre>
+            <br />
+
+            The training settings are:<br />
+            <ul>
+                <li>Optimizator: ADAM</li>
+                <li>Learning rate: $0.05$</li>
+                <li>Number of epochs: $1000$</li>
+                <li>loss function: sum of squares of differences</li>
+            </ul>
+            Turned into code:<br />
+            <br />
+            <pre><code class="julia">epochs = 1000
+learning_rate = 0.05
+data = Iterators.repeated((), epochs)
+opt = ADAM(learning_rate)
+callback_func = function ()
+  #.......
+end
+fparams = Flux.params(p)
+Flux.train!(loss_func, fparams, data, opt, cb=callback_func)</code></pre>
+            <br />
+            Here is the complete code:</br >
+            </br >
+            <pre><code class="julia">using Flux, DiffEqFlux, DifferentialEquations, Plots
+
+function parametric_ode_system!(du,u,p,t)
+  x, y = u
+  a1, b1, c1, d1, a2, b2, c2, d2 = p
+  du[1] = dx = a1*x + b1*y + c1*exp(-d1*t)
+  du[2] = dy = a2*x + b2*y + c2*exp(-d2*t)
+end
+
+true_params = [1.11, 2.43, -3.66, 1.37, 2.89, -1.97, 4.58, 2.86]
+
+an_sol_x(t) =
+  -1.38778e-17 * exp(-8.99002 * t) -
+  2.77556e-17 * exp(-7.50002 * t) +
+  3.28757 * exp(-3.49501 * t) -
+  3.18949 * exp(-2.86 * t) +
+  0.258028 * exp(-1.37 * t) -
+  0.356108 * exp(2.63501 * t) +
+  4.44089e-16 * exp(3.27002 * t) +
+  1.11022e-16 * exp(4.76002 * t)
+an_sol_y(t) =
+  -6.23016 * exp(-3.49501 * t) +
+  5.21081 * exp(-2.86 * t) +
+  1.24284 * exp(-1.37 * t) -
+  0.223485 * exp(2.63501 * t) +
+  2.77556e-17 * exp(4.76002 * t)
+
+tbegin=0.0
+tend=1.5
+tstep=0.01
+trange = tbegin:tstep:tend
+u0 = [0.0,0.0]
+tspan = (tbegin,tend)
+p = ones(8)
+
+prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
+
+function net()
+    solve(prob, Tsit5(), p=p, saveat=trange)
+end
+
+dataset_outs = [an_sol_x.(trange), an_sol_y.(trange)]
+function loss_func()
+  pred = net()
+  sum(abs2, dataset_outs[1] .- pred[1,:]) +
+  sum(abs2, dataset_outs[2] .- pred[2,:])
+end
+
+epochs = 1000
+learning_rate = 0.05
+data = Iterators.repeated((), epochs)
+opt = ADAM(learning_rate)
+callback_func = function ()
+  println("loss: ", loss_func())
+end
+fparams = Flux.params(p)
+Flux.train!(loss_func, fparams, data, opt, cb=callback_func)
+
+predict_prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
+predict_sol = solve(prob, Tsit5(), saveat=trange)
+x_predict_sol = [u[1] for u in predict_sol.u]
+y_predict_sol = [u[2] for u in predict_sol.u]
+
+println("Learned parameters:", p)
+
+plot(trange, dataset_outs[1],
+    linewidth=2, ls=:dash,
+    title="Neural ODEs to fit params",
+    xaxis="t",
+    label="dataset x(t)",
+    legend=true)
+plot!(trange, dataset_outs[2],
+    linewidth=2, ls=:dash,
+    label="dataset y(t)")
+plot!(predict_sol.t, x_predict_sol,
+    linewidth=1,
+    label="predicted x(t)")
+plot!(predict_sol.t, y_predict_sol,
+    linewidth=1,
+    label="predicted y(t)")
+</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/fit-funcs-by-param-odes.jl">GitHub</a>.<br />
+            <br />
+            The parameter values obtained at the end of the training are as follows:
+            
+        $$ \left[\begin{matrix}a_1 \\ b_1 \\ c_1 \\ d_1 \\ a_2 \\ b_2 \\ c_2 \\ d_2 \end{matrix} \right] = 
+           \left[\begin{matrix}1.7302980833638142 \\ 1.2823312512074032 \\ -1.6866178290795755 \\ 0.41974163099782325 \\ 
+                               1.223075467559363 \\ 0.9410722500584323 \\ 0.18890958911958686 \\ 1.7462909509457183 \end{matrix} \right] $$
+
+            which are obviously different from the values of the parameters used to generate the dataset (passing through the analytical solution);
+            but the system of equations obtained by replacing the formal parameters with these values obtained from the training of the neural network
+            and solving numerically this last system we obtain a numerical solution that approximates quite well the dataset, as shown in the figure:<br />
+            <br />
+        </p>
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-1-result.png" /></div>
+        <div class="photocaption">Ccomparison of the numerical solution that approximates the dataset.</div>
+        <br />
+        <p>
+            Different training strategies allow to obtain different values of the parameters and therefore a different numerical solution of the system
+            with a different accuracy. 
+        </p>
+
+        <h2>Citations</h2>
+        <p>
+            <pre><code class="text">@articleDBLP:journals/corr/abs-1806-07366,
+  author    = {Tian Qi Chen and
+               Yulia Rubanova and
+               Jesse Bettencourt and
+               David Duvenaud},
+  title     = {Neural Ordinary Differential Equations},
+  journal   = {CoRR},
+  volume    = {abs/1806.07366},
+  year      = {2018},
+  url       = {http://arxiv.org/abs/1806.07366},
+  archivePrefix = {arXiv},
+  eprint    = {1806.07366},
+  timestamp = {Mon, 22 Jul 2019 14:09:23 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1806-07366.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+</code></pre>
+            <pre><code class="text">@articleDBLP:journals/corr/abs-1902-02376,
+  author    = {Christopher Rackauckas and
+               Mike Innes and
+               Yingbo Ma and
+               Jesse Bettencourt and
+               Lyndon White and
+               Vaibhav Dixit},
+  title     = {DiffEqFlux.jl - {A} Julia Library for Neural Differential Equations},
+  journal   = {CoRR},
+  volume    = {abs/1902.02376},
+  year      = {2019},
+  url       = {https://arxiv.org/abs/1902.02376},
+  archivePrefix = {arXiv},
+  eprint    = {1902.02376},
+  timestamp = {Tue, 21 May 2019 18:03:36 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1902-02376},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+</code></pre>
+        </p>
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/neural-odes-demos/julia/DiffEqFlux/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/experiments-with-neural-odes-in-julia.html">Experiments with Neural ODEs in Julia</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
