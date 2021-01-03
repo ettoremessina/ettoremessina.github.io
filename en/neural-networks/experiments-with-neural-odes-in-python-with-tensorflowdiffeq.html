@@ -302,8 +302,8 @@ t_space_tensor = tf.constant(t_space)
 x_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 y_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 u_init = tf.convert_to_tensor([x_init, y_init], dtype=t_space_tensor.dtype)
-args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype)
-          for i in range(0, 8)]</code></pre>
+args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True,
+          dtype=t_space_tensor.dtype) for i in range(0, 8)]</code></pre>
 
             The neural network consists of a single <em>ODE solver</em> type layer:<br />
             <br />
@@ -385,8 +385,8 @@ t_space_tensor = tf.constant(t_space)
 x_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 y_init = tf.constant([0.], dtype=t_space_tensor.dtype)
 u_init = tf.convert_to_tensor([x_init, y_init], dtype=t_space_tensor.dtype)
-args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype)
-          for i in range(0, 8)]
+args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True,
+          dtype=t_space_tensor.dtype) for i in range(0, 8)]
 
 learning_rate = 0.05
 epochs = 200
