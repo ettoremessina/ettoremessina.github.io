@@ -308,7 +308,8 @@ args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True,
             The neural network consists of a single <em>ODE solver</em> type layer:<br />
             <br />
             <pre><code class="python">def net():
-  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args), u_init, t_space_tensor)</code></pre>
+  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args),
+                  u_init, t_space_tensor)</code></pre>
             <br />
 
             The training settings are:<br />
@@ -393,7 +394,8 @@ epochs = 200
 optimizer = tfko.Adam(learning_rate=learning_rate)
 
 def net():
-  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args), u_init, t_space_tensor)
+  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args),
+                  u_init, t_space_tensor)
 
 def loss_func(num_sol):
   return tf.reduce_sum(tf.square(dataset_outs[0] - num_sol[:, 0])) + \
