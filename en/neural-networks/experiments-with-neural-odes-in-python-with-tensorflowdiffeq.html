@@ -37,12 +37,12 @@
 		</script>
 
 
-		<title>Experiments with Neural ODEs in Julia</title>
-		<meta name="description" content="Examples of using Neural ODEs in Julia using the DifferentialEquations, Flux, DiffEqFlux packages of the Julia ecosystem." >
-		<meta name="keywords" content="Neural ODEs, ordinary differential equations, ode, numerical approximation, numerical solution, Julia, DifferentialEquations, Flux, DiffEqFlux" >
-		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html" />
+		<title>Experiments with Neural ODEs in Python with TensorFlowDiffEq</title>
+		<meta name="description" content="Examples of using Neural ODEs in Python using TensorFlowDiffEq." >
+		<meta name="keywords" content="Neural ODEs, ordinary differential equations, ode, numerical approximation, numerical solution, Python, TensorFlow, TensorFlowDiffEq" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-python-con-TensorFlowDiffEq.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -96,8 +96,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html",
-              "name": "Experiments with Neural ODEs in Julia"
+              "@id": "https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html",
+              "name": "Experiments with Neural ODEs in Python with TensorFlowDiffEq"
             }
 		  }
 		
@@ -164,17 +164,17 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Experiments with Neural ODEs in Julia</h1>
+			<h1>Experiments with Neural ODEs in Python with TensorFlowDiffEq</h1>
 		</header>
 		<p>
             <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviated <em>Neural ODEs</em>) is a paper that introduces a new family of neural networks
             in which some hidden layers (or even the only layer in the simplest cases) are implemented with an ordinary differential equation solver.<br />
-            This post shows an example written in Julia (there will be more in the future) that uses some ideas described in the paper <em>Neural ODEs</em> to solve a problem of approximating the mapping
+            This post shows an example written in Python with TensorFlowDiffEq (there will be more in the future) that uses some ideas described in the paper <em>Neural ODEs</em> to solve a problem of approximating the mapping
             between an input and an output in a given scenario.<br />
             <br />
-            All of the various code snippets described in this post require Julia version 1.5.3 and the following packages: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
+            All of the various code snippets described in this post require Python version 3.x, TensorFlow 2.x, TensorFlowDiffEq package and the following packages: NumPy, MatPlotLib.<br/>
 			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
-			<br/>
+            If you were interested in seeing the solution of the same problems in Julia see the post <a href="../../en/neural-networks/experiments-with-neural-odes-in-julia.html">Experiments with Neural ODEs in Julia</a> on this website.<br />
         </p>
 
 		<h2>Conventions</h2>
@@ -214,8 +214,8 @@
             <ul>
                 <li>Determine appropriate parameter values so that the system obtained by replacing the formal parameters with the determined values best approximates the mapping between input and output.</li>
             </ul>
-            The same scenario was applied in the post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#lets_put_an_ode_into_a_neural_net_framework">DiffEqFlux.jl – A Julia Library for Neural Differential Equations</a>
-            on Julia&apos;s official blog where the law is the Lotka-Volterra system of equations that describes the population dynamics of prey and predators.<br />
+            The same scenario was applied in the di <em>mandubian</em>&apos;s GitHub repository <a href="https://github.com/mandubian/neural-ode/">neural-ode</a>
+            where the law is the Lotka-Volterra system of equations that describes the population dynamics of prey and predators.<br />
             In this post, the law is intentionally not a famous law, but is the parametric system of two first-order equations and eight parameters shown in the following paragraph.
         </p>
 
@@ -277,13 +277,15 @@
 
  		<h3>Solution implementation</h3>
         <p>
-            The parametric system of differential equations is already written in explicit form, and in Julia with DifferentialEquations it is implemented like this:
-            <pre><code class="julia">function parametric_ode_system!(du,u,p,t)
-  x, y = u
-  a1, b1, c1, d1, a2, b2, c2, d2 = p
-  du[1] = dx = a1*x + b1*y + c1*exp(-d1*t)
-  du[2] = dy = a2*x + b2*y + c2*exp(-d2*t)
-end</code></pre>
+            The parametric system of differential equations is already written in explicit form, and in Python with TensorFlowDiffEq it is implemented like this:
+            <pre><code class="python">def parametric_ode_system(t, u, args):
+    a1, b1, c1, d1, a2, b2, c2, d2 = \
+        args[0], args[1], args[2], args[3], \
+        args[4], args[5], args[6], args[7]
+    x, y = u[0], u[1]
+    dx_dt = a1*x + b1*y + c1*tf.math.exp(-d1*t)
+    dy_dt = a2*x + b2*y + c2*tf.math.exp(-d2*t)
+    return tf.stack([dx_dt, dy_dt])</code></pre>
             The settings are:
             <ul>
                 <li>Input: $t \in [0, 1.5]$ discretization step $0.01$</li>
@@ -292,139 +294,150 @@ end</code></pre>
             </ul>
             Turned into code:<br />
             <br />
-            <pre><code class="julia">tbegin=0.0
-tend=1.5
-tstep=0.01
-trange = tbegin:tstep:tend
-u0 = [0.0,0.0]
-tspan = (tbegin,tend)
-p = ones(8)</code></pre>
+            <pre><code class="python">t_begin=0.
+t_end=1.5
+t_nsamples=150
+t_space = np.linspace(t_begin, t_end, t_nsamples)
+t_space_tensor = tf.constant(t_space)
+x_init = tf.constant([0.], dtype=t_space_tensor.dtype)
+y_init = tf.constant([0.], dtype=t_space_tensor.dtype)
+u_init = tf.convert_to_tensor([x_init, y_init], dtype=t_space_tensor.dtype)
+args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype)
+          for i in range(0, 8)]</code></pre>
 
             The neural network consists of a single <em>ODE solver</em> type layer:<br />
             <br />
-            <pre><code class="julia">prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
-
-function net()
-    solve(prob, Tsit5(), p=p, saveat=trange)
-end</code></pre>
+            <pre><code class="python">def net():
+  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args), u_init, t_space_tensor)</code></pre>
             <br />
 
             The training settings are:<br />
             <ul>
-                <li>Optimizator: ADAM</li>
+                <li>Optimizator: Adam</li>
                 <li>Learning rate: $0.05$</li>
-                <li>Number of epochs: $1000$</li>
+                <li>Number of epochs: $200$</li>
                 <li>loss function: sum of squares of differences</li>
             </ul>
             Turned into code:<br />
             <br />
-            <pre><code class="julia">epochs = 1000
-learning_rate = 0.05
-data = Iterators.repeated((), epochs)
-opt = ADAM(learning_rate)
-callback_func = function ()
-  #.......
-end
-fparams = Flux.params(p)
-Flux.train!(loss_func, fparams, data, opt, cb=callback_func)</code></pre>
+            <pre><code class="python">learning_rate = 0.05
+epochs = 200
+optimizer = tfko.Adam(learning_rate=learning_rate)
+
+def loss_func(num_sol):
+  return tf.reduce_sum(tf.square(dataset_outs[0] - num_sol[:, 0])) + \
+         tf.reduce_sum(tf.square(dataset_outs[1] - num_sol[:, 1]))  
+
+for epoch in range(epochs):
+  with tf.GradientTape() as tape:
+    num_sol = net()
+    loss_value = loss_func(num_sol)
+  print("Epoch:", epoch, " loss:", loss_value.numpy())
+  grads = tape.gradient(loss_value, args)
+  optimizer.apply_gradients(zip(grads, args))</code></pre>
             <br />
             Here is the complete code:</br >
             </br >
-            <pre><code class="julia">using Flux, DiffEqFlux, DifferentialEquations, Plots
+            <pre><code class="pythnon">import numpy as np
+import matplotlib.pyplot as plt
 
-function parametric_ode_system!(du,u,p,t)
-  x, y = u
-  a1, b1, c1, d1, a2, b2, c2, d2 = p
-  du[1] = dx = a1*x + b1*y + c1*exp(-d1*t)
-  du[2] = dy = a2*x + b2*y + c2*exp(-d2*t)
-end
+import tensorflow as tf
+import tensorflow.keras.optimizers as tfko
+from tfdiffeq import odeint
+
+def parametric_ode_system(t, u, args):
+    a1, b1, c1, d1, a2, b2, c2, d2 = \
+        args[0], args[1], args[2], args[3], \
+        args[4], args[5], args[6], args[7]
+    x, y = u[0], u[1]
+    dx_dt = a1*x + b1*y + c1*tf.math.exp(-d1*t)
+    dy_dt = a2*x + b2*y + c2*tf.math.exp(-d2*t)
+    return tf.stack([dx_dt, dy_dt])
 
 true_params = [1.11, 2.43, -3.66, 1.37, 2.89, -1.97, 4.58, 2.86]
 
-an_sol_x(t) =
-  -1.38778e-17 * exp(-8.99002 * t) -
-  2.77556e-17 * exp(-7.50002 * t) +
-  3.28757 * exp(-3.49501 * t) -
-  3.18949 * exp(-2.86 * t) +
-  0.258028 * exp(-1.37 * t) -
-  0.356108 * exp(2.63501 * t) +
-  4.44089e-16 * exp(3.27002 * t) +
-  1.11022e-16 * exp(4.76002 * t)
-an_sol_y(t) =
-  -6.23016 * exp(-3.49501 * t) +
-  5.21081 * exp(-2.86 * t) +
-  1.24284 * exp(-1.37 * t) -
-  0.223485 * exp(2.63501 * t) +
-  2.77556e-17 * exp(4.76002 * t)
+an_sol_x = lambda t : \
+  -1.38778e-17 * np.exp(-8.99002 * t) - \
+  2.77556e-17 * np.exp(-7.50002 * t) + \
+  3.28757 * np.exp(-3.49501 * t) - \
+  3.18949 * np.exp(-2.86 * t) + \
+  0.258028 * np.exp(-1.37 * t) - \
+  0.356108 * np.exp(2.63501 * t) +  \
+  4.44089e-16 * np.exp(3.27002 * t) + \
+  1.11022e-16 * np.exp(4.76002 * t)
 
-tbegin=0.0
-tend=1.5
-tstep=0.01
-trange = tbegin:tstep:tend
-u0 = [0.0,0.0]
-tspan = (tbegin,tend)
-p = ones(8)
+an_sol_y = lambda t : \
+  -6.23016 * np.exp(-3.49501 * t) + \
+  5.21081 * np.exp(-2.86 * t) + \
+  1.24284 * np.exp(-1.37 * t) - \
+  0.223485 * np.exp(2.63501 * t) + \
+  2.77556e-17 * np.exp(4.76002 * t)
 
-prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
+t_begin=0.
+t_end=1.5
+t_nsamples=150
+t_space = np.linspace(t_begin, t_end, t_nsamples)
 
-function net()
-    solve(prob, Tsit5(), p=p, saveat=trange)
-end
+dataset_outs = [tf.expand_dims(an_sol_x(t_space), axis=1), \
+                tf.expand_dims(an_sol_y(t_space), axis=1)]
 
-dataset_outs = [an_sol_x.(trange), an_sol_y.(trange)]
-function loss_func()
-  pred = net()
-  sum(abs2, dataset_outs[1] .- pred[1,:]) +
-  sum(abs2, dataset_outs[2] .- pred[2,:])
-end
+t_space_tensor = tf.constant(t_space)
+x_init = tf.constant([0.], dtype=t_space_tensor.dtype)
+y_init = tf.constant([0.], dtype=t_space_tensor.dtype)
+u_init = tf.convert_to_tensor([x_init, y_init], dtype=t_space_tensor.dtype)
+args = [tf.Variable(initial_value=1., name='p' + str(i+1), trainable=True, dtype=t_space_tensor.dtype)
+          for i in range(0, 8)]
 
-epochs = 1000
 learning_rate = 0.05
-data = Iterators.repeated((), epochs)
-opt = ADAM(learning_rate)
-callback_func = function ()
-  println("loss: ", loss_func())
-end
-fparams = Flux.params(p)
-Flux.train!(loss_func, fparams, data, opt, cb=callback_func)
+epochs = 200
+optimizer = tfko.Adam(learning_rate=learning_rate)
 
-predict_prob = ODEProblem(parametric_ode_system!, u0, tspan, p)
-predict_sol = solve(prob, Tsit5(), saveat=trange)
-x_predict_sol = [u[1] for u in predict_sol.u]
-y_predict_sol = [u[2] for u in predict_sol.u]
+def net():
+  return odeint(lambda ts, u0: parametric_ode_system(ts, u0, args), u_init, t_space_tensor)
 
-println("Learned parameters:", p)
+def loss_func(num_sol):
+  return tf.reduce_sum(tf.square(dataset_outs[0] - num_sol[:, 0])) + \
+         tf.reduce_sum(tf.square(dataset_outs[1] - num_sol[:, 1]))
 
-plot(trange, dataset_outs[1],
-    linewidth=2, ls=:dash,
-    title="Neural ODEs to fit params",
-    xaxis="t",
-    label="dataset x(t)",
-    legend=true)
-plot!(trange, dataset_outs[2],
-    linewidth=2, ls=:dash,
-    label="dataset y(t)")
-plot!(predict_sol.t, x_predict_sol,
-    linewidth=1,
-    label="predicted x(t)")
-plot!(predict_sol.t, y_predict_sol,
-    linewidth=1,
-    label="predicted y(t)")
-</code></pre>
-            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-sys-of-odes-to-meet-objective.jl">GitHub</a>.<br />
+for epoch in range(epochs):
+  with tf.GradientTape() as tape:
+    num_sol = net()
+    loss_value = loss_func(num_sol)
+  print("Epoch:", epoch, " loss:", loss_value.numpy())
+  grads = tape.gradient(loss_value, args)
+  optimizer.apply_gradients(zip(grads, args))
+
+print("Learned parameters:", [args[i].numpy() for i in range(0, 4)])
+num_sol = net()
+x_num_sol = num_sol[:, 0].numpy()
+y_num_sol = num_sol[:, 1].numpy()
+
+x_an_sol = an_sol_x(t_space)
+y_an_sol = an_sol_y(t_space)
+
+plt.figure()
+plt.plot(t_space, x_an_sol,'--', linewidth=2, label='analytical x')
+plt.plot(t_space, y_an_sol,'--', linewidth=2, label='analytical y')
+plt.plot(t_space, x_num_sol, linewidth=1, label='numerical x')
+plt.plot(t_space, y_num_sol, linewidth=1, label='numerical y')
+plt.title('Neural ODEs to fit params')
+plt.xlabel('t')
+plt.legend()
+plt.show()</code></pre>
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/python/TensorFlowDiffEq/train-sys-of-odes-to-meet-objective.py">GitHub</a>.<br />
             <br />
             The parameter values obtained at the end of the training are as follows:
             
         $$ \left[\begin{matrix}a_1 \\ b_1 \\ c_1 \\ d_1 \\ a_2 \\ b_2 \\ c_2 \\ d_2 \end{matrix} \right] = 
-           \left[\begin{matrix}1.7302980833638142 \\ 1.2823312512074032 \\ -1.6866178290795755 \\ 0.41974163099782325 \\ 
-                               1.223075467559363 \\ 0.9410722500584323 \\ 0.18890958911958686 \\ 1.7462909509457183 \end{matrix} \right] $$
+           \left[\begin{matrix}1.5526739031012387 \\ 1.153349483970675 \\ -1.705896205847302 \\ 0.38685266435358123 \\ 
+                               1.0173442364137184 \\ 0.7136534371585501 \\ -0.9789359917976935 \\ 1.4237334700663127 \end{matrix} \right] $$
 
             which are obviously different from the values of the parameters used to generate the dataset (passing through the analytical solution);
             but the system of equations obtained by replacing the formal parameters with these values obtained from the training of the neural network
             and solving numerically this last system we obtain a numerical solution that approximates quite well the dataset, as shown in the figure:<br />
             <br />
         </p>
-        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-1-result.png" /></div>
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq/nn-expnodestfde-exp-1-result.png" /></div>
         <div class="photocaption">Ccomparison of the numerical solution that approximates the dataset.</div>
         <br />
         <p>
@@ -450,29 +463,11 @@ plot!(predict_sol.t, y_predict_sol,
   biburl    = {https://dblp.org/rec/journals/corr/abs-1806-07366.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 </code></pre>
-            <pre><code class="text">@articleDBLP:journals/corr/abs-1902-02376,
-  author    = {Christopher Rackauckas and
-               Mike Innes and
-               Yingbo Ma and
-               Jesse Bettencourt and
-               Lyndon White and
-               Vaibhav Dixit},
-  title     = {DiffEqFlux.jl - {A} Julia Library for Neural Differential Equations},
-  journal   = {CoRR},
-  volume    = {abs/1902.02376},
-  year      = {2019},
-  url       = {https://arxiv.org/abs/1902.02376},
-  archivePrefix = {arXiv},
-  eprint    = {1902.02376},
-  timestamp = {Tue, 21 May 2019 18:03:36 +0200},
-  biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1902-02376},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
-</code></pre>
         </p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/neural-odes-demos/julia/DiffEqFlux/">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/neural-odes-demos/python/TensorFlowDiffEq/">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
