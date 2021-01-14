@@ -171,16 +171,16 @@
             per la quale si rimanda al paper sopra citato e si concentra invece sull&apos;implementazione in Python 3.x con SciPy della soluzione numerica del <em>caso scalare</em> analizzato dal paper stesso.</br >
         </p>
 
-        <h2>Il problema &quot;<em>DDE caso scalare</em>&quot;</h2>
+        <h2>Il problema <em>&quot;DDE caso scalare&quot;</em></h2>
         <p>
             I sistemi a tempo con ritardo (abbreviato TDS da Time Delayed Systems) sono sistemi in cui vi &egrave; un significativo ritardo temporale tra l&apos;applicazione dell&apos;input al sistema e l&apos;output conseguente,
             e tale ritardo pu&ograve; essere intrinseco o introdotto deliberatamente. Un TDS pu&ograve; essere modellato con equazioni differenziali con ritardo.</ br>
-            Questo paragrafo analizza il caso di una DDE a coefficienti scalari; dopo le definizioni formali del problema e della soluzione, che fanno uso della funzione W di Lambert,
+            Questo paragrafo analizza il caso di una DDE a coefficienti scalari; dopo le definizioni formali del problema e della soluzione, che fa uso della funzione W di Lambert,
             viene mostrata l&apos;implementazione di un programma Python con SciPy che realizza pedissequamente la soluzione proposta dal paper.
             Infine una fase di verifica mostra la correttezza della soluzione entro i limiti di approssimazione accetttabili.
         </p>
 
-        <h3>Il problema e soluzione</h3>
+        <h3>Il problema differenziale e la sua soluzione</h3>
         <p>
             Sia dato il seguente sistema che contiene una DDE:
             
@@ -215,17 +215,17 @@
         <p>
             dove $W_k$ &egrave; la funzione W di Lambert di indice $k$.<br />
             La funzione W di Lambert &egrave; una famiglia di funzioni definite nel campo complesso ottenute al variare dell&apos;indice $k$.
-            Per approfondimenti si veda  <a href="https://it.wikipedia.org/wiki/Funzione_W_di_Lambert" target="_blank">Funzione W di Lambert su Wikipedia</a>.
+            Per approfondimenti si veda <a href="https://it.wikipedia.org/wiki/Funzione_W_di_Lambert" target="_blank">Funzione W di Lambert su Wikipedia</a>.
         </p>
 
         <h3>L&apos;implementazione in Python con SciPy</h3>
         <p>
             Prima di entrare nel merito dell&apos;implementazione sono necessarie due note:
             <ul>
-                <li>la funzione W non può essere espressa in termini di funzioni elementari, quindi ci si servirà dell&apos;implementazione numerica <code>scipy.special.lambertw</code> fornita da SciPy;</li>
+                <li>la funzione W non pu&ograve; essere espressa in termini di funzioni elementari, quindi ci si servir&agrave; dell&apos;implementazione numerica <code>scipy.special.lambertw</code> fornita da SciPy;</li>
                 <li>
                     per il calcolo degli integrali si user&agrave; sempre SciPy e in particolare <code>scipy.integrate.quad</code> tenendo presente per&ograve;
-                    che si opera nel campo complesso (in quanto i vari $s_k$ sono complessi perché calcolati con la $W_k$) e quindi bisogner&agrave; avere l&apos;accortezza di integrare separatamente la parte reale dalla parte immaginaria
+                    che si opera nel campo complesso (in quanto i vari $s_k$ sono complessi perch&eacute; calcolati con la $W_k$) e quindi bisogner&agrave; avere l&apos;accortezza di integrare separatamente la parte reale dalla parte immaginaria
                     in quanto <code>scipy.integrate.quad</code> non supporta l&apos;integrazione nel campo complesso.
                 </li>
             </ul>
@@ -245,7 +245,7 @@ import matplotlib.pyplot as plt
                 <li>
                     i nomi degli oggetti matematici presenti nella soluzione proposta dal paper (vedi figure di cui sopra) sono state implementate con variabili Python omonime;
                     ad esempio le costanti $a$, $a_d$ e $b$ corrispondo alle variabili Python <code>a</code>, <code>ad</code> e <code>b</code>,
-                    la funzione incognita $x(t)$ &egrave; &egrave; la funzione Python <code>def x(t):</code>
+                    la funzione incognita $x(t)$ &egrave; la funzione Python <code>def x(t):</code>
                     e cos&igrave; via;
                 </li>
                 <li>
@@ -271,7 +271,7 @@ b = 1.75
 h = 1.
 g = lambda t : 1. - 0.1 * t
 u = lambda t : 0.2 * t
-x_0 = 1.5</code></pre>
+x0 = 1.5</code></pre>
             Naturalmente nel passaggio dal continuo della teoria alla discretizzazione dell&apos;implementazione numerica approssimata, vengono fatte alcune scelte:</br>
             <ul>
                 <li>il tempo $t$ varia da $0$ a $10$ con $101$ campionamenti (quindi passo di discretizzazione uguale a $0.1$);</li>
@@ -284,8 +284,8 @@ x_0 = 1.5</code></pre>
                     $g(t)$, come gi&agrave; detto, fornisce i valori di $x(t)$ prima del tempo $0$;
                     anche essa &egrave; stata definita arbitrariamente a $g(t) = 1 - 0.1 t$.
                 </li>
-                <li>anche $u(t)$ &egrave; arbitraria e in questo esempio &egrave; definita cos&igrave;: $u(t)=0.2 t$
-                <li>la condizione di Cauchy &egrave; arbitrariamente assegnata a $x_0=1.5$.
+                <li>anche $u(t)$ &egrave; arbitraria e in questo esempio &egrave; definita cos&igrave;: $u(t)=0.2 t$</li>
+                <li>la condizione di Cauchy &egrave; arbitrariamente assegnata a $x_0=1.5$.</li>
             </ul>
 
             Il codice quindi precalcola i vari $s_k$ che saranno coinvolti nel calcolo di $x(t)$:<br />
@@ -293,7 +293,7 @@ x_0 = 1.5</code></pre>
             <pre><code class="python">sk_fn = lambda k :  (1./h) * lambertw(ad * h * np.exp(-a * h), k) + a
 SK = [sk_fn(k) for k in range (-k_range, k_range+1)]
 </code></pre>
-            e dopo l&apos;esecuzione di questo frammento, la variabile <code>SK</code> contiene la lista di tutti i vari $s_k$ precalcolati una volta per tutte.        
+            e dopo l&apos;esecuzione di questo frammento, la variabile <code>SK</code> contiene la lista di tutti i vari $s_k$ precalcolati una volta per tutte.
 
             Segue l&apos;implementazione di $x(t)$ in Python:<br />
             <br />
@@ -333,7 +333,7 @@ SK = [sk_fn(k) for k in range (-k_range, k_range+1)]
         sk = SK[k + k_range]
         int_for_cki = integral_for_cki(sk)
         ck_denom = (1. + ad * h * np.exp(-sk * h))
-        cki = (x_0 + ad + np.exp(-sk * h) * int_for_cki) / ck_denom
+        cki = (x0 + ad * np.exp(-sk * h) * int_for_cki) / ck_denom
         tot += np.exp(sk * t) * cki
     tot += integral_for_x_t()
     return tot</code></pre>
@@ -350,9 +350,9 @@ SK = [sk_fn(k) for k in range (-k_range, k_range+1)]
             <pre><code class="python">x_num_sol=[x(t) for t in t_space]</code></pre>
             al termine della quale la variabile <code>x_num_sol</code> &egrave; una lista che contiene i valori discretizzati di $x(t)$ nell&apos;intervallo prestabilito.
             Si noti che gli elementi della lista sono numeri complessi con la parte immaginaria molto vicina a $0j$;
-            dovrebbe essere $0j$ ma non lo &egrave; per via di arrotondamenti.<br />
+            dovrebbe essere uguale a $0j$ ma non lo &egrave; per via delle approssimazioni.<br />
             <br />
-            Per tracciare il grafico della parte reale e della parte immaginaria (giusto per vedere che sta intorno a $0$ si esegua questo codice:<br />
+            Per tracciare il grafico della parte reale e della parte immaginaria (giusto per vedere che sia intorno a $0$) si esegua il seguente codice:<br />
             <br />
             <pre><code class="python">plt.figure()
 plt.plot(t_space, np.real(x_num_sol), linewidth=1, label='real')
@@ -365,24 +365,24 @@ plt.show()</code></pre>
             la cui esecuzione produce il seguente grafico:
         </p>
         <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_result_xt_1.png" /></div>
-        <div class="photocaption">Grafico della funzione $x(t)$ calcolata numericamente</div>
+        <div class="photocaption">Grafico della funzione $x(t)$, soluzione dell&apos;equazione, calcolata numericamente</div>
         <br /><br />
 
         <h3>La verifica</h3>
         <p>
             Non avendo una soluzione analitica da confrontare, la verifica non &egrave; cos&igrave; immediata e richiede un doppio passaggio:
             si calcolano separamente il primo membro e il secondo membro della DDE e poi si mettono a confronto su uno stesso grafico:
-            se i calcoli e l&apos;implementazione sono corretti le due curve saranno praticamente sovrappossti.
+            se i calcoli e l&apos;implementazione sono corretti le due curve saranno praticamente sovrapposte.
             Naturamente la parte immaginaria, essendo praticamente $0$, non &egrave; presa in considerazione nella verifica.
             <ul>
                 <li>
-                    Il primo membro (chiamato <em>left</em>), cio&egrave; la $x&apos;(t)$, lo si pu&ograve; calcolare approssimando $x&apos;(t)$ con $\frac{{\Delta x}}{{\Delta t}}$
+                    Il primo membro (chiamato <em>left</em>), cio&egrave; la $x&apos;(t)$, lo si pu&ograve; calcolare approssimando $x&apos;(t)$ con $\frac{{\Delta x(t)}}{{\Delta t}}$
                     e quindi facendo la differenza tra due valori adiacenti dell&apos;array <code>x_num_sol</code> diviso per il passo di discretizzazione del tempo.
                 </li>
                 <li>
                     Il secondo membro (chiamato <em>right</em>) lo si calcola eseguendo la formula sostituendo i valori formali con i valori attuali dei coefficienti e della funzione $u(t)$ 
                     mentre per quanto riguarda $x(t)$ e $x(t-h)$ essi si sostituiscono con i corrispodenti valori dell&apos;array <code>x_num_sol</code>
-                    avendo l&apos;accortezza di saltare i primi valori di $t$ pari ad un tempo $t<=h$ onde evitare di avere $t-h$ negativo e per i quali nell&apos;array non si avrebbe un valore da fornire
+                    avendo l&apos;accortezza di saltare i valori di $t<=h$ onde evitare di avere $t-h$ negativo e per i quali nell&apos;array non si avrebbe un valore da fornire
                     (&egrave; anche vero che si potrebbe usare $g(t)$ ma si tratta di pochi di valori che possono essere saltati senza inficiare la verifica). 
                 </li>
             </ul>
@@ -407,7 +407,7 @@ plt.xlabel('t')
 plt.ylabel('x(t)')
 plt.legend()
 plt.show()]</code></pre>
-            che mostra senza alcun dubbio la correttezza dell&apos;implementazione nei limiti dell&apos;approssimazione numerica:
+            Il grafico mostra senza alcun dubbio la correttezza dell&apos;implementazione nei limiti dell&apos;approssimazione numerica:
         </p>
         <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_result_derivxt_1.png" /></div>
         <div class="photocaption">
@@ -489,7 +489,7 @@ IFAC Workshop on Time Delay Systems, Boston, MA.</code></pre>
 											<span class="opener">Matematica</span>
 											<ul>
 												<li><a href="../../it/matematica/">INDICE</a></li>
-												<li><a href="_post_ma_xxxxxxxxx_url_">_post_ma_xxxxxxxx_title_</a></li>
+												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
 											</ul>
 										</li>
 										<li>

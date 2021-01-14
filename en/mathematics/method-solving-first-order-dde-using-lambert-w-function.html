@@ -1,0 +1,563 @@
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>A method to solve first-order time delayed differential equation using Lambert W function</title>
+		<meta name="description" content="Method of solving first-order time delayed linear differential equations using Lambert W function." >
+		<meta name="keywords" content="time delay system, time delay differential equations, linear differential equations, differential equations, dde, Lambert W function" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html",
+              "name": "A method to solve first-order time delayed differential equation using Lambert W function"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>A method to solve first-order time delayed differential equation using Lambert W function</h1>
+		</header>
+		<p>
+            This post was inspired by the paper <a href="https://www.sciencedirect.com/science/article/pii/S147466701534708X/pdf?md5=a311d2f1bb151c7996e17b8f5cba171e&pid=1-s2.0-S147466701534708X-main.pdf" target="_blank">The Lambert W Function Approach to Time Delay Systems and the LambertW_DDE Toolbox</a>
+            and from a math lesson by Prof. Fausta D&apos;Acunzo from <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparation 2.0</a> about the Lambert W function.
+            The post shows how to solve a particular type of differential equation with delay (abbreviated DDE for <em>Delay Differential Equations</em>) with initial values be given using the Lambert W function; the post does not deal into the underlying mathematics
+            for which we refer to the paper cited above and focuses instead on the implementation in Python 3.x with SciPy of the numerical solution of the <em>scalar case</em> analyzed on the paper itself.</br >
+		</p>
+
+        <h2>The <em>&quot;DDE scalar case&quot;</em> problem</h2>
+        <p>
+            Time Delayed Systems (abbreviated TDS) are systems in which there is a significant time delay between the application of input to the system and the resulting output,
+            and this delay may be inherent or deliberately introduced. A TDS can be modeled with delayed differential equations.</ br>
+            This section discusses the case of a scalar coefficient DDE; after formal definitions of the problem and the solution, which makes use of Lambert W function,
+            it is shown the implementation of a Python program with SciPy that realizes the solution proposed by the paper.
+            Finally a verification phase shows the correctness of the solution within the acceptable approximation limits.
+		</p>
+
+        <h3>The differential problem and its solution</h3>
+        <p>
+            Let the following system be given that contains a DDE:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x'(t) = a x(t) + a_d x(t-h) + b u(t) & t > 0
+                \\
+                x(t) = g(t) & t \in [-h, 0)
+                \\ 
+                x(t) = x_0 & t = 0
+            \end{cases}
+            \end{equation} $$
+
+            where:
+            <ul>
+                <li>$x(t)$ is the unknown function</li>
+                <li>$a$, $a_d$ e $b$ are scalar constants $\in \rm I\!R$</li>
+                <li>$h$ is a constant $\in \rm I\!R^+$, therefore strictly positive and represents the delay</li>
+                <li>$g(t)$ is a function that provides the values of $x(t)$ when the time variable $t$ is included in the interval $[-h, 0)$</li>
+                <li>$x(0) = x_0$ is the Cauchy initial condition.</li>
+            </ul>
+
+            In accordance with the paper, the solution of the DDE is as follows:
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_solution_schema_1.png" /></div>
+        <div class="photocaption">Formal solution provided by the paper, specifically in section 2.3 on page 2.</div>
+        <br /><br />
+        <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_sk_computation_1.png" /></div>
+        <div class="photocaption">Formula for calculating $s_k$, specifically in section 2.2 on page 2.</div>
+        <br />
+
+        <p>
+            where $W_k$ is the Lambert function W of index $k$.<br />
+            The Lambert function W is a family of functions defined in the complex field obtained as the index $k$ varies.
+            For further information see <a href="https://en.wikipedia.org/wiki/Lambert_W_function" target="_blank">Lambert W function on Wikipedia</a>.
+        </p>
+
+        <h3>Implementing in Python with SciPy</h3>
+        <p>
+            Two notes are necessary before going into the implementation:
+            <ul>
+                <li>the function W cannot be expressed in terms of elementary functions, therefore we will use the numerical implementation <code>scipy.special.lambertw</code> provided by SciPy;</li>
+                <li>
+                    for the calculation of integrals we will always use SciPy and in particular <code>scipy.integrate.quad</code> keeping in mind however
+                    that we operate in the complex field (since the various $s_k$ are complex because they are calculated with $W_k$) and then we must be careful to integrate separately the real part from the imaginary part
+                    because <code>scipy.integrate.quad</code> does not support integration in the complex field.
+                </li>
+            </ul>
+            Given the above, the necessary imports are:<br />
+            <br />
+            <pre><code class="python">import numpy as np
+from scipy import real, imag
+from scipy.integrate import quad
+from scipy.special import lambertw
+import matplotlib.pyplot as plt
+</code></pre>
+
+            there is also the import of <code>matplotlib.pyplot</code> for plotting graphs.<br />
+            <br />
+            In terms of the naming convention used for variable names, the following two rules were followed:
+            <ul>
+                <li>
+                    the names of the mathematical objects in the solution proposed by the paper (see figures above) have been implemented with Python variables of the same name;
+                    for example the constants $a$, $a_d$ and $b$ correspond to the Python variables <code>a</code>, <code>ad</code> and <code>b</code>,
+                    the unknown function $x(t)$ is; the Python function <code>def x(t):</code>
+                    and so on;
+                </li>
+                <li>
+                    regarding the names of Python variables that do not have a direct correspondence with the names of mathematical objects
+                    we chose to use deliberately long names to make their semantics clear;
+                    for example <code>k_range</code> is the range in which the index $k$ of the function W varies (to be intended from <code>-k_range</code> to <code>+k_range</code>)
+                    or the variable <code>int_for_cki</code> is the value of the integral that is involved in the calculation of $C_k^I$
+                    and so on.
+                </li>
+            </ul>
+
+            That said, the settings used in this example are:<br />
+            <br />
+            <pre><code class="python">t_begin=0.
+t_end=10.
+t_nsamples=101
+t_space, t_step = np.linspace(t_begin, t_end, t_nsamples, retstep=True)
+
+k_range=9
+a = 0.5
+ad = -2.5
+b = 1.75
+h = 1.
+g = lambda t : 1. - 0.1 * t
+u = lambda t : 0.2 * t
+x0 = 1.5</code></pre>
+            As it is obvious, in the transition from the continuum of theory to the discretization of the approximate numerical implementation, certain choices are made:</br>
+            <ul>
+                <li>time $t$ varies from $0$ to $10$ with $101$ sampling (hence discretization step equal to $0.1$);</li>
+                <li>the index $k$ of the function W in theory varies from $-\infty$ to $+\infty$, in this example we restrict the variation from $-9$ to $+9$.</li>
+            </ul>
+            also:
+            <ul>
+                <li>$a$, $a_d$ and $b$ are three arbitrarily chosen coefficients; the experimenter can freely change them;</li>
+                <li>
+                    $g(t)$, as mentioned above, gives the values of $x(t)$ before time $0$;
+                    it too was arbitrarily defined at $g(t) = 1 - 0.1 t$.
+                </li>
+                <li>$u(t)$ is also arbitrary and in this example is defined as follows: $u(t)=0.2 t$</li>
+                <li>the Cauchy condition is arbitrarily assigned to $x_0=1.5$.</li>
+            </ul>
+
+            The code then precalculates the various $s_k$ that will be involved in calculating $x(t)$:<br />
+            <br />
+            <pre><code class="python">sk_fn = lambda k :  (1./h) * lambertw(ad * h * np.exp(-a * h), k) + a
+SK = [sk_fn(k) for k in range (-k_range, k_range+1)]
+</code></pre>
+            and after the execution of this fragment, the variable <code>SK</code> contains the list of all the various $s_k$ precomputed once and for all.        
+
+            The implementation of $x(t)$ in Python follows:<br />
+            <br />
+            <pre><code class="python">def x(t):
+    def integrand_for_cki(t_, sk):
+        return np.exp(-sk * t_) * g(t_ - h)
+
+    def integral_for_cki(sk):
+        def real_func(t_, sk):
+            return np.real(integrand_for_cki(t_, sk))
+        def imag_func(t_, sk):
+            return np.imag(integrand_for_cki(t_, sk))
+        real_integral = quad(real_func, 0., h, args=(sk))
+        imag_integral = quad(imag_func, 0., h, args=(sk))
+        return real_integral[0] + 1.j*imag_integral[0]
+
+    def integrand_for_x_t(eta):
+        tot = 0.
+        for k in range (-k_range, k_range+1):
+            sk = SK[k + k_range]
+            ck_denom = (1. + ad * h * np.exp(-sk * h))
+            ckn = 1. / ck_denom
+            tot += np.exp(sk * (t - eta)) * ckn * b * u(eta)
+        return tot
+
+    def integral_for_x_t():
+        def real_func(eta):
+            return np.real(integrand_for_x_t(eta))
+        def imag_func(eta):
+            return np.imag(integrand_for_x_t(eta))
+        real_integral = quad(real_func, 0., t)
+        imag_integral = quad(imag_func, 0., t)
+        return real_integral[0] + 1.j*imag_integral[0]
+
+    tot = 0.
+    for k in range (-k_range, k_range+1):
+        sk = SK[k + k_range]
+        int_for_cki = integral_for_cki(sk)
+        ck_denom = (1. + ad * h * np.exp(-sk * h))
+        cki = (x0 + ad * np.exp(-sk * h) * int_for_cki) / ck_denom
+        tot += np.exp(sk * t) * cki
+    tot += integral_for_x_t()
+    return tot</code></pre>
+			Note the nested functions <code>integrand_for_cki</code> and <code>integral_for_cki</code> to respectively realize the integrand function
+            and the integral involved in the computation of $C_k^I$ with the separation of the integration of the real part from the imaginary part.
+            The same is true for the nested functions <code>integrand_for_x_t</code> and <code>integral_for_x_t</code> written with the same logic
+            to realize respectively the integrand function and the integral involved in the calculation of $x(t)$.<br />
+            <br />
+            <b>Note</b>: in the writing of the code it has been privileged the correspondence and the fidelity between the code and the mathematics described on the paper
+            at the expense of some missed optimization and some principles of good programming deliberately left out to make the code more readable.<br />
+            <br />
+            To perform the calculation of the function $x(t)$ in the interval $t \in [0, 10]$ this line of code is sufficient:<br />
+            <br />
+            <pre><code class="python">x_num_sol=[x(t) for t in t_space]</code></pre>
+            at the end of which the variable <code>x_num_sol</code> is a list containing the discretized values of $x(t)$ in the given interval.
+            Note that the elements of the list are complex numbers with the imaginary part very close to $0j$;
+            should be equal to $0j$ but is not because of the approximations.<br />
+            <br />
+            To graph the real part and the imaginary part (just to see that it is around $0$) run the following code:<br />
+            <br />
+            <pre><code class="python">plt.figure()
+plt.plot(t_space, np.real(x_num_sol), linewidth=1, label='real')
+plt.plot(t_space, np.imag(x_num_sol), linewidth=1, label='imaginary')
+plt.title('DDE 1st order IVP solved with W Lambert function')
+plt.xlabel('t')
+plt.ylabel('x(t)')
+plt.legend()
+plt.show()</code></pre>
+            whose execution produces the following graph:
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_result_xt_1.png" /></div>
+        <div class="photocaption">Graph of the function $x(t)$, solution of the equation, calculated numerically</div>
+        <br /><br />
+
+        <h3>Verification</h3>
+        <p>
+            Not having an analytical solution to compare, the verification is not so immediate and requires a double step:
+            one calculates separately the first member and the second member of the DDE and then compares them on the same graph:
+            if the calculations and implementation are correct, the two curves will be practically superimposed.
+            Of course the imaginary part, being practically $0$, is not taken into account in the verification.            <ul>
+            <li>
+                    The first member (called <em>left</em>), i.e., the $x&apos;(t)$, can be computed by approximating $x&apos;(t)$ with $\frac{{\Delta x(t)}}{{\Delta t}}$
+                    and then doing the difference between two adjacent values of the <code>x_num_sol</code> array divided by the time discretization step.
+                </li>
+                <li>
+					The second member (called <em>right</em>) is calculated by running the formula replacing the formal values with the actual values of the coefficients and the function $u(t)$ 
+                    while as for $x(t)$ and $x(t-h)$ they are replaced with the corresponding values of the array <code>x_num_sol</code>.
+                    having the care to skip the values of $t<=h$ in order to avoid having negative $t-h$ and for which in the array there would be no value to provide
+                    (it is also true that you could use $g(t)$ but these are few values that can be skipped without affecting the verification).
+                </li>
+            </ul>
+            To perform the verification calculations run this code:<br />
+            <br />
+            <pre><code class="python">num_of_cells_for_h_time = int(h/t_step)
+
+x_num_grad_left = [np.real((x_num_sol[i+1] - x_num_sol[i])) / t_step
+	for i in range(num_of_cells_for_h_time, t_nsamples-1)]
+x_num_grad_right = [
+	a * np.real(x_num_sol[i]) +
+	ad * np.real(x_num_sol[i - num_of_cells_for_h_time])
+	+ b * u(t_space[i])
+		for i in range(num_of_cells_for_h_time, t_nsamples-1)]</code></pre>
+            while the following code plots the graphs of the <em>left</em> and <em>right</em> members:<br />
+            <br />
+            <pre><code class="python">plt.figure()
+plt.plot(range(num_of_cells_for_h_time, t_nsamples-1), x_num_grad_left, linewidth=1, label='left')
+plt.plot(range(num_of_cells_for_h_time, t_nsamples-1), x_num_grad_right, linewidth=1, label='right')
+plt.title('Derivative of the solution of DDE solved with W Lambert function')
+plt.xlabel('t')
+plt.ylabel('x(t)')
+plt.legend()
+plt.show()]</code></pre>
+            The graph shows without any doubt the correctness of the implementation in the limits of the numerical approximation:
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/method-solving-first-order-dde-using-lambert-w-function/ma_dde1sollambw_result_derivxt_1.png" /></div>
+        <div class="photocaption">
+			Graph of the derivative $x&apos;(t)$ calculated numerically<br />	
+            by performing separate calculations on the <em>left</em> and <em>right</em> members of the equation
+        </div>
+        <br /><br />
+
+        <h2>Citations</h2>
+        <p>
+            <pre><code class="text">Yi, S. , Nelson, P.W. , and Ulsoy, A.G. , 
+2007a, "Survey on analysis of time delayed systems via the Lambert w function,"
+Dynamics of Continuous, Discrete and Impulsive Systems (Series A) (in press).</code></pre>
+
+            <pre><code class="text">Yi, S., Duan, S., Nelson, P., and Ulsoy, A. G., 
+2012, "The Lambert W Function Approach to Time Delay Systems and the LambertW_DDE Toolbox,"
+IFAC Workshop on Time Delay Systems, Boston, MA.</code></pre>
+        </p>
+        </p>
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/DDEs/solver-demos/python/SciPy/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html">Experiments with Neural ODEs in Python with TensorFlowDiffEq</a></li>
+												<li><a href="../../en/neural-networks/experiments-with-neural-odes-in-julia.html">Experiments with Neural ODEs in Julia</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+

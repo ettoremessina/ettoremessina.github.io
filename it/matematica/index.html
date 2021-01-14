@@ -34,12 +34,12 @@
 		</script>
 
 
-		<title>Machine&nbsp;Learning</title>
-		<meta name="description" content="Questa pagina &egrave; l&apos;indice di tutti i post sul machine learning pubblicati su questo sito web con esperimenti ed esempi su Accord.NET, ML.NET, Weka, SciPy e altri ML framework." >
-		<meta name="keywords" content="machine learning, accord.net, ml.net, weka, SciPy, Octave, MatLab, approssimazione, regressione, funzione, curva" >
-		<link rel="canonical" href="https://computationalmindset.com/it/machine-learning/" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/" />
+		<title>Matematica</title>
+		<meta name="description" content="Questa pagina &egrave; l&apos;indice di tutti i post sulla matematica applicata pubblicati su questo sito web con esperimenti ed esempi in Python e Julia usando librerie di calcolo scientifico." >
+		<meta name="keywords" content="matematica, funzione, curva, equazione differenziale, ode, dde, integrale, derivata, differenziale, analisi, calcolo" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -83,8 +83,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/machine-learning/",
-              "name": "Machine Learning"
+              "@id": "https://computationalmindset.com/it/matematica/",
+              "name": "Matematica"
             }
           }
 		
@@ -130,87 +130,36 @@
 	<section id="banner">
 		<div class="content">
 			<header>
-				<h1>Machine&nbsp;Learning</h1>
-				<p>Esperimenti su Machine Learning</p>
+				<h1>Matematica</h1>
+				<p>Esempi di matematica applicata</p>
 			</header>
 		</div>
 		<div class="image object">
-			<img src="../../images/banner-ml.jpg" alt="Machine Learning" />
+			<img src="../../images/banner-ma.jpg" alt="Matematica" />
 		</div>
 		<div class="content">
-			<br />
+			<br/>
 			<p>
-	Studi, esperimenti ed esempi di modelli di apprendimento automatico basati algoritmi e tecnologie di machine learninig di diverse tipologie: Weka, SciPy, Accord.NET, ML.NET, Octave e altre.
-	Applicazioni degli algoritmi di machine learning all'approssimazione di oggetti matematici, all'analisi di testi, immagini, suoni e video, alla ricerca di pattern ricorrenti in serie numeriche.
-	Codice ed esempi rigorosamente originali e scritti in vari linguaggi per varie piattaforme, funzionanti e liberamente disponibili su <a href="https://github.com/ettoremessina/" target="_blank">GitHub</a>.
+	Studi, esperimenti ed esempi di problemi di matematica applicata e relative soluzioni implementate in Python e/o in Julia usando librerie per il calcolo scientifico quali NumPy, SciPy, DifferentialEquations e altre.
+	In particolare sono presenti degli esempi per risolvere alcuni tipi di problemi per la modellazione dei sistemi dinamici.
+	Codice ed esempi rigorosamente originali, funzionanti e liberamente disponibili su <a href="https://github.com/ettoremessina/" target="_blank">GitHub</a>.
 </p>
 		</div>
 	</section>
 
 	<header class="major">
-		<h3>Tutti i Post sul Machine Learning</h3>
+		<h3>Tutti i Post sulla Matematica</h3>
 	</header>
 
 	<dl>
-		<dt><h4><a href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html">Strumenti generali per l&apos;approssimazione di funzioni</a><h4></dt>
+		<dt><h4><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a><h4></dt>
 		<dd>
 			<p>
-    Questo post descrive l&apos;usage di alcuni tool generali per la generazione e la visualizzazione di dataset
-    che rappresentano o approssimano oggetti matematici quali funzioni, curve e superfici;
-    tali tool sono utilizzati da altri programmi descritti in altri post di questo sito web.
-</p>
+    I sistemi a tempo con ritardo possono essere modellati con equazioni differenziali con ritardo che a loro volta possono essere risolte numericamente,
+    in alcuni specifici casi, utilizzando la funzione W di Lambert.
+    Questo post mostra e spiega l&apos;implementazione di un programma per calcolare le soluzioni fornite da un paper citato in bibliografia.</p>
 		</dd>
 	</dl>
-
-	<dl>
-		<dt><h4><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a><h4></dt>
-		<dd>
-			<p>
-    L&apos;algoritmo XGBoost, conosciuto per aver vinto numerose competizioni Kaggle, d&agrave; risultati incredibili nell&apos;ambito dell&apos;approssimazione di funzioni;
-    i risultati sono estremamente esaltanti sia in termini di metriche di errore che di performance.
-</p>
-		</dd>
-	</dl>
-
-	<dl>
-		<dt><h4><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a><h4></dt>
-		<dd>
-			<p>
-    Gli algoritmi Support Vector Machine, conosciuti impiegati nel contesto della classificazione, possono essere adoperati nell&apos;ambito della regressione e
-    in particolare nell&apos;approssimazione di funzioni reali sia scalari che vettoriali a una o pi&ugrave; variabili reali.
-</p>
-		</dd>
-	</dl>
-
-	<dl>
-		<dt><h4><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a><h4></dt>
-		<dd>
-			<p>
-    Questo post mostra un uso della classe PolynomialRegression del framework Accord.NET con l&apos;obiettivo di dimostrare
-    che la regressione polinomiale classica del machine learning pu&ograve; raggiungere interessanti livelli di accuratezza con tempi di learning estremamente brevi.</p>
-		</dd>
-	</dl>
-
-	<dl>
-		<dt><h4><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a><h4></dt>
-		<dd>
-			<p>
-    Questo post mostra come usare Weka, e precisamente l&apos;algoritmo SMO per la regressione SVM con kernel PUK, con il fine di realizzare una regressione
-    di dataset generati sinteticamente tramite funzioni reali di una variabile continue e limitate.
-</p>
-		</dd>
-	</dl>
-
-	<dl>
-		<dt><h4><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a><h4></dt>
-		<dd>
-			<p>
-    Questo post mostra come usare Weka, e precisamente l&apos;algoritmo SMO per il forecasting SVM con kernel polinomiale, con il fine di realizzare il forecast
-    di una serie storica generata sinteticamente con periodicit&agrave; e trend.
-</p>
-		</dd>
-	</dl>
-
 
 						</div>
 				</div>
