@@ -1,0 +1,438 @@
+dnldnl
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</title>
+		<meta name="description" content="Un metodo di soluzione di equazioni differenziali con ritardo del primo ordine utilizzando la funzione W di Lambert." >
+		<meta name="keywords" content="sistemi a tempo con ritardo, equazioni differenziali con ritardo, equazioni differenziali, equazioni differenziali, dde, funzione W di Lambert" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/",
+              "name": "Matematica"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html",
+              "name": "Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/MentalitaComputazionale/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+    $\newcommand{\dee}{\mathop{\mathrm{d}\!}}$
+	<section>
+		<header class="main">
+			<h1>Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</h1>
+		</header>
+		<p>
+            Questo sito web si occupa principalmente di computazione numerica e in altri post in cui si &egrave; trattato l&apos;argomento
+            delle equazioni differenziali si sono proposte infatti soluzioni numeriche opportune (si veda <a href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html">Risolutori di equazioni differenziali ordinarie in Python</a>);
+            tuttavia quando una soluzione analitica &egrave; possibile determinarla sarebbe in generale da preferire a quella numerica sia perch&eacute; essa &egrave; esatta (e non approssimata)
+            che anche per motivi di performance. Nell&apos;ecosistema di Python vi &egrave; la libreria <a href="https://www.sympy.org/en/index.html" target="_blank">SymPy</a>
+            che &egrave; una libreria di matematica simbolica e il suo obiettivo &egrave; quello di essere un sistema di algebra computerizzata completa (CAS)
+            mantenendo il codice il più semplice possibile per essere comprensibile e facilmente estensibile.<br />
+            Questo post mostra come utilizzare <em>SymPy</em> per risolvere analiticamente equazioni differenziali ordinarie (abbreviato <em>ODE</em> da <em>Ordinary Differential Equation</em>)
+            e inoltre con la &quot;lambdificazione&quot; si mostra come passare dalla rappresentazione simbolica a un oggeto Python &quot;callable&quot; e quindi eseguire calcoli numerici
+            a partire da soluzioni analitiche esatte.<br/>
+            <br/>
+            Tutti gli esempi di questo post e le relative soluzioni sono stati forniti dalla prof.ssa Fausta D&apos;Acunzo di <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>:
+            ogni esempio cade in una qualche tipologia nota di ODE del primo ordine e per ciascun esempio verr&agrave; confrontata la soluzione corretta, calcolata a mano da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>,
+            e quella ottenuta dalla libreria <em>SymPy</em>.
+        </p>
+
+        <h2>Installare e usare <em>SymPy</em></h2>
+        <p>
+            Per installare <em>SymPy</em> con <code>pip</code> &egrave; sufficiente eseguire:
+            <pre><code class="shell">$ pip install sympy</code></pre>
+            Per installare con Anaconda eseguire:<br />
+            <br />
+            <pre><code class="shell">$ conda install -c anaconda sympy</code></pre>
+            &Egrave; anche possibile installare <em>SymPy</em> dai sorgenti o con altri metodi; si veda <a href="https://docs.sympy.org/latest/install.html" target="blank">docs.sympy.org/latest/install.html</a> per dettagli.<br />
+            <br />
+            <em>SymPy</em> &egrave; anche disponibile online all&apos;indirizzo <a href="https://live.sympy.org/" target="blank">live.sympy.org</a>,
+            quindi senza necessit&agrave; di doverlo installare localmente. Se ci si serve della versione online si tenga presente che i seguenti import sono pre-eseguiti:<br />
+            <br />
+            <pre><code class="python"> from __future__ import division
+from sympy import *
+x, y, z, t = symbols('x y z t')
+k, m, n = symbols('k m n', integer=True)
+f, g, h = symbols('f g h', cls=Function)</code></pre>
+            Tutti i vari frammenti di codice descritti in questo post richiedono la versione 3.x di Python, ovviamente il package SymPy e i seguenti package: NumPy, MatPlotLib.<br/>
+			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
+            <br/>
+        </p>
+
+		<h2>Convenzioni</h2>
+		<p>
+            In questo post le convenzioni adoperate sono le seguenti:
+            <ul>
+                <li>$t$ &egrave; la variabile indipendente</li>
+                <li>$f$ &egrave; la funzione incognita</li>
+                <li>$f$ &egrave; da intendersi funzione di $t$, quindi $f=f(t)$</li>
+                <li>$f&apos;$ &egrave; la derivata prima di f rispetto a $t$ nella notazione di Lagrange</li>
+                <li>$\frac{\dee f(t)}{\dee t}$ &egrave; la derivata prima di f rispetto a $t$ nella notazione di Leibniz</li>
+            </ul>
+        </p>
+        <br />
+
+        <h2>ODE a variabili separabili (primo esempio)</h2>
+        <p>
+            Sia dato il seguente problema di Cauchy:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = -2 \mkern3mu t \mkern3mu f
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = -2 \mkern3mu t \mkern3mu f(t)
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            
+    $$f(t) = e^{-t^2}$$
+
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">eq = Eq(f(t).diff(t), -2 * t * f(t))</code></pre>
+            mentre per eseguire il problema di Cauchy proposto eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, ics={f(0): 1})
+print(classify_ode(eq)[0])
+pprint(an_sol)</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">separable
+              2
+        -t 
+f(t) = e</code></pre>
+            da cui si evince chiaramente che sia la classe di ODE determinata dalla libreria che la soluzione ottenuta sono quelle attese.<br />
+            <br />
+            Per passare dal calcolo simbolico al calcolo numerico bisogna effettuare una &quot;lambdificazione&quot; della parte destra della soluzione:<br />
+            <br />
+            <pre><code class="python">lmbd_sol = lambdify(t, an_sol.rhs)</code></pre>
+            ed eseguendo questo semplicissimo test:<br />
+            <br />
+            <pre><code class="python">t_range = [0., 0.5, 1., 1.5, 2.0]
+print([lmbd_sol(ti) for ti in t_range])</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">[1.0,
+0.7788007830714049, 
+0.36787944117144233, 
+0.10539922456186433, 
+0.01831563888873418]</code></pre>
+            si vede chiaramente che dal risultato simbolico si &egrave; passati al risultato numerico.
+		<p>
+
+        <h2>ODE a variabili separabili (secondo esempio)</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2>ODE omogenea</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2>ODE quasi omogenea</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2>ODE lineare</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2>ODE Bernoulli</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2>ODE Riccati</h2>
+        <p>
+        TBD...TBD...TBD...
+		<p>
+
+        <h2 id="downloadcode">Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/DDEs/solver-demos/python/SymPy/">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/esperimenti-con-neural-odes-in-python-con-tensorflowdiffeq.html">Esperimenti con Neural ODEs in Python con TensorFlowDiffEq</a></li>
+												<li><a href="../../it/reti-neurali/esperimenti-con-neural-odes-in-julia.html">Esperimenti con Neural ODEs in Julia</a></li>
+												<li><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html">Risolutori di equazioni differenziali ordinarie in Python</a></li>
+												<li><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html">Risolutori di equazioni differenziali ordinarie in Julia</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Matematica</span>
+											<ul>
+												<li><a href="../../it/matematica/">INDICE</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../it/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
