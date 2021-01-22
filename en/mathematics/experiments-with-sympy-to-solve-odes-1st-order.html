@@ -1,0 +1,637 @@
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Experiments with SymPy to solve first-order ordinary differential equations</title>
+		<meta name="description" content="Examples of use of the SymPy library to solve in symbolic way first-order differential equations of different types." >
+		<meta name="keywords" content="differential equations, symbolic calculus, algebra, ode, SymPy, Python" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html",
+              "name": "Experiments with SymPy to solve first-order ordinary differential equations"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+    $\newcommand{\dee}{\mathop{\mathrm{d}\!}}$
+	<section>
+		<header class="main">
+			<h1>Experiments with SymPy to solve first-order ordinary differential equations</h1>
+		</header>
+		<p>
+            This website deals mainly with numerical computation and in other posts in which we have dealt with the topic
+            of differential equations have indeed proposed appropriate numerical solutions (see <a href="https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a>);
+            however, when it is possible to determine an analytical solution would generally prefer it to the numerical one both because it is exact (and not approximate)
+            and also for performance reasons. In the Python ecosystem there is the library <a href="https://www.sympy.org/en/index.html" target="_blank">SymPy</a>
+            which is a symbolic mathematics library and its goal is to be a complete computer algebra system (CAS).<br />
+            This post shows how to use <em>SymPy</em> to analytically solve ordinary differential equations (abbreviated <em>ODE</em>) in Python
+            and also with &quot;lambdification&quot; we show how to go from symbolic representation to a Python &quot;callable&quot; object and then perform numerical calculations
+            from exact analytical solutions.<br/>
+            <br/>
+            All the examples in this post and their solutions have been provided by Prof. Fausta D&apos;Acunzo of <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>:
+            each example falls into some known type of first-order ODE and for each example we will compare the correct solution, computed by hand by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>,
+            with the one obtained from the <em>SymPy</em> library.
+		</p>
+
+		<h2>Install and use <em>SymPy</em></h2>
+        <p>
+            To install <em>SymPy</em> with <code>pip</code> simply run:
+            <pre><code class="shell">$ pip install sympy</code></pre>
+            To install with <code>conda</code> on Anaconda run:<br />
+            <br />
+            <pre><code class="shell">$ conda install sympy</code></pre>
+            It is also possible to install <em>SymPy</em> from source or by other methods; see <a href="https://docs.sympy.org/latest/install.html" target="blank">docs.sympy.org/latest/install.html</a> for details.<br />
+            <br />
+            <em>SymPy</em> is also available online at <a href="https://live.sympy.org/" target="blank">live.sympy.org</a>,
+            so there is no need to install it locally. If you use the online version please note that the following imports are pre-executed:<br />
+            <br />
+            <pre><code class="python">from __future__ import division
+from sympy import *
+x, y, z, t = symbols('x y z t')
+k, m, n = symbols('k m n', integer=True)
+f, g, h = symbols('f g h', cls=Function)</code></pre>
+            All the various code snippets described in this post require Python version 3.x, of course the SymPy package and the following packages: NumPy, MatPlotLib.<br/>
+			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
+            <br/>
+        </p>
+
+		<h2>Conventions</h2>
+		<p>
+            In this post the conventions used are as follows:
+            <ul>
+                <li>$t$ is the independent variable</li>
+                <li>$f$ is the unknown function</li>
+                <li>$f$ is intended to be functions of $t$, so $f=f(t)$</li>
+                <li>$f&apos;$ is the first derivative of x with respect to $t$ in Lagrange notation</li>
+                <li>$\frac{\dee f(t)}{\dee t}$ is the first derivative of x with respect to $t$ in Leibniz notation</li>
+            </ul>
+        </p>
+        <br />
+
+        <h2>Separable ODE (first example)</h2>
+        <p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = -2 \mkern3mu t \mkern3mu f
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            which rewritten in Leibniz notation (which is the one used by <em>SymPy</em>) becomes:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = -2 \mkern3mu t \mkern3mu f(t)
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            whose exact solution, provided by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, is:
+            
+    $$f(t) = e^{-t^2}$$
+
+            With <em>SymPy</em> the above equation is stated as follows:
+            <pre><code class="python">eq = Eq(f(t).diff(t), -2 * t * f(t))
+print('ODE class: ', classify_ode(eq)[0])
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">ODE class: separable</code></pre>
+            from which it is clear that the class of ODE determined by the library is the expected one.<br />
+            <br />
+            To solve the proposed Cauchy problem execute the following Python statement:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, ics={f(0): 1})
+pprint(an_sol)</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">           2
+        -t 
+f(t) = e</code></pre>
+            From which it is clear that the solution obtained from the library is the expected one.<br />
+            <br />
+            To switch from symbolic to numerical computation, we need to perform a &quot;lambdification&quot; of the right-hand side of the solution:<br />
+            <br />
+            <pre><code class="python">lmbd_sol = lambdify(t, an_sol.rhs)</code></pre>
+            and performing this very simple test:<br />
+            <br />
+            <pre><code class="python">t_range = [0., 0.5, 1., 1.5, 2.0]
+print([lmbd_sol(ti) for ti in t_range])</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">[1.0,
+0.7788007830714049, 
+0.36787944117144233, 
+0.10539922456186433, 
+0.01831563888873418]</code></pre>
+            you can clearly see that from the symbolic result you went to the numerical result.<br />
+            <br />
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_separable_01.py">GitHub</a>.<br />                    
+		</p>
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/experiments-with-sympy-to-solve-odes-1st-order/ma_expsympyodes1_graph_1.png" /></div>
+        <div class="photocaption">Graph of the function $f(t)$, solution of the previous Cauchy problem.</div>
+        <br /><br />
+
+        <h2>Separable ODE (second example)</h2>
+        <p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t-1}{f + 1}
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            which rewritten in Leibniz notation (which is the one used by <em>SymPy</em>) becomes:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t-1}{f(t) + 1}
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            whose exact solution, provided by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, is:
+            
+    $$f(t) = -t$$
+
+            With <em>SymPy</em> the above equation is stated as follows:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t-1)/(f(t)+1))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">ODE class:  separable</code></pre>
+            from which it is clear that the class of ODE determined by the library is the expected one.<br />
+            <br />
+            To solve the proposed Cauchy problem execute the following Python statement:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, ics={f(0): 0})
+pprint(an_sol)</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">          ______________    
+         ╱  2               
+f(t) = ╲╱  t  - 2⋅t + 1  - 1</code></pre>
+            The solution obtained seems different from the one given, however note that the value under root is the square of the binomial $(t-1)$
+            and the square elides with the root so simplifying the solution becomes $f(t)=|t-1| - 1$
+            and removing the absolute value operator we get the two possible solutions $f(t)=t-2$ and $f(t)=-t$
+            and considering the Cauchy condition $f(0)=0$, the solution found is $f(t)=-t$ is exactly as expected.<br />
+            <br />
+            The transition from symbolic to numerical computation and the plotting of the graph
+            are practically identical to the previous case and refer to the code for details.<br />
+            <br />
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_separable_02.py">GitHub</a>.
+            <br />
+		</p>
+
+        <h2>Homogeneous ODE</h2>
+        <p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t^2+f^2}{tf}
+                \\
+                f(2) = 2
+            \end{cases}
+            \end{equation} $$
+
+            which rewritten in Leibniz notation (which is the one used by <em>SymPy</em>) becomes:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t^2+f(t)^2}{tf(t)}
+                \\
+                f(2) = 2
+            \end{cases}
+            \end{equation} $$
+
+            whose exact solution, provided by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, is:
+            
+        $$f(t) = t \sqrt{2 \ln{\frac{t}{2}} + 1} $$
+
+            With <em>SymPy</em> the above equation is stated as follows:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t**2 + f(t)**2)/(t * f(t)))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">ODE class:  Bernoulli</code></pre>
+            from which we see that the library chooses to solve the equation using a different class of ODE than the one expected.<br />
+            <br />
+            To solve the proposed Cauchy problem by forcing the library to use the desired class, run the following Python statement:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_homogeneous_coeff_best', ics={f(2):2},)
+pprint(an_sol)</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">            ______________________
+           ╱    ⎛ 2⎞              
+f(t) = t⋅╲╱  log⎝t ⎠ - log(4) + 1</code></pre>
+            The solution obtained seems different from the one given, however note that the values under root are equivalent for the properties of logarithms
+            (precisely both are equivalent to $1 + \ln {\frac{t^2}{4}}$) and then the solution found is and therefore the solution found is exactly is exactly as expected.<br />
+            <br />
+			The transition from symbolic to numerical computation and the plotting of the graph
+            are practically identical to the previous case and refer to the code for details.<br />            <br />
+            <br />
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_homogeneous_01.py">GitHub</a>.
+		</p>
+
+        <h2>Linear ODE lineare (first example)</h2>
+        <p>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = 3 \mkern3mu t^2 \mkern3mu f + t \mkern3mu e^{t^3}
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            which rewritten in Leibniz notation (which is the one used by <em>SymPy</em>) becomes:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = 3 \mkern3mu t^2 \mkern3mu f(t) + t \mkern3mu e^{t^3}
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            whose exact solution, provided by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, is:
+            
+    $$f(t) = (\frac{t^2}{2} + 1) \mkern3mu e^{t^3}$$
+
+            With <em>SymPy</em> the above equation is stated as follows:
+            <pre><code class="python">eq = Eq(f(t).diff(t), 3 * t**2 * f(t) + t * exp(t**3))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">ODE class: 1st_exact</code></pre>
+            from which we see that the library chooses to solve the equation using a different class of ODE than the one expected.<br />
+            <br />
+            To solve the proposed Cauchy problem by forcing the library to use the desired class, run the following Python statement:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_linear', ics={f(0): 1})
+pprint(an_sol)</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">       / 2    \  / 3\
+       |t     |  \t /
+f(t) = |-- + 1|*e    
+       \2     /    </code></pre>
+            The solution obtained from the library is the expected one.<br />
+            <br />
+			The transition from symbolic to numerical computation and the plotting of the graph
+            are practically identical to the previous case and refer to the code for details.<br />            <br />
+            <br />
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_linear_01.py">GitHub</a>.
+		</p>
+
+        <h2>Linear ODE lineare (second example)</h2>
+            Let the following Cauchy problem be given:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t}{1 + t^2} \mkern3mu f + 1
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            which rewritten in Leibniz notation (which is the one used by <em>SymPy</em>) becomes:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t}{1 + t^2} \mkern3mu f(t) + 1
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            whose exact solution, provided by <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, is:
+            
+    $$f(t) = \sqrt{1 + t^2} \ln(t + \sqrt{1 + t^2})$$
+
+            With <em>SymPy</em> the above equation is stated as follows:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t / (1 + t**2)) * f(t) + 1)
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">ODE class: 1st_exact</code></pre>
+            from which we see that the library chooses to solve the equation using a different class of ODE than the one expected.<br />
+            <br />
+            To solve the proposed Cauchy problem by forcing the library to use the desired class, run the following Python statement:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_linear', ics={f(0): 0})
+pprint(an_sol)</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">        2                    
+       t *asinh(t) + asinh(t)
+f(t) = ----------------------
+               ________      
+              /  2           
+            \/  t  + 1  </code></pre>
+            The solution obtained seems different from the one given, but actually, applying the definitions of $arcsinh$ and $arccosh$ gives the same result.<br />
+            The proof in the graph of its solutions as shown in the figure.<br />
+            <br />
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_linear_02.py">GitHub</a>.
+		</p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/experiments-with-sympy-to-solve-odes-1st-order/ma_expsympyodes1_graph_7.png" /></div>
+        <div class="photocaption">
+            Graphs of the function $f(t)$, solution of the previous Cauchy problem<br />
+            calculated with the expected formula and with the one obtained from the library and are naturally identical.
+		</div>
+        <br /><br />
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html">Experiments with Neural ODEs in Python with TensorFlowDiffEq</a></li>
+												<li><a href="../../en/neural-networks/experiments-with-neural-odes-in-julia.html">Experiments with Neural ODEs in Julia</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></li>
+												<li><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+

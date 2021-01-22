@@ -1,4 +1,4 @@
-dnldnl
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -36,8 +36,8 @@ dnldnl
 
 
 		<title>Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</title>
-		<meta name="description" content="Un metodo di soluzione di equazioni differenziali con ritardo del primo ordine utilizzando la funzione W di Lambert." >
-		<meta name="keywords" content="sistemi a tempo con ritardo, equazioni differenziali con ritardo, equazioni differenziali, equazioni differenziali, dde, funzione W di Lambert" >
+		<meta name="description" content="Esempi di uso della libreria SymPy per risolvere in modo simbolico equazioni differenziali del primo ordine di diverse tipologie." >
+		<meta name="keywords" content="equazioni differenziali, calcolo simbolico, algebra, ode, SymPy, Python" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html" />
@@ -168,11 +168,10 @@ dnldnl
 		<p>
             Questo sito web si occupa principalmente di computazione numerica e in altri post in cui si &egrave; trattato l&apos;argomento
             delle equazioni differenziali si sono proposte infatti soluzioni numeriche opportune (si veda <a href="https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html">Risolutori di equazioni differenziali ordinarie in Python</a>);
-            tuttavia quando una soluzione analitica &egrave; possibile determinarla sarebbe in generale da preferire a quella numerica sia perch&eacute; essa &egrave; esatta (e non approssimata)
+            tuttavia quando &egrave; possibile determinare una soluzione analitica sarebbe in generale da preferirla a quella numerica sia perch&eacute; essa &egrave; esatta (e non approssimata)
             che anche per motivi di performance. Nell&apos;ecosistema di Python vi &egrave; la libreria <a href="https://www.sympy.org/en/index.html" target="_blank">SymPy</a>
-            che &egrave; una libreria di matematica simbolica e il suo obiettivo &egrave; quello di essere un sistema di algebra computerizzata completa (CAS)
-            mantenendo il codice il più semplice possibile per essere comprensibile e facilmente estensibile.<br />
-            Questo post mostra come utilizzare <em>SymPy</em> per risolvere analiticamente equazioni differenziali ordinarie (abbreviato <em>ODE</em> da <em>Ordinary Differential Equation</em>)
+            che &egrave; una libreria di matematica simbolica e il suo obiettivo &egrave; quello di essere un sistema di algebra computerizzata completa (CAS).<br />
+            Questo post mostra come utilizzare <em>SymPy</em> per risolvere analiticamente equazioni differenziali ordinarie (abbreviato <em>ODE</em> da <em>Ordinary Differential Equation</em>) in Python
             e inoltre con la &quot;lambdificazione&quot; si mostra come passare dalla rappresentazione simbolica a un oggeto Python &quot;callable&quot; e quindi eseguire calcoli numerici
             a partire da soluzioni analitiche esatte.<br/>
             <br/>
@@ -185,15 +184,15 @@ dnldnl
         <p>
             Per installare <em>SymPy</em> con <code>pip</code> &egrave; sufficiente eseguire:
             <pre><code class="shell">$ pip install sympy</code></pre>
-            Per installare con Anaconda eseguire:<br />
+            Per installare con <code>conda</code> su Anaconda eseguire:<br />
             <br />
-            <pre><code class="shell">$ conda install -c anaconda sympy</code></pre>
+            <pre><code class="shell">$ conda install sympy</code></pre>
             &Egrave; anche possibile installare <em>SymPy</em> dai sorgenti o con altri metodi; si veda <a href="https://docs.sympy.org/latest/install.html" target="blank">docs.sympy.org/latest/install.html</a> per dettagli.<br />
             <br />
             <em>SymPy</em> &egrave; anche disponibile online all&apos;indirizzo <a href="https://live.sympy.org/" target="blank">live.sympy.org</a>,
             quindi senza necessit&agrave; di doverlo installare localmente. Se ci si serve della versione online si tenga presente che i seguenti import sono pre-eseguiti:<br />
             <br />
-            <pre><code class="python"> from __future__ import division
+            <pre><code class="python">from __future__ import division
 from sympy import *
 x, y, z, t = symbols('x y z t')
 k, m, n = symbols('k m n', integer=True)
@@ -243,19 +242,24 @@ f, g, h = symbols('f g h', cls=Function)</code></pre>
     $$f(t) = e^{-t^2}$$
 
             Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
-            <pre><code class="python">eq = Eq(f(t).diff(t), -2 * t * f(t))</code></pre>
-            mentre per eseguire il problema di Cauchy proposto eseguire il seguente statement Python:<br />
+            <pre><code class="python">eq = Eq(f(t).diff(t), -2 * t * f(t))
+print('ODE class: ', classify_ode(eq)[0])
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ODE class: separable</code></pre>
+            da cui si evince chiaramente che  la classe di ODE determinata dalla libreria &egrave; quella attesa.<br />
+            <br />
+            Per risolvere il problema di Cauchy proposto eseguire il seguente statement Python:<br />
             <br />
             <pre><code class="python">an_sol = dsolve(eq, ics={f(0): 1})
-print(classify_ode(eq)[0])
 pprint(an_sol)</code></pre>
             il cui output &egrave;:<br />
             <br />
-            <pre><code class="shell">separable
-              2
+            <pre><code class="shell">           2
         -t 
 f(t) = e</code></pre>
-            da cui si evince chiaramente che sia la classe di ODE determinata dalla libreria che la soluzione ottenuta sono quelle attese.<br />
+            da cui si evince chiaramente che la soluzione ottenuta  dalla libreria &egrave; quella attesa.<br />
             <br />
             Per passare dal calcolo simbolico al calcolo numerico bisogna effettuare una &quot;lambdificazione&quot; della parte destra della soluzione:<br />
             <br />
@@ -271,42 +275,277 @@ print([lmbd_sol(ti) for ti in t_range])</code></pre>
 0.36787944117144233, 
 0.10539922456186433, 
 0.01831563888873418]</code></pre>
-            si vede chiaramente che dal risultato simbolico si &egrave; passati al risultato numerico.
-		<p>
+            si vede chiaramente che dal risultato simbolico si &egrave; passati al risultato numerico.<br />
+            <br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_separable_01.py">GitHub</a>.<br />                    
+		</p>
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/experiments-with-sympy-to-solve-odes-1st-order/ma_expsympyodes1_graph_1.png" /></div>
+        <div class="photocaption">Grafico della funzione $f(t)$, soluzione del precedente problema di Cauchy.</div>
+        <br /><br />
 
         <h2>ODE a variabili separabili (secondo esempio)</h2>
         <p>
-        TBD...TBD...TBD...
-		<p>
+            Sia dato il seguente problema di Cauchy:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t-1}{f + 1}
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t-1}{f(t) + 1}
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            
+    $$f(t) = -t$$
+
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t-1)/(f(t)+1))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ODE class:  separable</code></pre>
+            da cui si evince chiaramente che  la classe di ODE determinata dalla libreria &egrave; quella attesa.<br />
+            <br />
+            Per risolvere il problema di Cauchy proposto eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, ics={f(0): 0})
+pprint(an_sol)</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">          ______________    
+         ╱  2               
+f(t) = ╲╱  t  - 2⋅t + 1  - 1</code></pre>
+            La soluzione ottenuta sembra diversa da quella fornita, tuttavia si osservi che il valore sotto radice &egrave; il quadrato del binomio $(t-1)$
+            e il quadrato si elide con la radice per cui semplificando la soluzione diventa $f(t)=|t-1| - 1$
+            e togliendo il modulo si ottengono le due possibili soluzioni $f(t)=t-2$ e $f(t)=-t$
+            e considerando la condizione di Cauchy $f(0)=0$, la soluzione trovata &egrave; $f(t)=-t$ &egrave; esattamente quella prevista.<br />
+            <br />
+            Il passaggio dal calcolo simbolico a quello numerico e il tracciamento del grafico
+            sono praticamente identici al caso precedente e si rimanda al codice per i dettagli.<br />
+            <br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_separable_02.py">GitHub</a>.
+            <br />
+		</p>
 
         <h2>ODE omogenea</h2>
         <p>
-        TBD...TBD...TBD...
-		<p>
+            Sia dato il seguente problema di Cauchy:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t^2+f^2}{tf}
+                \\
+                f(2) = 2
+            \end{cases}
+            \end{equation} $$
 
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t^2+f(t)^2}{tf(t)}
+                \\
+                f(2) = 2
+            \end{cases}
+            \end{equation} $$
+
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            
+        $$f(t) = t \sqrt{2 \ln{\frac{t}{2}} + 1} $$
+
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t**2 + f(t)**2)/(t * f(t)))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ODE class:  Bernoulli</code></pre>
+            da cui si vede che la libreria sceglie di risolvere l&apos;equazione usando una classe di ODE diversa da quella attesa.<br />
+            <br />
+            Per risolvere il problema di Cauchy proposto, forzando la libreria a usare la classe desiderata, eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_homogeneous_coeff_best', ics={f(2):2},)
+pprint(an_sol)</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">            ______________________
+           ╱    ⎛ 2⎞              
+f(t) = t⋅╲╱  log⎝t ⎠ - log(4) + 1</code></pre>
+            La soluzione ottenuta sembra diversa da quella fornita, tuttavia si osservi che i valori sotto radice sono equivalenti per le propriet&agrave; dei logaritmi
+            (precisamente entrambe equivalgono a $1 + \ln {\frac{t^2}{4}}$) e quindi la soluzione trovata &egrave;
+            esattamente quella prevista.<br />
+            <br />
+            Il passaggio dal calcolo simbolico a quello numerico e il tracciamento del grafico
+            sono praticamente identici al primo caso precedente e si rimanda al codice per i dettagli.<br />
+            <br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_homogeneous_01.py">GitHub</a>.
+		</p>
+
+<!--
         <h2>ODE quasi omogenea</h2>
-        <p>
+        </p>
         TBD...TBD...TBD...
-		<p>
+		</p>
 
-        <h2>ODE lineare</h2>
-        <p>
+        <h2>ODE di forma esatta</h2>
+        </p>
         TBD...TBD...TBD...
-		<p>
+		</p>
+-->
 
+        <h2>ODE lineare (primo esempio)</h2>
+        <p>
+            Sia dato il seguente problema di Cauchy:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = 3 \mkern3mu t^2 \mkern3mu f + t \mkern3mu e^{t^3}
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = 3 \mkern3mu t^2 \mkern3mu f(t) + t \mkern3mu e^{t^3}
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            
+    $$f(t) = (\frac{t^2}{2} + 1) \mkern3mu e^{t^3}$$
+
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">eq = Eq(f(t).diff(t), 3 * t**2 * f(t) + t * exp(t**3))
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ODE class: 1st_exact</code></pre>
+            da cui si vede che la libreria sceglie di risolvere l&apos;equazione usando una classe di ODE diversa da quella attesa.<br />
+            <br />
+            Per risolvere il problema di Cauchy proposto, forzando la libreria a usare la classe desiderata, eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_linear', ics={f(0): 1})
+pprint(an_sol)</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">       / 2    \  / 3\
+       |t     |  \t /
+f(t) = |-- + 1|*e    
+       \2     /    </code></pre>
+            La soluzione ottenuta &egrave; esattamente quella prevista.<br />
+            <br />
+            Il passaggio dal calcolo simbolico a quello numerico e il tracciamento del grafico
+            sono praticamente identici al primo caso precedente e si rimanda al codice per i dettagli.<br />
+            <br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_linear_01.py">GitHub</a>.
+		</p>
+
+        <h2>ODE lineare (secondo esempio)</h2>
+        <p>
+            Sia dato il seguente problema di Cauchy:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                f' = \frac{t}{1 + t^2} \mkern3mu f + 1
+                \\
+                f(0) = 1
+            \end{cases}
+            \end{equation} $$
+
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \frac{\dee f(t)}{\dee t} = \frac{t}{1 + t^2} \mkern3mu f(t) + 1
+                \\
+                f(0) = 0
+            \end{cases}
+            \end{equation} $$
+
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            
+    $$f(t) = \sqrt{1 + t^2} \ln(t + \sqrt{1 + t^2})$$
+
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">eq = Eq(f(t).diff(t), (t / (1 + t**2)) * f(t) + 1)
+print('ODE class: ', classify_ode(eq)[0])</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ODE class: 1st_exact</code></pre>
+            da cui si vede che la libreria sceglie di risolvere l&apos;equazione usando una classe di ODE diversa da quella attesa.<br />
+            <br />
+            Per risolvere il problema di Cauchy proposto, forzando la libreria a usare la classe desiderata, eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_linear', ics={f(0): 0})
+pprint(an_sol)</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">        2                    
+       t *asinh(t) + asinh(t)
+f(t) = ----------------------
+               ________      
+              /  2           
+            \/  t  + 1  </code></pre>
+            La soluzione sembrerebbe diversa da quella attesa, ma in realt&agrave;, applicando le definizioni di $arcsinh$ e $arccosh$ si ottiene lo stesso risultato.<br />
+            La prova nel grafico delle sue soluzioni come mostrato in figura.<br />
+            <br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_linear_02.py">GitHub</a>.
+		</p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/experiments-with-sympy-to-solve-odes-1st-order/ma_expsympyodes1_graph_7.png" /></div>
+        <div class="photocaption">
+            Grafici della funzione $f(t)$, soluzione del precedente problema di Cauchy<br />
+            calcolato con la formula attesa e con quella ottenuta dalla libreria e sono naturalmente identici.
+        </div>
+        <br /><br />
+
+<!--
         <h2>ODE Bernoulli</h2>
-        <p>
-        TBD...TBD...TBD...
-		<p>
+            Sia dato il seguente problema di Cauchy:
+            ma_expsympyodes1_exp_problem_vdef_8
+            che riscritto in notazione di Leibniz (che &egrave; quella utilizzata da <em>SymPy</em>) diventa:
+            ma_expsympyodes1_exp_problem_ddef_8
+            la cui soluzione esatta, fornita da <a href="https://www.youtube.com/channel/UCRF8fKu-9nVZAdjOc3j4kCg" target="_blank">Preparazione 2.0</a>, &egrave:
+            ma_expsympyodes1_exp_handsol_8
+            Con <em>SymPy</em> l&apos;equazione di cui sopra si dichiara nel seguente modo:
+            <pre><code class="python">ma_expsympyodes1_impl_eqdef_8</code></pre>
+            mentre per eseguire il problema di Cauchy proposto eseguire il seguente statement Python:<br />
+            <br />
+            <pre><code class="python">ma_expsympyodes1_impl_solve_8</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">ma_expsympyodes1_out_solve_8</code></pre>
+            La prima classe individuata dalla libreria non &egrave; 1st_linear ma 1st_exact, e la soluzione sembrerebbe diversa,
+            ma in realt&agrave;, applicando le definizioni di $arcsinh$ e $arccosh$ si ottiene lo stesso risultato.<br />
+            La prova nel grafico delle sue soluzioni come mostrato in figura.<br />
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/ode_1st_ord_bernoulli_01.py">GitHub</a>.
+-->
 
+<!--
         <h2>ODE Riccati</h2>
         <p>
         TBD...TBD...TBD...
-		<p>
+		</p>
+-->
 
         <h2 id="downloadcode">Download del codice completo</h2>
 		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/DDEs/solver-demos/python/SymPy/">GitHub</a>.
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/python/SymPy/">GitHub</a>.
 			<br/>
 			
 			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
