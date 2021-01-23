@@ -36,12 +36,12 @@
 		</script>
 
 
-		<title>SMO forecast for SVM with polynomial kernel in Weka</title>
-		<meta name="description" content="Forecasting of a synthetic timeseries with periodicity and trend using the SMO forecast for SVM with polynomial kernel in Weka" >
-		<meta name="keywords" content="forecast, SMO, SVM, polynomial, kernel, prediction, time series, seasonality, periodicity, dataset, machine learning, Weka" >
-		<link rel="canonical" href="https://computationalmindset.com/en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html" />
+		<title>Differential Equations and Neural Networks</title>
+		<meta name="description" content="This page is an index of posts posts of this website that deal with some specific topic related to differential equations and neural networks." >
+		<meta name="keywords" content="differential  equation, neural network, neural odes, ode. dde, python, julia" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/differential-equations-and-neural-networks.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/differential-equations-and-neural-networks.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/equazioni-differenziali-e-reti-neurali.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -85,8 +85,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/machine-learning/",
-              "name": "Machine Learning"
+              "@id": "https://computationalmindset.com/en/neural-networks/",
+              "name": "Neural Networks"
             }
           },
 
@@ -95,14 +95,24 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html",
-              "name": "SMO forecast for SVM with polynomial kernel in Weka"
+              "@id": "https://computationalmindset.com/en/neural-networks/differential-equations-and-neural-networks.html",
+              "name": "Differential Equations and Neural Networks"
             }
 		  }
 		
         ]
     }
-    </script>
+    </script>		
+		<style>
+			.valign-middle
+			{
+				vertical-align: middle;
+			}
+			.size-of-symbols
+			{
+				font-size: 20px;
+			}
+		</style>
 		
 
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
@@ -163,120 +173,81 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>SMO forecast for SVM with polynomial kernel in Weka</h1>
+			<h1>Differential Equations and Neural Networks</h1>
 		</header>
-
 		<p>
-			This post shows a use in Weka of the <em>SMOreg</em> regressor (Sequential Minimal Optimization) which is an efficient machine learning algorithm for SVM (Support Vector Machine)
-			to implement the approximators; SMOreg can be used also to implement predictions (forecast) on timeseries; the used kernel is a simple one, namely it is the <em>PolyKernel</em> (Polynomial Kernel)
-			and the degree of polynomial will be 1.
-			The objective is to demonstrate that classic machine learning forecast can achieve interesting levels of accuracy with extremely short learning times.<br />
-			Although LSTM (Long Short Memory Term) type neural networks can be considered the best neural network typologies for the forecasting,
-			a classic supervised machine learning forecast algorithm, like the one presented here, can reach acceptable levels of accuracy and with a significantly lower computational cost than that of an LSTM neural network.<br />
-			<br />
-			In the real world datasets pre-exist the learning phase, in fact they are obtained by extracting data from production databases or Excel files,
-			from the output of measuring instruments, from data-loggers connected to electronic sensors and so on, and then used for the following learning phases;
-			but since the focus here is the forecast itself and not the prediction of a real phenomenon, the datasets used in this post have been synthetically generated from mathematical functions:
-			this has the advantage of being able to stress the algorithm and see for which types of datasets the algorithm has acceptable accuracy and for which the algorithm is struggling. 
+			The following table contains links to individual posts on this website that deal with some specific topic
+            related to differential equations and neural networks.
 		</p>
 
-		<h2>Complete sequence of steps</h2>
-		<p>
-			Launch the <a href="https://www.cs.waikato.ac.nz/ml/weka/" target="_blank">Weka</a> program of the University of Waikato (New Zealand);
-			in this post the version of Weka used is 3.8.3, but what I said also works with previous versions; Weka requires that the <a href="https://www.java.com/" target="_blank">Java</a> runtime is installed correctly.<br/>
-			After the Weka program is launched, the following window appears:
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/weka-main.png" /></div>
-			press the <em>Explorer</em> button highlighted in red.<br />
-			When the <em>Weka Explorer</em> window is displayed:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/weka-explorer.png" /></div>
-			press the <em>Open Url...</em> button, highlighted in red, to load the dataset in .arff format
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-load-learnts.png" /></div>
-			paste the dataset url <a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/timeseries/univariate/004/learnts.arff" target="_blank">004/learntss.arff</a> and press <em>Ok</em>.<br />
-			The loaded synthetic time series is generated with the formula
-	$y=\frac{t}{50} + \sin \frac{t}{10}$</td>
-within $t \in I\!N, 0 \leq t < 200$;<br />
-			the <em>Weka Explorer</em> window (located on the <em>Preprocess</em> tab) looks like this:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast.png" /></div>
-			For the purposes of the objectives of this post we can ignore this tab, then open the <em>Forecast</em> tab
-			as highlighted in red and the user interface appears like this:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast.png" /></div>
-			and change <em>Number of time units to forecast</em> to 200 (the number of predictions to compute),
-			<em>Time stamp</em> to <em>None</em> (because the chosen timeseries has no explicit field for time)
-			and <em>Periodicity</em> set to <em>Detect automatically</em> (even though it would be known).<br />
-			To choose the forecast algorithm in question, go to tab <em>Advanced configuration</em>
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-advconf.png" /></div>
-			and press the <em>Choose</em> button and this popup is shown on the screen:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-choose.png" /></div>
-			and choose the <em>SMOreg</em> entry under the <em>functions</em> category; the user interface looks like this:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-smoreg.png" /></div>
-			Then press the SMOreg label to configure the parameters of the algorithm <em>Sequential Minimal Optimization</em> (abbreviated SMO):
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-params.png" /></div>
-			Namely it is important to set the parameter <em>filterType</em> to <em>No normalization/standadization</em>;
-			for all other parameters keep the default proposed values; then press <em>OK</em>.
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-smoreg-poly.png" /></div>
-			Press the <em>Start</em> button to perform the forecast; after a few seconds of processing in the tab <em>Train future pred.</em> of the right part of the window
-			Weka shows the graph of the timeseries of the dataset (abscissae from 0 to 200) and the prediction (abscissae over 200).
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-result1.png" /></div>
-			Note that learning the trend is right and also the periodicity seems right, but it tends to crush the amplitude as the abscissae increases.<br />
-			To correct this, open the parameters of the SMOReg algorithm configuration again:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-params-bis.png" /></div>
-			click on the label <em>RegSMOImproved</em> as highlighted in red; the following popup &egrave; is shown:
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-smoreg-improved-params.png" /></div>
-			set <em>epsilonParameter</em> and <em>Tolerance</em> parameters to 1.0E-5. Return to Weka Explorer by closing the two open popups with the <em>OK</em> button
-			and press <em>Start</em> again to compute a new forecast.
-		</p>
-		<p>
-			<div class="betweentextlines"><img src="../../posts/machine-learning/weka-smo-poly-forecast/004-weka-explorer-forecast-result2.png" /></div>
-			As the graph clearly shows, the forecast obtained has the same periodic form and trend as the initial time series.
-		</p>
-
-		<h2>Media</h2>
+		<h2>Link to posts</h2>
 		<div class="table-wrapper">
 			<table class="alt">
 				<thead>
 					<tr>
-						<th>Type</th>
-						<th>Title</th>
+						<th class="align-center">Post</th>
+						<th class="align-center">Summary</th>
+						<th class="align-center">Language</th>
+						<th class="align-center">Technologies</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
+						<td class="valign-middle"><a href="../../en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html">Experiments with Neural ODEs in Python with TensorFlowDiffEq</a></td>
+                        <td class="valign-middle">
+    Examples of usages of Neural ODEs implemented in Python using TensorFlow 2.x and TensorFlowDiffEq.
+</td>
 						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://youtu.be/RhffSnoh5f4" target="_blank" class="icon brands fa-youtube" style="color: red;"></a>
-						</td>
-						<td>
-							<a href="https://youtu.be/RhffSnoh5f4" target="_blank">Forecast of an univariate time series with SMO and polynomial kernel in Weka</a>
+                            <img src="../../posts/neural-networks/python-logo-120.png" style="max-width: 30px; max-height: 30px" title="Python" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" title="TensorFlow" />
 						</td>
 					</tr>
+					<tr>
+						<td class="valign-middle"><a href="../../en/neural-networks/experiments-with-neural-odes-in-julia.html">Experiments with Neural ODEs in Julia</a></td>
+                        <td class="valign-middle">
+    Examples of usages of Neural ODEs implemented in Julia using the packages DifferentialEquations, Flux, DiffEqFlux of the Julia ecosystem.
+</td>
+						<td class="align-center valign-middle size-of-symbols">
+                            <img src="../../posts/neural-networks/julia-logo-120.png" style="max-width: 30px; max-height: 30px" title="Julia" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/dejl-logo-120.png" style="max-width: 30px; max-height: 30px" title="DifferentialEquations.jl"/>
+                            <img src="../../posts/neural-networks/flux-logo-120.png" style="max-width: 30px; max-height: 30px" title="Flux.jl"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle"><a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a></td>
+                        <td class="valign-middle">
+    Examples of use of some ordinary differential equation solvers in Python implemented by libraries frequently used in scientific applications in general and expecially in machine learning and deep learning.
+</td>
+						<td class="align-center valign-middle size-of-symbols">
+                            <img src="../../posts/neural-networks/python-logo-120.png" style="max-width: 30px; max-height: 30px" title="Python" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/scipy-logo-120.png" style="max-width: 30px; max-height: 30px" title="SciPy" />
+                            <img src="../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" title="TensorFlow" />
+                            <img src="../../posts/neural-networks/pytorch-logo-120.png" style="max-width: 30px; max-height: 30px" title="PyTorch"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="valign-middle"><a href="../../en/neural-networks/ordinary-differential-equation-solvers-in-julia.html">Ordinary differential equation solvers in Julia</a></td>
+                        <td class="valign-middle">
+    Examples of use of some ordinary differential equation solvers in Julia implemented by the <em>DifferentialEquations.jl</em> native package of Julia ecosystem.
+</td>
+						<td class="align-center valign-middle size-of-symbols">
+                            <img src="../../posts/neural-networks/julia-logo-120.png" style="max-width: 30px; max-height: 30px" title="Julia" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/dejl-logo-120.png" style="max-width: 30px; max-height: 30px" title="DifferentialEquations.jl"/>
+						</td>
+					</tr>                    
 				</tbody>
 				<tfoot>
 				</tfoot>
 			</table>
-		</div>
+
 	</section>
 
 						</div>

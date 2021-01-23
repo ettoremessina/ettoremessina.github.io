@@ -34,12 +34,12 @@
 		</script>
 
 
-		<title>Approssimazione con percettroni multistrato altamente configurabili</title>
-		<meta name="description" content="Approssimare una funzione reale di due variabili osservando diversi modelli di percettrone multistrato con TensorFlow senza scrivere codice ma solo tramite linea di comando." >
-		<meta name="keywords" content="machine learning, deep learning, rete neurale, tensorflow, percettrone multistrato, mlp, approssimazione, regressione, funzione, due variabili, superficie, attivazione, addestramento, loss, ottimizzazione, linea di comando" >
-		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html" />
+		<title>Equazioni Differenziali e Reti Neurali</title>
+		<meta name="description" content="Questa pagina &egrave; un indice di post di questo sito web che trattano un qualche specifico argomento collegato alle equazioni differenziali e alle reti neurali." >
+		<meta name="keywords" content="equazione differenziale, rete neurale, neural odes, ode. dde, python, julia" >
+		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/equazioni-differenziali-e-reti-neurali.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/differential-equations-and-neural-networks.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/equazioni-differenziali-e-reti-neurali.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -93,8 +93,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html",
-              "name": "Approssimazione con percettroni multistrato altamente configurabili"
+              "@id": "https://computationalmindset.com/it/reti-neurali/equazioni-differenziali-e-reti-neurali.html",
+              "name": "Equazioni Differenziali e Reti Neurali"
             }
 		  }
 		
@@ -171,125 +171,76 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Approssimazione con percettroni multistrato altamente configurabili</h1>
+			<h1>Equazioni Differenziali e Reti Neurali</h1>
 		</header>
-
 		<p>
-			L&apos;approssimazione di funzioni a una o più variabili, di curve e di superfici con una rete neurale
-			&egrave; un problema classico di machine learning e non richiede reti neurali con architetture sofisticate per ottenere risultati con accuratezza prossima al 100%:
-			&egrave; sufficiente un <em>MLP</em> (un percettrone multistrato, dall&apos;inglese Multi-Layer Perceptron) ove il layer di input contiene tanti neuroni quanto è la dimensione del dominio
-			e il layer di output contiene tanti neuroni quanto è la dimensione del codominio mentre vi &egrave; una certa libert&agrave; di opzioni nello scegliere l&apos;architettura degli strati nascosti,
-			le funzioni di attivazione, le funzioni di loss, l&apos;ottimizzatore e i vari parametri di addestramento.
-			<br/>
-			Su Internet si trovano numerosi esempi di MLP che approssimano questo tipo di oggetti matematici; tuttavia spesso tali esempi combinano in un unico script Python la generazione dei dataset
-			(con la funzione da approssimare hardcoded), il training del MLP, la predizione e la visualizzazione dei risultati; inoltre l&apos;architettura della rete neurale &egrave; hardcoded
-			o poco parametrizzabile da linea di comando e infine le funzioni di attivazione, l&apos;algoritmo di ottimizzazione usato e la funzione di loss sono molto spesso decisi dall&apos;autore 
-			senza una spiegazione che descriva le motivazioni della loro scelta.
-			<br/>
-			La scarsa parametrizzazione, il ricorso a scelte implementate hardcoded e l&apos;unificazione di varie funzionalit&agrave; in un unico script rendono poco agevole la sperimentazione
-			e costringono lo sperimentatore a procedere per modifiche di codice al fine di realizzare e testare personalizzazioni del MLP e/o della procedura di addestramento.
+			La seguente tabella contiene i link per accedere ai singoli post di questo sito web che trattano un qualche specifico argomento
+            collegato alle equazioni differenziali e alle reti neurali.
 		</p>
 
-		<p>
-			Scopo di questa serie di post sull&apos;approssimazione di funzioni, curve e superfici &egrave; di consentire all&apos;utilizzatore di sperimentare diverse combinazioni
-			di architettura MLP, funzioni di attivazione, algoritmo di addestramento e funzione di loss senza scrivere codice ma agendo solamente sulla linea di comando di quattro script Python che implementano separatamente le seguenti funzionalit&agrave;:
-			<ul>
-				<li>
-					<b>Creazione dei dataset</b>: generazione di un file csv a partire da un oggetto matematico passato come argomento (quindi <u>non</u> hardcoded). Questa fase &egrave; opzionale in quanto i dataset potrebbero pre-esistere (come avviene nel mondo reale ad esempio estraendo curve da dati presenti su database o file Excel, dall&apos;output di strumenti di misura, dai data-logger collegati a sensori elettronici, ecc)
-					e quindi non necessariamente essere generati in modo sintetico.
-				</li>
-				<li>
-					<b>Definizione dell&apos;architettura del MLP + Addestramento</b>: configurazione dell&apos;architettura degli strati nascosti del MLP con le relative funzioni di attivazione in uscita ed esecuzione della procedura di addestramento sul dataset di training consentendo di specificare la scelta dell&apos;algoritmo di ottimizzazione, della funzione di loss
-					e di altri parametri di addestramento.
-				</li>
-				<li>
-					<b>Predizione</b>: applicazione del modello precedentemente addestrato a un dataset di input (che dovrebbe contenere dati mai visti dal modello in fase di addestramento) e generazione di un file csv di uscita con la predizione.
-				</li>
-				<li>
-					<b>Visualizzazione del risultato</b>: generazione di un grafico che mostra la curva di un dataset di input e quella della predizione e consente la comparazione visuale. Questa fase &egrave; opzionale in quanto la predizione &egrave; salvata al passo precedente in un file csv ed &egrave; quindi gi&agrave; utilizzabile come tale.
-				</li>
-			</ul>
-		</p>
-
-		<h2>Link ai post e al codice</h2>
-		<p>
-			La seguente tabella consente di accedere agli specifici post e al relativo codice delle varie tipologie di approssimatori: clickare sull&apos;icona <i class="icon fas fa-file"></i> per visualizzare il post corrispondente 
-			e sull&apos;icona <i class="icon brands fa-github"></i> per scaricare il codice disponibile su GitHub.
-		</p>
-
+		<h2>Link ai post</h2>
 		<div class="table-wrapper">
 			<table class="alt">
 				<thead>
 					<tr>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th class="align-center"><img src="../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" /> </th>
-						<th class="align-center"><img src="../../posts/neural-networks/pytorch-logo-120.png" style="max-width: 30px; max-height: 30px"/> </th>
-					</tr>
-					<tr>
-						<th>Tipologia</th>
-						<th>&nbsp;</th>
-						<th class="align-center">TensorFlow</th>
-						<th class="align-center">PyTorch</th>
+						<th class="align-center">Post</th>
+						<th class="align-center">Sommario</th>
+						<th class="align-center">Linguaggio</th>
+						<th class="align-center">Tecnologie</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="valign-middle">Approssimazione di una funzione reale di una variabile</td>
-						<td class="align-center valign-middle"><img src="../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-ovff-thumb.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="valign-middle"><a href="../../it/reti-neurali/esperimenti-con-neural-odes-in-python-con-tensorflowdiffeq.html">Esperimenti con Neural ODEs in Python con TensorFlowDiffEq</a></td>
+                        <td class="valign-middle">
+    Esempi d&apos;uso di Neural ODEs in Python utilizzando TensorFlow 2.x e TensorFlowDiffEq.
+</td>
 						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html" class="icon fas fa-file"></a>
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/one-variable-function-fitting" target="_blank" class="icon brands fa-github"></a>
-						</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html" class="icon fas fa-file"></a>
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/one-variable-function-fitting" target="_blank" class="icon brands fa-github"></a>
+                            <img src="../../posts/neural-networks/python-logo-120.png" style="max-width: 30px; max-height: 30px" title="Python" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" title="TensorFlow" />
 						</td>
 					</tr>
 					<tr>
-						<td class="valign-middle">Approssimazione di una curva parametrica su un piano</td>
-						<td class="align-center valign-middle"><img src="../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-pcopf-thumb.png" style="max-width: 80px; max-height: 60px" /></td>
+						<td class="valign-middle"><a href="../../it/reti-neurali/esperimenti-con-neural-odes-in-julia.html">Esperimenti con Neural ODEs in Julia</a></td>
+                        <td class="valign-middle">
+    Esempi d&apos;uso di Neural ODEs in Julia utilizzando i package DifferentialEquations, Flux, DiffEqFlux dell&apos;ecosistema di Julia.
+</td>
 						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-on-plane-fitting" target="_blank" class="icon brands fa-github"></a>
-						</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-on-plane-fitting" target="_blank" class="icon brands fa-github"></a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">Approssimazione di una curva parametrica nello spazio</td>
-						<td class="align-center valign-middle"><img src="../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-pcisf-thumb.png" style="max-width: 100px; max-height: 75px" /></td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/parametric-curve-in-space-fitting" target="_blank" class="icon brands fa-github"></a>
-						</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/parametric-curve-in-space-fitting" target="_blank" class="icon brands fa-github"></a>
+                            <img src="../../posts/neural-networks/julia-logo-120.png" style="max-width: 30px; max-height: 30px" title="Julia" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/dejl-logo-120.png" style="max-width: 30px; max-height: 30px" title="DifferentialEquations.jl"/>
+                            <img src="../../posts/neural-networks/flux-logo-120.png" style="max-width: 30px; max-height: 30px" title="Flux.jl"/>
 						</td>
 					</tr>
 					<tr>
-						<td class="valign-middle">Approssimazione di una funzione reale di due variabili</td>
-						<td class="align-center valign-middle"><img src="../../posts/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable/nn-2vff-thumb.png" style="max-width: 100px; max-height: 75px" /></td>
+						<td class="valign-middle"><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html">Risolutori di equazioni differenziali ordinarie in Python</a></td>
+                        <td class="valign-middle">
+    Esempi d&apos;uso di alcuni risolutori di equazioni differenziali ordinarie implementati da librerie per Python frequentemente adoperate nelle applicazioni scientifiche in generale e soprattutto nel machine learning e nel deep learning.
+</td>
 						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-tensorflow/tree/master/two-variables-function-fitting" target="_blank" class="icon brands fa-github"></a>
-						</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="../../it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html" class="icon fas fa-file" />
-							&nbsp;
-							<a href="https://github.com/ettoremessina/fitting-with-mlp-using-pytorch/tree/master/two-variables-function-fitting" target="_blank" class="icon brands fa-github"></a>
+                            <img src="../../posts/neural-networks/python-logo-120.png" style="max-width: 30px; max-height: 30px" title="Python" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/scipy-logo-120.png" style="max-width: 30px; max-height: 30px" title="SciPy" />
+                            <img src="../../posts/neural-networks/tensorflow-logo-120.png" style="max-width: 30px; max-height: 30px" title="TensorFlow" />
+                            <img src="../../posts/neural-networks/pytorch-logo-120.png" style="max-width: 30px; max-height: 30px" title="PyTorch"/>
 						</td>
 					</tr>
+					<tr>
+						<td class="valign-middle"><a href="../../it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html">Risolutori di equazioni differenziali ordinarie in Julia</a></td>
+                        <td class="valign-middle">
+    Esempi d&apos;uso dei risolutori di equazioni differenziali ordinarie implementati dal package nativo <em>DifferentialEquations.jl</em> dell&apos;ecosistema di Julia.
+</td>
+						<td class="align-center valign-middle size-of-symbols">
+                            <img src="../../posts/neural-networks/julia-logo-120.png" style="max-width: 30px; max-height: 30px" title="Julia" />
+                        </td>				
+						<td class="align-center valign-middle">
+                            <img src="../../posts/neural-networks/dejl-logo-120.png" style="max-width: 30px; max-height: 30px" title="DifferentialEquations.jl"/>
+						</td>
+					</tr>                    
 				</tbody>
 				<tfoot>
 				</tfoot>
