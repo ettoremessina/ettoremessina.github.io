@@ -377,7 +377,7 @@ print('ODE class: ', classify_ode(eq)[0])</code></pre>
             <br />
             To solve the proposed Cauchy problem by forcing the library to use the desired class, run the following Python statement:<br />
             <br />
-            <pre><code class="python">an_sol = dsolve(eq, hint='1st_homogeneous_coeff_best', ics={f(2):2},)
+            <pre><code class="python">an_sol = dsolve(eq, hint='1st_homogeneous_coeff_best', ics={f(2):2})
 pprint(an_sol)</code></pre>
             whose output is:<br />
             <br />
@@ -452,7 +452,7 @@ f(t) = |-- + 1|*e
             \begin{cases}
                 f' = \frac{t}{1 + t^2} \mkern3mu f + 1
                 \\
-                f(0) = 1
+                f(0) = 0
             \end{cases}
             \end{equation} $$
 
