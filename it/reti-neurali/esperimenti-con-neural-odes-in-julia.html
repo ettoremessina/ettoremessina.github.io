@@ -1,3 +1,5 @@
+
+dnldnl
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -166,8 +168,10 @@
 		<p>
             <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviato <em>Neural ODEs</em>) &egrave; un paper che introduce una nuova famiglia di reti neurali
             in cui alcuni strati nascosti (o anche l&apos;unico strato nei casi pi&ugrave; semplici) sono implementati con un risolutore di equazioni differenziali ordinarie. <br />
-            Questo post mostra un esempio scritto in Julia (in futuro ce ne saranno altri) che utilizza alcune idee descritte nel paper <em>Neural ODEs</em> per risolvere un problema di approssimazione della mappatura
-            tra un input e un output in uno preciso scenario.<br />
+            Questo post mostra due esempi scritti in Julia (in futuro ce ne saranno altri) che utilizzano alcune idee descritte nel paper <em>Neural ODEs</em> per mostrare possibili soluzioni nei seguenti scenari:
+            <ul>
+                <li><a href="#exp1">Esperimento #1</a>: addestrare un sistema di ODE per soddisfare un obiettivo.</li>
+                <li><a href="#exp2">Esperimento #2</a>: calcolare il forecast di un sistema di serie temporali descritte da una legge differenziale.</li>
             <br />
             Tutti i vari frammenti di codice descritti in questo post richiedono la versione 1.5.3 di Julia e i seguenti package: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
@@ -206,14 +210,14 @@
             <ul></ul>
             <b>Conoscenza a priori:</b>
             <ul>
-                <li>Un dataset che contenga gli input e gli output</li>
-                <li>Una legge che associ input e output in forma di sistema parametrico di equazioni differenziali</li>
+                <li>Un dataset che contenga gli input e gli output.</li>
+                <li>Una legge che associ input e output in forma di sistema parametrico di equazioni differenziali.</li>
             </ul>
             <b>Obiettivo:</b>
             <ul>
-                <li>Determinare opportuni valori dei parametri affiché il sistema ottenuto sostituendo i parametri formali con i valori determinati approssimi al meglio la mappatura tra input e output.</li>
+                <li>Determinare opportuni valori dei parametri affich&eacute; il sistema ottenuto sostituendo i parametri formali con i valori determinati approssimi al meglio la mappatura tra input e output.</li>
             </ul>
-            Lo stesso scenario &egrave; stato applicato nel post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#lets_put_an_ode_into_a_neural_net_framework">DiffEqFlux.jl – A Julia Library for Neural Differential Equations</a>
+            Lo stesso scenario &egrave; stato applicato nel post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#lets_put_an_ode_into_a_neural_net_framework" target="_blank">DiffEqFlux.jl – A Julia Library for Neural Differential Equations</a>
             sul blog ufficiale di Julia ove la legge &egrave; il sistema di equazioni di Lotka-Volterra che descrive la dinamica della popolazione di prede e predatori.<br />
             In questo post la legge non &egrave; volutamente una legge famosa, ma &egrave; il sistema parametrico di due equazioni del primo ordine e otto parametri mostrato nel seguente paragrafo.
         </p>
@@ -236,7 +240,7 @@
             \end{equation} $$
 
             Ovviamente questa &egrave; una demo il cui scopo &egrave; provare la bont&agrave; del metodo, quindi per preparare il dataset
-            fissiamo arbitrariamente gli otto valori dei parametri, ad esempio questi:
+            si fissino arbitrariamente gli otto valori dei parametri, ad esempio questi:
             
         $$ \left[\begin{matrix}a_1 \\ b_1 \\ c_1 \\ d_1 \\ a_2 \\ b_2 \\ c_2 \\ d_2 \end{matrix} \right] = 
            \left[\begin{matrix}1.11 \\ 2.43 \\ -3.66 \\ 1.37 \\ 2.89 \\ -1.97 \\ 4.58 \\ 2.86 \end{matrix} \right] $$
@@ -429,6 +433,211 @@ plot!(predict_sol.t, y_predict_sol,
         <p>
             Differenti strategie di addestramento consentono di ottenere diversi valori dei parametri e quindi una diversa soluzione numerica del sistema
             con una differente accuratezza. 
+        </p>
+        <br />
+        
+		<h2 id="exp2">Esperimento #2: calcolare il forecast di un sistema di serie temporali descritte da una legge differenziale</h2>
+        <p>
+            Ci sono varie tassonomie di reti neurali black-box per calcolare il forecast di serie temporali (si veda il post si veda il post <a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a> su questo sito web)
+            che sono adatte quando non si ha conoscenza a priori della legge matematica che descriva il comporamento delle serie temporali in input.<br />
+            Quando invece si ha conoscenza a priori della legge differenziale che regoli l&apos;evoluzione delle derivate delle serie temporali
+            (ad esempio nella forma di un sistema parametrico di equazioni differenziali)
+            una rete di tipo Neural ODE diventa lo strumento giusto per calcolare il forecast in modo efficiente e accurato.<br />
+        </p>
+
+		<h3>Lo scenario di applicazione</h3>
+        <p>
+            Lo scenario di applicazione &egrave; il seguente:<br />
+            <ul></ul>
+            <b>Conoscenza a priori:</b>
+            <ul>
+                <li>Un dataset che contenga un set di serie temporali interdipendenti.</li>
+                <li>Una legge che regoli l&apos;evoluzione delle derivate delle serie temporali nel tempo sotto forma di sistema parametrico di equazioni differenziali.</li>
+            </ul>
+            <b>Obiettivo:</b><br />
+            L&apos; obiettivo &egrave; duplice:
+            <ul>
+                <li>1. Addestrare una rete neurale di tipo NeuralODE per imparare il valore dei parametri del sistema di ODE a partire dalle serie temporali in input.</li>
+                <li>2. Utilizzare il sistema imparato per calcolare il forecast, quindi le predizioni con tempo posteriore a quello delle serie temporali iniziali.</li>
+            </ul>
+            L&apos;obiettivo 1 &egrave; simile a quello del post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#understanding_the_neural_ode_layer_behavior_by_example" target="_blank">DiffEqFlux.jl – A Julia Library for Neural Differential Equations</a>
+            sul blog ufficiale di Julia ove la legge che regola le derivate delle serie temporali &egrave; $u(t) = A t^3$ con $A$ una matrice 2x2.<br />
+            In questo post la legge &egrave; diversa ed &egrave; una legge di oscillazione con smorzamento e in pi&ugrave; &egrave; affrontato l&apos;obiettivo del forecast.
+        </p>
+
+ 		<h3>Il problema da risolvere</h3>
+        <p>
+            Sia dato il seguente sistema parametrico di due equazioni differenziali ordinarie con valori iniziali
+            che rappresenta la legge che descrive l&apos;evoluzione delle derivate di una coppia di serie temporali interdipendenti:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                x' = a_{11} \sin 2t + a_{12} \cos 2x
+                \\
+                y' = a_{21} \sin 2t + a_{22} \cos 2x
+                \\ 
+                x(0)=x_0
+                \\
+                y(0)=y_0
+            \end{cases}
+            \end{equation} $$
+
+            Ovviamente questa &egrave; una demo il cui scopo &egrave; provare la bont&agrave; del metodo, quindi per preparare il dataset
+            si fissino arbitrariamente i valori dei quattro parametri e le due condizioni iniziali:
+            
+        $$ A = \left[\begin{matrix}a_{11} & a_{12} \\ a_{21} & a_{22} \end{matrix} \right] = 
+           \left[\begin{matrix}-0.15 & 2.10 \\ -2.10 & -0.10 \end{matrix} \right] $$
+
+            $$ \begin{equation}
+            \begin{cases}
+                x(0)=2.5
+                \\
+                y(0)=0.5
+            \end{cases}
+            \end{equation} $$
+
+
+            in modo da poter creare il dataset della coppia delle <i>vere</i> serie temporali:
+            il tempo viene discretizzato in modo arbitrario da $0$ a $4$ con un numero di $51$ valori discreti,
+            mentre le serie temporali $x(t)$ e $y(t)$ sono costruite risolvendo il sistema di equazioni differenziali
+            ottenuto usando la matrice A dei parametri specifici nel sistema parametrico di cui sopra, insieme alle condizioni iniziali scelte arbitrariamente.<br />
+            Una volta preparato il dataset (che nel mondo reale pu&ograve; essere ottenuto eseguendo delle vere misurazioni)
+            ci si dimentichi dei valori dei parametri (che quindi diventeranno sconosciuti) e ci si ponga un duplice problema:
+            <ul>
+                <li>come addestrare una rete neurale che incorpori la legge nota per imparare il sistema a parametri sconosciuti al fine di approssimare al meglio le serie temporali iniziali?</li>
+                <li>come utilizzare tale rete neurale una volta addestrata per predire valori futuri (il forecast, appunto)?</li>
+            </ul>
+        </p>
+
+ 		<h3>L&apos;implementazione della soluzione</h3>
+        <p>
+            La legge matematica del sistema di cui sopra in Julia si implementa cos&igrave;:
+            <pre><code class="julia">math_law(u) = sin.(2. * u) + cos.(2. * u)</code></pre>
+            Il dataset di input, costruito risolvendo il sistema di equazioni differenziali <i>vere</i>, si crea eseguendo questo codice:<br />
+            <br />
+            <pre><code class="julia">function true_ode(du,u,p,t)
+    true_A = [-0.15 2.10; -2.10 -0.10]
+    du .= ((math_law(u))'true_A)'
+end
+
+tbegin = 0.0
+tend = 4.0
+datasize = 51
+t = range(tbegin,tend,length=datasize)
+u0 = [2.5; 0.5]
+tspan = (tbegin,tend)
+trange = range(tbegin,tend,length=datasize)
+prob = ODEProblem(true_ode, u0, tspan)
+dataset_ts = Array(solve(prob, Tsit5(), saveat=trange))</code></pre>
+            <b>Nota</b>: tale codice contiene delle dichiarazioni di variabili che saranno utilizzate nei frammenti di codice successivi.<br />
+            <br />
+
+            La rete neurale &egrave; costituita da uno strato che rappresenta la legge matematica pi&ugrave;
+            due layer di tipo <em>Dense</em> (detti anche <em>Full Connected</em>) con 2 nodi in ingresso, 2 in uscita e 50 nello strato intermedio
+            e la tangente iperbolica (<em>tanh</em>) quale funzione di attivazione; questo il codice:<br />
+            <br />
+            <pre><code class="julia">dudt = Chain(u -> math_law(u),
+             Dense(2, 50, tanh),
+             Dense(50, 2))
+
+reltol = 1e-7
+abstol = 1e-9
+n_ode = NeuralODE(dudt, tspan, Tsit5(), saveat=trange, reltol=reltol,abstol=abstol)
+ps = Flux.params(n_ode.p)</code></pre>
+            dove <code>ps</code> referenzia i parametri addestrabili della rete.<br />
+            <br />
+            <b>Nota</b>: lo scopo nella rete <u>NON</u> &egrave; quello di risolvere il sistema di equazioni differenziali
+            ma quello di imparare ad approssimare il sistema delle <i>vere</i> ODE (che in questa demo &egrave; servito per generare il dataset).<br />
+            <br />
+
+            Le impostazioni dell&apos;addrestramento sono:<br />
+            <ul>
+                <li>Ottimizzatore: ADAM</li>
+                <li>Learning rate: $0.01$</li>
+                <li>Numero di epoche: $400$</li>
+                <li>Funzione di loss: somma dei quadrati delle differenze</li>
+            </ul>
+            In codice:<br />
+            <br />
+            <pre><code class="julia">function loss_n_ode()
+  pred = n_ode(u0)
+  loss = sum(abs2, dataset_ts1,: .- pred1,:) +
+         sum(abs2, dataset_ts2,: .- pred2,:)
+  loss
+end
+
+n_epochs = 400
+learning_rate = 0.01
+data = Iterators.repeated((), n_epochs)
+opt = ADAM(learning_rate)
+
+cb = function ()
+  loss = loss_n_ode()
+  println("Loss: ", loss)
+end
+
+println();
+cb()
+
+Flux.train!(loss_n_ode, ps, data, opt, cb=cb)]</code></pre>
+            <br />
+
+            I setting per il forecast sono:<br />
+            <ul>
+                <li>Tempo di inizio: coincidente con il tempo di fine della serie temporale di input, quindi $4$.</li>
+                <li>Tempo di fine: tempo di inizio del forecast pi&ugrave; una quantit&egrave; di tempo a piacere, diciamo 5, quindi $4+5$, cio&egrave; $9$.</li>
+                <li>Numero di valori temporali: 351 (quindi molti pi&ugrave punti e molto pi&ugrave; fitti rispetto alle serie temporali di input).</li>
+                <li>Condizione iniziale: gli ultimi valori delle serie temporali di input.</li>
+            </ul>
+            In codice:<br />
+            <br />
+            <pre><code class="julia">tbegin_forecast = tend
+tend_forecast = tbegin_forecast + 5.0
+tspan_forecast = (tbegin_forecast, tend_forecast)
+datasize_forecast = 351
+trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_forecast)
+u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]</code></pre>
+            <br />
+            Per calcolare il forecast si esegua:<br />
+            <pre><code class="julia">tbegin_forecast = tend
+tend_forecast = tbegin_forecast + 5.0
+tspan_forecast = (tbegin_forecast, tend_forecast)
+datasize_forecast = 351
+trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_forecast)
+u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]
+
+n_ode_forecast = NeuralODE(
+  n_ode.model, tspan_forecast;
+  p=n_ode.p, saveat=trange_forecast, reltol=reltol, abstol=abstol)
+forecast = n_ode_forecast(u0_forecast)</code></pre>
+            <br />
+
+            Il codice completo contiene anche degli statement per visualizzare il grafico di sei curve:
+            <ul>
+                <li>Le due serie temporali originali in input.</li>
+                <li>Le due serie temporali cos&igrave; come le approssima la rete neurale dopo l&apos;addestramento.</li>
+                <li>La proiezione nel futuro delle due serie temporali (forecast).</li>
+            </ul>
+			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
+			<br />
+        </p>
+
+        </p>
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-2-result.png" /></div>
+        <div class="photocaption">Visualizzazione delle serie in input originali, delle serie imparate e loro proiezione futura</div>
+        <br />
+
+        <p>
+            Dal grafico si evince chiaramente che la rete neurale ha imparato bene le propriet&agrave; di oscillazione e smorzatura delle due serie
+            e riesce a proiettarle nel fututo.<br />
+            <br />
+            Si noti soprattutto il concetto di <em>profonditt&agrave; continua</em> tipico delle NeuralODEs, infatti mentre nelle classiche reti neurali
+            il passo di discretizzazione delle serie temporali di input &egrave; lo stesso nel forecast, con le NeuralODEs invece l&apos;array dei tempi
+            con cui calcolare la predizione pu&ograve; essere arbitrariamente fitto, proprio perch&eacute; il risolutore di equazioni differenziali
+            dentro la rete neurale, per sua propria natura, lavora nel continuo e trasmette questa propriet&agrave; a tutta la rete.<br />
+            <br /> 
+            Qui il link al codice completo su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-nn-sys-of-odes-for-forecast.jl">GitHub</a>.<br />
+            <br />
         </p>
 
         <h2>Citazioni</h2>
