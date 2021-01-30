@@ -161,6 +161,7 @@ dnldnl
 								</header>
 
 <!-- Content -->
+    $\newcommand\dag\dagger$
 	<section>
 		<header class="main">
 			<h1>Esperimenti con Neural ODEs in Julia</h1>
@@ -472,9 +473,14 @@ plot!(predict_sol.t, y_predict_sol,
             
             $$ \begin{equation}
             \begin{cases}
-                x' = a_{11} \sin 2x + a_{12} \cos 2y
-                \\
-                y' = a_{21} \sin 2x + a_{22} \cos 2y
+                \left[\begin{matrix}
+                x' & y'                
+                \end{matrix} \right]
+                =
+                \left[\begin{matrix}
+                \sin 2x + \cos 2y \\ \sin 2x + \cos 2y                
+                \end{matrix} \right] ^ \dag
+                \left[\begin{matrix}a_{11} & a_{12} \\ a_{21} & a_{22} \end{matrix} \right]
                 \\ 
                 x(0)=x_0
                 \\
