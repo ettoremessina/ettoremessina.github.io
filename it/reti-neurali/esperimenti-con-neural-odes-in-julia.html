@@ -167,12 +167,12 @@
 		</header>
 		<p>
             <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviato <em>Neural ODEs</em>) &egrave; un paper che introduce una nuova famiglia di reti neurali
-            in cui alcuni strati nascosti (o anche l&apos;unico strato nei casi pi&ugrave; semplici) sono implementati con un risolutore di equazioni differenziali ordinarie. <br />
+            in cui alcuni strati nascosti (o anche l&apos;unico strato nei casi pi&ugrave; semplici) sono implementati con un risolutore di equazioni differenziali ordinarie.<br />
             Questo post mostra due esempi scritti in Julia (in futuro ce ne saranno altri) che utilizzano alcune idee descritte nel paper <em>Neural ODEs</em> per mostrare possibili soluzioni nei seguenti scenari:
             <ul>
                 <li><a href="#exp1">Esperimento #1</a>: addestrare un sistema di ODE per soddisfare un obiettivo.</li>
                 <li><a href="#exp2">Esperimento #2</a>: calcolare il forecast di un sistema di serie temporali descritto da una legge differenziale.</li>
-            <br />
+            </ul>
             Tutti i vari frammenti di codice descritti in questo post richiedono la versione 1.5.3 di Julia e i seguenti package: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
             Se si fosse interessati a vedere la soluzione degli stessi problemi in Python con TensorFlow si veda il post <a href="../../it/reti-neurali/esperimenti-con-neural-odes-in-python-con-tensorflowdiffeq.html">Esperimenti con Neural ODEs in Python con TensorFlowDiffEq</a> su questo sito web.<br />
@@ -438,7 +438,7 @@ plot!(predict_sol.t, y_predict_sol,
         
 		<h2 id="exp2">Esperimento #2: calcolare il forecast di un sistema di serie temporali descritto da una legge differenziale</h2>
         <p>
-            Ci sono varie tassonomie di reti neurali black-box per calcolare il forecast di serie temporali (si veda il post si veda il post <a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a> su questo sito web)
+            Ci sono varie tassonomie di reti neurali black-box per calcolare il forecast di serie temporali (si veda il post <a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a> su questo sito web)
             che sono adatte quando non si ha conoscenza a priori della legge matematica che descriva il comporamento delle serie temporali in input.<br />
             Quando invece si ha conoscenza a priori della legge differenziale che regoli l&apos;evoluzione delle derivate delle serie temporali
             (ad esempio nella forma di un sistema parametrico di equazioni differenziali)
@@ -603,6 +603,7 @@ trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_fo
 u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]</code></pre>
             <br />
             Per calcolare il forecast si esegua:<br />
+            <br />
             <pre><code class="julia">tbegin_forecast = tend
 tend_forecast = tbegin_forecast + 5.0
 tspan_forecast = (tbegin_forecast, tend_forecast)
@@ -616,7 +617,7 @@ n_ode_forecast = NeuralODE(
 forecast = n_ode_forecast(u0_forecast)</code></pre>
             <br />
 
-            Il codice completo contiene anche degli statement per visualizzare il grafico di sei curve:
+            Il codice completo contiene anche degli statement per visualizzare il grafico di sei serie:
             <ul>
                 <li>Le due serie temporali originali in input.</li>
                 <li>Le due serie temporali cos&igrave; come le approssima la rete neurale dopo l&apos;addestramento.</li>

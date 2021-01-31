@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -38,7 +39,7 @@
 
 		<title>Experiments with Neural ODEs in Julia</title>
 		<meta name="description" content="Examples of using Neural ODEs in Julia using the DifferentialEquations, Flux, DiffEqFlux packages of the Julia ecosystem." >
-		<meta name="keywords" content="Neural ODEs, ordinary differential equations, ode, numerical approximation, numerical solution, Julia, DifferentialEquations, Flux, DiffEqFlux" >
+		<meta name="keywords" content="Neural ODEs, ordinary differential equations, ode, numerical approximation, numerical solution, forecast, time series, Julia, DifferentialEquations, Flux, DiffEqFlux" >
 		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html" />
@@ -161,6 +162,7 @@
 								</header>
 
 <!-- Content -->
+    $\newcommand\dag\dagger$
 	<section>
 		<header class="main">
 			<h1>Experiments with Neural ODEs in Julia</h1>
@@ -168,9 +170,11 @@
 		<p>
             <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviated <em>Neural ODEs</em>) is a paper that introduces a new family of neural networks
             in which some hidden layers (or even the only layer in the simplest cases) are implemented with an ordinary differential equation solver.<br />
-            This post shows an example written in Julia (there will be more in the future) that uses some ideas described in the paper <em>Neural ODEs</em> to solve a problem of approximating the mapping
-            between an input and an output in a given scenario.<br />
-            <br />
+            This post shows two examples written in Julia (there will be more in the future) that use some of the ideas described in the <em>Neural ODEs</em> paper to show possible solutions in the following scenarios:
+            <ul>
+                <li><a href="#exp1">Experiment #1</a>: to train a system of ODEs to meet an objective.</li>
+                <li><a href="#exp2">Experiment #2</a>: to calculate the forecast of a time series system described by a differential law.</li>
+            </ul>
             All of the various code snippets described in this post require Julia version 1.5.3 and the following packages: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
 			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
 			<br/>
@@ -209,7 +213,7 @@
                 <li>A dataset that contains the inputs and outputs</li>
                 <li>A law that associates input and output in the form of a parametric system of differential equations</li>
             </ul>
-            <b>Objective:</b>
+            <b>Goal:</b>
             <ul>
                 <li>Determine appropriate parameter values so that the system obtained by replacing the formal parameters with the determined values best approximates the mapping between input and output.</li>
             </ul>
@@ -429,6 +433,216 @@ plot!(predict_sol.t, y_predict_sol,
         <p>
             Different training strategies allow to obtain different values of the parameters and therefore a different numerical solution of the system
             with a different accuracy. 
+        </p>
+        <br />
+
+		<h2 id="exp2">Esperimento #2: to calculate the forecast of a time series system described by a differential law</h2>
+        <p>
+            There are various taxonomies of black-box neural networks to compute the forecast of time series (see the post <a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a> on this website)
+            which are suitable when you do not have a priori knowledge of the mathematical law that describes the behavior of the input time series.<br />
+            When instead we have a priori knowledge of the differential law that governs the evolution of the derivatives of time series
+            (for example in the form of a parametric system of differential equations)
+            a network of Neural ODE type becomes the right tool to calculate the forecast in an efficient and accurate way.<br />
+        </p>
+
+		<h3>The application scenario</h3>
+        <p>
+            The application scenario is as follows:<br />
+            <ul></ul>
+            <b>A priori knowledge:</b>
+            <ul>
+                <li>A dataset containing a set of interdependent time series.</li>
+                <li>A law governing the evolution of time series derivatives over time in the form of a parametric system of differential equations.</li>
+            </ul>
+            <b>Goal:</b><br />
+            The goal is twofold:
+            <ul>
+                <li>1. Train a NeuralODE type neural network to learn the value of ODE system parameters from the input time series.</li>
+                <li>2. Use the learned system to compute the forecast, then the predictions with time later than the initial time series.</li>
+            </ul>
+            The goal 1 is similar to the one of the post <a href="https://julialang.org/blog/2019/01/fluxdiffeq/#understanding_the_neural_ode_layer_behavior_by_example." target="_blank">DiffEqFlux.jl - A Julia Library for Neural Differential Equations</a>
+            on the official Julia blog where the law that governs the derivatives of time series is $u&apos; = u^3$.<br />
+            In this post the law is different and is a law of oscillation with damping plus the forecast objective is addressed.
+        </p>
+
+ 		<h3>The problem to be solved</h3>
+        <p>
+            Let the following parametric system of two ordinary differential equations with initial values be given
+            representing the law describing the evolution of the derivatives of a pair of interdependent time series:
+            
+            $$ \begin{equation}
+            \begin{cases}
+                \left[\begin{matrix}
+                x' & y'                
+                \end{matrix} \right]
+                =
+                \left[\begin{matrix}
+                \sin 2x + \cos 2y \\ \sin 2x + \cos 2y                
+                \end{matrix} \right] ^ \dag
+                \left[\begin{matrix}a_{11} & a_{12} \\ a_{21} & a_{22} \end{matrix} \right]
+                \\ 
+                x(0)=x_0
+                \\
+                y(0)=y_0
+            \end{cases}
+            \end{equation} $$
+
+            Obviously this is a demo whose purpose is to test the goodness of the method, so to prepare the dataset
+            let&apos;s set arbitrarily the values of the four parameters and the two initial conditions:
+            
+        $$ A = \left[\begin{matrix}a_{11} & a_{12} \\ a_{21} & a_{22} \end{matrix} \right] = 
+           \left[\begin{matrix}-0.15 & 2.10 \\ -2.10 & -0.10 \end{matrix} \right] $$
+
+            $$ \begin{equation}
+            \begin{cases}
+                x(0)=2.5
+                \\
+                y(0)=0.5
+            \end{cases}
+            \end{equation} $$
+
+            so that we can create the dataset of the <i>true</i> time series pair:
+            time is discretized arbitrarily from $0$ to $4$ with a number of $51$ discrete values,
+            while the time series $x(t)$ and $y(t)$ are constructed by solving the system of differential equations
+            obtained using the matrix A of the specific parameters in the parametric system above, along with arbitrarily chosen initial conditions.<br />
+            Once the dataset is prepared (which in the real world can be obtained by performing real measurements)
+            we forget about the values of the parameters (which will then become unknown) and we have a twofold problem:
+            <ul>
+                <li>how to train a neural network that incorporates the known law to learn the system at unknown parameters in order to best approximate the initial time series?</li>
+                <li>how to use such neural net once trained to predict future values (the forecast, in fact)?</li>
+            </ul>
+        </p>
+
+ 		<h3>Solution implementation</h3>
+        <p>
+            The mathematical law of the system above in Julia is implemented as follows:
+            <pre><code class="julia">math_law(u) = sin.(2. * u) + cos.(2. * u)</code></pre>
+            The input dataset, constructed by solving the system of <i>true</i> differential equations, is created by running this code:<br />
+            <br />
+            <pre><code class="julia">function true_ode(du,u,p,t)
+    true_A = [-0.15 2.10; -2.10 -0.10]
+    du .= ((math_law(u))'true_A)'
+end
+
+tbegin = 0.0
+tend = 4.0
+datasize = 51
+t = range(tbegin,tend,length=datasize)
+u0 = [2.5; 0.5]
+tspan = (tbegin,tend)
+trange = range(tbegin,tend,length=datasize)
+prob = ODEProblem(true_ode, u0, tspan)
+dataset_ts = Array(solve(prob, Tsit5(), saveat=trange))</code></pre>
+            <b>Note</b>: this code contains variable declarations that will be used in subsequent code snippets.<br />
+            <br />
+
+            The neural network consists of one layer representing the mathematical law plus
+            two layers of type <em>Dense</em> (also called <em>Full Connected</em>) with 2 input nodes, 2 output nodes and 50 in the intermediate layer
+            and the hyperbolic tangent (<em>tanh</em>) as an activation function; this is the code:<br />
+            <br />
+            <pre><code class="julia">dudt = Chain(u -> math_law(u),
+             Dense(2, 50, tanh),
+             Dense(50, 2))
+
+reltol = 1e-7
+abstol = 1e-9
+n_ode = NeuralODE(dudt, tspan, Tsit5(), saveat=trange, reltol=reltol,abstol=abstol)
+ps = Flux.params(n_ode.p)</code></pre>
+            where <code>ps</code> references the trainable parameters of the network.<br />
+            <br />
+            <b>Note</b>: the goal in the network is <u>not</u> to solve the system of differential equations
+            but that one to learn to approximate the system of <i>true</i> ODEs (that in this demo it was used in order to generate the dataset).<br />
+            <br />
+
+            The training settings are:<br />
+            <ul>
+                <li>Optimizator: ADAM</li>
+                <li>Learning rate: $0.01$</li>
+                <li>Number of epochs: $400$</li>
+                <li>loss function: sum of squares of differences</li>
+            </ul>
+            The code is:<br />
+            <br />
+            <pre><code class="julia">function loss_n_ode()
+  pred = n_ode(u0)
+  loss = sum(abs2, dataset_ts1,: .- pred1,:) +
+         sum(abs2, dataset_ts2,: .- pred2,:)
+  loss
+end
+
+n_epochs = 400
+learning_rate = 0.01
+data = Iterators.repeated((), n_epochs)
+opt = ADAM(learning_rate)
+
+cb = function ()
+  loss = loss_n_ode()
+  println("Loss: ", loss)
+end
+
+println();
+cb()
+
+Flux.train!(loss_n_ode, ps, data, opt, cb=cb)]</code></pre>
+            <br />
+
+            The forecast settings are:<br />
+            <ul>
+                <li>Start time: coincident with the end time of the input time series, so $4$.</li>
+                <li>End time: forecast start time plus any amount of time, say 5, so $4+5$, that is $9$.</li>
+                <li>Number of time values: 351 (so many more points and much denser than the input time series).</li>
+                <li>Initial condition: the last values of the input time series.</li>
+            </ul>
+            The code is:<br />
+            <br />
+            <pre><code class="julia">tbegin_forecast = tend
+tend_forecast = tbegin_forecast + 5.0
+tspan_forecast = (tbegin_forecast, tend_forecast)
+datasize_forecast = 351
+trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_forecast)
+u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]</code></pre>
+            <br />
+            To calculate the forecast execute:<br />
+            <br />
+            <pre><code class="julia">tbegin_forecast = tend
+tend_forecast = tbegin_forecast + 5.0
+tspan_forecast = (tbegin_forecast, tend_forecast)
+datasize_forecast = 351
+trange_forecast = range(tspan_forecast[1], tspan_forecast[2], length=datasize_forecast)
+u0_forecast = [dataset_ts[1,datasize], dataset_ts[2,datasize]]
+
+n_ode_forecast = NeuralODE(
+  n_ode.model, tspan_forecast;
+  p=n_ode.p, saveat=trange_forecast, reltol=reltol, abstol=abstol)
+forecast = n_ode_forecast(u0_forecast)</code></pre>
+            <br />
+
+            The complete code also contains statements to display the graph of six series:
+            <ul>
+                <li>The two original input time series.</li>
+                <li>The two time series as approximated by the neural network after training.</li>
+                <li>The projection into the future of the two time series (forecast).</li>
+            </ul>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.<br />
+			<br />
+        </p>
+
+        </p>
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-2-result.png" /></div>
+        <div class="photocaption">Visualization of original input series, learned series and their future projection</div>
+        <br />
+
+        <p>
+            It is clear from the graph that the neural network has learned well the oscillation and damping properties of the two series
+            and is able to project them into the future.<br />
+            <br />
+            Note especially the concept of <em>continuous depth</em> typical of NeuralODEs, in fact while in the classical neural networks
+            the discretization step of the input time series is the same in the forecast, with the NeuralODEs instead the array of the times with which to calculate the prediction can be arbitrarily dense,
+            with which to calculate the prediction can be arbitrarily dense, just because the solver of differential equations
+            inside the neural network, by its own nature, works in the continuous and transmits this property to the whole network.<br />
+            <br /> 
+            Here the link to the code on <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-nn-sys-of-odes-for-forecast.jl">GitHub</a>.<br />
+            <br />
         </p>
 
         <h2>Citations</h2>
