@@ -171,7 +171,7 @@
             Questo post mostra due esempi scritti in Julia (in futuro ce ne saranno altri) che utilizzano alcune idee descritte nel paper <em>Neural ODEs</em> per mostrare possibili soluzioni nei seguenti scenari:
             <ul>
                 <li><a href="#exp1">Esperimento #1</a>: addestrare un sistema di ODE per soddisfare un obiettivo.</li>
-                <li><a href="#exp2">Esperimento #2</a>: calcolare il forecast di un sistema di serie temporali descritte da una legge differenziale.</li>
+                <li><a href="#exp2">Esperimento #2</a>: calcolare il forecast di un sistema di serie temporali descritto da una legge differenziale.</li>
             <br />
             Tutti i vari frammenti di codice descritti in questo post richiedono la versione 1.5.3 di Julia e i seguenti package: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
@@ -436,7 +436,7 @@ plot!(predict_sol.t, y_predict_sol,
         </p>
         <br />
         
-		<h2 id="exp2">Esperimento #2: calcolare il forecast di un sistema di serie temporali descritte da una legge differenziale</h2>
+		<h2 id="exp2">Esperimento #2: calcolare il forecast di un sistema di serie temporali descritto da una legge differenziale</h2>
         <p>
             Ci sono varie tassonomie di reti neurali black-box per calcolare il forecast di serie temporali (si veda il post si veda il post <a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a> su questo sito web)
             che sono adatte quando non si ha conoscenza a priori della legge matematica che descriva il comporamento delle serie temporali in input.<br />
@@ -500,7 +500,6 @@ plot!(predict_sol.t, y_predict_sol,
                 y(0)=0.5
             \end{cases}
             \end{equation} $$
-
 
             in modo da poter creare il dataset della coppia delle <i>vere</i> serie temporali:
             il tempo viene discretizzato in modo arbitrario da $0$ a $4$ con un numero di $51$ valori discreti,
