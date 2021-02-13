@@ -168,10 +168,11 @@
 		<p>
             <a href="https://arxiv.org/abs/1806.07366" target="_blank"><em>Neural Ordinary Differential Equations</em></a> (abbreviato <em>Neural ODEs</em>) &egrave; un paper che introduce una nuova famiglia di reti neurali
             in cui alcuni strati nascosti (o anche l&apos;unico strato nei casi pi&ugrave; semplici) sono implementati con un risolutore di equazioni differenziali ordinarie.<br />
-            Questo post mostra due esempi scritti in Julia (in futuro ce ne saranno altri) che utilizzano alcune idee descritte nel paper <em>Neural ODEs</em> per mostrare possibili soluzioni nei seguenti scenari:
+            Questo post mostra tre esempi scritti in Julia che utilizzano alcune idee descritte nel paper <em>Neural ODEs</em> per mostrare possibili soluzioni nei seguenti scenari:
             <ul>
                 <li><a href="#exp1">Esperimento #1</a>: addestrare un sistema di ODE per soddisfare un obiettivo.</li>
                 <li><a href="#exp2">Esperimento #2</a>: calcolare il forecast di un sistema di serie temporali descritto da una legge differenziale.</li>
+                <li><a href="#exp3">Esperimento #3</a>: approssimare una funzione con MLP e Neural ODEs</li>
             </ul>
             Tutti i vari frammenti di codice descritti in questo post richiedono la versione 1.5.3 di Julia e i seguenti package: DifferentialEquations, Flux, DiffEqFlux, Plots.<br/>
 			Per ottenere il codice si veda il paragrafo <a href='#downloadcode'>Download del codice completo</a> in fondo a questo post.<br/>
@@ -642,6 +643,233 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
             dentro la rete neurale, per sua propria natura, lavora nel continuo e trasmette questa propriet&agrave; a tutta la rete.<br />
             <br /> 
             Qui il link al codice completo su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-nn-sys-of-odes-for-forecast.jl">GitHub</a>.<br />
+            <br />
+        </p>
+
+		<h2 id="exp3">Esperimento #3: approssimare una funzione con MLP e Neural ODEs</h2>
+        <p>
+            Anche se il paper <em>Neural ODEs</em> non cita esplicitamente l&apos;approssimazione delle funzioni con gli MLP
+            (i percettroni multistrato, dall&apos;inglese <em>Multi Layer Perceptron</em>) un campo di applicazione che possa trarre beneficio dalle Neural ODE,
+            tuttavia &egrave; interessante comunque vedere come costruire una rete neurale costituita da un MLP e da un layer a profondit&agrave; continua realizzato tramite
+            un layer di tipo Neural ODE.<br />
+            L&apos;esperimento ha due obiettivi:
+            <ul>
+                <li>
+                    Mostrare come si definisce un MLP utilizzando <code>FastChain</code> e <code>FastDense</code> definiti in DiffEqFlux
+                    (a differenza degli esperimenti precedenti in cui si &egrave; adoperato <code>Chain</code> e <code>Dense</code> definiti Flux)
+                    senza uso di Neural ODE per approssimare una funzione.
+                </li>
+                <li>
+                    Innestare un layer Neural ODE sulla rete di tipo MLP e mostrare le modifiche necessarie da apportare al codice per utilizzare
+                    questa combinazione di MLP e Neural ODE per approssimare la stessa funzione.
+                </li>                
+            </ul>
+            Per semplicit&agrave; la funzione da approssimare &egrave; una funzione reale continua e limitata a valori reali di una variabile reale in un intervallo chiuso
+            $f(x) \colon [a,b] \to \rm I\!R$
+        </p>
+
+		<h3>Lo scenario di applicazione</h3>
+        <p>
+            Lo scenario di applicazione &egrave; il seguente:<br />
+            <ul></ul>
+            <b>Conoscenza iniziale:</b>
+            <ul>
+                <li>
+                    Un dataset che contenga una mappatura di valori reali di input (variabile $t$, il tempo) con valori reali di output (variabile $y$).<br />
+                    Il dataset &egrave; creato in modo sintetico tramite una funzione generatrice $y=y(t)$.
+                </li>
+            </ul>
+            <b>Obiettivo:</b><br />
+            <ul>
+                <li>
+                    Approssimare con una rete neurale la mappatura input $\to$ output rappresentata dal dataset.
+                </li>
+            </ul>
+        </p>
+
+ 		<h3>Il problema da risolvere</h3>
+        <p>
+            Sia data la seguente funzione generatrice del dataset (che diventa quindi la funzione da approssimare):
+            
+            $$ y(t) = \ln{(1 + t)} - 3 \sqrt {t} \:\:\:\: t \in [0,4] $$
+
+            dove il tempo $t$ viene discretizzato da $0$ a $4$ con un numero di $51$ valori discreti;
+            naturalmente nel mondo reale il dataset &egrave; ottenuto eseguendo delle vere misurazioni sul campo,
+            qui invece &egrave; generato da una funzione generatrice a scopo dimostrativo.<br />
+            Il problema da risolvere, come gi&agrave; detto, &egrave; addestrare una rete neurale per approssimare tale funzione addestrando la rete neurale (dapprima un MLP puro, poi un MLP combinato con un layer Neural ODE)
+            sul dataset generato tramite la funzione generatrice di cui sopra.
+        </p>
+
+        <h3>L&apos;implementazione della soluzione senza Neural ODE</h4>
+        <p>
+            Gli <code>using</code> necessari all&apos;intero programma sono i seguenti:<br />
+            <pre><code class="julia">using Plots
+using Flux
+using DiffEqFlux</code></pre>
+            La prima parte del programma esegue la generazione del dataset che &egrave; implementato da due array paralleli <code>dataset_in</code> e <code>dataset_out</code>:
+            il primo contiene il tempo $t \in [0, 4]$ discretizzato in modo da avere 51 valori distinti equispaziati,
+            il secondo contiene il valore della funzione generatrice per ogni valore discreto di $t$.<br />
+            <br />
+            In codice:<br />
+            <br />
+            <pre><code class="julia">tbegin = 0.0
+tend = 4.0
+datasize = 51
+dataset_in = range(tbegin, tend, length=datasize)
+dataset_out = log.(1 .+ dataset_in) .- 3 * sqrt.(dataset_in)</code></pre>
+            Di seguito il codice definisce una rete neurale di tipo MLP puro tramite il seguente codice:<br />
+            <br />
+            <pre><code class="julia">function neural_network(data_dim)
+    fc = FastChain(FastDense(data_dim, 64, swish),
+                  FastDense(64, 32, swish),
+                  FastDense(32, data_dim))
+end
+
+nn = neural_network(1)
+theta = initial_params(nn)</code></pre>
+            dove <code>nn</code> &egrave; la rete neurale MLP e <code>theta</code> &egrave; l&apos;array dei parametri della rete da addestrare.<br />
+            <br />
+            La funzione di predizione &egrave; semplicemente l&apos;applicazione della rete all&apos;input
+            mentre la funzione di costo (<em>loss</em>) &egrave; lo scarto quadratico medio tra il dataset di output e la predizione.<br />
+            In codice:<br />
+            <br />
+            <pre><code class="julia">predict(t, p) = nn(t', p)'
+
+loss(p) = begin
+  yhat = predict(dataset_in, p)
+  l = Flux.mse(yhat, dataset_out)
+end</code></pre>
+            Le impostazioni dell&apos;addrestramento sono:<br />
+            <ul>
+                <li>Ottimizzatore: ADAMW</li>
+                <li>Learning rate: $0.01$</li>
+                <li>Numero di epoche: $1500$</li>
+            </ul>
+            Il seguente codice esegue l&apos;addestramento e alla fine del quale la variable <code>y_pred</code>
+            contiene l&apos;approssimazione della funzione generatrice:<br />
+            <br />
+            <pre><code class="julia">learning_rate=1e-2
+opt = ADAMW(learning_rate)
+epochs = 1500
+
+function cb_train(theta, loss)
+    println("Loss: ", loss)
+    false
+end
+
+res_train = DiffEqFlux.sciml_train(
+    loss, theta, opt,
+    maxiters = epochs,
+    cb = cb_train)
+    
+y_pred = predict(dataset_in, res_train.minimizer)</code></pre>
+            Il codice completo contiene anche degli statement per visualizzare il grafico della funzione generatrice e dell&apos;approssimazione ottenuta dalla rete neurale.<br />
+            <br />
+			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
+			<br />
+        </p>
+
+        </p>
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-3a-result.png" /></div>
+        <div class="photocaption">Visualizzazione del grafico della funzione generatrice e dell&apos;approssimazione calcolata dalla rete neurale MLP</div>
+        <br />
+
+        <p>
+            Dal grafico si evince chiaramente che la rete neurale approssima bene la funzione generatriche nell&apos;intervallo $[0, 4]$.<br />
+            <br />
+            Qui il link al codice completo su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-mlp-to-fit-func-without-n-odes.jl">GitHub</a>.<br />
+            <br />
+        </p>
+
+        <h3>L&apos;implementazione della soluzione con Neural ODE</h4>
+        <p>
+            Gli <code>using</code> necessari all&apos;intero programma sono i seguenti:<br />
+            <pre><code class="julia">using Plots
+using Flux
+using DiffEqFlux
+using OrdinaryDiffEq</code></pre>
+            da cui si vede che &egrave; stato aggiunto lo using <code>OrdinaryDiffEq</code> per poter usare <code>NeuralODE</code>.<br />
+            <br />
+            La prima parte del programma (come il programma precedente) esegue la generazione del dataset che &egrave; implementato da due array paralleli <code>dataset_in</code> e <code>dataset_out</code>:
+            il primo contiene il tempo $t \in [0, 4]$ discretizzato in modo da avere 51 valori distinti equispaziati,
+            il secondo contiene il valore della funzione generatrice per ogni valore discreto di $t$.<br />
+            <br />
+            In codice:<br />
+            <br />
+            <pre><code class="julia">tbegin = 0.0
+tend = 4.0
+datasize = 51
+dataset_in = range(tbegin, tend, length=datasize)
+dataset_out = log.(1 .+ dataset_in) .- 3 * sqrt.(dataset_in)</code></pre>
+            Di seguito il codice definisce una rete neurale di tipo MLP con un layer di Neural ODE tramite il seguente codice:<br />
+            <br />
+            <pre><code class="julia">function neural_ode(data_dim; saveat = dataset_in)
+    fc = FastChain(FastDense(data_dim, 64, swish),
+                  FastDense(64, 32, swish),
+                  FastDense(32, data_dim))
+
+    n_ode = NeuralODE(
+            fc,
+            (minimum(dataset_in), maximum(dataset_in)),
+            Tsit5(),
+            saveat = saveat,
+            abstol = 1e-9, reltol = 1e-9)
+end
+
+n_ode = neural_ode(1)
+theta = n_ode.p</code></pre>
+            dove <code>n_ode</code> &egrave; la rete neurale Neural ODE e <code>theta</code> &egrave; l&apos;array dei parametri della rete Neural ODE da addestrare.<br />
+            <br />
+            La funzione di predizione presenta una variazione rispetto al caso precedente: 
+            qui infatti alla funzione di predizione non viene passato l&apos;intero input ma solamente il primo dato,
+            che &egrave; da intendersi come condizione iniziale di un problema di Cauchy;
+            la funzione di costo (<em>loss</em>) &egrave; sempre lo scarto quadratico medio tra il dataset di output e la predizione.<br />
+            In codice:<br />
+            <br />
+            <pre><code class="julia">predict(t, p) = nn(t', p)'
+
+loss(p) = begin
+  yhat = predict(dataset_in, p)
+  l = Flux.mse(yhat, dataset_out)
+end</code></pre>
+            Le impostazioni dell&apos;addrestramento sono:<br />
+            <ul>
+                <li>Ottimizzatore: ADAMW</li>
+                <li>Learning rate: $0.01$</li>
+                <li>Numero di epoche: $500$</li>
+            </ul>
+            Analogamente a sopra, il seguente codice esegue l&apos;addestramento e alla fine del quale la variable <code>y_pred</code>
+            contiene l&apos;approssimazione della funzione generatrice:<br />
+            <br />
+            <pre><code class="julia">learning_rate=1e-2
+opt = ADAMW(learning_rate)
+epochs = 1500
+
+function cb_train(theta, loss)
+    println("Loss: ", loss)
+    false
+end
+
+res_train = DiffEqFlux.sciml_train(
+    loss, theta, opt,
+    maxiters = epochs,
+    cb = cb_train)
+    
+y_pred = predict(dataset_in, res_train.minimizer)</code></pre>
+            Il codice completo contiene anche degli statement per visualizzare il grafico della funzione generatrice e dell&apos;approssimazione ottenuta dalla rete neurale.<br />
+            <br />
+			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
+			<br />
+        </p>
+
+        <div class="betweentextlines"><img src="../../posts/neural-networks/experiments-with-neural-odes-in-julia/nn-expnodesjl-exp-3b-result.png" /></div>
+        <div class="photocaption">Visualizzazione del grafico della funzione generatrice e dell&apos;approssimazione calcolata dalla rete neurale MLP con un layer Neural ODE</div>
+        <br />
+
+        <p>
+            Dal grafico si evince chiaramente che la rete neurale con un layer Neural ODE approssima bene la funzione generatriche nell&apos;intervallo $[0, 4]$.<br />
+            <br />
+            Qui il link al codice completo su <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/neural-odes-demos/julia/DiffEqFlux/train-mlp-to-fit-func-with-n-odes.jl">GitHub</a>.<br />
             <br />
         </p>
 
