@@ -729,8 +729,16 @@ nn = neural_network(1)
 theta = initial_params(nn)</code></pre>
             where <code>nn</code> is the MLP neural network and <code>theta</code> is the array of network parameters to be trained.<br />
             <br />
+            The taxonomy of the neural network is that of a pure MLP (so <em>full connected</em>) structured as follows:<br />
+            <ul>
+                <li>Number of dimension of input layer: 1</li>
+                <li>Number of dimension of outout layer: 1</li>
+                <li>Hidden layers: 2 layers, one with 64 neurons and one with 32</li>
+                <li>Activation function: swish</li>
+            </ul>
             The prediction function is simply the application of the network to the input
             and the <em>loss</em> function is the mean square error (<em>MSE</em> for short) between the output dataset and the prediction.<br />
+            <br />
             The code is:<br />
             <br />
             <pre><code class="julia">predict(t, p) = nn(t', p)'
@@ -820,6 +828,8 @@ end
 n_ode = neural_ode(1)
 theta = n_ode.p</code></pre>
             where <code>n_ode</code> is the Neural ODE neural network and <code>theta</code> is the array of parameters of the Neural ODE network to be trained.<br />
+            <br />
+            The neural network taxonomy is a Neural ODE layer that takes the previous MLP network as an argument.<br />
             <br />
             The prediction function has a variation from the previous case: 
             here in fact the prediction function is not passed the entire input but only the first data,

@@ -729,8 +729,16 @@ nn = neural_network(1)
 theta = initial_params(nn)</code></pre>
             dove <code>nn</code> &egrave; la rete neurale MLP e <code>theta</code> &egrave; l&apos;array dei parametri della rete da addestrare.<br />
             <br />
+            La tassonomia della rete neurale &egrave; quella di un MLP puro (quindi <em>full connected</em>) cos&igrave; strutturato:<br />
+            <ul>
+                <li>Numero di dimensione del layer di input: 1</li>
+                <li>Numero di dimensione del layer di output: 1</li>
+                <li>Layer nascosti: 2 layer, uno da 64 neuroni e uno da 32</li>
+                <li>Funzione di attivazione: swish</li>
+            </ul>
             La funzione di predizione &egrave; semplicemente l&apos;applicazione della rete all&apos;input
             mentre la funzione di costo (<em>loss</em>) &egrave; lo scarto quadratico medio (abbreviato <em>MSE</em>) tra il dataset di output e la predizione.<br />
+            <br />
             In codice:<br />
             <br />
             <pre><code class="julia">predict(t, p) = nn(t', p)'
@@ -820,6 +828,8 @@ end
 n_ode = neural_ode(1)
 theta = n_ode.p</code></pre>
             dove <code>n_ode</code> &egrave; la rete neurale Neural ODE e <code>theta</code> &egrave; l&apos;array dei parametri della rete Neural ODE da addestrare.<br />
+            <br />
+            La tassonomia della rete neurale è un layer Neural ODE che prende come argomento la rete MLP precedente.<br />
             <br />
             La funzione di predizione presenta una variazione rispetto al caso precedente: 
             qui infatti alla funzione di predizione non viene passato l&apos;intero input ma solamente il primo dato,
