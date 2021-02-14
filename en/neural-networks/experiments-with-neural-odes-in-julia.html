@@ -703,24 +703,42 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
         <h3>Solution implementation without Neural ODE</h4>
         <p>
             The <code>using</code> statements needed for the entire program are as follows:<br />
-            <pre><code class="julia">nn_expnodesjl_exp_3a_using</code></pre>
+            <pre><code class="julia">using Plots
+using Flux
+using DiffEqFlux</code></pre>
             The first part of the program performs dataset generation which is implemented by two parallel arrays <code>dataset_in</code> and <code>dataset_out</code>:
             the first contains the time $t \in [0, 4]$ discretized to have 51 distinct equispaced values,
             the second contains the value of the generating function for each discrete value of $t$.<br />
             <br />
             The code is:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3_dsgen</code></pre>
+            <pre><code class="julia">tbegin = 0.0
+tend = 4.0
+datasize = 51
+dataset_in = range(tbegin, tend, length=datasize)
+dataset_out = log.(1 .+ dataset_in) .- 3 * sqrt.(dataset_in)</code></pre>
             The following code defines a neural network of pure MLP type:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3a_nn</code></pre>
+            <pre><code class="julia">function neural_network(data_dim)
+    fc = FastChain(FastDense(data_dim, 64, swish),
+                  FastDense(64, 32, swish),
+                  FastDense(32, data_dim))
+end
+
+nn = neural_network(1)
+theta = initial_params(nn)</code></pre>
             where <code>nn</code> is the MLP neural network and <code>theta</code> is the array of network parameters to be trained.<br />
             <br />
             The prediction function is simply the application of the network to the input
             and the <em>loss</em> function is the mean square error (<em>MSE</em> for short) between the output dataset and the prediction.<br />
             The code is:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3a_predloss</code></pre>
+            <pre><code class="julia">predict(t, p) = nn(t', p)'
+
+loss(p) = begin
+  yhat = predict(dataset_in, p)
+  l = Flux.mse(yhat, dataset_out)
+end</code></pre>
             The training settings are:<br />
             <ul>
                 <li>Optimizator: ADAMW</li>
@@ -731,7 +749,21 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
             The following code performs the training and at the end of which the variable <code>y_pred</code>
             contains the approximation of the generating function:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3a_training</code></pre>
+            <pre><code class="julia">learning_rate=1e-2
+opt = ADAMW(learning_rate)
+epochs = 1500
+
+function cb_train(theta, loss)
+    println("Loss: ", loss)
+    false
+end
+
+res_train = DiffEqFlux.sciml_train(
+    loss, theta, opt,
+    maxiters = epochs,
+    cb = cb_train)
+    
+y_pred = predict(dataset_in, res_train.minimizer)</code></pre>
             The complete code also contains statements to visualize the graph of the generating function and the approximation obtained by the neural network.<br />
             <br />
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.<br/>
@@ -753,7 +785,10 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
         <h3>Solution implementation with Neural ODE</h4>
         <p>
             The <code>using</code> statements needed for the entire program are as follows:<br />
-            <pre><code class="julia">nn_expnodesjl_exp_3b_using</code></pre>
+            <pre><code class="julia">using Plots
+using Flux
+using DiffEqFlux
+using OrdinaryDiffEq</code></pre>
             from which you can see that the using <code>OrdinaryDiffEq</code> has been added in order to use <code>NeuralODE</code>.<br />
             <br />
             The first part of the program (like the previous program) performs dataset generation which is implemented by two parallel arrays <code>dataset_in</code> and <code>dataset_out</code>:
@@ -762,10 +797,28 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
             <br />
             The code is:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3_dsgen</code></pre>
+            <pre><code class="julia">tbegin = 0.0
+tend = 4.0
+datasize = 51
+dataset_in = range(tbegin, tend, length=datasize)
+dataset_out = log.(1 .+ dataset_in) .- 3 * sqrt.(dataset_in)</code></pre>
             Below code defines an MLP type neural network with a Neural ODE layer via the following code:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3b_nn</code></pre>
+            <pre><code class="julia">function neural_ode(data_dim; saveat = dataset_in)
+    fc = FastChain(FastDense(data_dim, 64, swish),
+                  FastDense(64, 32, swish),
+                  FastDense(32, data_dim))
+
+    n_ode = NeuralODE(
+            fc,
+            (minimum(dataset_in), maximum(dataset_in)),
+            Tsit5(),
+            saveat = saveat,
+            abstol = 1e-9, reltol = 1e-9)
+end
+
+n_ode = neural_ode(1)
+theta = n_ode.p</code></pre>
             where <code>n_ode</code> is the Neural ODE neural network and <code>theta</code> is the array of parameters of the Neural ODE network to be trained.<br />
             <br />
             The prediction function has a variation from the previous case: 
@@ -773,7 +826,12 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
             which is intended as a condition for the initial values of a Cauchy problem;
             the <em>loss</em> function is always the mean square error (<em>MSE</em> for short) between the output dataset and the prediction.<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3b_predloss</code></pre>
+            <pre><code class="julia">predict(p) = n_ode(dataset_out[1:1], p)'
+
+loss(p) = begin
+  yhat = predict(p)
+  l = Flux.mse(yhat, dataset_out)
+end</code></pre>
             The training settings are:<br />
             <ul>
                 <li>Optimizator: ADAMW</li>
@@ -784,7 +842,21 @@ forecast = n_ode_forecast(u0_forecast)</code></pre>
             Similarly to above, the following code performs the training and at the end of which the variable <code>y_pred</code>
             contains the approximation of the generating function:<br />
             <br />
-            <pre><code class="julia">nn_expnodesjl_exp_3b_training</code></pre>
+            <pre><code class="julia">learning_rate=1e-2
+opt = ADAMW(learning_rate)
+epochs = 500
+
+function cb_train(theta, loss)
+    println("Loss: ", loss)
+    false
+end
+
+res_train = DiffEqFlux.sciml_train(
+    loss, theta, opt,
+    maxiters = epochs,
+    cb = cb_train)
+
+y_pred = predict(res_train.minimizer)</code></pre>
             The complete code also contains statements to visualize the graph of the generating function and the approximation obtained by the neural network.<br />
             <br />
 			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.<br/>
