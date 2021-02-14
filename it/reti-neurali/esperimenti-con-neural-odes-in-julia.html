@@ -37,7 +37,7 @@
 
 		<title>Esperimenti con Neural ODEs in Julia</title>
 		<meta name="description" content="Esempi d&apos;uso di Neural ODEs in Julia utilizzando i package DifferentialEquations, Flux, DiffEqFlux dell&apos;ecosistema di Julia." >
-		<meta name="keywords" content="Neural ODEs, equazioni differenziali ordinarie, approssimazione numerica, soluzione numerica, forecast, serie temporali, Julia, DifferentialEquations, Flux, DiffEqFlux" >
+		<meta name="keywords" content="Neural ODEs, equazioni differenziali ordinarie, approssimazione numerica, soluzione numerica, forecast, serie temporali, Julia, DifferentialEquations, Flux, DiffEqFlux, MLP, FastChain, FastDense" >
 		<link rel="canonical" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html" />
@@ -730,7 +730,7 @@ theta = initial_params(nn)</code></pre>
             dove <code>nn</code> &egrave; la rete neurale MLP e <code>theta</code> &egrave; l&apos;array dei parametri della rete da addestrare.<br />
             <br />
             La funzione di predizione &egrave; semplicemente l&apos;applicazione della rete all&apos;input
-            mentre la funzione di costo (<em>loss</em>) &egrave; lo scarto quadratico medio tra il dataset di output e la predizione.<br />
+            mentre la funzione di costo (<em>loss</em>) &egrave; lo scarto quadratico medio (abbreviato <em>MSE</em>) tra il dataset di output e la predizione.<br />
             In codice:<br />
             <br />
             <pre><code class="julia">predict(t, p) = nn(t', p)'
@@ -744,6 +744,7 @@ end</code></pre>
                 <li>Ottimizzatore: ADAMW</li>
                 <li>Learning rate: $0.01$</li>
                 <li>Numero di epoche: $1500$</li>
+                <li>Funzione di loss: MSE</li>
             </ul>
             Il seguente codice esegue l&apos;addestramento e alla fine del quale la variable <code>y_pred</code>
             contiene l&apos;approssimazione della funzione generatrice:<br />
@@ -822,14 +823,14 @@ theta = n_ode.p</code></pre>
             <br />
             La funzione di predizione presenta una variazione rispetto al caso precedente: 
             qui infatti alla funzione di predizione non viene passato l&apos;intero input ma solamente il primo dato,
-            che &egrave; da intendersi come condizione iniziale di un problema di Cauchy;
-            la funzione di costo (<em>loss</em>) &egrave; sempre lo scarto quadratico medio tra il dataset di output e la predizione.<br />
+            che &egrave; da intendersi come condizione ai valori iniziali di un problema di Cauchy;
+            la funzione di costo (<em>loss</em>) &egrave; sempre lo scarto quadratico medio (abbreviato <em>MSE</em>) tra il dataset di output e la predizione.<br />
             In codice:<br />
             <br />
-            <pre><code class="julia">predict(t, p) = nn(t', p)'
+            <pre><code class="julia">predict(p) = n_ode(dataset_out[1:1], p)'
 
 loss(p) = begin
-  yhat = predict(dataset_in, p)
+  yhat = predict(p)
   l = Flux.mse(yhat, dataset_out)
 end</code></pre>
             Le impostazioni dell&apos;addrestramento sono:<br />
@@ -837,13 +838,14 @@ end</code></pre>
                 <li>Ottimizzatore: ADAMW</li>
                 <li>Learning rate: $0.01$</li>
                 <li>Numero di epoche: $500$</li>
+                <li>Funzione di loss: MSE</li>
             </ul>
             Analogamente a sopra, il seguente codice esegue l&apos;addestramento e alla fine del quale la variable <code>y_pred</code>
             contiene l&apos;approssimazione della funzione generatrice:<br />
             <br />
             <pre><code class="julia">learning_rate=1e-2
 opt = ADAMW(learning_rate)
-epochs = 1500
+epochs = 500
 
 function cb_train(theta, loss)
     println("Loss: ", loss)
@@ -854,8 +856,8 @@ res_train = DiffEqFlux.sciml_train(
     loss, theta, opt,
     maxiters = epochs,
     cb = cb_train)
-    
-y_pred = predict(dataset_in, res_train.minimizer)</code></pre>
+
+y_pred = predict(res_train.minimizer)</code></pre>
             Il codice completo contiene anche degli statement per visualizzare il grafico della funzione generatrice e dell&apos;approssimazione ottenuta dalla rete neurale.<br />
             <br />
 			<b>Nota</b>: Data la natura stocastica della fase di addestramento, i singoli specifici risultati possono variare. Si consideri di eseguire la fase di addestramento pi&ugrave; volte.<br/>
