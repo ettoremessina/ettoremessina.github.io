@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -40,9 +39,7 @@
 		<meta name="description" content="Il post mostra un programma scritto in Python che studia il comportamento di un sistema dinamico lineare e omogeneo sul piano a coefficienti costanti, ne calcola l&apos;integrale generale e traccia il ritratto delle fasi." >
 		<meta name="keywords" content="sistema dinamico, sistemi dinamici, sistema lineare, sistemi lineari, omogeneo, omogenei, equazioni differenziali, piano, autovalori, autovettori, stabilit&agrave;, punto critico, stazionario, equilibrio" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/analizzatore-di-un sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html" />
-		<!-- ETME
 		<link rel="alternate" hreflang="en" href="_website_url_en_ma_ancclinhodsop_" />
-		-->
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/analizzatore-di-un sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
@@ -198,7 +195,7 @@
             In questo post le convenzioni adoperate sono le seguenti:
             <ul>
                 <li>$t$ &egrave; la variabile indipendente tempo.</li>
-                <li>$A$ &egrave; la matrice 2x2 dei coefficienti del sistema; tali coefficienti sono costanti e <u>reali</u></li.>
+                <li>$A$ &egrave; la matrice 2x2 dei coefficienti del sistema; tali coefficienti sono costanti e <u>reali</u>.</li>
                 <li>$\mathbf{x}$ &egrave; da intendersi la funzione incognita vettoriale $\mathbf{x}(t) : {\rm I\!R} \to {\rm I\!R}^2$.</li>
                 <li>$x(t)$ e $y(t)$ sono le due componenti della funzione incognita $\mathbf{x}(t)$.</li>
                 <li>$C1$ e $C2$ sono le costanti arbitrarie di integrazione della soluzione generale.</li>
@@ -212,21 +209,19 @@
 
         <h2>Definizioni</h2>
         <p>
-            In questo post valgono le seguenti convenzioni:
+            In questo post valgono le seguenti definizioni:
 			<ul>
 				<li>
-					<b>
-						Punto critico</b>: un punto dove la derivata prima si annulla; considerando la definizione del sistema, vale per transitivit&agrave;:
-						
+					<b>Punto critico</b>: un punto dove la derivata prima si annulla; considerando la definizione del sistema, vale per transitivit&agrave;:
+					
     $$ \frac{d\mathbf{x}}{dt} = A\mathbf{x}=\mathbf{0}$$
 
-						e quindi cercare i punti critici, ovvero quelli in cui la derivata si annulla, equivale a cercare i vettori del piano tali che
-						moltiplicando la matrice $A$ per essi si ottiene il vettore $\mathbf{0}$ (che &egrave; l&apos;origine del piano).<br />
+					e quindi cercare i punti critici, ovvero quelli in cui la derivata si annulla, equivale a cercare i vettori del piano tali che
+					moltiplicando la matrice $A$ per essi si ottiene il vettore $\mathbf{0}$ (che &egrave; l&apos;origine del piano).<br />
 					<br />
 				</li>
 				<li>
-					<b>
-						Punto stazionario o di equilibrio</b>: un punto critico che sia di minimo relativo o di massimo relativo, e non invece un punto di sella.<br />
+					<b>Punto stazionario o di equilibrio</b>: un punto critico che sia di minimo relativo o di massimo relativo, e non invece un punto di sella.<br />
 					<br />
 				</li>
 				<li>
@@ -285,7 +280,7 @@
 				<li><b>Gli autovettori</b>, disegnati solo se hanno le componenti reali; un autovettore corrispondente a un autovalore positivo &egrave; disegnato con una freccia color magenta,
 				un autovettore corrispondente a un autovalore negativo &egrave; disegnato con una freccia color verde,
 				un autovettore corrispondente a un autovalore uguale a $0$ &egrave; disegnato con una freccia color nero.</li>
-				<li><b>Le variet&agrave; (manifold)</b>, disegnati solo solo se gli autovettori hanno le compoenti reali e, nel qual caso, sono tracciante in rosso come rette la cui direzione &egrave; individuata dagli autovettori.</li>
+				<li><b>Le variet&agrave; (manifold)</b>, disegnati solo solo se gli autovettori hanno le componenti reali e, nel qual caso, sono tracciante in rosso come rette la cui direzione &egrave; individuata dagli autovettori.</li>
 			</ul>
 			Infine, opzionalmente, il programma traccia il diagramma cartesiano della soluzione particolare richiesta
 			ove sulle ascisse vi &egrave; il tempo $t$ e sulle ordinate i valori delle componenti $x(t)$ e $y(t)$ della soluzione particolare.
@@ -428,24 +423,24 @@ optional arguments:
 
 			Si distinguono tre casi:
 			<ul>
-				<li>Autovalori reali distinti (e diversi da 0)</li>
-				<li>Autovalori reali uguali (e diversi da 0)</li>
-				<li>Autovalori complessi coniugati</li>
+				<li>Autovalori reali distinti e diversi da 0.</li>
+				<li>Autovalori reali uguali e diversi da 0.</li>
+				<li>Autovalori complessi coniugati.</li>
 			</ul>
 
 		</p>
 
         <h3>Autovalori reali distinti (e diversi da 0)</h3>
 		<p>
-			Si distinguono tre sottocasi:
+			Si distinguono tre sott ocasi:
 			<ul>
-				<li>Autovalori reali entrambi positivi</li>
-				<li>Autovalori reali entrambi negativi</li>
-				<li>Autovalori reali con segno discorde</li>
+				<li>Autovalori reali entrambi positivi.</li>
+				<li>Autovalori reali entrambi negativi.</li>
+				<li>Autovalori reali con segno discorde.</li>
 			</ul>
 		</p>
 
-        <h4>Autovalori entrambi positivi</h4>
+        <h4>Autovalori reali entrambi positivi</h4>
 		<p>
 			In questo caso il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
@@ -505,7 +500,7 @@ C₁⋅ℯ      + 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
 
         <h4>Autovalori reali entrambi negativi</h4>
 		<p>
-			Questo caso &egrave; simile al precedente dal punto di vista della forma della soluzione generale ma non per l&apos;equilibrio;
+			Questo caso &egrave; simile al precedente dal punto di vista della forma della soluzione generale ma non per l&apos;equilibrio
 			che &egrave; considerato stabile e infatti il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  &egrave; classificato come <b>nodo stabile</b>.
@@ -555,7 +550,7 @@ General solution          :
 			Questo caso &egrave; simile ai due precedenti dal punto di vista della forma della soluzione generale; la stabilit&agrave; invece &egrave; diversa e
 			il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
- &egrave; classificato come <b>punto sella instabile</b>;
+ &egrave; classificato come <b>punto sella</b>;
 			la soluzione &egrave; divergente in quanto, come si evince dall&apos;integrale generale, l&apos;esponenziale dell&apos;autovalore positivo moltiplicato $t$ prevale
 			sull&apos;esponenziale dell&apos;autovalore negativo moltiplicato $t$ per $t$ che tende all&apos;infinito.<br />
 			La soluzione generale &egrave; della forma (1).</br>
@@ -595,15 +590,15 @@ General solution          :
         <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
-        <h3>Autovalori reali uguali (e diversi da 0)</h3>
+        <h3>Autovalori reali uguali e diversi da 0</h3>
 		<p>
 			Ovverosia un autovalore con molteplicit&agrave; algebrica uguale a 2.<br />
-			Si distinguono quattro sottocasi:
+			Si distinguono quattro sotto casi:
 			<ul>
-				<li>Autovalore positivo con molteplicit&agrave; geometrica uguale a 2</li>
-				<li>Autovalore negativo con molteplicit&agrave; geometrica uguale a 2</li>
-				<li>Autovalore positivo con molteplicit&agrave; geometrica uguale a 1</li>
-				<li>Autovalore negativo con molteplicit&agrave; geometrica uguale a 1</li>
+				<li>Autovalore positivo con molteplicit&agrave; geometrica uguale a 2.</li>
+				<li>Autovalore negativo con molteplicit&agrave; geometrica uguale a 2.</li>
+				<li>Autovalore positivo con molteplicit&agrave; geometrica uguale a 1.</li>
+				<li>Autovalore negativo con molteplicit&agrave; geometrica uguale a 1.</li>
 			</ul>
 		</p>
 
@@ -612,7 +607,7 @@ General solution          :
 			In questo caso, il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  &egrave; classificato come <b>nodo singolare instabile</b> (detto anche <b>nodo stella instabile</b>);
-			l&apos;essere singolare &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (con moltepliicit&agrave; algebrica uguale a 2)
+			l&apos;essere singolare &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (con molteplicit&agrave; algebrica uguale a 2)
 			e con molteplicit&agrave; geometrica uguale a 2, che garantisce di avere comunque due autovettori linearmente indipendenti per costruire l&apos;integrale generale.<br />
 			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.</br>
 			</br>
@@ -647,7 +642,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=-2.3$ e $C_2=-4.9$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_singular_node_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
         <h4>Autovalore negativo con molteplicit&agrave; geometrica uguale a 2</h4>
@@ -655,8 +650,8 @@ General solution          :
 			Questo caso &egrave; molto simile al caso precedente: l&apos;unica differenza consiste nell&apos;equilibrio del punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  che &egrave; stabile
-			quindi il punto critico &egrave; classificato come <b>nodo singolare stabile</b> (detto anche <b>nodo stella stabile</b>;
-			l&apos;autovalore &egrave; uno solo (con moltepliicit&agrave; algebrica uguale a 2) e vale -1, quindi negativo,
+			quindi il punto critico &egrave; classificato come <b>nodo singolare stabile</b> (detto anche <b>nodo stella stabile</b>);
+			l&apos;autovalore &egrave; uno solo (con molteplicit&agrave; algebrica uguale a 2) e vale -1, quindi negativo,
 			e con molteplicit&agrave; geometrica uguale a 2, che garantisce di avere comunque due autovettori linearmente indipendenti per costruire l&apos;integrale generale.<br />
 			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.</br>
 			<br />
@@ -687,7 +682,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=-1.9$ e $C_2=-4.4$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_singular_node_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
         <h4>Autovalore positivo con molteplicit&agrave; geometrica uguale a 1</h4>
@@ -700,7 +695,7 @@ General solution          :
 			Il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  &egrave; classificato come <b>nodo degenere instabile</b>;
-			l&apos;essere degenere &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (con moltepliicit&agrave; algebrica uguale a 2)
+			l&apos;essere degenere &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (con molteplicit&agrave; algebrica uguale a 2)
 			e con molteplicit&agrave; geometrica uguale a 1, mentre l&apos;instabilit&agrave; &egrave; data dal segno positivo dell&apos;autovalore.<br />
 			Per il calcolo della catena di autovettori generalizzati, che &egrave; basato su un algoritmo che si serve dei blocchi di Jordan, si veda l&apos;implementazione del programma
 			(precisamente la funzione Python <code>compute_generalized_eigenvectors</code>).<br />
@@ -738,7 +733,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=-0.4$ e $C_2=-1.5$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_degenerate_node_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
         <h4>Autovalore negativo con molteplicit&agrave; geometrica uguale a 1</h4>
@@ -783,7 +778,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=-0.4$ e $C_2=-1.5$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_degenerate_node_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
 		<h3>Autovalori complessi coniugati</h3>
@@ -791,7 +786,7 @@ General solution          :
 			Nel caso di autovalori complessi, essi sono necessariamente coniugati per il teorema fondamentale dell&apos;algebra
 			in quanto i coefficienti della matrice $A$ sono <u>reali</u>.<br />
 			<br />
-			Si distinguono tre sottocasi:
+			Si distinguono tre sotto casi:
 			<ul>
 				<li>Autovalori complessi coniugati con parte reale positiva.</li>
 				<li>Autovalori complessi coniugati con parte reale negativa.</li>
@@ -843,7 +838,7 @@ t)  - 0.707106781186547⋅C₁⋅ℯ     ⋅sin(1.0⋅t) - 0.707106781186547⋅C
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=-2.9$ e $C_2=-3.9$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_focus_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
 		<h4>Autovalori complessi coniugati con parte reale negativa</h4>
@@ -893,7 +888,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=1.3$ e $C_2=-1.4$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_focus_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
 		<h4>Autovalori complessi coniugati con parte reale nulla</h4>
@@ -934,7 +929,7 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=1.8$ e $C_2=2.0$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/center_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
         <h2>Sistemi dinamici lineari omogenei non semplici</h2>
@@ -955,7 +950,7 @@ General solution          :
 
         <h3>Il secondo autovalore diverso da 0</h3>
 		<p>
-			Si distinguono ulteriormente due sottocasi:
+			Si distinguono ulteriormente due sotto casi:
 			<ul>
 				<li>Il secondo autovalore &egrave; reale positivo.</li>
 				<li>Il secondo autovalore &egrave; reale negativo.</li>
@@ -997,13 +992,13 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=2.0$ e $C_2=3.2$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_line_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
 		<h4>Il secondo autovalore &egrave; reale negativo</h4>
 		<p>
-			Questo caso &egrave; simile al precedente dal punto di vista della forma della soluzione generale ma non per l&apos;equilibrio;
-			che &egrave; considerato stabile e infatti in questo caso i punti critici sempre infiniti e sempre giacciono su una retta passante per l&apos;origine; 
+			Questo caso &egrave; simile al precedente dal punto di vista della forma della soluzione generale ma non per l&apos;equilibrio
+			che &egrave; considerato stabile e infatti in questo caso i punti critici sempre infiniti e sempre giacciono su una retta passante per l&apos;origine 
 			ma l&apos;insieme dei punti critici stavolta &egrave; classificato come <b>linea stabile</b>.
 			La stabilit&agrave; &egrave; dovuta alla negativit&agrave; dell&apos;autovalore che fa convergere la soluzione al tendere di $t$ all&apos;infinito.<br />
 			La soluzione generale &egrave; della forma (1) con $\lambda_1$ uguale a 0.</br>
@@ -1040,13 +1035,13 @@ General solution          :
 		<p>ove la traiettoria color oro &egrave; la soluzione particolare per $C_1=3.0$ e $C_2=3.2$.<br />
 		Il diagramma della soluzione particolare &egrave;:</p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_line_fav_sol.png" /></div>
-        <div class="photocaption">Diagramma della soluzione particolare</div>
+        <div class="photocaption">Diagramma della soluzione particolare.</div>
         <br /><br />
 
         <h3>Il secondo autovalore &egrave; uguale a 0</h3>
 		<p>
 			Quindi l&apos;autovalore 0 &egrave; doppio, ovverosia ha molteplicit&agrave; algebrica uguale a 2.<br />
-			Si distinguono ulteriormente due sottocasi:
+			Si distinguono ulteriormente due sotto casi:
 			<ul>
 				<li>L&apos;autovalore 0 doppio con molteplicit&agrave; geometrica uguale a 1.</li>
 				<li>L&apos;autovalore 0 doppio con molteplicit&agrave; geometrica uguale a 2.</li>
@@ -1061,7 +1056,7 @@ General solution          :
 			e $\eta_1$ e $\eta_2$ sono due autovettori generalizzati linearmente indipendenti.<br />
 			<br />
 			In questo caso i punti critici sono infiniti e giacciono su una retta passante per l&apos;origine e l&apos;insieme dei punti critici &egrave; classificato come <b>linea degenere</b>
-			l&apos;essere degenere &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (quello nullo con moltepliicit&agrave; algebrica uguale a 2)
+			l&apos;essere degenere &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (quello nullo con molteplicit&agrave; algebrica uguale a 2)
 			e con molteplicit&agrave; geometrica uguale a 1.<br />
 			Per il calcolo della catena di autovettori generalizzati, che &egrave; basato su un algoritmo che si serve dei blocchi di Jordan, si veda l&apos;implementazione del programma
 			(precisamente la funzione Python <code>compute_generalized_eigenvectors</code>).<br />
@@ -1098,7 +1093,7 @@ General solution          :
 		<h4>L&apos;autovalore 0 doppio con molteplicit&agrave; geometrica uguale a 2</h4>
 		<p>
 			Questo caso &egrave; particolarissimo e banalissimo e corrisponde alla matrice $A$ nulla.<br />
-			L&apos;insieme dei punti critici &egrave; costituito dall&apos;intero piano.<br />
+			L&apos;insieme dei punti critici &egrave; costituito dall&apos;<b>intero piano</b>.<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/whole_plane.sh">degenerate_line.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -1127,6 +1122,14 @@ None</code></pre>
 <i><a target="_blank" href="https://www.dm.unibo.it/~fioresi/tesi/TesiCostanzini.pdf">ANALISI DEI SISTEMI DINAMICI E DELLA LORO STABILITA&apos; NELLE APPLICAZIONI ECONOMICHE</a></i>
 Alma Mater Studiorum · Universit&agrave; di Bologna
 2008/2009</code></pre>
+        </p>
+
+        <h2>Bibliografia</h2>
+        <p>
+            <pre><code class="text">Stephen Lynch
+<i><a target="_blank" href="https://www.springer.com/gp/book/9783319781440">Dynamical Systems with Applications using Python</a></i>
+Springer
+2018</code></pre>
         </p>
 
         <h2 id="downloadcode">Download del codice completo</h2>
