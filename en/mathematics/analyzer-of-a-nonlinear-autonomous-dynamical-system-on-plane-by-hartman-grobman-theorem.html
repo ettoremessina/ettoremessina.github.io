@@ -1,0 +1,928 @@
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</title>
+		<meta name="description" content="The post shows a program written in Python that, by applying the Hartman-Grobman theorem, studies the behavior of a nonlinear and autonomous dynamical system on the plane and traces its phase portrait." >
+		<meta name="keywords" content="Hartman, Grobman, dynamical system, nonlinear, differential equation, plane, eigenvalue, eigenvector, stability, critical point, stationary, equilibrium, Lotka, Volterra, Holling, Tanner" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html",
+              "name": "Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+    $\newcommand{\dee}{\mathop{\mathrm{d}\!}}$
+	$\newcommand\dag\dagger$
+	<section>
+		<header class="main">
+			<h1>Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</h1>
+		</header>
+		<p>
+			This post presents the Python program <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer.py" target="_blank">nonlin-auton-plane-sys-hartman-analyzer.py</a></code> and its command line usage.
+			The program analyzes, using both symbolic techniques (via SymPy) and numerical techniques (via NumPy),
+			the behavior of a nonlinear and autonomous dynamic system on the plane
+			by a system of two differential equations expressed in this form:
+			
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos;(t) = P(x, y)
+                \\
+                y&apos;(t) = Q(x, y)
+            \end{cases}
+            \end{equation} $$
+<br />
+			where $P$ and $Q$ are two nonlinear functions of $x$ and $y$.<br />
+			<br />		
+			The program first determines the critical points and whether they are finite in number (the program does not support a finite number of critical points),
+			determines whether they are hyperbolic or non-hyperbolic by analyzing the eigenvalues and eigenvectors of the Jacobian matrix calculated at each critical point;
+			then only for hyperbolic critical points the program classifies them in the appropriate category
+			analyzing the type and stability of the linear system obtained by applying the <a target="_blank" href="https://en.wikipedia.org/wiki/Hartman%E2%80%93Grobman_theorem">Hartman–Grobman theorem</a>.<br />
+			Finally, the program also draws the <em>phase portrait</em> on the plane which provides a qualitative analysis of the behavior of the trajectories
+			on which it also draws the eigenvectors (if they are not complex) of the constant coefficient matrices representing the linearized systems at the hyperbolic critical points.<br />
+			<br />
+			Basically, the Hartman-Grobman theorem shows that the behavior of a dynamical system around a hyperbolic critical point
+			is qualitatively similar to that of its linearization around that point and provides the linearization formula which is based on
+			on the Jacobian matrix of the original system computed at that critical point.
+			So by studying this linearization, which is easier, we can indirectly study some characteristics of the original system.<br />
+			<br />
+			To get the code see paragraph <a href="#downloadcode">Download del codice completo</a> at the end of this post.<br/>
+			<br />
+			For a more in-depth study of linear, homogeneous systems on the plane with constant coefficients, see post
+			<a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a> also published on this website.<br />
+        </p>
+
+        <h2>Conventions</h2>
+        <p>
+            In this post, the conventions used are as follows:
+            <ul>
+                <li>$t$ is the time independent variable.</li>
+                <li>$x(t)$ and $y(t)$ are the unknown functions of the system.</li>
+				<li>$J$ indicates the Jacobian matrix.</li>
+				<li>$J_{(x_i, y_i)}$ indicates the Jacobian matrix calculated at point $\left[\begin{matrix} x_i & y_i \end{matrix} \right]^\dag$.</li>
+				<li>$\lambda_{i_1}$ and $\lambda_{i_2}$ are the two eigenvalues of the matrix $J_{(x_i, y_i)}$.</li>
+            </ul>
+        </p>
+
+        <h2>Definitions</h2>
+        <p>
+            The following definitions apply in this post:
+			<ul>
+				<li>
+					<b>Autonomous system</b>: a system of ordinary differential equations that do not explicitly depend on the independent variable $t$.<br />
+					<br />
+				</li>
+				<li>
+					<b>Critical point</b>: a point where $\frac{dx}{dt}$ and $\frac{dy}{dt}$ computed at that point are equal to $0$ for every $t$.<br />
+					<br />
+				</li>
+				<li>
+					<b>Stationary or equilibrium point</b>: a critical point that is of relative minimum or relative maximum, and not instead a saddle point.<br />
+					<br />
+				</li>
+				<li>
+					<b>Jacobian matrix</b>: is the 2x2 matrix whose elements are the partial prime derivatives of the functions $P(x, y)$ and $Q(x, y)$ with respect to $x$ and $y$.<br />
+					<br />
+				</li>
+				<li>
+					<b>Hyperbolic point</b>: a critical point $\left[\begin{matrix} x_i & y_i \end{matrix} \right]^\dag$ such that
+					the matrix $J_{(x_i, y_i)}$ that linearizes the initial system at that critical point has no eigenvalues with real part equal to $0$.<br />
+					The word &quot;hyperbolic&quot; is due to the fact that on the plane the trajectories close to the hyperbolic point lie on hyperbola lines centered at that point
+					with respect to a suitable reference system.<br />
+					<br />
+				</li>
+				<li>
+					<b>Non-hyperbolic point</b>: a critical point $\left[\begin{matrix} x_i & y_i \end{matrix} \right]^\dag$ such that
+					the matrix $J_{(x_i, y_i)}$ that linearizes the initial system at that critical point has eigenvalues equal to zero or pure imaginary (so with real part equal to $0$).<br />
+					<br />
+				</li>
+			</ul>			
+        </p>
+
+        <h2>Program features</h2>
+        <p>
+			The program takes as input, via command line, the pair of nonlinear functions $P(x,y)$ and $Q(x,y)$
+			which represent the system to be studied in the form
+			
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos;(t) = P(x, y)
+                \\
+                y&apos;(t) = Q(x, y)
+            \end{cases}
+            \end{equation} $$
+<br />
+			and determines the following characteristics:
+			<ul>
+				<li>
+					<b>The set of critical points</b>, by solving the system of equations:
+					
+            $$ \begin{equation}
+            \begin{cases}
+                P(x, y) = 0
+                \\
+                Q(x, y) = 0
+            \end{cases}
+            \end{equation} $$
+
+					If the critical points are infinite, the program does no further processing and jumps to drawing the phase portrait.
+				</li>
+
+				<li>
+					<b>The type of critical points</b>, divided between <em>hyperbolic</em> vs <em>non-hyperbolic</em> by studying the real part of the eigenvalues
+					of the Jacobian matrix computed for each critical point: if the real part is non-zero,
+					the point is of hyperbolic type, otherwise (so at least one eigenvalue is equal to zero or pure imaginary)
+					the point is non-hyperbolic.
+				</li>
+
+				<li>
+					<b>The eigenvalues and eigenvectors of the Jacobian matrix $J_{(x_i, y_i)}$</b>, distinguishing the various cases between real vs complex, sign (of the real part) concordant or discordant,
+					degenerate cases (geometric multiplicity less than 2);
+					in this last case the program calculates the generalized eigenvectors using an algorithm based on Jordan blocks.</li>
+
+				<li>
+					<b>The class of critical points</b>, divided between <em>stable</em> vs <em>unstable</em> and between <em>node</em>, <em>point</em>, <em>saddle</em>, <em>singular</em>, <em>degenerate</em>
+					and any combinations of them as a function of the sign of the eigenvalues of the Jacobian matrix computed for each hyperbolic critical point.
+				</li>
+			</ul>
+			In addition, the program traces the phase portrait, which contains:
+			<ul>
+				<li><b>The trajectories</b>, plotted in red and computed by numerically solving the system of differential equations by discretely varying the initial condition at time $t=0$.</li>
+				<li><b>The gradient</b>, plotted as a vector field with blue arrows; the length of the arrows indicates the value of the modulus of the gradient,
+				the direction indicates the direction in which the gradient vector tends to $\mathbf{0}$.</li>
+				<li><b>Eigenvectors</b>, drawn only if they have real components; an eigenvector corresponding to a positive eigenvalue is drawn with a magenta colored arrow,
+				an eigenvector corresponding to a negative eigenvalue is drawn with a green arrow.</li>
+			</ul>
+        <p>
+
+        <h2>Program usage</h2>
+        <p>
+			To obtain program usage <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer.py" target="_blank">nonlin-auton-plane-sys-hartman-analyzer.py</a></code> simply run the following command:
+			<pre><code class="shell">$ python nonlin-auton-plane-sys-hartman-analyzer.py --help</code></pre>
+			and the output obtained is:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: nonlin-auton-plane-sys-hartman-analyzer.py [-h] [--version] --dx_dt
+                    FUNC_DX_DT_BODY --dy_dt
+                    FUNC_DY_DT_BODY
+                    [--t_end T_END]
+                    [--t_num_of_samples T_NUM_OF_SAMPLES]
+                    [--x0_begin X0_BEGIN]
+                    [--x0_end X0_END]
+                    [--x0_num_of_samples X0_NUM_OF_SAMPLES]
+                    [--y0_begin Y0_BEGIN]
+                    [--y0_end Y0_END]
+                    [--y0_num_of_samples Y0_NUM_OF_SAMPLES]
+                    [--font_size FONT_SIZE]
+
+nonlin-auton-plane-sys-hartman-analyzer.py analyzes a dynamyc system modeled
+by a nonlinear planar system using Hartman theorem
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --dx_dt FUNC_DX_DT_BODY
+                        dx/dt=P(x, y) body (lamba format)
+  --dy_dt FUNC_DY_DT_BODY
+                        dy/dt=Q(x, y) body (lamba format)
+  --t_end T_END         In the phase portait diagram, it is the final value
+                        of the interval of variable t (starting value of t is 0).
+                        For backward time trajectories, t goes from -t_end to 0;
+                        for forward time trajectories, t goes from 0 to t_end.
+  --t_num_of_samples T_NUM_OF_SAMPLES
+                        In the phase portait diagram, it is the number of samples
+                        of variable t between -t_end and 0
+                        for backward time trajectories
+                        and also it is the number of samples of variable t
+                        between 0 and t_end for forward time trajectories
+  --x0_begin X0_BEGIN   In the phase portait diagram, it is the starting
+                        value of the interval of initial condition x0
+  --x0_end X0_END       In the phase portait diagram, it is the final
+                        value of the interval of initial condition x0
+  --x0_num_of_samples X0_NUM_OF_SAMPLES
+                        In the phase portait diagram, it is the number of samples
+                        of initial condition x0 between x0_begin and x0_end
+  --y0_begin Y0_BEGIN   In the phase portait diagram, it is the starting value
+                        of of interval for initial condition y0
+  --y0_end Y0_END       In the phase portait diagram, it is the final value
+                        of intervalfor initial condition y0
+  --y0_num_of_samples Y0_NUM_OF_SAMPLES
+                        In the phase portait diagram, it is the number of samples
+                        of initial condition y0 between y0_begin and y0_end
+  --font_size FONT_SIZE
+                        font size</code></pre>
+			Where:
+			<ul>
+				<li>
+					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dx_dt</b>: lambda expression of the function $P(x,y)$.<br />
+					This option is mandatory.<br />
+					<br />
+				</li>
+				<li>
+					<b>--dy_dt</b>: lambda expression of the function $Q(x,y)$.<br />
+					This option is mandatory.<br />
+					<br />
+				</li>
+				<li>
+					<b>--t_end</b>: interval of the variable $t$ between 0 and t_end; (default 100.0).<br />
+					In the phase portrait, backward trajectories are drawn by varying the time between -t_end and 0
+					while forward trajectories are drawn by varying the time between 0 and t_end.<br />
+					<br />
+				</li>
+				<li>
+					<b>--t_num_of_samples</b>: in the phase portrait is denotes the number of discrete values of $t$ between 0 and t_end to plot forward trajectories;
+					similarly, for backward trajectories, denotes the number of discrete values of $t$ between -t_end and 0; (default: 10).<br />
+					<br />
+				</li>
+				<li>
+					<b>--x0_begin</b> and <b>--x0_end</b>: in the phase portrait indicates interval of change in the initial condition $x_0$; (default respectively: -5.0 and 5.0).<br />
+					<br />
+				</li>
+				<li>
+					<b>--x0_num_of_samples</b>: in the phase portrait indicates the number of discrete values of $x_0$ in the interval specified by the previous option; (default: 6).<br />
+					<br />
+				</li>
+				<li>
+					<b>--y0_begin</b> and <b>--y0_end</b>: in the phase portrait indicates interval of change in the initial condition $y_0$; (default respectively: -5.0 and 5.0).<br />
+					<br />
+				</li>
+				<li>
+					<b>--y0_num_of_samples</b>: in the phase portrait indicates the number of discrete values of $y_0$ in the interval specified by the previous option; (default: 6).<br />
+					<br />
+				</li>
+				<li>
+					<b>--font_size</b>: font size of all labels present in the figures generated by the program; (default: 10).<br />
+					<br />
+				</li>
+			</ul>
+        </p>
+
+		<h2>Examples</h2>
+		<p>
+			A series of examples follow, all available on GitHub at this link <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/">nonlin-auton-plane-sys-hartman-analyzer-examples</a></code>.<br />
+			Some of them are described in detail below, for others there is only shown the phase portraits and we refer to the corresponding scripts on GitHub for the command line.
+		</p>
+
+		<h3>Example #01</h3>
+		<p>
+			The shell script for this example is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_01.sh">example_01.sh</a></code>.
+			The system consists of the following pair of differential equations: 
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos; = x
+                \\
+                y&apos; = x^2 + y^2 - 1
+            \end{cases}
+            \end{equation} $$
+
+			In order to study the behavior of such system we execute the command: <pre><code>$ python nonlin-auton-plane-sys-hartman-analyzer.py \
+    --dx_dt "x" \
+    --dy_dt "x**2 + y**2 - 1" \
+    --t_num_of_samples 500 \
+    --x0_begin -3 --x0_end 3 \
+    --y0_begin -3 --y0_end 3</pre></code>
+			whose output is:<br /><br />
+			<pre><code class="shell">Critical point(s)         :  [(0, -1), (0, 1)]
+Formal Jacobian           : 
+⎡ 1    0 ⎤
+⎢        ⎥
+⎣2⋅x  2⋅y⎦
+*************************   
+Critical point            :  (0, -1)
+Jacobian at c.p.          : 
+⎡1  0 ⎤
+⎢     ⎥
+⎣0  -2⎦
+Determinant               :  -2.0
+Eigenvalues               :  1.0 -2.0
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [0.0, 1.0]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point
+*************************   
+Critical point            :  (0, 1)
+Jacobian at c.p.          : 
+⎡1  0⎤
+⎢    ⎥
+⎣0  2⎦
+Determinant               :  2.0
+Eigenvalues               :  1.0 2.0
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [0.0, 1.0]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  unstable node</code></pre>
+			From which we see that the critical points are finite and there are two:
+			$\left[\begin{matrix} 0 & -1 \end{matrix} \right]^\dag$ e $\left[\begin{matrix} 0 & 1 \end{matrix} \right]^\dag$.<br />
+			Furthermore both are hyperbolic and the eigenvalues of the Jacobian matrix computed at the point $\left[\begin{matrix} 0 & -1 \end{matrix} \right]^\dag$ have sign discordant
+			and therefore the first critical point is classified as <em>saddle point</em>
+			while the eigenvalues of the Jacobian matrix calculated at the point $\left[\begin{matrix} 0 & 1 \end{matrix} \right]^\dag$
+			are both positive, so the second critical point is classified as an <em>unstable node</em>.<br />
+			<br />
+			The phase portrait generated by the program is as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_01.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_01.sh.</div>
+        <br /><br />
+
+		<h3>Examples #02, #03 and #04</h3>
+		<p>
+			For brevity these three examples are not shown in detail. The shell scripts of these three examples are respectively:<br />
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_02.sh">example_02.sh</a></code>&nbsp;
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_03.sh">example_03.sh</a></code>&nbsp;
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_04.sh">example_04.sh</a></code><br />
+			The phase portraits generated by the program are respectively:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_02.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_02.sh.</div>
+        <br /><br />
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_03.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_03.sh.</div>
+        <br /><br />
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_04.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_04.sh.</div>
+        <br /><br />
+
+		<h3>Example #05 epidemic</h3>
+		<p>
+			This example describes a simple model of the spread of an epidemic in a city.
+			Also this example for brevity is not shown in detail; the corresponding shell script is
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_05_epidemic.sh">example_05_epidemic.sh</a></code><br />
+			The stage portrait generated by the program is as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_05_epidemic.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_05_epidemic.sh.</div>
+        <br /><br />
+
+		<h3>Example #06 infected species</h3>
+		<p>
+			This example describes the evolution of a population of healthy animals of a species, represented by the variable $x$,
+			and the subpopulation of infected animals, represented by the variable $y$, that never recover once infected,
+			both measured in millions.<br />
+			<br />
+			The shell script for this example is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_06_infected_species.sh">example_06_infected_species.sh</a></code>.
+			The system consists of the following pair of differential equations: 
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos; = (b-d)x - \delta y & b=4, d=1, \delta=6
+                \\
+                y&apos; = \tau y (x - y) - (\delta + d) y & \tau = 1
+            \end{cases}
+            \end{equation} $$
+
+			In order to study the behavior of such system we execute the command: <pre><code>$ python nonlin-auton-plane-sys-hartman-analyzer.py \
+     --dx_dt "(4.0 - 1.0) * x - 6.0 * y" \
+    --dy_dt "1.0 * y * (x - y) - (6.0 + 1.0) * y" \
+    --t_num_of_samples 500 \
+    --x0_begin 0 --x0_end 20 \
+    --y0_begin 0 --y0_end 20</pre></code>
+			whose output is:<br /><br />
+			<pre><code class="shell">Critical point(s)         :  [(0.0, 0.0), (14.0, 7.0)]
+Formal Jacobian           : 
+⎡ 3.0          -6.0        ⎤
+⎢                          ⎥
+⎣1.0⋅y  1.0⋅x - 2.0⋅y - 7.0⎦
+*************************   
+Critical point            :  (0.0, 0.0)
+Jacobian at c.p.          : 
+⎡3.0  -6.0⎤
+⎢         ⎥
+⎣0.0  -7.0⎦
+Determinant               :  -21.0
+Eigenvalues               :  3.0 -7.0
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [0.5144957554275265, 0.8574929257125441]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point
+*************************   
+Critical point            :  (14.0, 7.0)
+Jacobian at c.p.          : 
+⎡3.0  -6.0⎤
+⎢         ⎥
+⎣7.0  -7.0⎦
+Determinant               :  21.0
+Eigenvalues               :  (-2+4.12310562j) (-2-4.12310562j)
+Eigenvector 1             :  [(0.52414241+0.43221891j), (0.73379938+0j)]
+Eigenvector 2             :  [(0.52414241-0.43221891j), (0.73379938-0j)]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  stable focus</code></pre>
+			From which we see that the critical points are finite and there are two:
+			$\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$ e $\left[\begin{matrix} 14 & 7 \end{matrix} \right]^\dag$.<br />
+			Furthermore both are hyperbolic and the eigenvalues of the Jacobian matrix computed at the point $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$ have sign discordant
+			and therefore the first critical point is classified as <em>saddle point</em>
+			while the eigenvalues of the Jacobian matrix calculated at the point $\left[\begin{matrix} 14 & 7 \end{matrix} \right]^\dag$
+			are conjugate complexes with negative real part, so the second critical point is classified as <em>stable focus</em>.<br />
+			<br />
+			The phase portrait generated by the program is as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_06_infected_species.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_06_infected_species.sh.</div>
+        <br /><br />
+
+		<h3>Example #07 competing species</h3>
+		<p>
+			This example describes a simple of two competing species in an environment where the common food supply is limited.
+			Also this example for brevity is not shown in detail; the corresponding shell script is
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_07_competing_species.sh">example_07_competing_species.sh</a></code><br />
+			The stage portrait generated by the program is as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_07_competing_species.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_07_competing_species.sh.</div>
+        <br /><br />
+
+		<h3>Example #08 Lotka-Volterra</h3>
+		<p>
+			This example describes the dynamics of an ecosystem in which only two animal species interact: one of them as a predator (modeled by the variable $y$),
+			the other as its prey (modeled by the variable $x$) in accordance with the system published by Lotka in 1925 and independently by Volterra in 1926.<br />
+			<br />
+			The shell script for this example is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_08_lotka_volterra.sh">example_08_lotka_volterra.sh</a></code>.
+			The system consists of the following pair of differential equations: 
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos; = x (A - By) & A=\frac{2}{3}, B=\frac{4}{3}
+                \\
+                y&apos; = y (Cx - D) & C=\frac{9}{10}, D=\frac{9}{10}
+            \end{cases}
+            \end{equation} $$
+
+			In order to study the behavior of such system we execute the command: <pre><code>$ python nonlin-auton-plane-sys-hartman-analyzer.py \
+    --dx_dt "x * (0.666 - 1.333 * y)" \
+    --dy_dt "y * (0.9 * x - 0.9)" \
+    --t_num_of_samples 500 \
+    --x0_begin 0 --x0_end 4 \
+    --y0_begin 0 --y0_end 2</pre></code>
+			whose output is:<br /><br />
+			<pre><code class="shell">Critical point(s)         :  [(0.0, 0.0), (1.0, 0.499624906226557)]
+Formal Jacobian           : 
+⎡0.666 - 1.333⋅y   -1.333⋅x  ⎤
+⎢                            ⎥
+⎣     0.9⋅y       0.9⋅x - 0.9⎦
+*************************   
+Critical point            :  (0.0, 0.0)
+Jacobian at c.p.          : 
+⎡0.666  0.0 ⎤
+⎢           ⎥
+⎣ 0.0   -0.9⎦
+Determinant               :  -0.5994
+Eigenvalues               :  0.666 -0.9
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [0.0, 1.0]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point
+*************************   
+Critical point            :  (1.0, 0.499624906226557)
+Jacobian at c.p.          : 
+⎡-4.44089209850063e-16  -1.333⎤
+⎢                             ⎥
+⎣  0.449662415603901     0.0  ⎦
+Determinant               :  0.5994000000000004
+Eigenvalues               :  (0+0.77420927j) (0-0.77420927j)
+Eigenvector 1             :  [(-0.86472998+0j), (0+0.50223704j)]
+Eigenvector 2             :  [(-0.86472998-0j), (0-0.50223704j)]
+Type of c.p.              :  Non-hyperbolic
+	So Hartman theorem cannot be applied to this critical point</code></pre>
+			From which we see that the critical points are finite and there are two, but the second one is non-hyperbolic,
+			then the program analyzes only the hyperbolic critical point $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
+			and the eigenvalues of the Jacobian matrix computed at that point have sign discordant
+			and therefore it is classified as <em>saddle point</em>.<br />
+			<br />
+			The phase portrait generated by the program is as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_08_lotka_volterra.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_08_lotka_volterra.sh.</div>
+        <br /><br />
+
+		<h3>Example #09 and #10 Holling-Tanner</h3>
+		<p>
+			This pair of examples describes like the previous one an ecosystem dynamics in which only two animal species interact: one of them as a predator (modeled by the variable $y$),
+			the other as its prey (modeled by the variable $x$), but following a different system of equations, called the Holling-Tanner system.<br />
+			<br />
+			The shell scripts in this pair of examples are <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_09_holling_tanner_0dot5.sh">example_09_holling-tanner_0_dot5.sh</a></code> and
+			<code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer-examples/example_10_holling_tanner_2dot5.sh">example_10_holling_tanner_2dot5.sh</a></code>.
+			The system consists of the following pair of differential equations: 
+            $$ \begin{equation}
+            \begin{cases}
+                x&apos; = x (1 - \frac{x}{7}) - \frac{6xy}{7 + 7x}
+                \\
+                y&apos; = 0.2 y (1 - \frac{Ny}{x})
+            \end{cases}
+            \end{equation} $$
+
+			and the two examples differ only in the constant $N$ which is worth $0.5$ for the former and $2.5$ for the latter.<br />
+			<br />
+			To study the behavior of such a system for $N=0.5$ execute the command: <pre><code>$ python nonlin-auton-plane-sys-hartman-analyzer.py \
+    --dx_dt "x * (1 - x/7) - 6*x*y/(7+7*x)" \
+    --dy_dt "0.2*y * (1 - (0.5*y)/x)" \
+    --t_num_of_samples 500 \
+    --x0_begin 0 --x0_end 8 \
+    --y0_begin 0 --y0_end 6</pre></code>
+			whose output is:<br /><br />
+			<pre><code class="shell">Critical point(s)         :  [(-7.0, -14.0), (1.0, 2.0), (7.0, 0.0)]
+Formal Jacobian           : 
+⎡  42⋅x⋅y     2⋅x     6⋅y           -6⋅x    ⎤
+⎢────────── - ─── - ─────── + 1    ───────  ⎥
+⎢         2    7    7⋅x + 7        7⋅x + 7  ⎥
+⎢(7⋅x + 7)                                  ⎥
+⎢                                           ⎥
+⎢                 2                         ⎥
+⎢            0.1⋅y                     0.2⋅y⎥
+⎢            ──────              0.2 - ─────⎥
+⎢               2                        x  ⎥
+⎣              x                            ⎦
+*************************   
+Critical point            :  (-7.0, -14.0)
+Jacobian at c.p.          : 
+⎡3.33333333333333  -1.0⎤
+⎢                      ⎥
+⎣      0.4         -0.2⎦
+Determinant               :  -0.2666666666666668
+Eigenvalues               :  3.2162457375544835 -0.08291240422114961
+Eigenvector 1             :  [0.9932149332261002, 0.11629314862309552]
+Eigenvector 2             :  [0.28093063252715217, 0.9597280759193689]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point
+*************************   
+Critical point            :  (1.0, 2.0)
+Jacobian at c.p.          : 
+⎡0.285714285714286  -0.428571428571429⎤
+⎢                                     ⎥
+⎣       0.4                -0.2       ⎦
+Determinant               :  0.11428571428571427
+Eigenvalues               :  (0.04285714+0.33533413j) (0.04285714-0.33533413j)
+Eigenvector 1             :  [(0.71919495+0j), (0.40754380-0.56273143j)]
+Eigenvector 2             :  [(0.71919495-0j), (0.40754380+0.56273143j)]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  unstable focus
+*************************   
+Critical point            :  (7.0, 0.0)
+Jacobian at c.p.          : 
+⎡-1.0  -0.75⎤
+⎢           ⎥
+⎣0.0    0.2 ⎦
+Determinant               :  -0.2
+Eigenvalues               :  -1.0 0.2
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [-0.52999894000318, 0.847998304005088]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point</code></pre>
+			<br /><br />
+			To study the behavior of such a system for $N=2.5$ execute the command::<br /><br /><pre><code>$ python nonlin-auton-plane-sys-hartman-analyzer.py \
+    --dx_dt "x * (1 - x/7) - 6*x*y/(7+7*x)" \
+    --dy_dt "0.2*y * (1 - (2.5*y)/x)" \
+    --t_num_of_samples 500 \
+    --x0_begin 0 --x0_end 8 \
+    --y0_begin 0 --y0_end 6</pre></code>
+			whose output is:<br /><br />
+			<pre><code class="shell">Critical point(s)         :  [(-1.4, -0.56), (5.0, 2.0), (7.0, 0.0)]
+Formal Jacobian           : 
+⎡  42⋅x⋅y     2⋅x     6⋅y         -6⋅x  ⎤
+⎢────────── - ─── - ─────── + 1  ───────⎥
+⎢         2    7    7⋅x + 7      7⋅x + 7⎥
+⎢(7⋅x + 7)                              ⎥
+⎢                                       ⎥
+⎢                 2                     ⎥
+⎢            0.5⋅y                     y⎥
+⎢            ──────              0.2 - ─⎥
+⎢               2                      x⎥
+⎣              x                        ⎦
+*************************   
+Critical point            :  (-1.4, -0.56)
+Jacobian at c.p.          : 
+⎡4.4   -3.0⎤
+⎢          ⎥
+⎣0.08  -0.2⎦
+Determinant               :  -0.640000000000001
+Eigenvalues               :  4.347220505424427 -0.14722050542442328
+Eigenvector 1             :  [0.9998452761917251, 0.017590442777059078]
+Eigenvector 2             :  [0.5506931674648844, 0.8347077544311499]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point
+*************************   
+Critical point            :  (5.0, 2.0)
+Jacobian at c.p.          : 
+⎡-0.476190476190476  -0.714285714285714⎤
+⎢                                      ⎥
+⎣       0.08                -0.2       ⎦
+Determinant               :  0.15238095238095234
+Eigenvalues               :  (-0.33809523+0.19512191j) (-0.33809523-0.19512191j)
+Eigenvector 1             :  [(0.94830405+0j), (-0.18333878-0.25904886j)]
+Eigenvector 2             :  [(0.94830405-0j), (-0.18333878+0.25904886j)]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  stable focus
+*************************   
+Critical point            :  (7.0, 0.0)
+Jacobian at c.p.          : 
+⎡-1.0  -0.75⎤
+⎢           ⎥
+⎣0.0    0.2 ⎦
+Determinant               :  -0.2
+Eigenvalues               :  -1.0 0.2
+Eigenvector 1             :  [1.0, 0.0]
+Eigenvector 2             :  [-0.52999894000318, 0.847998304005088]
+Type of c.p.              :  Hyperbolic
+Kind of critical point(s) :  saddle point</code></pre>
+			The phase portraits generated by the program are as follows:
+		<p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_09_holling_tanner_0dot5.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_09_holling_tanner_0dot5.sh.</div>
+        <br /><br />
+        <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem/annlinauphart_10_holling_tanner_2dot5.png" /></div>
+        <div class="photocaption">The portrait of the phases of example_10_holling_tanner_2dot5.sh.</div>
+        <br /><br />
+
+        <h2>Bibliography</h2>
+        <p>
+            <pre><code class="text">Stephen Lynch
+<i><a target="_blank" href="https://www.springer.com/gp/book/9783319781440">Dynamical Systems with Applications using Python</a></i>
+Springer
+2018</code></pre>
+        </p>
+
+        <h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/nonlin-auton-plane-sys-hartman-analyzer.py">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/differential-equations-and-neural-networks.html">Differential Equations and Neural Networks</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+

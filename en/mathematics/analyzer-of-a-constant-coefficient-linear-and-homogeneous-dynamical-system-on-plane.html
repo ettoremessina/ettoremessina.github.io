@@ -168,7 +168,7 @@
 			<h1>Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</h1>
 		</header>
 		<p>
-			This post presents the Python program <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> and its command line usage.
+			This post presents the Python program <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> and its command line usage.
 			The program analyzes, using both symbolic techniques (via SymPy) and numerical techniques (via NumPy),
 			the behavior of a linear and homogeneous dynamic system on the plane with constant coefficients defined
 			by a system of two differential equations expressed in matrix form:
@@ -189,6 +189,9 @@
 			Thanks to Prof. Fausta D&apos;Acunzo from <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> for the theoretical support provided on systems of differential equations.<br />
 			<br />
 			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
+			<br />
+			For a more in-depth study of nonlinear autonomous systems on plane, see the post
+			<a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a> always published on this website.<br />
         </p>
 
         <h2>Conventions</h2>
@@ -213,12 +216,13 @@
             The following definitions apply in this post:
 			<ul>
 				<li>
-					<b>Critical point</b>: a point where the prime derivative cancels; considering the definition of the system, it holds for transitivity:
-					
+					<b>Critical point</b>: a point where $\frac{d\mathbf{x}}{dt}$ calculated at that point is equal to $\mathbf{0}$ for each $t$;
+					considering the definition of the system, it holds for transitivity: 
     $$ \frac{d\mathbf{x}}{dt} = A\mathbf{x}=\mathbf{0}$$
 
-					and then look for the critical points, i.e. those where the derivative cancels out, is equivalent to looking for the vectors of the plane such that
-					multiplying the matrix $A$ by them yields the vector $\mathbf{0}$ (which is the origin of the plane).<br />
+					and then look for the critical points, i.e. those where the derivative of $\mathbf{x}$ is equal to $\mathbf{0}$ for every $t$,
+					is equivalent to looking for the vectors of the plane such that multiplying the matrix $A$ by them yields the vector $\mathbf{0}$
+					(which lies on the origin of the plane).<br />
 					<br />
 				</li>
 				<li>
@@ -261,13 +265,13 @@
  if the determinant of the matrix $A$ is different from zero (case <em>simple system</em>),
 				otherwise it is a line through the origin, or the entire plane in the trivial case of the matrix $A$ equal to the null matrix.</li>
 
-				<li><b>The class of critical points</b>, divided between <em>stable</em> vs <em>unstable</em> and between <em>node</em>, <em>point</em>, <em>saddle</em>, <em>line</em>, <em>singular</em>, <em>degenerate</em>
-				and any combinations thereof.</li>
-
 				<li><b>The determinant of the matrix $A$</b>, to distinguish between <em>simple</em> or <em>non-simple</em> system.</li>
 
 				<li><b>The eigenvalues and eigenvectors of the matrix $A$.</b>, distinguishing the various cases between real vs complex, sign (of the real part) concordant or discordant, degenerate cases (geometric multiplicity less than 2);
 				in this last case the program calculates the generalized eigenvectors using an algorithm based on Jordan blocks.</li>
+
+				<li><b>The class of critical points</b>, divided between <em>stable</em> vs <em>unstable</em> and between <em>node</em>, <em>point</em>, <em>saddle</em>, <em>line</em>, <em>singular</em>, <em>degenerate</em>
+				and any combinations thereof.</li>
 
 				<li><b>Symbolic solution of the general integral</b>, using one of three forms (1), (2), or (3) depending on the class of critical points.</li>
 			</ul>
@@ -289,7 +293,7 @@
 
         <h2>Program usage</h2>
         <p>
-			To obtain program usage <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> simply run the following command:
+			To obtain program usage <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> simply run the following command:
 			<pre><code class="shell">$ python cc-lin-plane-homo-sys-analyzer.py --help</code></pre>
 			and the output obtained is:
 			<br/>
@@ -337,9 +341,9 @@ optional arguments:
                     In the phase portait diagram, it is the number of samples
                     of initial condition x0 between x0_begin and x0_end
   --y0_begin Y0_BEGIN   In the phase portait diagram, it is the starting value
-                    of of interval for initial condition y0
+                    of interval for initial condition y0
   --y0_end Y0_END   In the phase portait diagram, it is the final value
-                    of of interval for initial condition y0
+                    of interval for initial condition y0
   --y0_num_of_samples Y0_NUM_OF_SAMPLES
                     In the phase portait diagram, it is the number of samples
                     of initial condition y0 between y0_begin and y0_end
@@ -355,7 +359,7 @@ optional arguments:
                     (together with C1) the favourite solution
   --font_size FONT_SIZE
                     font size</code></pre>
-			Dove:
+			Where:
 			<ul>
 				<li>
 					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
@@ -422,8 +426,8 @@ optional arguments:
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			and because of what was noted above in the definition of stationary point in homogeneous linear systems, by transitivity it follows trivially that the only stationary point is therefore the point of origin itself.<br />
-			Again from trivial linear algebra considerations, if the determinant of the matrix is non-zero, then its eigenvalues will also be non-zero.</br>
-			The program <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> then analyzes the following cases of simple homogeneous linear systems
+			Again from trivial linear algebra considerations, if the determinant of the matrix is non-zero, then its eigenvalues will also be non-zero.<br />
+			The program <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> then analyzes the following cases of simple homogeneous linear systems
 			to classify the critical node type 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 .
@@ -453,7 +457,7 @@ optional arguments:
  is classified as <b>unstable node</b>.
 			The instability is due to the fact that when $t$ tends to infinity the solution diverges
 			away from the point of equilibrium, so the equilibrium is called unstable.<br />
-			The general solution is of the form (1).</br>
+			The general solution is of the form (1).<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_node.sh">unstable_node.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -491,8 +495,8 @@ C₁⋅ℯ      + 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
 			
     $$\mathbf{x}=\left[\begin{matrix} C_1 e^{3t} - C_2 e^t & C_1 e^{3t} + C_2 e^t \end{matrix} \right]$$
 
-			which however is completely equivalent to the one provided by the program.</br>
-			</br>
+			which however is completely equivalent to the one provided by the program.<br />
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_node.png" /></div>
@@ -514,7 +518,7 @@ C₁⋅ℯ      + 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			approaching the point of equilibrium, so the equilibrium is said to be stable.<br />
-			The general solution is of the form (1).</br>
+			The general solution is of the form (1).<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_node.sh">stable_node.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -539,7 +543,7 @@ General solution          :
 547⋅C₁⋅ℯ       + 0.707106781186547⋅C₂⋅ℯ      ⎦</code></pre>
 			From which we see that the determinant is non-zero, so the critical point, as expected, is only the origin
 			and the eigenvalues are -3 and -1, so both negative, so the critical point has been classified as <em>stable node</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_node.png" /></div>
@@ -559,7 +563,7 @@ General solution          :
  is classified as <b>saddle point</b>;
 			the solution is divergent since, as we can see from the general integral, the exponential of the positive eigenvalue multiplied $t$ prevails
 			over the exponential of the negative eigenvalue multiplied $t$ by $t$ which tends to infinity.<br />
-			The general solution is of the form (1).</br>
+			The general solution is of the form (1).<br />
 			<br /> 
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/saddle_point.sh">saddle_point.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -584,7 +588,7 @@ General solution          :
 9958⋅C₁⋅ℯ       - 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
 			From which we see that the determinant is non-zero, so the critical point, as expected, is only the origin
 			and since the eigenvalues are with discordant sign, precisely 1 and -1, the critical point has been classified as <em>saddle point</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/saddle_point.png" /></div>
@@ -615,8 +619,8 @@ General solution          :
  is classified as <b>unstable singular node</b> (also called <b>unstable star node</b>);
 			being singular is given by the fact that the eigenvalue is only one (with algebraic multiplicity equal to 2)
 			and with geometric multiplicity equal to 2, which guarantees that we still have two linearly independent eigenvectors to construct the general integral.<br />
-			The general solution is of the form (1) where $\lambda_1=\lambda_2$.</br>
-			</br>
+			The general solution is of the form (1) where $\lambda_1=\lambda_2$.<br />
+			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_singular_node.sh">unstable_singular_node.sh</a></code>.
 			The system is represented by the following matrix: 
     $$\left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right]$$
@@ -659,7 +663,7 @@ General solution          :
 			then the critical point is classified as <b>stable singular node</b> (also called <b>stable star node</b>);
 			the eigenvalue is only one (with algebraic multiplicity equal to 2) and it is -1, so negative,
 			and with geometric multiplicity equal to 2, which guarantees that we still have two linearly independent eigenvectors to construct the general integral.<br />
-			The general solution is of the form (1) where $\lambda_1=\lambda_2$.</br>
+			The general solution is of the form (1) where $\lambda_1=\lambda_2$.<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_singular_node.sh">stable_singular_node.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -749,7 +753,7 @@ General solution          :
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  is classified as a <b>stable degenerate node</b>.
 			The general solution is obviously of the form (2) where $\lambda$ is the dual eigenvalue
-			and $\eta_1$ and $\eta_2$ are two linearly independent generalized eigenvectors.</br>
+			and $\eta_1$ and $\eta_2$ are two linearly independent generalized eigenvectors.<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_degenerate_node.sh">unstable_degenerate_node.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -807,7 +811,7 @@ General solution          :
  is classified as <b>unstable focus</b>.
 			The instability is always due to the fact that when $t$ tends to infinity the solution diverges
 			away from the point of equilibrium, so the equilibrium is called unstable.<br />
-			The general solution is of the form (3).</br>
+			The general solution is of the form (3).<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_focus.sh">unstable_focus.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -835,7 +839,7 @@ t)  - 0.707106781186547⋅C₁⋅ℯ     ⋅sin(1.0⋅t) - 0.707106781186547⋅C
 (1.0⋅t)⎦</code></pre>
 			From which we see that the determinant is non-zero, so the critical point, as expected, is only the origin
 			and the eigenvalues are complex conjugate, precisely $1+i$ and $1-i$, so with positive real part, and the critical point was classified as <em>unstable focus</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_focus.png" /></div>
@@ -852,12 +856,12 @@ t)  - 0.707106781186547⋅C₁⋅ℯ     ⋅sin(1.0⋅t) - 0.707106781186547⋅C
 			This case is similar to the previous one from the point of view of the shape of the general solution but not for the equilibrium;
 			which is considered stable and in fact the critical point 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
- is classified as <b>stable focus</b>.</br>
+ is classified as <b>stable focus</b>.<br />
 			The stability is due to the fact that when $t$ tends to infinity the solution converges to 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			approaching the point of equilibrium, so the equilibrium is said to be stable.<br />
-			The general solution is of the form (3).</br>
+			The general solution is of the form (3).<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_focus.sh">stable_focus.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -885,7 +889,7 @@ General solution          :
 )⎦</code></pre>
 			From which we see that the determinant is non-zero, so the critical point, as expected, is only the origin
 			and the eigenvalues are conjugate complexes, precisely $-1+i$ and $-1-i$, hence with negative real part, and the critical point was classified as <em>stable focus</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_focus.png" /></div>
@@ -904,7 +908,7 @@ General solution          :
  is classified as <b>center</b>.
 			We cannot speak of equilibrium because the solutions are oscillating and the orbits are concentric ellipses
 			centered on the origin.<br />
-			The general solution is of the form (3).</br>
+			The general solution is of the form (3).<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/center.sh">center.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -926,7 +930,7 @@ General solution          :
 548⋅C₁⋅cos(2.0⋅t) + 0.707106781186548⋅C₂⋅cos(2.0⋅t)]</code></pre>
 			From which we see that the determinant is non-zero, so the critical point, as expected, is only the origin
 			and the eigenvalues are conjugate pure imaginaries, precisely $2i$ and $-2i$, and the critical point has been classified as <em>center</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/center.png" /></div>
@@ -967,7 +971,7 @@ General solution          :
 		<p>
 			In this case the critical points are infinite and lie on a line through the origin, and the set of critical points is classified as an <b>unstable line</b>.
 			The instability is due, as seen above, to the positivity of the eigenvalue which causes the solution to diverge as $t$ tends to infinity.<br />
-			The general solution is of the form (1) where $\lambda_1$ equal to 0.</br>
+			The general solution is of the form (1) where $\lambda_1$ equal to 0.<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_line.sh">unstable_line.sh</a></code>.
 			The system is represented by the following matrix: 
@@ -989,7 +993,7 @@ General solution          :
 ⎣1.0⋅C₁ - 0.447213595499958⋅C₂⋅ℯ       0.894427190999916⋅C₂⋅ℯ     ⎦</code></pre>
 			From which we see that the determinant is zero, so the critical points are infinite, as expected, and lie on the x-axis
 			and the eigenvalues are 0 and 2, so positive is the one other than 0, so the line of critical points has been classified as <em>unstable line</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_line.png" /></div>
@@ -1007,7 +1011,7 @@ General solution          :
 			which is considered stable and in fact in this case the critical points are always infinite and always lie on a line passing through the origin
 			but the set of critical points this time is classified as <b>stable line</b>.
 			Stability is due to the negativity of the eigenvalue that causes the solution to converge as $t$ tends to infinity.<br />
-			The general solution is of the form (1) where $\lambda_1$ uguale a 0.</br>
+			The general solution is of the form (1) where $\lambda_1$ uguale a 0.<br />
 			<br />
 			An example that falls into this category is <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_line.sh">stable_line.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -1032,7 +1036,7 @@ General solution          :
 4427190999916⋅C₂⋅ℯ      ⎦</code></pre>
 			From which we see that the determinant is zero, so the critical points are infinite, as expected, and lie on the x-axis
 			and the eigenvalues are 0 and -1, so negative is the one other than 0, so the line of critical points has been classified as <em>stable line</em>.<br />
-			</br>
+			<br />
 			The phase portrait generated by the program is as follows:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_line.png" /></div>
@@ -1198,6 +1202,7 @@ Springer
 											<ul>
 												<li><a href="../../en/mathematics/">INDEX</a></li>
 												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
 												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
 												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
 											</ul>

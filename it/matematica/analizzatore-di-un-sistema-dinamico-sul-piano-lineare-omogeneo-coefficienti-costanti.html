@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -167,7 +166,7 @@
 			<h1>Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</h1>
 		</header>
 		<p>
-			Questo post presenta il programma Python <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> e la sua usage in linea di comando.
+			Questo post presenta il programma Python <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> e la sua usage in linea di comando.
 			Il programma analizza, utilizzando sia tecniche simboliche (tramite SymPy) che tecniche numeriche (tramite NumPy),
 			il comportamento di un sistema dinamico lineare e omogeneo sul piano a coefficienti costanti definito
 			da un sistema di due equazioni differenziali espresso in forma matriciale:
@@ -188,6 +187,9 @@
 			Si ringrazia la prof.ssa Fausta D&apos;Acunzo di <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> per il supporto teorico fornito sui sistemi di equazioni differenziali.<br />
 			<br />
 			Per ottenere il codice si veda il paragrafo <a href="#downloadcode">Download del codice completo</a> in fondo a questo post.<br/>
+			<br />
+			Per un approfondimento sullo studio dei sistemi non lineari e autonomo sul piano si veda il post
+			<a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a> pubblicato sempre su questo sito web.<br />
         </p>
 
         <h2>Convenzioni</h2>
@@ -212,12 +214,13 @@
             In questo post valgono le seguenti definizioni:
 			<ul>
 				<li>
-					<b>Punto critico</b>: un punto dove la derivata prima si annulla; considerando la definizione del sistema, vale per transitivit&agrave;:
+					<b>Punto critico</b>: un punto dove $\frac{d\mathbf{x}}{dt}$ calcolato in tale punto sia uguale a $\mathbf{0}$ per ogni $t$;
+					considerando la definizione del sistema, vale per transitivit&agrave;:
 					
     $$ \frac{d\mathbf{x}}{dt} = A\mathbf{x}=\mathbf{0}$$
 
-					e quindi cercare i punti critici, ovvero quelli in cui la derivata si annulla, equivale a cercare i vettori del piano tali che
-					moltiplicando la matrice $A$ per essi si ottiene il vettore $\mathbf{0}$ (che &egrave; l&apos;origine del piano).<br />
+					quindi cercare i punti critici, ovvero quelli in cui la derivata di $\mathbf{x}$ si annulla per ogni $t$, equivale a cercare i vettori del piano tali che
+					moltiplicando la matrice $A$ per essi si ottiene il vettore $\mathbf{0}$ (che giace sull&apos;origine del piano).<br />
 					<br />
 				</li>
 				<li>
@@ -260,13 +263,13 @@
  se il determinante della matrice $A$ &egrave; diverso da zero (caso <em>sistema semplice</em>),
 				altrimenti &egrave; una retta passante per l&apos;origine, o l&apos;intero piano nel banalissimo caso della matrice $A$ uguale alla matrice nulla.</li>
 
-				<li><b>La classe dei punti critici</b>, divisi tra <em>stabile</em> vs <em>instabile</em> e tra <em>nodo</em>, <em>punto</em>, <em>sella</em>, <em>linea</em>, <em>singolare</em>, <em>degenere</em>
-				ed eventuali loro combinazioni.</li>
-
 				<li><b>Il determinante della matrice $A$</b>, per distringuere tra sistema <em>semplice</em> o <em>non semplice</em>.</li>
 
 				<li><b>Gli autovalori e gli autovettori della matrice $A$</b>, distinguendo i vari casi tra reali vs complessi, segno (della parte reale) concorde o discorde, casi degenere (molteplicit&agrave; geometrica minore di 2);
 				in questo ultimo caso il programma calcola gli autovettori generalizzati tramite un algoritmo basato sui blocchi di Jordan.</li>
+
+				<li><b>La classe dei punti critici</b>, divisi tra <em>stabile</em> vs <em>instabile</em> e tra <em>nodo</em>, <em>punto</em>, <em>sella</em>, <em>linea</em>, <em>singolare</em>, <em>degenere</em>
+				ed eventuali loro combinazioni.</li>
 
 				<li><b>Soluzione simbolica dell&apos;integrale generale</b>, utilizzando una delle tre forme (1), (2) o (3) in funzione della classe dei punti critici.</li>
 			</ul>
@@ -288,7 +291,7 @@
 
         <h2>L&apos;usage del programma</h2>
         <p>
-			Per ottenere l&apos;usage del programma <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> &egrave; sufficiente eseguire il seguente comando:
+			Per ottenere l&apos;usage del programma <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> &egrave; sufficiente eseguire il seguente comando:
 			<pre><code class="shell">$ python cc-lin-plane-homo-sys-analyzer.py --help</code></pre>
 			e l&apos;output ottenuto &egrave;:
 			<br/>
@@ -336,9 +339,9 @@ optional arguments:
                     In the phase portait diagram, it is the number of samples
                     of initial condition x0 between x0_begin and x0_end
   --y0_begin Y0_BEGIN   In the phase portait diagram, it is the starting value
-                    of of interval for initial condition y0
+                    of interval for initial condition y0
   --y0_end Y0_END   In the phase portait diagram, it is the final value
-                    of of interval for initial condition y0
+                    of interval for initial condition y0
   --y0_num_of_samples Y0_NUM_OF_SAMPLES
                     In the phase portait diagram, it is the number of samples
                     of initial condition y0 between y0_begin and y0_end
@@ -421,8 +424,8 @@ optional arguments:
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			e per quanto osservato sopra nella definizione di punto stazionario nei sistemi lineari omogenei, per transitivit&agrave; segue banalmente che l&apos;unico punto stazionario &egrave; quindi il punto di origine stesso.<br />
-			Sempre da banali considerazioni di algebra lineare, se il determinante della matrice &egrave; diverso da zero, allora i suoi autovalori saranno anche essi diversi da zero.</br>
-			Il programma <code><a href="https://github.com/ettoremessina/differential-equations//blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> analizza quindi i seguenti casi di sistemi lineari omogenei semplici
+			Sempre da banali considerazioni di algebra lineare, se il determinante della matrice &egrave; diverso da zero, allora i suoi autovalori saranno anche essi diversi da zero.<br />
+			Il programma <code><a href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer.py" target="_blank">cc-lin-plane-homo-sys-analyzer.py</a></code> analizza quindi i seguenti casi di sistemi lineari omogenei semplici
 			per classificare il tipo di nodo critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 .
@@ -453,7 +456,7 @@ optional arguments:
  &egrave; classificato come <b>nodo instabile</b>.
 			L&apos;instabilit&agrave; &egrave; dovuta al fatto che al tendere di $t$ all&apos;infinito la soluzione diverge
 			allontanandosi appunto dal punto di equilibrio, per cui l&apos;equilibio &egrave; detto instabile.<br />
-			La soluzione generale &egrave; della forma (1).</br>
+			La soluzione generale &egrave; della forma (1).<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_node.sh">unstable_node.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -491,8 +494,8 @@ C₁⋅ℯ      + 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
 			
     $$\mathbf{x}=\left[\begin{matrix} C_1 e^{3t} - C_2 e^t & C_1 e^{3t} + C_2 e^t \end{matrix} \right]$$
 
-			che comunque &egrave; del tutto equivalente a quella fornita dal programma.</br>
-			</br>
+			che comunque &egrave; del tutto equivalente a quella fornita dal programma.<br />
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_node.png" /></div>
@@ -514,7 +517,7 @@ C₁⋅ℯ      + 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			avvicinandosi appunto al punto di equilibrio, per cui l&apos;equilibio &egrave; detto stabile.<br />
-			La soluzione generale &egrave; della forma (1).</br>
+			La soluzione generale &egrave; della forma (1).<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_node.sh">stable_node.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -539,7 +542,7 @@ General solution          :
 547⋅C₁⋅ℯ       + 0.707106781186547⋅C₂⋅ℯ      ⎦</code></pre>
 			Da cui si evince che il determinante &egrave; diverso da zero, per cui il punto critico, come ci si aspettava, &egrave; soltanto l&apos;origine
 			e gli autovalori sono -3 e -1, quindi entrambi negativi, per cui il punto critico &egrave; stato classificato come <em>nodo stabile</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_node.png" /></div>
@@ -559,7 +562,7 @@ General solution          :
  &egrave; classificato come <b>punto sella</b>;
 			la soluzione &egrave; divergente in quanto, come si evince dall&apos;integrale generale, l&apos;esponenziale dell&apos;autovalore positivo moltiplicato $t$ prevale
 			sull&apos;esponenziale dell&apos;autovalore negativo moltiplicato $t$ per $t$ che tende all&apos;infinito.<br />
-			La soluzione generale &egrave; della forma (1).</br>
+			La soluzione generale &egrave; della forma (1).<br />
 			<br /> 
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/saddle_point.sh">saddle_point.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -584,7 +587,7 @@ General solution          :
 9958⋅C₁⋅ℯ       - 0.707106781186547⋅C₂⋅ℯ     ⎦</code></pre>
 			Da cui si evince che il determinante &egrave; diverso da zero per cui il punto critico, come ci si aspettava, &egrave; soltanto l&apos;origine
 			e poich&eacute; gli autovalori sono con segno discorde, precisamente 1 e -1, il punto critico &egrave; stato classificato come <em>punto sella</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/saddle_point.png" /></div>
@@ -615,8 +618,8 @@ General solution          :
  &egrave; classificato come <b>nodo singolare instabile</b> (detto anche <b>nodo stella instabile</b>);
 			l&apos;essere singolare &egrave; dato dal fatto che l&apos;autovalore &egrave; uno solo (con molteplicit&agrave; algebrica uguale a 2)
 			e con molteplicit&agrave; geometrica uguale a 2, che garantisce di avere comunque due autovettori linearmente indipendenti per costruire l&apos;integrale generale.<br />
-			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.</br>
-			</br>
+			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.<br />
+			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_singular_node.sh">unstable_singular_node.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
     $$\left[\begin{matrix} 1 & 0 \\ 0 & 1 \end{matrix} \right]$$
@@ -659,7 +662,7 @@ General solution          :
 			quindi il punto critico &egrave; classificato come <b>nodo singolare stabile</b> (detto anche <b>nodo stella stabile</b>);
 			l&apos;autovalore &egrave; uno solo (con molteplicit&agrave; algebrica uguale a 2) e vale -1, quindi negativo,
 			e con molteplicit&agrave; geometrica uguale a 2, che garantisce di avere comunque due autovettori linearmente indipendenti per costruire l&apos;integrale generale.<br />
-			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.</br>
+			La soluzione generale &egrave; della forma (1) con $\lambda_1=\lambda_2$.<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_singular_node.sh">stable_singular_node.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -749,7 +752,7 @@ General solution          :
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
  &egrave; classificato come <b>nodo degenere stabile</b>.
 			La soluzione generale &egrave; ovviamente della forma (2) ove $\lambda$ &egrave; l&apos;autovalore doppio
-			e $\eta_1$ e $\eta_2$ sono due autovettori generalizzati linearmente indipendenti.</br>
+			e $\eta_1$ e $\eta_2$ sono due autovettori generalizzati linearmente indipendenti.<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_degenerate_node.sh">unstable_degenerate_node.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -807,7 +810,7 @@ General solution          :
  &egrave; classificato come <b>focus instabile</b>.
 			L&apos;instabilit&agrave; &egrave; sempre dovuta al fatto che al tendere di $t$ all&apos;infinito la soluzione diverge
 			allontanandosi appunto dal punto di equilibrio, per cui l&apos;equilibio &egrave; detto instabile.<br />
-			La soluzione generale &egrave; della forma (3).</br>
+			La soluzione generale &egrave; della forma (3).<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_focus.sh">unstable_focus.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -835,7 +838,7 @@ t)  - 0.707106781186547⋅C₁⋅ℯ     ⋅sin(1.0⋅t) - 0.707106781186547⋅C
 (1.0⋅t)⎦</code></pre>
 			Da cui si evince che il determinante &egrave; diverso da zero, per cui il punto critico, come ci si aspettava, &egrave; soltanto l&apos;origine
 			e gli autovalori sono complessi coniugati, precisamente $1+i$ e $1-i$, quindi con parte reale positiva, e il punto critico &egrave; stato classificato come <em>focus instabile</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_focus.png" /></div>
@@ -852,12 +855,12 @@ t)  - 0.707106781186547⋅C₁⋅ℯ     ⋅sin(1.0⋅t) - 0.707106781186547⋅C
 			Questo caso &egrave; simile al precedente dal punto di vista della forma della soluzione generale ma non per l&apos;equilibrio;
 			che &egrave; considerato stabile e infatti il punto critico 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
- &egrave; classificato come <b>focus stabile</b>.</br>
+ &egrave; classificato come <b>focus stabile</b>.<br />
 			La stabilit&agrave; &egrave; dovuta al fatto che al tendere di $t$ all&apos;infinito la soluzione converge verso 
     $\left[\begin{matrix} 0 & 0 \end{matrix} \right]^\dag$
 
 			avvicinandosi appunto al punto di equilibrio, per cui l&apos;equilibio &egrave; detto stabile.<br />
-			La soluzione generale &egrave; della forma (3).</br>
+			La soluzione generale &egrave; della forma (3).<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_focus.sh">stable_focus.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -885,7 +888,7 @@ General solution          :
 )⎦</code></pre>
 			Da cui si evince che il determinante &egrave; diverso da zero, per cui il punto critico, come ci si aspettava, &egrave; soltanto l&apos;origine
 			e gli autovalori sono complessi coniugati, precisamente $-1+i$ e $-1-i$, quindi con parte reale negativa, e il punto critico &egrave; stato classificato come <em>focus stabile</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_focus.png" /></div>
@@ -904,7 +907,7 @@ General solution          :
  &egrave; classificato come <b>centro</b>.
 			Non si pu&ograve; parlare di equilibrio perch&eacute; le soluzioni sono oscillanti e le orbite sono ellissi concentriche
 			centrate sull&apos;origine.<br />
-			La soluzione generale &egrave; della forma (3).</br>
+			La soluzione generale &egrave; della forma (3).<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/center.sh">center.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -926,7 +929,7 @@ General solution          :
 548⋅C₁⋅cos(2.0⋅t) + 0.707106781186548⋅C₂⋅cos(2.0⋅t)]</code></pre>
 			Da cui si evince che il determinante &egrave; diverso da zero, per cui il punto critico, come ci si aspettava, &egrave; soltanto l&apos;origine
 			e gli autovalori sono immaginari puri coniugati, precisamente $2i$ e $-2i$, e il punto critico &egrave; stato classificato come <em>centro</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/center.png" /></div>
@@ -967,7 +970,7 @@ General solution          :
 		<p>
 			In questo caso i punti critici sono infiniti e giacciono su una retta passante per l&apos;origine e l&apos;insieme dei punti critici &egrave; classificato come <b>linea instabile</b>.
 			L&apos;instabilit&agrave; &egrave; dovuta, come visto sopra, alla positivit&agrave; dell&apos;autovalore che fa divergere la soluzione al tendere di $t$ all&apos;infinito.<br />
-			La soluzione generale &egrave; della forma (1) con $\lambda_1$ uguale a 0.</br>
+			La soluzione generale &egrave; della forma (1) con $\lambda_1$ uguale a 0.<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/unstable_line.sh">unstable_line.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -989,7 +992,7 @@ General solution          :
 ⎣1.0⋅C₁ - 0.447213595499958⋅C₂⋅ℯ       0.894427190999916⋅C₂⋅ℯ     ⎦</code></pre>
 			Da cui si evince che il determinante &egrave; zero, per cui i punti critici sono infiniti, come ci si aspettava, e giacciono sull&apos;asse delle ascisse
 			e gli autovalori sono 0 e 2, quindi positivo quello diverso da 0, per cui la retta dei punti critici &egrave; stata classificata come <em>linea instabile</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/unstable_line.png" /></div>
@@ -1007,7 +1010,7 @@ General solution          :
 			che &egrave; considerato stabile e infatti in questo caso i punti critici sempre infiniti e sempre giacciono su una retta passante per l&apos;origine 
 			ma l&apos;insieme dei punti critici stavolta &egrave; classificato come <b>linea stabile</b>.
 			La stabilit&agrave; &egrave; dovuta alla negativit&agrave; dell&apos;autovalore che fa convergere la soluzione al tendere di $t$ all&apos;infinito.<br />
-			La soluzione generale &egrave; della forma (1) con $\lambda_1$ uguale a 0.</br>
+			La soluzione generale &egrave; della forma (1) con $\lambda_1$ uguale a 0.<br />
 			<br />
 			Un esempio che cade in questa casistica &egrave; <code><a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/dyn-sys/python/cc-lin-plane-homo-sys-analyzer-examples/stable_line.sh">stable_line.sh</a></code>.
 			Il sistema &egrave; rappresentato dalla seguente matrice: 
@@ -1032,7 +1035,7 @@ General solution          :
 4427190999916⋅C₂⋅ℯ      ⎦</code></pre>
 			Da cui si evince che il determinante &egrave; zero, per cui i punti critici sono infiniti, come ci si aspettava, e giacciono sulla bisettriche del secondo e quarto quadrante
 			e gli autovalori sono 0 e -1, quindi negativo quello diverso da 0, per cui la retta dei punti critici &egrave; stata classificata come <em>linea stabile</em>.<br />
-			</br>
+			<br />
 			Il ritratto delle fasi generato dal programma &egrave; il seguente:
 		<p>
         <div class="betweentextlines"><img src="../../posts/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane/stable_line.png" /></div>
@@ -1198,6 +1201,7 @@ Springer
 											<ul>
 												<li><a href="../../it/matematica/">INDICE</a></li>
 												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html">Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a></li>
 												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
 												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
 											</ul>
