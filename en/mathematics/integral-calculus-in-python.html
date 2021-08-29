@@ -1,0 +1,580 @@
+dnldnl
+
+
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Integral Calculus in Python</title>
+		<meta name="description" content="Examples of using common Python libraries to calculate numerically (with SciPy) and analytically (with SymPy) the value of different types of integrals." >
+		<meta name="keywords" content="integral, integrals, integral calculus, NumPy, SciPy, SymPy, Python" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://www.facebook.com/MentalitaComputazionale/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html",
+              "name": "Integral Calculus in Python"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/channel/UCKrOtSEJjs5msOhPIdYEeWA/" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://www.linkedin.com/in/ettoremessina/" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+    $\newcommand{\dee}{\mathop{\mathrm{d}\!}}$
+	<section>
+		<header class="main">
+			<h1>Integral Calculus in Python</h1>
+		</header>
+		<p>
+        	This post shows how to perform integral calculus of continuous and limited real functions of real variables in Python
+            through the use of common Python libraries frequently used in scientific applications.
+            The integral calculation techniques here are both primarily numerical since this site deals with computation,
+            however some analytical techniques are also shown.<br />
+            The post is organized <em>by examples</em>: each paragraph contains an example of an integral to compute
+            and the related Python code snippet that calculates it using an appropriate library.<br />
+            <br />
+            All of the various code snippets described in this post require Python version 3 and the NumPy library,
+            while individually they require an additional library (and its dependencies, if any) between
+            <a href="https://www.scipy.org/" target="_blank">SciPy</a> and <a href="https://www.sympy.org/" target="_blank">SymPy</a>.<br/>
+			<br />
+			We thank Prof. Fausta D&apos;Acunzo of <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> for theoretical support provided on multi-variable integral calculus.<br />
+			<br/>
+			To get the code see the <a href="#downloadcode">Full code download</a> paragraph at the bottom of this post.<br/>
+			<br/>
+        </p>
+
+        <h2>Integration via SciPy</h2>
+
+		<h3 id="int1vexp1_quadscipy">Integral of function of one variable with <em>quad</em></h3>
+		<p>
+            Let the following integral of a function of one variable be given:
+            
+            $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
+
+            whose analytical solution is
+            $ \approx 1.3907 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>quad</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy quad')
+print('Example 01')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+
+result, error = spi.quad(integrand, a, b)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy quad
+Example 01
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906624006967436 with error  1.54394541673402e-14
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01.py">GitHub</a>.
+        </p>
+
+		<h3 id="int1vexp2_quadscipy">Integral of function of one variable with <em>quad</em> (other example)</h3>
+		<p>
+            Set the following integral of a function of one variable be given:
+            
+            $$ \int_{1}^{+\infty} 2 x e^{-x} \,dx $$
+
+            whose analytical solution is
+            $ \approx 1.4715 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+infinite" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>quad</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy quad')
+print('Example 02')
+print('Integral of 2xe^-x from x=1 to x-->+inf')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = np.inf
+
+result, error = spi.quad(integrand, a, b)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy quad
+Example 02
+Integral of 2xe^-x from x=1 to x-->+inf
+Result is  1.4715177646857691 with error  3.7568301883294814e-10
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-02.py">GitHub</a>.
+        </p>
+
+		<h3 id="int2vexp1_dblquadscipy">Double integral of a function of two variables with <em>dblquad</em></h3>
+		<p>
+            Let the following double integral of a function of two variables be given:
+            
+            $$ \int_{1}^{5} \int_{y-1}^{y+2} 2 x y e^{-x * y} \,dx dy $$
+
+            whose analytical solution is
+            $ \approx 1.0273 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=double+integral+2+x+y+e%5E-%28x+*+y%29+dx+dy+from+1+to+5+and+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>dblquad</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Double integral computed by SciPy dblquad')
+print('Example 01')
+print('Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
+
+integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
+ya = 1.
+yb = 5.
+
+result, error = spi.dblquad(integrand, ya, yb, lambda y: y-1, lambda y: y+1)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Double integral computed by SciPy dblquad
+Example 01
+Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
+Result is  1.0273038469260316 with error  1.3420097685964054e-14
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01.py">GitHub</a>.
+        </p>
+
+		<h3 id="int2vexp1_nquadscipy">Double integral of a function of two variables with <em>nquad</em></h3>
+		<p>
+            Let the following double integral of a function of two variables be given:
+            
+            $$ \int_{1}^{5} \int_{y-1}^{y+2} 2 x y e^{-x * y} \,dx dy $$
+
+            whose analytical solution is
+            $ \approx 1.0273 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=double+integral+2+x+y+e%5E-%28x+*+y%29+dx+dy+from+1+to+5+and+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>nquad</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Double integral computed by SciPy nquad')
+print('Alternative Example 01')
+print('Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
+
+integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
+
+bounds_y = lambda : [1., 5.]
+bounds_x = lambda y : [y-1, y+1]
+
+result, error = spi.nquad(integrand, [bounds_x, bounds_y])
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Double integral computed by SciPy nquad
+Alternative Example 01
+Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
+Result is  1.0273038469260316 with error  1.3420097685964054e-14
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01-alt.py">GitHub</a>.
+        </p>
+
+		<h3 id="int2vexp1_nquadscipy">Double integral of a function of two variables with <em>nquad</em> (other example)</h3>
+		<p>
+            Let the following double integral of a function of two variables be given:
+            
+            $$ \int_{1}^{+\infty} \int_{1}^{+\infty} 2 x y e^{-x * y} \,dx dy $$
+
+            whose analytical solution is
+            $ \approx 1.17453 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=double+integral+2+x+y+e%5E-%28x+*+y%29+dx+dy+from+1+to+%2Binfinite+and+1+to+%2Binfinite" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>nquad</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Double integral computed by SciPy nquad')
+print('Example 01')
+print('Integral of xye^-xy from y=1 to y-->+inf and x=1 to x-->+inf')
+
+integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
+ya = 1.
+yb = 5.
+
+result, error = spi.nquad(integrand, [[1, np.inf],[1, np.inf]])
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Double integral computed by SciPy nquad
+Example 01
+Integral of xye^-xy from y=1 to y-->+inf and from x=1 to x-->+inf
+Result is  1.1745267511339024 with error  1.6321550842479074e-08
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-02.py">GitHub</a>.
+        </p>
+
+		<h2>Integration via SymPy</h2>
+
+		<h3 id="int1vexp1_quadscipy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em></h3>
+		<p>
+            Let the following integral of a function of one variable be given:
+            
+            $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
+
+            whose analytical solution is
+            $ \approx 1.3907 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>integrate(f, (x, a, b))</code> function of the <em>SymPy</em> library:</br >
+            <pre><code class="python">import sympy as sp
+
+print('Single integral computed by SymPy integrate')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+x = sp.Symbol('x')
+a = 1.
+b = 5.
+integral = sp.integrate(2 * x * sp.exp(-x), (x, a, b))
+print('Result is ', integral)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SymPy integrate
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.39066240069674
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01.py">GitHub</a>.
+        </p>
+
+		<h3 id="int1vexp1_quadscipy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em> via indefinite integral</h3>
+		<p>
+            Let the following integral of a function of one variable be given:
+            
+            $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
+
+            whose analytical solution is
+            $ \approx 1.3907 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>integrate(f, x)</code> function of the <em>SymPy</em> library:</br >
+            <pre><code class="python">import sympy as sp
+
+print('Single integral computed by SymPy integrate')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+x = sp.Symbol('x')
+primitive = sp.integrate(2 * x * sp.exp(-x), x)
+print('Primitive is ', primitive)
+
+primitive_lambda = sp.lambdify(x, primitive)
+a = 1.
+b = 5.
+integral = primitive_lambda(b) - primitive_lambda(a)
+print('Result is ', integral)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SymPy integrate
+Integral of 2xe^-x from x=1 to x=5
+Primitive is  (-2*x - 2)*exp(-x)
+Result is  1.3906624006967436
+</code></pre>
+            The program first calculates the indefinite integral and then
+            applying the fundamental theorem of integral calculus,
+            calculates the value of the integral.<br />
+            <br />
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01-undef.py">GitHub</a>.
+        </p>
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/tree/main/demo/python/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/differential-equations-and-neural-networks.html">Differential Equations and Neural Networks</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
