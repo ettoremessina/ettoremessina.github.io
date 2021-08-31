@@ -1,7 +1,6 @@
 
 
 
-
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -204,7 +203,7 @@
 import numpy as np
 
 print('Single integral computed by SciPy quad')
-print('Example 01')
+print('Example 1-01')
 print('Integral of 2xe^-x from x=1 to x=5')
 
 integrand = lambda x : 2 * x * np.exp(-x)
@@ -217,7 +216,7 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Single integral computed by SciPy quad
-Example 01
+Example 1-01
 Integral of 2xe^-x from x=1 to x=5
 Result is  1.3906624006967436 with error  1.54394541673402e-14
 </code></pre>
@@ -240,7 +239,7 @@ Result is  1.3906624006967436 with error  1.54394541673402e-14
 import numpy as np
 
 print('Single integral computed by SciPy quad')
-print('Example 02')
+print('Example 1-02')
 print('Integral of 2xe^-x from x=1 to x-->+inf')
 
 integrand = lambda x : 2 * x * np.exp(-x)
@@ -253,7 +252,7 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Single integral computed by SciPy quad
-Example 02
+Example 1-02
 Integral of 2xe^-x from x=1 to x-->+inf
 Result is  1.4715177646857691 with error  3.7568301883294814e-10
 </code></pre>
@@ -264,7 +263,7 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
 		<p>
             Let the following double integral of a function of two variables be given:
             
-            $$ \int_{1}^{5} \int_{y-1}^{y+2} 2 x y e^{-x * y} \,dx dy $$
+            $$ \int_{1}^{5} \int_{y-1}^{y+1} 2 x y e^{-x y} \,dx dy $$
 
             whose analytical solution is
             $ \approx 1.0273 $
@@ -276,8 +275,8 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
 import numpy as np
 
 print('Double integral computed by SciPy dblquad')
-print('Example 01')
-print('Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
+print('Example 2-01')
+print('Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
 ya = 1.
@@ -289,7 +288,7 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy dblquad
-Example 01
+Example 2-01
 Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
 Result is  1.0273038469260316 with error  1.3420097685964054e-14
 </code></pre>
@@ -300,7 +299,7 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 		<p>
             Let the following double integral of a function of two variables be given:
             
-            $$ \int_{1}^{5} \int_{y-1}^{y+2} 2 x y e^{-x * y} \,dx dy $$
+            $$ \int_{1}^{5} \int_{y-1}^{y+1} 2 x y e^{-x y} \,dx dy $$
 
             whose analytical solution is
             $ \approx 1.0273 $
@@ -312,8 +311,8 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Alternative Example 01')
-print('Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
+print('Example 1-01 Alternative')
+print('Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
 
@@ -326,8 +325,8 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy nquad
-Alternative Example 01
-Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
+Example 1-01 Alternative
+Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
 Result is  1.0273038469260316 with error  1.3420097685964054e-14
 </code></pre>
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01-alt.py">GitHub</a>.
@@ -337,7 +336,7 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 		<p>
             Let the following double integral of a function of two variables be given:
             
-            $$ \int_{1}^{+\infty} \int_{1}^{+\infty} 2 x y e^{-x * y} \,dx dy $$
+            $$ \int_{1}^{+\infty} \int_{1}^{+\infty} 2 x y e^{-x y} \,dx dy $$
 
             whose analytical solution is
             $ \approx 1.17453 $
@@ -349,8 +348,8 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Example 01')
-print('Integral of xye^-xy from y=1 to y-->+inf and x=1 to x-->+inf')
+print('Example 2-02')
+print('Integral of 2xye^-xy from y=1 to x-->+inf and from x=1 to x-->+inf')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
 ya = 1.
@@ -362,16 +361,16 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy nquad
-Example 01
-Integral of xye^-xy from y=1 to y-->+inf and from x=1 to x-->+inf
+Example 2-02
+Integral of 2xye^-xy from y=1 to y-->+inf and from x=1 to x-->+inf
 Result is  1.1745267511339024 with error  1.6321550842479074e-08
 </code></pre>
-            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-02.py">GitHub</a>.
+            Here is the link to the code on <a target="_blank" href="ma_intcalpyton_int_impls_scipy_url_2vexp2">GitHub</a>.
         </p>
 
 		<h2>Integration via SymPy</h2>
 
-		<h3 id="int1vexp1_quadscipy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em></h3>
+		<h3 id="int1vexp1_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em></h3>
 		<p>
             Let the following integral of a function of one variable be given:
             
@@ -403,7 +402,7 @@ Result is  1.39066240069674
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01.py">GitHub</a>.
         </p>
 
-		<h3 id="int1vexp1_quadscipy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em> via indefinite integral</h3>
+		<h3 id="int1vexp1_undef_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em> via indefinite integral</h3>
 		<p>
             Let the following integral of a function of one variable be given:
             
@@ -442,6 +441,45 @@ Result is  1.3906624006967436
             calculates the value of the integral.<br />
             <br />
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01-undef.py">GitHub</a>.
+        </p>
+
+		<h3 id="int2vexp3_sympy">Double Integral of a function of two variables with <em>integrate(f, (x, xa, xb), (y, ya, yb))</em></h3>
+		<p>
+            Let the following double integral of a function of two variables be given:
+            
+            $$ \int_{1}^{4} \int_{y-1}^{y+2} x y e^{-x} e^{-y} \,dx dy $$
+
+            whose analytical solution is
+            $ \approx 0.396134 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=double+integral+x+y+e%5E-x+e%5E-y+dx+dy+from+0+to+4+and+from+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>integrate(f, (x, xa, xb), (y, ya, yb))</code> of the <em>SymPy</em> library:</br >
+            <pre><code class="python">import sympy as sp
+
+print('Double integral computed by SymPy integrate(f, (x, xa(y), xb(y)), (y, ya, yb)')
+print('Example 2-03')
+print('Integral of xye^-xy from y=1 to y=4 and from x=y-1 to x=y+1')
+
+x, y = sp.symbols('x y')
+f = x * y * sp.exp(-x) * sp.exp(-y)
+ya = 0.
+yb = 4.
+xa = y-1.
+xb = y+1.
+
+integral = sp.integrate(f, (x, xa, xb), (y, ya, yb))
+integral = integral.evalf()
+print('Result is ', integral)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Double integral computed by SymPy integrate(f, (x, xa(y), xb(y)), (y, ya, yb)
+Example 2-03
+Integral of xye^-xy from y=1 to y=4 and from x=y-1 to x=y+1
+Result is  0.396134380699524
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr2-03.py">GitHub</a>.
         </p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
