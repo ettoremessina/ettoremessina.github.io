@@ -37,7 +37,7 @@
 
 		<title>Calcolo Integrale in Python</title>
 		<meta name="description" content="Esempi di uso di comuni librerie per Python per calcolare numericamente (con SciPy) e analiticamente (con SymPy) il valore di diverse tipologie di integrali." >
-		<meta name="keywords" content="integrale, integrali, calcolo integrale, NumPy, SciPy, SymPy, Python" >
+		<meta name="keywords" content="integrale, integrali, calcolo integrale, quad, dblquad, tplquad, nquad, integrate, NumPy, SciPy, SymPy, Python" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html" />
@@ -201,7 +201,7 @@
 import numpy as np
 
 print('Single integral computed by SciPy quad')
-print('Example 1-01')
+print('Example 1-01 quad')
 print('Integral of 2xe^-x from x=1 to x=5')
 
 integrand = lambda x : 2 * x * np.exp(-x)
@@ -214,11 +214,11 @@ print('Result is ', result, 'with error ', error)
             il cui output &egrave;:<br />
             <br />
             <pre><code class="shell">Single integral computed by SciPy quad
-Example 1-01
+Example 1-01 quad
 Integral of 2xe^-x from x=1 to x=5
 Result is  1.3906624006967436 with error  1.54394541673402e-14
 </code></pre>
-            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01.py">GitHub</a>.
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-quad.py">GitHub</a>.
         </p>
 
 		<h3 id="int1vexp2_quadscipy">Integrale di funzione di una variabile con <em>quad</em> (altro esempio)</h3>
@@ -237,7 +237,7 @@ Result is  1.3906624006967436 with error  1.54394541673402e-14
 import numpy as np
 
 print('Single integral computed by SciPy quad')
-print('Example 1-02')
+print('Example 1-02 quad')
 print('Integral of 2xe^-x from x=1 to x-->+inf')
 
 integrand = lambda x : 2 * x * np.exp(-x)
@@ -250,14 +250,14 @@ print('Result is ', result, 'with error ', error)
             il cui output &egrave;:<br />
             <br />
             <pre><code class="shell">Single integral computed by SciPy quad
-Example 1-02
+Example 1-02 quad
 Integral of 2xe^-x from x=1 to x-->+inf
 Result is  1.4715177646857691 with error  3.7568301883294814e-10
 </code></pre>
-            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-02.py">GitHub</a>.
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-02-quad.py">GitHub</a>.
         </p>
 
-		<h3 id="int2vexp1_dblquadscipy">Integrale doppio di funzione di due variabili con <em>dblquad</em></h3>
+		<h3 id="int2vexp1_scipy">Integrale doppio di funzione di due variabili</h3>
 		<p>
             Sia dato il seguente integrale doppio di una funzione di due variabili:
             
@@ -266,7 +266,10 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
             la cui soluzione analitica &egrave;
             $ \approx 1.0273 $
             verificabile online tramite <a href="https://www.wolframalpha.com/input/?i=double+integral+2+x+y+e%5E-%28x+*+y%29+dx+dy+from+1+to+5+and+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
+        </p>
+
+        <h4 id="int2vexp1_scipydblquad">Calcolo dell&apos;integrale con <em>dblquad</em></h4>
+		<p>
             Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
             la funzione <code>dblquad</code> della libreria <em>SciPy</em>:</br >
             <pre><code class="python">import scipy.integrate as spi
@@ -290,26 +293,18 @@ Example 2-01
 Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
 Result is  1.0273038469260316 with error  1.3420097685964054e-14
 </code></pre>
-            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01.py">GitHub</a>.
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01-dblquad.py">GitHub</a>.
         </p>
 
-		<h3 id="int2vexp1_nquadscipy">Integrale doppio di funzione di due variabili con <em>nquad</em></h3>
+        <h4 id="int2vexp1_scipynquad">Calcolo dell&apos;integrale con <em>nquad</em></h4>
 		<p>
-            Sia dato il seguente integrale di una funzione di due variabili:
-            
-            $$ \int_{1}^{5} \int_{y-1}^{y+1} 2 x y e^{-x y} \,dx dy $$
-
-            la cui soluzione analitica &egrave;
-            $ \approx 1.0273 $
-            verificabile online tramite <a href="https://www.wolframalpha.com/input/?i=double+integral+2+x+y+e%5E-%28x+*+y%29+dx+dy+from+1+to+5+and+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
             Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
             la funzione <code>nquad</code> della libreria <em>SciPy</em>:</br >
             <pre><code class="python">import scipy.integrate as spi
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Example 1-01 Alternative')
+print('Example 2-01 dblquad')
 print('Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
@@ -323,11 +318,11 @@ print('Result is ', result, 'with error ', error)
             il cui output &egrave;:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy nquad
-Example 1-01 Alternative
+Example 2-01 nquad
 Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
 Result is  1.0273038469260316 with error  1.3420097685964054e-14
 </code></pre>
-            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01-alt.py">GitHub</a>.
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr2-01-nquad.py">GitHub</a>.
         </p>
 
 		<h3 id="int2vexp1_nquadscipy">Integrale doppio di funzione di due variabili con <em>nquad</em> (altro esempio)</h3>
@@ -346,7 +341,7 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Example 2-02')
+print('Example 2-01 nquad')
 print('Integral of 2xye^-xy from y=1 to x-->+inf and from x=1 to x-->+inf')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
@@ -364,6 +359,83 @@ Integral of 2xye^-xy from y=1 to y-->+inf and from x=1 to x-->+inf
 Result is  1.1745267511339024 with error  1.6321550842479074e-08
 </code></pre>
             Qui il link al codice su <a target="_blank" href="ma_intcalpyton_int_impls_scipy_url_2vexp2">GitHub</a>.
+        </p>
+
+		<h3 id="int3vexp1_scipy">Integrale triplo di funzione di tre variabili</h3>
+		<p>
+            Sia dato il seguente integrale triplo di una funzione di due variabili:
+            
+            $$ \int_{1}^{2} \int_{z+1}^{z+2} \int_{y+z}^{2(y+z)} x + yz^2 \,dx dy dz $$
+
+            la cui soluzione analitica &egrave;
+            $ \approx 65.7194 $
+            verificabile online tramite <a href="https://www.wolframalpha.com/input/?i=triple+integral+x+%2B+y+*+z%5E2+dx+dy+dz+from+1+to+2+and+from+z%2B1+to+z%2B2+and+from+y%2Bz+to+2+*+%28y%2Bz%29" target="_brank">Wolfram Alpha</a>.<br />
+        </p>
+
+        <h4 id="int3vexp1_scipytplquad">Calcolo dell&apos;integrale con <em>tplquad</em></h4>
+		<p>
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>tplquad</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Triple integral computed by SciPy tplquad')
+print('Example 3-01 tplquad')
+print('Integral of x + yz^2 from z=1 to z=2, y=z+1 to y=z+2 and from x=y+x to x=2(y+z)')
+
+integrand = lambda x, y, z : x + y * z ** 2
+za = 1.
+zb = 2.
+ya=lambda z: z + 1
+yb=lambda z: z + 2
+xa=lambda z, y : y + z
+xb=lambda z, y : 2 * (y + z)
+
+result, error = spi.tplquad(integrand, za, zb, ya, yb, xa, xb)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Triple integral computed by SciPy tplquad
+Example 3-01 tplquad
+Integral of x + yz^2 from z=1 to z=2, y=z+1 to y=z+2 and from x=y+x to x=2(y+z)
+Result is  65.71944444444445 with error  1.659412309590769e-12
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr3-01-tplquad.py">GitHub</a>.
+        </p>
+
+        <h4 id="int3vexp1_scipynquad">Calcolo dell&apos;integrale con <em>nquad</em></h4>
+		<p>
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>nquad</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Triple integral computed by SciPy nquad')
+print('Example 3-01 nquad')
+print('Integral of x + yz^2 from z=1 to z=2, y=z+1 to y=z+2 and from x=y+x to x=2(y+z)')
+
+integrand = lambda x, y, z : x + y * z ** 2
+
+bounds_z = lambda : [1., 2.]
+bounds_y = lambda z : [z+1, z+2]
+bounds_x = lambda z, y : [y+z, 2 * (y+z)]
+ya=lambda z: z + 1
+yb=lambda z: z + 2
+xa=lambda z, y : y + z
+xb=lambda z, y : 2 * (y + z)
+
+result, error = spi.nquad(integrand, [bounds_x, bounds_y, bounds_z])
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Triple integral computed by SciPy nquad
+Example 3-01 nquad
+Integral of x + yz^2 from z=1 to z=2, y=z+1 to y=z+2 and from x=y+x to x=2(y+z)
+Result is  65.71944444444445 with error  1.659412309590769e-12
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr3-01-nquad.py">GitHub</a>.
         </p>
 
         <h2>Integrazione tramite SymPy</h2>
