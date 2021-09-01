@@ -278,7 +278,7 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
 import numpy as np
 
 print('Double integral computed by SciPy dblquad')
-print('Example 2-01')
+print('Example 2-01 dblquad')
 print('Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
@@ -291,7 +291,7 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy dblquad
-Example 2-01
+Example 2-01 dblquad
 Integral of xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1
 Result is  1.0273038469260316 with error  1.3420097685964054e-14
 </code></pre>
@@ -306,7 +306,7 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Example 2-01 dblquad')
+print('Example 2-01 nquad')
 print('Integral of 2xye^-xy from y=1 to y=5 and from x=y-1 to x=y+1')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
@@ -343,7 +343,7 @@ Result is  1.0273038469260316 with error  1.3420097685964054e-14
 import numpy as np
 
 print('Double integral computed by SciPy nquad')
-print('Example 2-01 nquad')
+print('Example 2-02 nquad')
 print('Integral of 2xye^-xy from y=1 to x-->+inf and from x=1 to x-->+inf')
 
 integrand = lambda x, y : 2 * x * y * np.exp(-x * y)
@@ -356,7 +356,7 @@ print('Result is ', result, 'with error ', error)
             whose output is:<br />
             <br />
             <pre><code class="shell">Double integral computed by SciPy nquad
-Example 2-02
+Example 2-02 nquad
 Integral of 2xye^-xy from y=1 to y-->+inf and from x=1 to x-->+inf
 Result is  1.1745267511339024 with error  1.6321550842479074e-08
 </code></pre>
