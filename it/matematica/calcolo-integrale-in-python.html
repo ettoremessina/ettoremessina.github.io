@@ -37,7 +37,7 @@
 
 		<title>Calcolo Integrale in Python</title>
 		<meta name="description" content="Esempi di uso di comuni librerie per Python per calcolare numericamente (con SciPy) e analiticamente (con SymPy) il valore di diverse tipologie di integrali." >
-		<meta name="keywords" content="integrale, integrali, calcolo integrale, quad, dblquad, tplquad, nquad, integrate, NumPy, SciPy, SymPy, Python" >
+		<meta name="keywords" content="integrale, integrali, calcolo integrale, quad, dblquad, tplquad, nquad, fixed_quad, quadrature, romberg, integrate, NumPy, SciPy, SymPy, Python" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html" />
@@ -185,7 +185,7 @@
 
         <h2>Integrazione tramite SciPy</h2>
 
-		<h3 id="int1vexp1_quadscipy">Integrale di funzione di una variabile con <em>quad</em></h3>
+		<h3 id="int1vexp1_scipy">Integrale di funzione di una variabile</h3>
 		<p>
             Sia dato il seguente integrale di una funzione di una variabile:
             
@@ -194,7 +194,10 @@
             la cui soluzione analitica &egrave;
             $ \approx 1.3907 $
             verificabile online tramite <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
+        </p>
+
+        <h4 id="int1vexp1_scipy_quad">Calcolo dell&apos;integrale con <em>quad</em></h3>
+		<p>
             Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
             la funzione <code>quad</code> della libreria <em>SciPy</em>:</br >
             <pre><code class="python">import scipy.integrate as spi
@@ -219,6 +222,90 @@ Integral of 2xe^-x from x=1 to x=5
 Result is  1.3906624006967436 with error  1.54394541673402e-14
 </code></pre>
             Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-quad.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_fixed_quad">Calcolo dell&apos;integrale con <em>fixed_quad</em></h3>
+		<p>
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>fixed_quad</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy fixed_quad')
+print('Example 1-01 fixed_quad')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+
+result, none = spi.fixed_quad(integrand, a, b, n=5)
+print('Result is ', result)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy fixed_quad
+Example 1-01 fixed_quad
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.39066368239563
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-fixed_quad.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_quadrature">Calcolo dell&apos;integrale con <em>quadrature</em></h3>
+		<p>
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>quadrature</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy quadrature')
+print('Example 1-01 quadrature')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+
+result, error = spi.quadrature(integrand, a, b)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy quadrature
+Example 1-01 quadrature
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906624007789083 with error  1.225092050027854e-08
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-quadrature.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_romberg">Calcolo dell&apos;integrale con <em>romberg</em></h3>
+		<p>
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>romberg</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy romberg')
+print('Example 1-01 romberg')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+
+result = spi.romberg(integrand, a, b)
+print('Result is ', result)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy romberg
+Example 1-01 romberg
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906624006967394
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-romberg.py">GitHub</a>.
         </p>
 
 		<h3 id="int1vexp2_quadscipy">Integrale di funzione di una variabile con <em>quad</em> (altro esempio)</h3>
