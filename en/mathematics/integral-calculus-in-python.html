@@ -346,6 +346,111 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-02-quad.py">GitHub</a>.
         </p>
 
+		<h3 id="int1vexp34_scipy">Calculation of the length of a planar curve arc</h3>
+		<p>
+            As is well known, the integrals of a function of one variable can also be used to calculate the length of an arc of a planar curve.
+            If the curve is expressed in the form $y=f(x)$ and is continuous and derivable
+            the formula for calculating the length of the;arc of the curve between $ x=a $ and $ x=b $ is as follows:
+            $$ \int_{a}^{b} \sqrt{1 + \left(\frac{\,dy}{\,dx}\right)^2} \,dx $$
+            <br />
+            If instead curve is expressed in the parametric form $x=f_x(t)$ and $y=f_y(t)$
+            with both $f_x$ and $f_y$ continuous and derivable,
+            the formula for calculating the length of the arc of the curve between $ t=a $ and $ t=b $ is as follows:
+            $$ \int_{a}^{b} \sqrt{\left(\frac{\,dx}{\,dt}\right)^2 + \left(\frac{\,dy}{\,dt}\right)^2} \,dt $$
+            <br />
+            <b>Note:</b> in the two examples that follow, the prime derivatives are calculated using the <em>AutoGrad</em> library.
+        </p>
+
+        <h4 id="int1vexp3_scipyarclength">Calculation of the length of a planar curve arc expressed in explicit form with <em>quad</em></h3>
+		<p>
+            Let the following planar curve be given in explicit form:
+            
+            $$ y=e^{-x^2} $$
+
+            by applying the corresponding formula above to calculate the length of the arc between $ x=-1 $ and $ x = 1 $, the integral is obtained:
+            
+            $$ \int_{-1}^{1} \sqrt{1 + \left(\frac{\,d(e^{-x^2})}{\,dx}\right)^2} \,dx $$
+
+            whose analytical solution is
+            $ \approx 2.4089 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=length+of+e%5E-x%5E2+for+x%3D-1+to+x%3D1&lk=3" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Here is the example of Python code that calculates length of a planar curve arc expressed in explicit form using
+            the <code>quad</code> function of <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import autograd.numpy as anp   # Thinly-wrapped version of Numpy
+import autograd as ag
+
+print('Compute length of an arc of planar curve by SciPy quad')
+print('Example 1-03 quad arclength')
+print('Length of arc of curve y=e^(-x^2) from x=-1 to x=1')
+
+y = lambda x : anp.exp(-x**2)
+dy_dx = ag.grad(y)
+integrand = lambda x : anp.sqrt(1 + dy_dx(x) ** 2)
+a = -1.
+b = 1.
+
+result, error = spi.quad(integrand, a, b)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Compute length of an arc of planar curve by SciPy quad
+Example 1-03 quad arclength
+Length of arc of curve y=e^(-x^2) from x=-1 to x=1
+Result is  2.408882141747104 with error  1.3501578327579367e-12
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-03-quad-arclength.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp4_scipyarclength">Calculation of the length of a planar curve arc expressed in parametric form with <em>quad</em></h3>
+		<p>
+            Let the following planar curve be given in parametric form:
+            
+            $$ x(t)=cos^3 t $$
+            $$ y(t)=sin^3 t $$
+
+            by applying the corresponding formula above to calculate the length of the arc between $ t=0 $ e $ t = 2\pi $, the integral is obtained:
+            
+            $$ \int_{0}^{2 \pi} \sqrt{\left(\frac{\,d (cos^3 t)}{\,dt}\right)^2 + \left(\frac{\,d (sin^3 t)}{\,dt}\right)^2} \,dt $$
+
+            whose analytical solution is
+            $ 6 $
+            verifiable online via <a href="https://www.wolframalpha.com/input/?i=arclength+x%28t%29%3Dcos%5E3+t%2C+y%28t%29%3Dsin%5E3+t+for+t%3D0+to+2pi&lk=3" target="_brank">Wolfram Alpha</a>.<br />
+            <br />
+            Here is the example of Python code that calculates length of a planar curve arc expressed in parametric form using
+            the <code>quad</code> function of <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import autograd.numpy as anp   # Thinly-wrapped version of Numpy
+import autograd as ag
+
+print('Compute length of an arc of planar parametric curve by SciPy quad')
+print('Example 1-04 quad arclength')
+print('Length of arc of parametric curve x(t)=cos^3(t) and y(t)=sin^3(t) from t=0 to t=2pi')
+
+x = lambda t : anp.cos(t) ** 3
+y = lambda t : anp.sin(t) ** 3
+dx_dt = ag.grad(x)
+dy_dt = ag.grad(y)
+
+integrand = lambda t : anp.sqrt(dx_dt(t) ** 2 + dy_dt(t) ** 2)
+a = 0.
+b = 2 * anp.pi
+
+result, error = spi.quad(integrand, a, b)
+print('Result is ', result, 'with error ', error)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Compute length of an arc of planar parametric curve by SciPy quad
+Example 1-04 quad arclength
+Length of arc of parametric curve x(t)=cos^3(t) and y(t)=sin^3(t) from t=0 to t=2pi
+Result is  6.0 with error  6.616929226765933e-14
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-04-quad-arclength.py">GitHub</a>.
+        </p>
+
 		<h3 id="int2vexp1_scipy">Double integral of a function of two variables</h3>
 		<p>
             Let the following double integral of a function of two variables be given:
