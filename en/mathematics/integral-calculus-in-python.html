@@ -1,6 +1,9 @@
 
 
 
+
+
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -187,8 +190,14 @@
 
         <h2>Integration via SciPy</h2>
 
-		<h3 id="int1vexp1_scipy">Integral of function of one variable</h3>
+		<h3 id="int1vexp1_scipy">Integral of function of one variable (with finite extremes)</h3>
 		<p>
+			In integral calculus, the definite integral is an operator that, given a real-valued function of a real-valued variable and an interval $[a,b]$ (subset of the domain),
+            associates to the function the area subtended by its graph in the interval $[a,b]$.<br />
+            The <em>SciPy</em> library provides several numerical methods for computing the integral of such functions;
+            the purpose of this chapter is to present a series of demos to show &quot;by examples&quot; the use of such methods;
+            for complete documentation of these methods, the reader is invited to consult the official documentation of <em>SciPy</em>.<br />
+			<br />
             Let the following integral of a function of one variable be given:
             
             $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
@@ -310,7 +319,115 @@ Result is  1.3906624006967394
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-romberg.py">GitHub</a>.
         </p>
 
-		<h3 id="int1vexp2_quadscipy">Integral of function of one variable with <em>quad</em> (other example)</h3>
+        <h4 id="int1vexp1_scipy_trapezoid">Calcolo dell&apos;integrale con <em>trapezoid</em></h3>
+		<p>
+            The <code>trapezoid</code> function is a fixed-sample function integration method,
+            so the code first discretizes the integration interval evenly spaced and
+            for all discrete values of $x$ it computes the corresponding values of $y$
+            and then passes the two sets of discrete values $x$ and $y$ to the integration method.<br />
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>trapezoid</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy trapezoid')
+print('Example 1-01 trapezoid')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.trapezoid(ys, xs)
+print('Result is ', result)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy trapezoid
+Example 1-01 trapezoid
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624352673
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-trapezoid.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_cumulative_trapezoid">Calcolo dell&apos;integrale con <em>cumulative_trapezoid</em></h3>
+		<p>
+            The function <code>cumulative_trapezoid</code> is also a fixed-sample function integration method,
+            and so what was said about <code>trapezoid</code> applies.
+            <br />
+            Below is the example of Python code that calculates the integral using
+            of the <code>cumulative_trapezoid</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy cumulative_trapezoid')
+print('Example 1-01 cumulative_trapezoid')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.cumulative_trapezoid(ys, xs)
+result = result[-1]
+print('Result is ', result)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy cumulative_trapezoid
+Example 1-01 cumulative_trapezoid
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624352677
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-cumulative-trapezoid.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_simpson">Calcolo dell&apos;integrale con <em>simpson</em></h3>
+		<p>
+            The function <code>simpson</code> is also a fixed-sample function integration method,
+            and so what was said about <code>trapezoid</code> applies.
+            <br />
+            Below is the example of Python code that calculates the integral using
+            the <code>simpson</code> function of the <em>SciPy</em> library:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy simpson')
+print('Example 1-01 simpson')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.simpson(ys, xs)
+print('Result is ', result)
+</code></pre>
+            whose output is:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy simpson
+Example 1-01 simpson
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624801614
+</code></pre>
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-simpson.py">GitHub</a>.
+        </p>
+
+		<h3 id="int1vexp2_quadscipy">Integral of function of one variable with <em>quad</em> (with extreme infinity)</h3>
 		<p>
             Set the following integral of a function of one variable be given:
             

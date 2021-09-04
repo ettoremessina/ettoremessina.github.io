@@ -1,4 +1,7 @@
 
+
+
+
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -185,8 +188,14 @@
 
         <h2>Integrazione tramite SciPy</h2>
 
-		<h3 id="int1vexp1_scipy">Integrale di funzione di una variabile</h3>
+		<h3 id="int1vexp1_scipy">Integrale di funzione di una variabile (con estremi finiti)</h3>
 		<p>
+            In analisi matematica, l&apos;integrale definito &egrave; un operatore che, dati una funzione reale di una variabile reale e un intervallo $ [a,b] $ (sottoinsieme del dominio),
+            associa alla funzione l&apos;area sottesa dal suo grafico nell&apos;intervallo $[a,b]$.<br />
+            La libreria <em>SciPy</em> fornisce una serie di metodi numerici per calcolare l&apos;integrale di tali funzioni;
+            scopo di questo capitolo &egrave; presentare una serie di demo per mostrare &quot;per esempi&quot; l&apos;uso di tali metodi;
+            per la documentazione esaustiva di essi si invita il lettore a consultare la documentazione ufficiale di <em>SciPy</em>.<br />
+            <br />
             Sia dato il seguente integrale di una funzione di una variabile:
             
             $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
@@ -308,7 +317,115 @@ Result is  1.3906624006967394
             Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-romberg.py">GitHub</a>.
         </p>
 
-		<h3 id="int1vexp2_quadscipy">Integrale di funzione di una variabile con <em>quad</em> (altro esempio)</h3>
+        <h4 id="int1vexp1_scipy_trapezoid">Calcolo dell&apos;integrale con <em>trapezoid</em></h3>
+		<p>
+            La funzione <code>trapezoid</code> &egrave; un metodo di integrazione di funzione a campioni fissi,
+            quindi il codice prima discretizza l&apos;intervallo di integrazione in modo uniformemente spaziato e
+            per tutti i valori discreti di $x$ calcola i corrispondenti valore di $y$
+            e successivamente passa i due insiemi di valori discreti $x$ e $y$ al metodo di integrazione.<br />
+            <br />
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>trapezoid</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy trapezoid')
+print('Example 1-01 trapezoid')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.trapezoid(ys, xs)
+print('Result is ', result)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy trapezoid
+Example 1-01 trapezoid
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624352673
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-trapezoid.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_cumulative_trapezoid">Calcolo dell&apos;integrale con <em>cumulative_trapezoid</em></h3>
+		<p>
+            Anche la funzione <code>cumulative_trapezoid</code> &egrave; un metodo di integrazione di funzione a campioni fissi,
+            e quindi vale quanto detto per <code>trapezoid</code>.
+            <br />
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>cumulative_trapezoid</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy cumulative_trapezoid')
+print('Example 1-01 cumulative_trapezoid')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.cumulative_trapezoid(ys, xs)
+result = result[-1]
+print('Result is ', result)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy cumulative_trapezoid
+Example 1-01 cumulative_trapezoid
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624352677
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-cumulative-trapezoid.py">GitHub</a>.
+        </p>
+
+        <h4 id="int1vexp1_scipy_simpson">Calcolo dell&apos;integrale con <em>simpson</em></h3>
+		<p>
+            Anche la funzione <code>simpson</code> &egrave; un metodo di integrazione di funzione a campioni fissi,
+            e quindi vale quanto detto per <code>trapezoid</code>.
+            <br />
+            Qui di seguito l&apos;esempio di codice Python che calcola l&apos;integrale usando
+            la funzione <code>simpson</code> della libreria <em>SciPy</em>:</br >
+            <pre><code class="python">import scipy.integrate as spi
+import numpy as np
+
+print('Single integral computed by SciPy simpson')
+print('Example 1-01 simpson')
+print('Integral of 2xe^-x from x=1 to x=5')
+
+integrand = lambda x : 2 * x * np.exp(-x)
+a = 1.
+b = 5.
+step = 1e-4
+
+xs = np.arange(a, b, step)
+ys = integrand(xs)
+
+result = spi.simpson(ys, xs)
+print('Result is ', result)
+</code></pre>
+            il cui output &egrave;:<br />
+            <br />
+            <pre><code class="shell">Single integral computed by SciPy simpson
+Example 1-01 simpson
+Integral of 2xe^-x from x=1 to x=5
+Result is  1.3906556624801614
+</code></pre>
+            Qui il link al codice su <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-simpson.py">GitHub</a>.
+        </p>
+
+		<h3 id="int1vexp2_quadscipy">Integrale di funzione di una variabile con <em>quad</em> (con estremo infinito)</h3>
 		<p>
             Sia dato il seguente integrale di una funzione di una variabile:
             
