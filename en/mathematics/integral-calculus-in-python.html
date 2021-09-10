@@ -235,7 +235,7 @@ Result is  1.3906624006967436 with error  1.54394541673402e-14
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-quad.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_fixed_quad">Calculating the integral with <em>fixed_quad</em></h3>
+        <h4 id="int1vexp1_scipy_fixed_quad">Calculating the integral with <em>fixed_quad</em></h4>
 		<p>
             Below is the example of Python code that calculates the integral using
             the <code>fixed_quad</code> function of the <em>SciPy</em> library:</br >
@@ -263,7 +263,7 @@ Result is  1.39066368239563
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-fixed_quad.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_quadrature">Calculating the integral with <em>quadrature</em></h3>
+        <h4 id="int1vexp1_scipy_quadrature">Calculating the integral with <em>quadrature</em></h4>
 		<p>
             Below is the example of Python code that calculates the integral using
             the <code>quadrature</code> function of the <em>SciPy</em> library:</br >
@@ -291,7 +291,7 @@ Result is  1.3906624007789083 with error  1.225092050027854e-08
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-quadrature.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_romberg">Calculating the integral with <em>romberg</em></h3>
+        <h4 id="int1vexp1_scipy_romberg">Calculating the integral with <em>romberg</em></h4>
 		<p>
             Below is the example of Python code that calculates the integral using
             the <code>romberg</code> function of the <em>SciPy</em> library:</br >
@@ -319,7 +319,7 @@ Result is  1.3906624006967394
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-romberg.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_trapezoid">Calculating the integral with <em>trapezoid</em></h3>
+        <h4 id="int1vexp1_scipy_trapezoid">Calculating the integral with <em>trapezoid</em></h4>
 		<p>
             The <code>trapezoid</code> function is a fixed-sample function integration method,
             so the code first discretizes the integration interval evenly spaced and
@@ -356,7 +356,7 @@ Result is  1.3906556624352673
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-trapezoid.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_cumulative_trapezoid">Calculating the integral with <em>cumulative_trapezoid</em></h3>
+        <h4 id="int1vexp1_scipy_cumulative_trapezoid">Calculating the integral with <em>cumulative_trapezoid</em></h4>
 		<p>
             The function <code>cumulative_trapezoid</code> is also a fixed-sample function integration method,
             and so what was said about <code>trapezoid</code> applies.
@@ -392,7 +392,7 @@ Result is  1.3906556624352677
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-01-cumulative-trapezoid.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp1_scipy_simpson">Calculating the integral with <em>simpson</em></h3>
+        <h4 id="int1vexp1_scipy_simpson">Calculating the integral with <em>simpson</em></h4>
 		<p>
             The function <code>simpson</code> is also a fixed-sample function integration method,
             and so what was said about <code>trapezoid</code> applies.
@@ -478,7 +478,7 @@ Result is  1.4715177646857691 with error  3.7568301883294814e-10
             <b>Note:</b> in the two examples that follow, the prime derivatives are calculated using the <em>AutoGrad</em> library.
         </p>
 
-        <h4 id="int1vexp3_scipyarclength">Calculation of the length of a planar curve arc expressed in explicit form with <em>quad</em></h3>
+        <h4 id="int1vexp3_scipyarclength">Calculation of the length of a planar curve arc expressed in explicit form with <em>quad</em></h4>
 		<p>
             Let the following planar curve be given in explicit form:
             
@@ -521,7 +521,7 @@ Result is  2.408882141747104 with error  1.3501578327579367e-12
             Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/scipy/scipy-integr1-03-quad-arclength.py">GitHub</a>.
         </p>
 
-        <h4 id="int1vexp4_scipyarclength">Calculation of the length of a planar curve arc expressed in parametric form with <em>quad</em></h3>
+        <h4 id="int1vexp4_scipyarclength">Calculation of the length of a planar curve arc expressed in parametric form with <em>quad</em></h4>
 		<p>
             Let the following planar curve be given in parametric form:
             
@@ -570,6 +570,9 @@ Result is  6.0 with error  6.616929226765933e-14
 
 		<h3 id="int2vexp1_scipy">Double integral of a function of two variables</h3>
 		<p>
+            In integral calculus, the definite double integral is an operator that, given a real-valued function of two real-valued variables and a set included in the domain,			
+            associates to the function the volume of the solid (called cylindroid) between the surface described by the function and the plane containing the given set.<br />
+            <br />
             Let the following double integral of a function of two variables be given:
             
             $$ \int_{1}^{5} \int_{y-1}^{y+1} 2 x y e^{-x y} \,dx dy $$
@@ -751,8 +754,14 @@ Result is  65.71944444444445 with error  1.659412309590769e-12
 
 		<h2>Integration via SymPy</h2>
 
-		<h3 id="int1vexp1_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em></h3>
+		<h3 id="int1vexp1_sympy">Integral of function of one variable (with finite extremes)</h3>
 		<p>
+			In integral calculus, the definite integral is an operator that, given a real-valued function of a real-valued variable and an interval $[a,b]$ (subset of the domain),
+            associates to the function the area subtended by its graph in the interval $[a,b]$.<br />
+            The <em>SciPy</em> library provides several numerical methods for computing the integral of such functions;
+            the purpose of this chapter is to present a series of demos to show &quot;by examples&quot; the use of such methods;
+            for complete documentation of these methods, the reader is invited to consult the official documentation of <em>SciPy</em>.<br />
+			<br />
             Let the following integral of a function of one variable be given:
             
             $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
@@ -760,48 +769,49 @@ Result is  65.71944444444445 with error  1.659412309590769e-12
             whose analytical solution is
             $ \approx 1.3907 $
             verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
+		</p>
+
+		<h4 id="int1vexp1_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em></h4>
+		<p>
             Below is the example of Python code that calculates the integral using
             the <code>integrate(f, (x, a, b))</code> function of the <em>SymPy</em> library:</br >
             <pre><code class="python">import sympy as sp
 
-print('Single integral computed by SymPy integrate')
+print('Single integral computed by SymPy definite integrate')
+print('Example 1-01 definite')
 print('Integral of 2xe^-x from x=1 to x=5')
 
 x = sp.Symbol('x')
+f = 2 * x * sp.exp(-x)
 a = 1.
 b = 5.
-integral = sp.integrate(2 * x * sp.exp(-x), (x, a, b))
+integral = sp.integrate(f, (x, a, b))
+integral = integral.evalf()
 print('Result is ', integral)
 </code></pre>
             whose output is:<br />
             <br />
-            <pre><code class="shell">Single integral computed by SymPy integrate
+            <pre><code class="shell">Single integral computed by SymPy definite integrate
+Example 1-01 definite
 Integral of 2xe^-x from x=1 to x=5
 Result is  1.39066240069674
 </code></pre>
-            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01.py">GitHub</a>.
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01-definite.py">GitHub</a>.
         </p>
 
-		<h3 id="int1vexp1_undef_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em> via indefinite integral</h3>
+		<h4 id="int1vexp1_undef_sympy">Integral of a function of one variable with <em>integrate(f, (x, a, b))</em> via indefinite integral</h4>
 		<p>
-            Let the following integral of a function of one variable be given:
-            
-            $$ \int_{1}^{5} 2 x e^{-x} \,dx $$
-
-            whose analytical solution is
-            $ \approx 1.3907 $
-            verifiable online via <a href="https://www.wolframalpha.com/input/?i=integrate+2+x+e%5E-x+from+1+to+5" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
             Below is the example of Python code that calculates the integral using
             the <code>integrate(f, x)</code> function of the <em>SymPy</em> library:</br >
             <pre><code class="python">import sympy as sp
 
-print('Single integral computed by SymPy integrate')
+print('Single integral computed by SymPy indefinite integrate')
+print('Example 1-01 indefinite integrate')
 print('Integral of 2xe^-x from x=1 to x=5')
 
 x = sp.Symbol('x')
-primitive = sp.integrate(2 * x * sp.exp(-x), x)
+f = 2 * x * sp.exp(-x)
+primitive = sp.integrate(f, x)
 print('Primitive is ', primitive)
 
 primitive_lambda = sp.lambdify(x, primitive)
@@ -812,7 +822,8 @@ print('Result is ', integral)
 </code></pre>
             whose output is:<br />
             <br />
-            <pre><code class="shell">Single integral computed by SymPy integrate
+            <pre><code class="shell">Single integral computed by SymPy indefinite integrate
+Example 1-01 indefinite integrate
 Integral of 2xe^-x from x=1 to x=5
 Primitive is  (-2*x - 2)*exp(-x)
 Result is  1.3906624006967436
@@ -821,11 +832,14 @@ Result is  1.3906624006967436
             applying the fundamental theorem of integral calculus,
             calculates the value of the integral.<br />
             <br />
-            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01-undef.py">GitHub</a>.
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr1-01-indefinite-integrate.py">GitHub</a>.
         </p>
 
-		<h3 id="int2vexp3_sympy">Double Integral of a function of two variables with <em>integrate(f, (x, xa, xb), (y, ya, yb))</em></h3>
+		<h3 id="int2vexp1_sympy">Double integral of a function of two variables</h3>
 		<p>
+            In integral calculus, the definite double integral is an operator that, given a real-valued function of two real-valued variables and a set included in the domain,			
+            associates to the function the volume of the solid (called cylindroid) between the surface described by the function and the plane containing the given set.<br />
+            <br />
             Let the following double integral of a function of two variables be given:
             
             $$ \int_{1}^{4} \int_{y-1}^{y+2} x y e^{-x} e^{-y} \,dx dy $$
@@ -833,13 +847,16 @@ Result is  1.3906624006967436
             whose analytical solution is
             $ \approx 0.396134 $
             verifiable online via <a href="https://www.wolframalpha.com/input/?i=double+integral+x+y+e%5E-x+e%5E-y+dx+dy+from+0+to+4+and+from+y-1+to+y%2B1" target="_brank">Wolfram Alpha</a>.<br />
-            <br />
+		</p>
+
+		<h4 id="int2vexp3_sympy">Double Integral of a function of two variables with <em>integrate(f, (x, xa, xb), (y, ya, yb))</em></h4>
+		<p>
             Below is the example of Python code that calculates the integral using
             the <code>integrate(f, (x, xa, xb), (y, ya, yb))</code> of the <em>SymPy</em> library:</br >
             <pre><code class="python">import sympy as sp
 
-print('Double integral computed by SymPy integrate(f, (x, xa(y), xb(y)), (y, ya, yb)')
-print('Example 2-03')
+print('Double integral computed by SymPy definite integrate')
+print('Example 2-03 definite')
 print('Integral of xye^-xy from y=1 to y=4 and from x=y-1 to x=y+1')
 
 x, y = sp.symbols('x y')
@@ -855,12 +872,12 @@ print('Result is ', integral)
 </code></pre>
             whose output is:<br />
             <br />
-            <pre><code class="shell">Double integral computed by SymPy integrate(f, (x, xa(y), xb(y)), (y, ya, yb)
-Example 2-03
+            <pre><code class="shell">Double integral computed by SymPy definite integrate
+Example 2-03 definite
 Integral of xye^-xy from y=1 to y=4 and from x=y-1 to x=y+1
 Result is  0.396134380699524
 </code></pre>
-            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr2-03.py">GitHub</a>.
+            Here is the link to the code on <a target="_blank" href="https://github.com/ettoremessina/integral-calculus/blob/main/demo/python/sympy/sympy-integr2-03-definite.py">GitHub</a>.
         </p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
