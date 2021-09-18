@@ -58,6 +58,25 @@
     }
     </script>
 
+		<style>
+			@media screen and (max-width: 320px) {
+				#spashlogo {
+					max-width: 90%;
+				}
+			}
+
+			@media screen (min-width: 321px) and (max-width: 768px) {
+				#spashlogo {
+					max-width: 90%;
+				}
+			}
+
+			@media screen and (min-width: 769px) {
+				#spashlogo {
+					max-width: 45%;
+				}
+			}
+		</style>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="./assets/css/main.css" />
@@ -90,7 +109,7 @@
 		</div>
 		<div class="image object">
 			<center>
-			<img src="./images/cm-logo-big.png" alt="Computational&nbsp;Mindset" style="max-width: 90%;" />
+			<img src="./images/cm-logo-big.png" alt="Computational&nbsp;Mindset" id="spashlogo" />
 			</center>
 		</div>
 	</section>
