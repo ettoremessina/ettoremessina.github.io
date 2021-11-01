@@ -1,0 +1,729 @@
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Pruning of neural networks with TensorFlow</title>
+		<meta name="description" content="The pruning of the weights of a neural net puts to zero the insignificant weights of the model in phase of training with the purpose to obtain a sure level of sparsity in such way to render the model more easy compressible." >
+		<meta name="keywords" content="pruning, sparsity, insignificant_weights, model optimization, TensorFlow Optimization, PolynomialDecay, ConstantSparsity, prune_low_magnitude, UpdatePruningStep, strip_pruning" >
+		<link rel="canonical" href="https://computationalmindset.com/en/neural-networks/pruning-of-neural-networks-with-tensorflow.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/neural-networks/pruning-of-neural-networks-with-tensorflow.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/",
+              "name": "Neural Networks"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/neural-networks/pruning-of-neural-networks-with-tensorflow.html",
+              "name": "Pruning of neural networks with TensorFlow"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Pruning of neural networks with TensorFlow</h1>
+		</header>
+		<p>
+			The purpose of <em>pruning</em> of the weights based on magnitude is to gradually zero out the less significant weights of the model during the training phase
+			thus obtaining a certain degree of <em>sparsity</em> in the matrices of the weights (both kernel and bias).<br />
+			For sparsity of a matrix it is intended the presence of elements equal to zero in the same matrix: more are present elements equal to zero
+			more the matrix has a greater degree of sparsity; a sparse matrix brings advantages in terms of memory occupation and computational.
+			As far as memory is concerned, it can be more easily compressed thanks to the presence of redundant elements (the zeros, in fact)
+			and this is the case treated in this post; in general, sparse arrays can also be stored in a different way from the traditional
+			NxM arrays, for example by storing in lists the non-zero values with their associated indexes, but this is not the case discussed in this post.<br />
+			Regarding the computational aspects there could be some room for improvement as the multiplications with elements equal to zero
+			could be skipped, but also this case is not treated in this post, since here the focus is to realize the sparsity
+			of the matrices of weights in order to obtain greater compression in the face of a limited loss of quality of inference (the prediction) of the model itself.<br />
+			<br />
+			The post presents a magnitude-based weight pruning solution implemented via the library
+			<em><a href="https://www.tensorflow.org/model_optimization" target="_blank">TensorFlow Model Optimization</a></em>
+			and shows three examples of pruning applied to three different types of networks: a full-connected network (an MLP that performs a regression), a long-short-term-memory network
+			(an LSTM network that performs a time-series forecast) and a convolutional network (a CNN network that performs an image classifier).<br />
+			The code described by this post requires version 3 of Python and uses TensorFlow 2.x technology (both CPU or GPU) with Keras (which is already integrated within TensorFlow 2);
+			requires in addition to the already mentioned TensorFlow Model Optimization other libraries such as NumPy, SkLearn, Pandas, MatPlotLib and TensorFlow Datasets.<br />
+			<br />
+			To get the code please see the paragraph <a href="#downloadcode">Download of the complete code</a> at the end of this post.<br/>
+		</p>
+
+        <h2>The code of the solution</h2>
+		<p>
+			The heart of the proposed solution is the file <code><a href="https://github.com/ettoremessina/nn-optimization/blob/main/pruning/demos/tensorflow/support/trim_insignificant_weights.py" target="_blank">trim_insignificant_weights.py</a></code>
+			which implements two classes and some functions.<br />
+			<br />
+			Classes are:
+			<ul>
+				<li>
+					<code>AttemptConfig</code>:
+					which is the element of a search grid (implemented by the examples shown later) that proceeds by attempts;
+					this class implements two properties: the name of the attempt and the TensorFlow Model Optimization object that implements the pruning policy.
+					Currently the supported policies are: <code><a href="https://www.tensorflow.org/model_optimization/api_docs/python/tfmot/sparsity/keras/PolynomialDecay" target="_blank">PolynomialDecay</a></code>
+					and <code><a href="https://www.tensorflow.org/model_optimization/api_docs/python/tfmot/sparsity/keras/ConstantSparsity" target="_blank">ConstantSparsity</a></code>.
+				</li>
+				<li>
+					<code>AttemptInfo</code>:
+					which implements a set of properties to store various information about a trained model. Precisely: 
+					the total number of weights, the number of weights equal to zero (and by difference those different from zero),
+					the size of the original model saved in .h5, the size of the zipped .h5 file, the size of the .tflite file, the size of the zipped .tflite file with the relative compression coefficients 
+					and also other information regarding inference, such as predicted test values and the error between the predicted and expected values.
+				</li>
+			</ul>
+			Functions are:<br />
+			<br />
+			<ul>
+				<li>
+					<code>print_attempt_infos</code>:
+					takes as input a list of objects of type <code>AttemptInfo</code>, obtained from the complete execution of the search grid,
+					and writes on the standard output, in a user-friendly way, the information content of the various objects <code>AttemptInfo</code> present in the list.
+				</li>
+				<li>
+					<code>inspect_weigths</code>:
+					takes in input a keras model, inspects the weights (both kernel and bias) and writes on the standard output the number of weights for each layer of the model
+					indicating how many of them are equal to zero and how many are different from zero.
+				</li>
+				<li>
+					<code>retrieve_size_of_model</code>:
+					takes in input a keras model and returns the size of the .h5 file that is obtained saving the model and the size of the same zipped file.
+				</li>
+				<li>
+					<code>retrieve_size_of_lite_model</code>:
+					takes as input a keras model and returns the size of the .tflite file that is obtained by converting and saving the model for TensorFlow Lite;
+					also, as above, returns the size of the same zipped file.
+				</li>
+				<li>
+					<code>build_pruning_model</code>:
+					takes as input an original keras model (which has not undergone any pruning process) and returns a wrapper of the model by applying the method
+					<code><a href="https://www.tensorflow.org/model_optimization/api_docs/python/tfmot/sparsity/keras/prune_low_magnitude" target="_blank">prune_low_magnitude</a></code> 
+					to prepare the model to undergo a pruning process during the training phase.
+				</li>
+				<li>
+					<code>retrieve_callbacks_for_pruning</code>:
+					returns the callback <code><a href="https://www.tensorflow.org/model_optimization/api_docs/python/tfmot/sparsity/keras/UpdatePruningStep" target="_blank">UpdatePruningStep</a></code> needed for the pruning training phase.
+				</li>
+				<li>
+					<code>extract_pruned_model</code>:
+					takes as input a wrapper for pruning a model and removes the wrapper, via <code><a href="https://www.tensorflow.org/model_optimization/api_docs/python/tfmot/sparsity/keras/strip_pruning" target="_blank">strip_pruning</a></code>
+					and returns the underlying model that results ready for inference.
+				</li>
+			</ul>
+		</p>
+
+        <h2>The examples</h2>
+		<p>
+			The examples shown in this post all follow the same pattern: the example code prepares a dataset (which is generated synthetically in examples #1 and #2,
+			while in example #3 a dataset of <a href="https://www.tensorflow.org/datasets/" target="_blank">TensorFlow Datasets</a> is used,
+			which is divided into two pieces: one for training and the other for testing (sometimes there is a third piece for validation);
+			then a neural network model is built and a training process is performed.<br /> 
+			This model is named <em>original model</em> and information about it is placed in an instance of the class <code>AttemptInfo</code>.<br />
+			At this point the search grid is created, which is a list of instances of the classes <code>PolynomialDecay</code> and <code>ConstantSparsity</code>
+			initialized differently; each configuration is stored in an instance of <code>AttemptConfig</code>.<br />
+			The code in the example loops over the search grid and for each <code>AttemptConfig</code> creates a wrapper for pruning the original template
+			by calling the function <code>build_pruning_model</code> and trains this model, using the same hyper-parameters as the training of the original model
+			but with an extra callback obtained by calling <code>retrieve_callbacks_for_pruning</code>.<br />
+			During training, the model undergoes a process of pruning; once training is over, the function <code>extract_pruned_model</code> is called
+			function to remove the wrapper and obtain the underlying model on which the inference of the test data is performed
+			and finally we store in a new instance of <code>AttemptInfo</code> all the information about that model, in particular the size of the zipped .h5 file
+			and the size of the zipped .tflite file and the error calculated by comparing the prediction on the test data and the real test values.<br />
+			The various instances of <code>AttemptInfo</code> are collected in a list and at the end of the sample script the information from the various attempts is displayed
+			of the various attempts to allow you to compare the compression factor obtained for each attempt against how much loss in model quality.<br />
+			For examples #1 and #2 a Cartesian graph with two curves is also shown for each attempt: in green the test dataset, in red the prediction of the current attempt
+			and this gives an insight into the loss of quality as the pruning activity increases.
+		</p>
+
+        <h3>Example #1: full-connected neural network</h3>
+		<p>
+			The code for this example is the file <code><a href="https://github.com/ettoremessina/nn-optimization/blob/main/pruning/demos/tensorflow/example1.py" target="_blank">example1.py</a></code>.<br />
+			The dataset used by this example is a synthetic dataset generated as follows:
+			<pre><code class="python">fx_gen_ds = lambda x: x**2 #generating function of the dataset
+x_dataset = np.arange(-2., 2, 0.005, dtype=float)
+y_dataset = fx_gen_ds(x_dataset)</code></pre>
+			which is trivially a parabolic curve whose equation is $y=x^2$ with $x \in [-2, 2]$.<br />
+			To execute this Python scripy run the following command:<br />
+			<br/>
+			<pre><code class="shell">$ python example1.py</code></pre>
+			In the output obtained, just at the beginning, we observe the structure of the model, which is a normal full-connected network,
+			that is a MLP (Multi Layer Perceptron) implemented through the <code>Dense</code> layer, with a total of 4289 trainable weights.<br />
+			Here is the network structure:<br />
+			<br />
+			<pre><code class="shell">Model: "mlp_regression_model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 1)]               0         
+_________________________________________________________________
+dense (Dense)                (None, 32)                64        
+_________________________________________________________________
+dense_1 (Dense)              (None, 64)                2112      
+_________________________________________________________________
+dense_2 (Dense)              (None, 32)                2080      
+_________________________________________________________________
+dense_3 (Dense)              (None, 1)                 33        
+=================================================================
+Total params: 4,289
+Trainable params: 4,289
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+			It follows the training of the original model that consists of 100 epochs with batch size of 80 elements, with optimizer <code>Adams</code>
+			and <code>MeanSquaredError</code> as loss function. The properties of this model (which we call original model because it is not pruned)
+			are visible in the output of the program:<br />
+			<br/>
+			<pre><code class="shell">Model: original (unpruned)
+  Total number of weights: 4289
+  Total number of non-zero weights: 4280
+  Total number of zero weights: 9
+  Unzipped h5 size: 37272 bytes
+  Zipped h5 size: 18155 bytes (compression factor: 51.29%)
+  Unzipped tflite size: 7232 bytes
+  Zipped tflite size: 5781 bytes (compression factor: 20.06%)
+  Error (loss) value: 1.379212E-04</code></pre>
+			from which we can see that the error calculated on the test dataset is very low ($1.379212 \cdot 10^{-4}$), there are very few weights equal to zero (less than 10, practically none) as expected
+			because that model has not been pruned, the compression factor on the .h5 file is $51.29 \%$
+			while the one on the .tflite file is $20.06 \%$.<br />
+			The following image shows at a glance that the quality of inference is very good.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example1-attempt-org.png" alt="Test dataset and inference produced with original model"/></div>
+			<div class="photocaption">Test dataset (in green) and inference (in red) produced with the original model (which has not undergone any pruning).</div>
+			<br/>
+			Then follows the execution of the search grid that performs 11 attempts of pruning application, 6 with <code>PolynomialDecay</code> variously initialized
+			and 5 with <code>ConstantSparsity</code> variously initialized. As a sample, we show the result of one of the 11 attempts, precisely <em>const sparsity 0.5</em>.
+			(however, the results of all attempts are available in the standard output):<br />
+			<br/>
+			<pre><code class="shell">Model: const sparsity 0.5
+  Total number of weights: 4289
+  Total number of non-zero weights: 1775
+  Total number of zero weights: 2514
+  Unzipped h5 size: 37272 bytes
+  Zipped h5 size: 10832 bytes (compression factor: 70.94%)
+  Unzipped tflite size: 7232 bytes
+  Zipped tflite size: 2953 bytes (compression factor: 59.17%)
+  Error (loss) value: 3.109528E-04</code></pre>
+			from which we can see that the error calculated on the test dataset remains very low ($3.109528 \cdot 10^{-4}$) even if a bit higher than the original model as expected
+			because the pruning reduces the quality of the model; the weights equal to zero are 2514 on 4289 (so more than half), the compression factor on the .h5 file is $70.94 \%$
+			while that on the .tflite file is $59.17 \%$.<br />
+			The following image shows at a glance that the quality of inference is quite good.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example1-attempt-pruned.png" alt="Test dataset and inference produced with the const sparsity 0.5 model" /></div>
+			<div class="photocaption">Test dataset (in green) and inference (in red) produced with the <em>const sparsity 0.5</em> model.</div>
+			<br/>
+			When all attempts are finished, the example script shows the recap of all attempts; the first element of the recap is relative to the original model.<br />
+			<br/>
+			<pre><code class="shell">*** Final recap ***
+Attempt name              Size h5 (Comp. %)     Error (loss)
+original (unpruned)         18155 ( 51.29%)     1.379212e-04
+poly decay 10/50            11958 ( 67.92%)     1.981978e-03
+poly decay 20/50            11928 ( 68.00%)     9.621178e-05
+poly decay 30/60            10544 ( 71.71%)     2.460897e-04
+poly decay 30/70             9039 ( 75.75%)     2.291273e-03
+poly decay 40/50            12254 ( 67.12%)     8.707970e-05
+poly decay 10/90             5782 ( 84.49%)     3.172360e-02
+const sparsity 0.1          10858 ( 70.87%)     5.406314e-04
+const sparsity 0.4          10856 ( 70.87%)     4.125351e-04
+const sparsity 0.5          10832 ( 70.94%)     3.109528e-04
+const sparsity 0.6          10476 ( 71.89%)     2.269561e-04
+const sparsity 0.9           5792 ( 84.46%)     9.419761e-04</code></pre>
+			from which we deduce that in principle, as the compression factor increases, the error calculated on the test dataset increases
+			and therefore the quality of the inference decreases.
+			As a sample the following image shows a model that has suffered a heavy pruning and consequently the quality of the inference
+			is significantly worse than the model previously shown.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example1-attempt-weak.png" alt="Test dataset and inference produced with the 10/90 poly decay model" /></div>
+			<div class="photocaption">Dataset di test (in verde) e inferenza (in rosso) prodotta con il modello <em>poly decay 10/90</em>.</div>
+			<br/>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
+		</p>
+
+        <h3>Example #2: long-short-term-memory neural network</h3>
+		<p>
+			The code for this example is the file <code><a href="https://github.com/ettoremessina/nn-optimization/blob/main/pruning/demos/tensorflow/example2.py" target="_blank">example2.py</a></code>.<br />
+			The dataset used by this example is a synthetic time series generated as follows:
+			<pre><code class="python">ft_gen_ts = lambda t: 2.0 * np.sin(t/10.0) #generating function of the time series
+t_train = np.arange(0, 200, 0.5, dtype=float)
+y_train_timeseries = ft_gen_ts(t_train)
+t_test = np.arange(200, 400, 0.5, dtype=float)
+y_test_timeseries = ft_gen_ts(t_test)</code></pre>
+			which is trivially a sine wave whose equation is $y=2 \sin \frac{t}{10}$ with $t \in [0, 200]$.<br />
+			To execute this Python scripy run the following command:<br />
+			<br/>
+			<pre><code class="shell">$ python example2.py</code></pre>
+			In the output obtained, right at the beginning, we see the structure of the model, which is a network with an LSTM layer followed by a Dense layer,
+			suitable to calculate a forecast; it has with a total of 26321 trainable weights.<br />
+			Here is the network structure:<br />
+			<br />
+			<pre><code class="shell">Model: "long_short_term_memory_model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 6, 1)]            0         
+_________________________________________________________________
+lstm (LSTM)                  (None, 80)                26240     
+_________________________________________________________________
+dense (Dense)                (None, 1)                 81        
+=================================================================
+Total params: 26,321
+Trainable params: 26,321
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+			This is followed by training of the original model which consists of 80 epochs with time window equal to 6 elements and batch size of 50 elements,
+			with optimizer <code>Adams</code> and <code>MeanSquaredError</code> as loss function.
+			The properties of this model (which we call original model because it is not pruned)
+			are visible in the output of the program:<br />
+			<br/>
+			<pre><code class="shell">Model: original (unpruned)
+  Total number of weights: 26321
+  Total number of non-zero weights: 26321
+  Total number of zero weights: 0
+  Unzipped h5 size: 122096 bytes
+  Zipped h5 size: 99952 bytes (compression factor: 18.14%)
+  Unzipped tflite size: 42480 bytes
+  Zipped tflite size: 29678 bytes (compression factor: 30.14%)
+  Error (loss) value: 1.289916E-01</code></pre>
+			from which we see that the error calculated on the test forecast is relatively low ($1.289916 \cdot 10^{-1}$), no weight equal to zero as expected
+			because that model has not been pruned, the compression factor on the .h5 file is $18.14 \%$
+			while that on the .tflite file is $30.14 \%$.<br />
+			The following image shows at a glance that the quality of the forecast is good.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example2-attempt-org.png" alt="Test dataset and forecast produced with the original model" /></div>
+			<div class="photocaption">Test dataset (in green) and forecast (in red) produced with the original model (which did not undergo any pruning).</div>
+			<br/>
+			Then follows the execution of the search grid that performs 11 attempts of pruning application, 6 with <code>PolynomialDecay</code> variously initialized
+			and 5 with <code>ConstantSparsity</code> variously initialized. As a sample, we show the result of one of the 11 attempts, precisely <em>poly decay 40/50</em>.
+			(however the results of all attempts are available in the standard output):<br />
+			<br/>
+			<pre><code class="shell">Model: poly decay 40/50
+  Total number of weights: 26321
+  Total number of non-zero weights: 13322
+  Total number of zero weights: 12999
+  Unzipped h5 size: 122096 bytes
+  Zipped h5 size: 63464 bytes (compression factor: 48.02%)
+  Unzipped tflite size: 42480 bytes
+  Zipped tflite size: 21277 bytes (compression factor: 49.91%)
+  Error (loss) value: 8.439505E-01</code></pre>
+			from which we can see that the error calculated on the test dataset is still low ($8.439505 \cdot 10^{-1}$) even if a bit higher than the original model as expected
+			because the pruning reduces the quality of the model; the weights equal to zero are 12999 on 26321 (so almost half), the compression factor on the .h5 file is $48.02 \%$
+			while that on the .tflite file is $49.91 \%$.<br />
+			The following image shows at a glance that the quality of the forecast is relatively good.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example2-attempt-pruned.png" alt="Test dataset and forecast produced with the poly decay 40/50 model"/></div>
+			<div class="photocaption">Test dataset (in green) and the forecast (in red) produced with the <em>poly decay 40/50</em> model.</div>
+			<br/>
+			When all attempts are finished, the example script shows the recap of all attempts; the first element of the recap is relative to the original model.<br />
+			<br/>
+			<pre><code class="shell">*** Final recap ***
+Attempt name              Size h5 (Comp. %)     Error (loss)
+original (unpruned)         99952 ( 18.14%)     1.289916e-01
+poly decay 10/50            62316 ( 48.96%)     8.029442e-01
+poly decay 20/50            62268 ( 49.00%)     1.122432e-01
+poly decay 30/60            53409 ( 56.26%)     2.103334e+00
+poly decay 30/70            43866 ( 64.07%)     3.067956e+00
+poly decay 40/50            63464 ( 48.02%)     8.439505e-01
+poly decay 10/90            22154 ( 81.86%)     4.263138e+00
+const sparsity 0.1          96429 ( 21.02%)     2.983370e+00
+const sparsity 0.4          72670 ( 40.48%)     3.378339e+00
+const sparsity 0.5          63657 ( 47.86%)     3.714817e-01
+const sparsity 0.6          54506 ( 55.36%)     4.406884e+00
+const sparsity 0.9          22818 ( 81.31%)     4.847150e+00</code></pre>
+			from which it can be deduced that, in principle, as the compression factor increases, the error calculated on the test dataset increases and therefore the quality of the forecast decreases.
+			and therefore the quality of the forecast decreases.<br />
+			As a sample the following image shows a model that has undergone a heavy pruning and consequently the quality of the inference
+			has notably worsened regarding the model previously shown.<br />
+			<br />
+			<br />
+			<div class="betweentextlines"><img src="../../posts/neural-networks/pruning-of-neural-networks-with-tensorflow/nn-prunnnwtf-example2-attempt-weak.png" alt="Test dataset and forecast produced with the const spartsity 0.4 model" /></div>
+			<div class="photocaption">Test dataset (in green) and forecast (in red) produced with the <em>const spartsity 0.4</em> model.</div>
+			<br/>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
+		</p>
+
+        <h3>Example #3: convolutional neural network</h3>
+		<p>
+			The code for this example is the file <code><a href="https://github.com/ettoremessina/nn-optimization/blob/main/pruning/demos/tensorflow/example3.py" target="_blank">example3.py</a></code>.<br />
+			The dataset used by this example is the dataset <a href="https://www.tensorflow.org/datasets/catalog/tf_flowers" target="_blank">Flowers of TensorFlow</a>;
+			here is the code that performs the download of that dataset:
+			<pre><code class="python">(train_ds, val_ds, test_ds), metadata = tfds.load(
+    'tf_flowers',
+    split=['train[:80%]', 'train[80%:90%]', 'train[90%:]'],
+    with_info=True,
+    as_supervised=True,
+)
+
+total_number_of_training_images = 8
+total_number_of_validation_images = 6
+total_number_of_test_images = 7</code></pre>
+			To execute this Python scripy run the following command:<br />
+			<br/>
+			<pre><code class="shell">$ python example3.py</code></pre>
+			It is recommended to run this script having available a GPU, even a modest one, as running on CPU can take a long time.<br />
+			In the output obtained, right at the beginning, we see the structure of the model, which is a network with a series of Conv2D and MaxPooling2D layers
+			followed by a Dense layer, then a Flatten, then a Dropout (to avoid overfitting) and finally a Dense; has with a total of 1658565 trainable weights.<br />
+			Here is the structure of the network:<br />
+			<br />
+			<pre><code class="shell">Model: "cnn_model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 180, 180, 3)]     0         
+_________________________________________________________________
+conv2d (Conv2D)              (None, 178, 178, 32)      896       
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 89, 89, 32)        0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 87, 87, 32)        9248      
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 43, 43, 32)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 41, 41, 32)        9248      
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 20, 20, 32)        0         
+_________________________________________________________________
+flatten (Flatten)            (None, 12800)             0         
+_________________________________________________________________
+dense (Dense)                (None, 128)               1638528   
+_________________________________________________________________
+dropout (Dropout)            (None, 128)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 5)                 645       
+=================================================================
+Total params: 1,658,565
+Trainable params: 1,658,565
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+			This is followed by training the original model which consists of 15 epochs with batch size of 100 elements,
+			with optimizer <code>Adams</code> and <code>SparseCategoricalCrossentropy(from_logits=True)</code> as loss function.
+			<b>Note</b>: The error value shown in the output of the program however is not the value of the loss function obtained by comparing the test dataset with the prediction,
+			as it was for examples #1 and #2, but is the number of correctly classified images divided by the total number of images in the test dataset.<br/>
+			The properties of this model (which we call the original model because it is not pruned)
+			are visible in the output of the program:<br />
+			<br/>
+			<pre><code class="shell">Model: original (unpruned)
+  Total number of weights: 1658565
+  Total number of non-zero weights: 1658565
+  Total number of zero weights: 0
+  Unzipped h5 size: 6665816 bytes
+  Zipped h5 size: 6151486 bytes (compression factor: 7.72%)
+  Unzipped tflite size: 1669728 bytes
+  Zipped tflite size: 1358843 bytes (compression factor: 18.62%)
+  Error (loss) value: 3.950954E-01</code></pre>
+			from which we see that the calculated error on the classification on the test dataset is $3.950954 \cdot 10^{-1}$, no weight equal to zero as expected
+			because that model has not been pruned, the compression factor on the .h5 file is $7.72 \%$
+			while that on the .tflite file is $18.62 \%$.<br />
+			<br/>
+			Then follows the execution of the search grid that performs 11 attempts of pruning application, 6 with <code>PolynomialDecay</code> variously initialized
+			and 5 with <code>ConstantSparsity</code> variously initialized. As a sample, we show the result of one of the 11 attempts, precisely <em>poly decay 40/50</em>.
+			(however the results of all attempts are available in the standard output):<br />
+			<br/>
+			<pre><code class="shell">Model: poly decay 40/50
+  Total number of weights: 1658565
+  Total number of non-zero weights: 829624
+  Total number of zero weights: 828941
+  Unzipped h5 size: 6665816 bytes
+  Zipped h5 size: 3859572 bytes (compression factor: 42.10%)
+  Unzipped tflite size: 1669728 bytes
+  Zipped tflite size: 978984 bytes (compression factor: 41.37%)
+  Error (loss) value: 4.087193E-01</code></pre>
+			from which we can see that the error calculated on the test dataset is still close to that of the original model ($4.087193 \cdot 10^{-1}$) even if a bit higher as expected
+			because the pruning reduces the quality of the model; the weights equal to zero are 828941 on 1658565 (so almost half), the compression factor on the .h5 file is $42.10 \%$
+			while that on the .tflite file is $41.37 \%$.<br />
+			<br/>
+			When all attempts are finished, the example script shows the recap of all attempts; the first element of the recap is relative to the original model.<br />
+			<br/>
+			<pre><code class="shell">*** Final recap ***
+Attempt name              Size h5 (Comp. %)     Error (loss)
+original (unpruned)       6151486 (  7.72%)     3.950954e-01
+poly decay 10/50          3781226 ( 43.27%)     4.223433e-01
+poly decay 20/50          3786548 ( 43.19%)     4.168937e-01
+poly decay 30/60          3238918 ( 51.41%)     4.523161e-01
+poly decay 30/70          2602091 ( 60.96%)     4.441417e-01
+poly decay 40/50          3859572 ( 42.10%)     4.087193e-01
+poly decay 10/90          1286371 ( 80.70%)     4.741144e-01
+const sparsity 0.1        5891419 ( 11.62%)     4.604905e-01
+const sparsity 0.4        4400747 ( 33.98%)     4.386921e-01
+const sparsity 0.5        3830963 ( 42.53%)     4.414169e-01
+const sparsity 0.6        3246370 ( 51.30%)     4.441417e-01
+const sparsity 0.9        1285383 ( 80.72%)     4.659401e-01</code></pre>
+			from which it can be deduced that in principle, as the compression factor increases, the error calculated on the test dataset increases
+			and therefore the quality of the classification decreases.<br />
+			<br/>
+			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the example a few times.
+		</p>
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/nn-optimization/tree/main/pruning/demos/tensorflow/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/pruning-of-neural-networks-with-tensorflow.html">Pruning of neural networks with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/differential-equations-and-neural-networks.html">Differential Equations and Neural Networks</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
