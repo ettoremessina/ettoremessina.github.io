@@ -9,397 +9,407 @@
 
 <url>
   <loc>https://computationalmindset.com/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/info.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/quantum-computing/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/differential-equations-and-neural-networks.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/quantum-computing/not-cnot-operators.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <loc>https://computationalmindset.com/en/neural-networks/pruning-of-neural-networks-with-tensorflow.html</loc>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/quantum-computing/random-number-generation.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/quantum-computing/hadamard-gate-cascade.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://computationalmindset.com/en/machine-learning/fitting-with-configurable-xgboost.html</loc>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/fitting-with-configurable-svr.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/polynomial-regression-with-accord-net.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/smo-regression-with-puk-kernel-in-weka.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/integral-calculus-in-python.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/datasets/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/datasets/functions-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/datasets/time-series-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/datasets/synthetic-words-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/info.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/computazione-quantistica/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/equazioni-differenziali-e-reti-neurali.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/computazione-quantistica/operatori-not-cnot.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
-  <loc>https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <loc>https://computationalmindset.com/it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html</loc>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/computazione-quantistica/porte-hadamard-in-cascata.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html</loc>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/regressione-polinomiale-con-accord-net.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/calcolo-integrale-in-python.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/datasets/</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/datasets/functions-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/datasets/time-series-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/datasets/synthetic-words-dataset.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-python-with-tensorflowdiffeq.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/experiments-with-neural-odes-in-julia.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/ordinary-differential-equation-solvers-in-julia.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/machine-learning/common-tools-for-function-fitting.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/one-variable-real-function-fitting-with-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/one-variable-real-function-fitting-with-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/parametric-curve-on-plane-fitting-with-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/parametric-curve-on-plane-fitting-with-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/parametric-curve-in-space-fitting-with-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/parametric-curve-in-space-fitting-with-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/two-variables-real-function-fitting-with-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/en/neural-networks/two-variables-real-function-fitting-with-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-python-con-tensorflowdiffeq.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/esperimenti-con-neural-odes-in-julia.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/risolutori-di-equazioni-differenziali-ordinarie-in-julia.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-funzione-reale-di-una-variabile-con-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-curva-sul-piano-con-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-curva-nello-spazio-con-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-tensorflow.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://computationalmindset.com/it/reti-neurali/approssimazione-di-una-funzione-reale-di-due-variabili-con-pytorch.html</loc>
-  <lastmod>2021-08-29T20:47:29+00:00</lastmod>
+  <lastmod>2021-11-01T17:40:39+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 
