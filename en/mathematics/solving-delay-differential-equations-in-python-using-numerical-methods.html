@@ -201,9 +201,12 @@ dnldnl
                 <li>$y_1$ and $y_2$ are the unknown functions in the case of systems of two equations.</li>
                 <li>The instant $t=0$ is assumed as initial time, so in the following examples it will always be $t_0=0$.</li>
 				<li>
-					$ihf$ stands for the initial historical function, i.e., the function that gives the values of the unknown function $y$ 
+					$\phi$ stands for the initial historical function, i.e., the function that gives the values of the unknown function $y$ 
 					for values of $t \leq t_0$.<br />
-				</li>				
+				</li>
+				<li>
+					$\tau$ denotes the delay function, it is intended as a function of $t$ and $y$, i.e. $\tau=f(t, y(t))$.<br />
+				</li>                
                 <li>$y'$ is the first derivative of $x$ with respect to $t$.</li>
                 <li>$y''$ is the second derivative of $x$ with respect to $t$.</li>
             </ul>
@@ -215,10 +218,10 @@ dnldnl
 			and are of the form: $y(t_0)=y_0$, $y'(t_0)=y'_0$, and so on
 			(for a complete list of other conditions to guarantee the existence and uniqueness of the solution see the Picard-Lindel&ouml;f theorem).<br />
 			For DDEs, on the other hand, it is not enough to give a set of initial values for the function and its derivatives at $t_0$, but one must give a set of functions to provide
-			the historical values for $t_0 - max(delay) \leq t \leq t_0$.<br />
-			How many and which historical functions to give to get a unique solution depends on the order of the equation: for a first-order equation you only need to give one $ihf$ to give the historical values of $y$.
-			For a second-order equation we must give an $ihf$ to give the historical values of $y$ and another $ihf$ to give the historical values of $y'$.
-			For a system of first-order equations, one must give two $ihf$ to provide the historical values of $y_1$ and $y_2$. And so on.
+			the historical values for $t_0 - max(\tau) \leq t \leq t_0$.<br />
+			How many and which historical functions to give to get a unique solution depends on the order of the equation: for a first-order equation you only need to give one $\phi$ to give the historical values of $y$.
+			For a second-order equation we must give an $\phi$ to give the historical values of $y$ and another $\phi$ to give the historical values of $y'$.
+			For a system of first-order equations, one must give two $\phi$ to provide the historical values of $y_1$ and $y_2$. And so on.
         </p>
 
 		<h2>Technical notes</h2>
@@ -254,9 +257,9 @@ dnldnl
             $$ y'(t)=-y(t-1) $$
 			where the delay is $1 s$; the example compares the solutions of three different cases using three different constant history functions:
 			<ul>
-				<li>Case #1: $ihf(t)=-1$</li>
-				<li>Case #2: $ihf(t)=0$</li>
-				<li>Cas3 #3: $ihf(t)=1$</li>
+				<li>Case #1: $\phi(t)=-1$</li>
+				<li>Case #2: $\phi(t)=0$</li>
+				<li>Cas3 #3: $\phi(t)=1$</li>
 			</ul>
         </p>
 
@@ -361,10 +364,10 @@ plt.show()</code></pre>
 			where the delay is $2 s$; the example compares the solutions of four different cases using two different non constant history functions
 			and two different intervals of $t$:
 			<ul>
-				<li>Case #1: $ihf(t)=e^{-t} - 1, t \in [0, 4]$</li>
-				<li>Case #2: $ihf(t)=e^{t} - 1, t \in [0, 4]$</li>
-				<li>Case #3: $ihf(t)=e^{-t} - 1, t \in [0, 60]$</li>
-				<li>Case #4: $ihf(t)=e^{t} - 1, t \in [0, 60]$</li>
+				<li>Case #1: $\phi(t)=e^{-t} - 1, t \in [0, 4]$</li>
+				<li>Case #2: $\phi(t)=e^{t} - 1, t \in [0, 4]$</li>
+				<li>Case #3: $\phi(t)=e^{-t} - 1, t \in [0, 60]$</li>
+				<li>Case #4: $\phi(t)=e^{t} - 1, t \in [0, 60]$</li>
 			</ul>
         </p>
 
@@ -486,8 +489,8 @@ plt.show()</code></pre>
             $$ y'(t)=y(t-delay(y, t))$$
 			where the delay is not constant and is given by the function $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$; the example compares the solutions of two different cases using two different constant history functions:
 			<ul>
-				<li>Case #1: $ihf(t)=-1$</li>
-				<li>Case #2: $ihf(t)=1$</li>
+				<li>Case #1: $\phi(t)=-1$</li>
+				<li>Case #2: $\phi(t)=1$</li>
 			</ul>
         </p>
 
@@ -582,7 +585,7 @@ plt.show()</code></pre>
             Let the following DDE be given:
             $$ y'(t)=y(t-delay(y, t))$$
 			where the delay is not constant and is given by the function $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$
-			and the initial historical function is non-constant and is $ifh(t)=e^t$.
+			and the initial historical function is non-constant and is $\phi(t)=e^t$.
         </p>
 
         <h3>ddeint</h3>
@@ -665,7 +668,7 @@ plt.show()</code></pre>
             Let the following DDE be given:
             $$ y'(t)=-y(t - 1) + 0.3 y(t - 2)$$
 			where the delays are two and are both constants equal to $1 s$ and $2 s$ respectively;
-			The initial historical function is also constant and is $ifh(t)=1$.
+			The initial historical function is also constant and is $\phi(t)=1$.
         </p>
 
         <h3>ddeint</h3>

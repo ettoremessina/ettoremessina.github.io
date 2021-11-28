@@ -199,9 +199,12 @@ dnldnl
                 <li>$y_1$ e $y_2$ sono le funzioni incognite nel caso dei sistemi di due equazioni.</li>
                 <li>L&apos;istante $t=0$ &egrave; assunto come tempo iniziale, quindi negli esempi successivi sar&agrave; sempre $t_0=0$.</li>
 				<li>
-					L&apos;abbreviazione $ihf$ indica la funzione storica iniziale, ovverosia la funzione che fornisce i valori della funzione incognita $y$ 
+					$\phi$ indica la funzione storica iniziale, ovverosia la funzione che fornisce i valori della funzione incognita $y$ 
 					per valori di $t \leq t_0$.<br />
-				</li>				
+				</li>
+				<li>
+					$\tau$ indica la funzione ritardo, &egrave; da intendersi come funzione di $t$ e di $y$, ovverosia $\tau=f(t, y(t))$.<br />
+				</li>                
                 <li>$y'$ &egrave; la derivata prima di $y$ rispetto a $t$.</li>
                 <li>$y''$ &egrave; la derivata seconda di $y$ rispetto a $t$.</li>
             </ul>
@@ -213,10 +216,10 @@ dnldnl
 			e sono della forma: $y(t_0)=y_0$, $y'(t_0)=y'_0$, e cos&igrave; via
 			(per un elenco completo delle altre condizioni per garantire l&apos;esistenza e l&apos;unicit&agrave; della soluzione si veda il teorema di Picard-Lindel&ouml;f).<br />
 			Per le DDE invece non basta dare un insieme di valori iniziali per la funzione e le sue derivate in $t_0$, ma bisogna dare un insieme di funzioni per fornire
-			i valori storici per $t_0 - max(ritardo) \leq t \leq t_0$.<br />
-			Quanti e quali funzioni storiche dare per avere una soluzione unica dipende dall&apos;ordine dell&apos;equazione: per una equazione del primo ordine bisogna dare una sola $ihf$ per fornire i valori storici di $y$.
-			Per una equazione del secondo ordine bisogna dare una $ihf$ per fornire i valori storici di $y$ e un&apos;altra $ihf$ per fornire i valori storici di $y'$.
-			Per un sistema di equazioni del primo ordine bisogna dare due $ihf$ per fornire i valori storici di $y_1$ e $y_2$. E cos&igrave; via.
+			i valori storici per $t_0 - max(\tau) \leq t \leq t_0$.<br />
+			Quanti e quali funzioni storiche dare per avere una soluzione unica dipende dall&apos;ordine dell&apos;equazione: per una equazione del primo ordine bisogna dare una sola $\phi$ per fornire i valori storici di $y$.
+			Per una equazione del secondo ordine bisogna dare una $\phi$ per fornire i valori storici di $y$ e un&apos;altra $\phi$ per fornire i valori storici di $y'$.
+			Per un sistema di equazioni del primo ordine bisogna dare due $\phi$ per fornire i valori storici di $y_1$ e $y_2$. E cos&igrave; via.
         </p>
 
 		<h2>Note tecniche</h2>
@@ -252,9 +255,9 @@ dnldnl
             $$ y'(t)=-y(t-1) $$
 			ove il ritardo &egrave; di $1 s$; l&apos;esempio confronta le soluzioni di tre casi diversi usando tre differenti funzioni storiche costanti:
 			<ul>
-				<li>Caso #1: $ihf(t)=-1$</li>
-				<li>Caso #2: $ihf(t)=0$</li>
-				<li>Caso #3: $ihf(t)=1$</li>
+				<li>Caso #1: $\phi(t)=-1$</li>
+				<li>Caso #2: $\phi(t)=0$</li>
+				<li>Caso #3: $\phi(t)=1$</li>
 			</ul>
         </p>
 
@@ -359,10 +362,10 @@ plt.show()</code></pre>
 			ove il ritardo &egrave; di $2 s$; l&apos;esempio confronta le soluzioni di quattro casi diversi usando due differenti funzioni storiche (non costanti)
 			e due diversi intervalli di $t$:
 			<ul>
-				<li>Caso #1: $ihf(t)=e^{-t} - 1, t \in [0, 4]$</li>
-				<li>Caso #2: $ihf(t)=e^{t} - 1, t \in [0, 4]$</li>
-				<li>Caso #3: $ihf(t)=e^{-t} - 1, t \in [0, 60]$</li>
-				<li>Caso #4: $ihf(t)=e^{t} - 1, t \in [0, 60]$</li>
+				<li>Caso #1: $\phi(t)=e^{-t} - 1, t \in [0, 4]$</li>
+				<li>Caso #2: $\phi(t)=e^{t} - 1, t \in [0, 4]$</li>
+				<li>Caso #3: $\phi(t)=e^{-t} - 1, t \in [0, 60]$</li>
+				<li>Caso #4: $\phi(t)=e^{t} - 1, t \in [0, 60]$</li>
 			</ul>
         </p>
 
@@ -484,8 +487,8 @@ plt.show()</code></pre>
             $$ y'(t)=y(t-delay(y, t))$$
 			ove il ritardo non &egrave; costante ed &egrave; dato dalla funzione $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$; l&apos;esempio confronta le soluzioni di due casi diversi usando due differenti funzioni storiche costanti:
 			<ul>
-				<li>Caso #1: $ihf(t)=-1$</li>
-				<li>Caso #2: $ihf(t)=1$</li>
+				<li>Caso #1: $\phi(t)=-1$</li>
+				<li>Caso #2: $\phi(t)=1$</li>
 			</ul>
         </p>
 
@@ -580,7 +583,7 @@ plt.show()</code></pre>
             Sia data la seguente DDE:
             $$ y'(t)=y(t-delay(y, t))$$
 			ove il ritardo non &egrave; costante ed &egrave; dato dalla funzione $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$
-			e la funzione storica iniziale non &egrave; constante ed &egrave; $ifh(t)=e^t$.
+			e la funzione storica iniziale non &egrave; constante ed &egrave; $\phi(t)=e^t$.
         </p>
 
         <h3>ddeint</h3>
@@ -663,7 +666,7 @@ plt.show()</code></pre>
             Sia data la seguente DDE:
             $$ y'(t)=-y(t - 1) + 0.3 y(t - 2)$$
 			ove i ritardi sono due e sono entrambi costanti pari rispettivamente a $1 s$ e $2 s$;
-			anche la funzione storica iniziale &egrave; constante ed &egrave; $ifh(t)=1$.
+			anche la funzione storica iniziale &egrave; constante ed &egrave; $\phi(t)=1$.
         </p>
 
         <h3>ddeint</h3>
