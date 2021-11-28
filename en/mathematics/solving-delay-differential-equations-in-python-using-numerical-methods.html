@@ -176,7 +176,7 @@ dnldnl
 			This post instead deals with numerical solving techniques in Python using two different libraries: <a href="https://github.com/Zulko/ddeint" target="_blank"><em>ddeint</em></a>
 			and <a href="https://github.com/neurophysik/jitcdde" tatget="_blank"><em>jitcdde</em></a>;
 			<em>ddeint</em> is based on Scipy while <em>jitcdde</em> produces C code that is compiled and executed.
-			This post doesn't go into the implementation of these two libraries, but focuses on usage, proceeding by examples
+			This post does not go into the implementation of these two libraries, but focuses on usage, proceeding by examples
 			with increasing complexity.<br/>
 			<br/>
             All of the various code examples described in this post require Python version 3 and the NumPy and MatPlotLib libraries;
@@ -248,7 +248,7 @@ dnldnl
 			See also <a href="https://pypi.org/project/jitcdde/" target="_blank">https://pypi.org/project/jitcdde/</a> for more details.
 		</p>
 
-		<h2>Example #1: First-order DDE with constant delay and constant initial history function</h2>
+		<h2>Example #1: First-order DDE with one constant delay and a constant initial history function</h2>
 		<p>
             Let the following DDE be given:
             $$ y'(t)=-y(t-1) $$
@@ -354,7 +354,7 @@ plt.show()</code></pre>
         </br >
         </br >
 
-		<h2>Example #2: First-order DDE with constant delay and non constant initial history function</h2>
+		<h2>Example #2: First-order DDE with one constant delay and a non constant initial history function</h2>
 		<p>
             Let the following DDE be given:
             $$ y'(t)=-y(t-2) $$
@@ -480,7 +480,7 @@ plt.show()</code></pre>
         </br >
         </br >
 
-		<h2>Example #3: First-order DDE with non constant delay and constant initial history function</h2>
+		<h2>Example #3: First-order DDE with one non constant delay and a constant initial history function</h2>
 		<p>
             Let the following DDE be given:
             $$ y'(t)=y(t-delay(y, t))$$
@@ -577,7 +577,7 @@ plt.show()</code></pre>
         </br >
         </br >
 
-		<h2>Example #4: First-order DDE with non constant delay and non constant initial history function</h2>
+		<h2>Example #4: First-order DDE with one non constant delay and a non constant initial history function</h2>
 		<p>
             Let the following DDE be given:
             $$ y'(t)=y(t-delay(y, t))$$
@@ -653,10 +653,271 @@ axs.plot(ts, ys, color='red', linewidth=1)
 axs.set_title('$ihf(t)=e^t$')
 
 plt.show()</code></pre>
-            Here is the link to the code on GitHub:  <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_onevariabdelay_variabihf.py">jitcdde/dde_1stord_eq_onevariabdelay_variabihf.py</a>.
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_onevariabdelay_variabihf.py">jitcdde/dde_1stord_eq_onevariabdelay_variabihf.py</a>.
         </p>
 		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_jitcdde_4.png" /></div>
 		<div class="photocaption" alt="Graph of the numerical solution of the DDE obtained by JiTCDDE">Graph of the numerical solution of the DDE obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #5: First-order DDE with two constant delays and a constant initial history function</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y'(t)=-y(t - 1) + 0.3 y(t - 2)$$
+			where the delays are two and are both constants equal to $1 s$ and $2 s$ respectively;
+			The initial historical function is also constant and is $ifh(t)=1$.
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def equation(Y, t):
+    return -Y(t - 1) + 0.3 * Y(t - 2)
+
+def initial_history_func(t):
+    return 1.
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-1) + 0.3\ y(t-2)$ solved by ddeint")
+
+ts = np.linspace(0, 10, 10000)
+
+ys = ddeint(equation, initial_history_func, ts)
+axs.plot(ts, ys, color='red', linewidth=1)
+axs.set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_eq_twoconstdelays_constihf.py">ddeint/dde_1stord_eq_twoconstdelays_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_ddeint_5.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the DDE obtained by ddeint">Graph of the numerical solution of the DDE obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+equation=[-y(0, t - 1) + 0.3 * y(0, t - 2)]
+dde = jitcdde(equation)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-1) + 0.3\ y(t-2)$ solved by jitcdde")
+
+ts = np.linspace(0, 10, 10000)
+
+dde.constant_past([1.])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs.plot(ts, ys, color='red', linewidth=1)
+axs.set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_twoconstdelays_constihf.py">jitcdde/dde_1stord_eq_twoconstdelays_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_jitcdde_5.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the DDE obtained by JiTCDDE">Graph of the numerical solution of the DDE obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #6: System of two first-order DDEs with one constant delay and two constant initial history functions</h2>
+		<p>
+            Let the following system of DDEs be given:
+            $$ \begin{equation}
+\begin{cases}
+    y_1'(t) = y_1(t) y_2(t-0.5)
+    \\
+    y_2'(t) = y_2(t) y_1(t-0.5)
+\end{cases}
+\end{equation} $$
+			where the delay is only one, constant and equal to $0.5 s$
+			and the initial historical functions are also constant; for what we said at the beginning of the post 
+			these must be two, in fact being the order of the system of first degree you need one for each unknown and they are:
+			$y_1(t)=1, y_2(t)=-1$.
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def equation(Y, t, d):
+    x,y = Y(t)
+    xd,yd = Y(t-d)
+    return [x * yd, y * xd]
+
+def initial_history_func(t):
+    return [1., -1.]
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$x'(t)=x(t) y(t-d); y'(t)=y(t) x(t-d)$ solved by ddeint")
+
+ts = np.linspace(0, 3, 2000)
+
+ys = ddeint(equation, initial_history_func, ts, fargs=(0.5,))
+axs.plot(ts, ys[:,0], color='red', linewidth=1)
+axs.plot(ts, ys[:,1], color='blue', linewidth=1)
+axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1; d=0.5$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_sys_oneconstdelay_constihf.py">ddeint/dde_1stord_sys_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_ddeint_6.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the system of DDEs obtained by ddeint">Graph of the numerical solution of the system of DDEs obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+import symengine
+from jitcdde import jitcdde, y, t
+
+d=symengine.symbols("d")
+equations=[
+	y(0, t) * y(1, t-d),
+	y(1, t) * y(0, t-d)]
+ddesys = jitcdde(equations, control_pars=[d], max_delay=100.)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$x'(t)=x(t) y(t-d); y'(t)=y(t) x(t-d)$ solved by jitcdde")
+
+ts = np.linspace(0, 3, 2000)
+
+ddesys.constant_past([1., -1.])
+params=[0.5]
+ddesys.set_parameters(*params)
+ys = []
+for t in ts:
+	ys.append(ddesys.integrate(t))
+ys=np.array(ys)
+axs.plot(ts, ys[:,0], color='red', linewidth=1)
+axs.plot(ts, ys[:,1], color='blue', linewidth=1)
+axs.set_title('$ihf_x(t)=1; ihf_y(t)=-1; d=0.5$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_sys_oneconstdelay_constihf.py">jitcdde/dde_1stord_sys_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_jitcdde_6.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the system of DDEs obtained by JiTCDDE">Graph of the numerical solution of the system of DDEs obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #7: Second-order DDE with one constant delay and two constant initial history functions</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y(t)'' = -y'(t) - 2y(t) - 0.5 y(t-1) $$
+			where the delay is only one, constant and equal to $1 s$.
+			Since the DDE is second order, in that the second derivative of the unknown function appears,
+			the historical functions must be two, one to give the values of the unknown $y(t)$ for $t <= 0$ and one 
+			and one to provide the value of the first derivative $y'(t)$ also for $t <= 0$.<br />
+			In this example they are the following two constant functions: $y(t)=1, y'(t)=0$.<br />
+			Due to the properties of the second-order equations, the given DDE is equivalent to the following system of first-order equations:
+			$$ \begin{equation}
+\begin{cases}
+    y_1'(t) = y_2(t)
+    \\
+    y_2'(t) = -y_1'(t) - 2y_1(t) - 0.5 y_1(t-1)
+\end{cases}
+\end{equation} $$
+			and so the implementation falls into the case of the previous example of systems of first-order equations.
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def equation(Y, t):
+    y,dydt = Y(t)
+    ydelay, dydt_delay = Y(t-1)
+    return [dydt, -dydt - 2 * y - 0.5 * ydelay]
+
+def initial_history_func(t):
+    return [1., 0.]
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y''(t)=-y'(t) - 2 y(t) - 0.5 y(t-1)$ solved by ddeint")
+
+ts = np.linspace(0, 16, 4000)
+
+ys = ddeint(equation, initial_history_func, ts)
+axs.plot(ts, ys[:,0], color='red', linewidth=1)
+#axs.plot(ts, ys[:,1], color='green', linewidth=1)
+axs.set_title('$ihf_y(t)=1; ihf_dy/dt(t)=0$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_2ndord_eq_oneconstdelay_constihf.py">ddeint/dde_2ndord_eq_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_ddeint_7.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the second-order DDE obtained by ddeint">Graph of the numerical solution of the second-order DDE obtained by  <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+equations=[
+    y(1, t),
+    -y(1, t) - 2 * y(0, t) - 0.5 * y(0, t-1)
+]
+ddesys = jitcdde(equations)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y''(t)=-y'(t) - 2 y(t) - 0.5 y(t-1)$ solved by jitcdde")
+
+ts = np.linspace(0, 16, 4000)
+
+ddesys.constant_past([1., 0.])
+ys = []
+for t in ts:
+	ys.append(ddesys.integrate(t))
+ys=np.array(ys)
+axs.plot(ts, ys[:,0], color='red', linewidth=1)
+#axs.plot(ts, ys[:,1], color='green', linewidth=1)
+axs.set_title('$ihf_y(t)=1; ihf_dy/dt(t)=0$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_2ndord_eq_oneconstdelay_constihf.py">jitcdde/dde_2ndord_eq_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/ma_solddepytnm_result_jitcdde_7.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the second-order DDE obtained by JiTCDDE">Graph of the numerical solution of the second-order DDE obtained by  <em>JiTCDDE</em>.</div>
         </br >
         </br >
 

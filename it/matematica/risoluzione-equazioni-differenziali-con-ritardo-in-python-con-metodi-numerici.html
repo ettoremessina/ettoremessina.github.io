@@ -175,7 +175,7 @@ dnldnl
 			e <a href="https://github.com/neurophysik/jitcdde" tatget="_blank"><em>JiTCDDE</em></a>;
 			<em>ddeint</em> &egrave; basata su Scipy mentre <em>JiTCDDE</em> produce codice C che viene compilato ed eseguito.
 			Questo post non entra nel merito dell&apos;implementazione di queste due librerie, ma si concentra sull&apos;usage procedendo per esempi
-			a complessità crescente.<br/>
+			a complessit&agrave; crescente.<br/>
 			<br/>
             Tutti i vari esempi di codice descritti in questo post richiedono la versione 3 di Python e le librerie NumPy e MatPlotLib;
             addizionalmente gli script basati su <em>ddeint</em> richiedono SciPy per quanto detto prima, mentre quelli basati su <em>JiTCDDE</em> richiedono SymPy.<br/>
@@ -825,13 +825,13 @@ plt.show()</code></pre>
         </br >
         </br >
 
-		<h2>Esempio #7: DDE del secondo ordine con un ritardo costante e funzione storica iniziale costante</h2>
+		<h2>Esempio #7: DDE del secondo ordine con un ritardo costante e due funzione storiche iniziali costante</h2>
 		<p>
             Sia data la seguente DDE:
             $$ y(t)'' = -y'(t) - 2y(t) - 0.5 y(t-1) $$
 			ove il ritardo &egrave; soltanto uno, costante e uguale a $1 s$.
 			Poich&eacute; la DDE &egrave; del secondo ordine, in quanto compare la derivata seconda della funzione incognita,
-			le funzioni storiche devono essere due, una per fornire i valori dell'incognita $y(t)$ per $t <= 0$ e una 
+			le funzioni storiche devono essere due, una per fornire i valori dell&apos;incognita $y(t)$ per $t <= 0$ e una 
 			e una per fornire il valore della derivata prima $y'(t)$ sempre per $t <= 0$.<br />
 			In questo esempio esse sono le seguenti due funzioni costanti: $y(t)=1, y'(t)=0$.<br />
 			Per le proprit&agrave; delle equazioni del secondo ordine, la DDE data equivale al seguente sistema di equazioni del primo ordine:
