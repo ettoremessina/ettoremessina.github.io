@@ -37,9 +37,9 @@
 		</script>
 
 
-		<title>A method to solve first-order time delayed differential equation using Lambert W function</title>
-		<meta name="description" content="Method of solving first-order time delayed linear differential equations using Lambert W function." >
-		<meta name="keywords" content="time delay system, time delay differential equations, linear differential equations, differential equations, dde, Lambert W function" >
+		<title>A method to solve first-order time delay differential equation using Lambert W function</title>
+		<meta name="description" content="Method of solving first-order time delay differential equations using Lambert W function." >
+		<meta name="keywords" content="time delay system, time delay differential equations, differential equations, dde, Lambert W function" >
 		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html" />
@@ -97,7 +97,7 @@
             "item":
             {
               "@id": "https://computationalmindset.com/en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html",
-              "name": "A method to solve first-order time delayed differential equation using Lambert W function"
+              "name": "A method to solve first-order time delay differential equation using Lambert W function"
             }
 		  }
 		
@@ -172,19 +172,24 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>A method to solve first-order time delayed differential equation using Lambert W function</h1>
+			<h1>A method to solve first-order time delay differential equation using Lambert W function</h1>
 		</header>
 		<p>
             This post was inspired by the paper <a href="https://www.sciencedirect.com/science/article/pii/S147466701534708X/pdf?md5=a311d2f1bb151c7996e17b8f5cba171e&pid=1-s2.0-S147466701534708X-main.pdf" target="_blank">The Lambert W Function Approach to Time Delay Systems and the LambertW_DDE Toolbox</a>
             and from a math lesson by Prof. Fausta D&apos;Acunzo from <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparation 2.0</a> about the Lambert W function.
-            The post shows how to solve a particular type of differential equation with delay (abbreviated DDE for <em>Delay Differential Equations</em>) with initial values be given using the Lambert W function; the post does not deal into the underlying mathematics
+            The post shows how to solve a particular type of delay differential equation (abbreviated DDE for <em>Delay Differential Equations</em>) with initial values be given using the Lambert W function; the post does not deal into the underlying mathematics
             for which we refer to the paper cited above and focuses instead on the implementation in Python 3.x with SciPy of the numerical solution of the <em>scalar case</em> analyzed on the paper itself.</br >
+            <br />
+            If you are instead interested in solving delay differential equations using numerical techniques, 
+            see the post on this site <a href="../../en/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods.html" target="_blank">Solving delay differential equations using numerical methods in Python</a>.<br />
+			<br/>
+			To get the code see the <a href="#downloadcode">Full code download</a> paragraph at the bottom of this post.<br/>
 		</p>
 
         <h2>The <em>&quot;DDE scalar case&quot;</em> problem</h2>
         <p>
             Time Delayed Systems (abbreviated TDS) are systems in which there is a significant time delay between the application of input to the system and the resulting output,
-            and this delay may be inherent or deliberately introduced. A TDS can be modeled with delayed differential equations.</ br>
+            and this delay may be inherent or deliberately introduced. A TDS can be modeled with delay differential equations.</ br>
             This section discusses the case of a scalar coefficient DDE; after formal definitions of the problem and the solution, which makes use of Lambert W function,
             it is shown the implementation of a Python program with SciPy that realizes the solution proposed by the paper.
             Finally a verification phase shows the correctness of the solution within the acceptable approximation limits.
@@ -435,7 +440,6 @@ Dynamics of Continuous, Discrete and Impulsive Systems (Series A) (in press).</c
 2012, "The Lambert W Function Approach to Time Delay Systems and the LambertW_DDE Toolbox,"
 IFAC Workshop on Time Delay Systems, Boston, MA.</code></pre>
         </p>
-        </p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
@@ -498,11 +502,12 @@ IFAC Workshop on Time Delay Systems, Boston, MA.</code></pre>
 											<span class="opener">Mathematics</span>
 											<ul>
 												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods.html">Solving delay differential equations using numerical methods in Python</a></li>
 												<li><a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a></li>
 												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
 												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
 												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
-												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delayed differential equation using Lambert W function</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delay differential equation using Lambert W function</a></li>
 											</ul>
 										</li>
 										<li>

@@ -1,0 +1,801 @@
+
+
+dnldnl
+dnldnl
+dnldnl
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Solving delay differential equations using numerical methods in Python</title>
+		<meta name="description" content="Method of solving time delay differential equations in Python using numeric methods." >
+		<meta name="keywords" content="time delay system, time delay differential equations, differential equations, dde, ddeint, jitcdde" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/isolving-delay-differential-equations-in-python-using-numerical-methods.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/isolving-delay-differential-equations-in-python-using-numerical-methods.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/risoluzione-equazioni-differenziali-con-ritardo-in-python-con-metodi-numerici.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/isolving-delay-differential-equations-in-python-using-numerical-methods.html",
+              "name": "Solving delay differential equations using numerical methods in Python"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Solving delay differential equations using numerical methods in Python</h1>
+		</header>
+		<p>
+			The delay differential equations are used in the mathematical modeling of systems where the reactions to the stresses 
+			occur not immediately but after a certain non-negligible period of time.
+			Delay Differential equations are a wide and complicated field of mathematics still under research;
+			the analytical resolution of such equations is, when feasible, certainly not trivial: see the post on this site <a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html" target="_blank">A method to solve first-order time delay differential equation using Lambert W function</a>
+			for a discussion of the analytical solution of a particular class of such equations.<br />
+			This post instead deals with numerical solving techniques in Python using two different libraries: <a href="https://github.com/Zulko/ddeint" target="_blank"><em>ddeint</em></a>
+			and <a href="https://github.com/neurophysik/jitcdde" tatget="_blank"><em>jitcdde</em></a>;
+			<em>ddeint</em> is based on Scipy while <em>jitcdde</em> produces C code that is compiled and executed.
+			This post doesn't go into the implementation of these two libraries, but focuses on usage, proceeding by examples
+			with increasing complexity.<br/>
+			<br/>
+            All of the various code examples described in this post require Python version 3 and the NumPy and MatPlotLib libraries;
+            additionally, <em>ddeint</em> based scripts require SciPy for the above, while <em>jitcdde</em> based scripts require SymPy.<br/>
+			<br/>
+			To get the code see the <a href="#downloadcode">Full code download</a> paragraph at the bottom of this post.<br/>
+        </p>
+
+		<h2>Conventions</h2>
+		<p>
+            In this post the conventions used are as follows:
+            <ul>
+				<li>DDE stands for Delay Differential Equation.</li> 
+				<li>ODE stands for Ordinary Differential Equation.</li> 
+				<li>IVP stands for Initial Value Problem, also called Cauchy problem.</li>
+                <li>$t$ is the independent variable, it indicates the time and is expressed in seconds.</li>
+                <li>
+					$y$ is the unknown function and is intended as a function of t, i.e. $y=y(t)$,
+					but the use of this compact notation, in addition to having a greater readability at a mathematical level
+	 				makes it easier to "translate" the equation into code.
+				</li>
+                <li>$y_1$ and $y_2$ are the unknown functions in the case of systems of two equations.</li>
+                <li>The instant $t=0$ is assumed as initial time, so in the following examples it will always be $t_0=0$.</li>
+				<li>
+					$ihf$ stands for the initial historical function, i.e., the function that gives the values of the unknown function $y$ 
+					for values of $t \leq t_0$.<br />
+				</li>				
+                <li>$y'$ is the first derivative of $x$ with respect to $t$.</li>
+                <li>$y''$ is the second derivative of $x$ with respect to $t$.</li>
+            </ul>
+        </p>
+
+		<h2>Observations on the initial conditions of DDEs</h2>
+		<p>
+			In the case of an ODE in an IVP in addition to the equation are given many initial conditions depending on the order of the equation
+			and are of the form: $y(t_0)=y_0$, $y'(t_0)=y'_0$, and so on
+			(for a complete list of other conditions to guarantee the existence and uniqueness of the solution see the Picard-Lindel&ouml;f theorem).<br />
+			For DDEs, on the other hand, it is not enough to give a set of initial values for the function and its derivatives at $t_0$, but one must give a set of functions to provide
+			the historical values for $t_0 - max(delay) \leq t \leq t_0$.<br />
+			How many and which historical functions to give to get a unique solution depends on the order of the equation: for a first-order equation you only need to give one $ihf$ to give the historical values of $y$.
+			For a second-order equation we must give an $ihf$ to give the historical values of $y$ and another $ihf$ to give the historical values of $y'$.
+			For a system of first-order equations, one must give two $ihf$ to provide the historical values of $y_1$ and $y_2$. And so on.
+        </p>
+
+		<h2>Technical notes</h2>
+		<p>
+			While, as mentioned above, this post does not go into detail about the implementation, it is important to provide a few technical notes
+			before proceeding with the examples.<br />
+		</p>
+
+        <h3>ddeint</h3>
+        <p>
+			<em>ddeint</em> is a Python library that contains a class of the same name, which is the heart of the implementation,
+			whose purpose is to override some functions of scipy.integrate.ode to allow the update of a pseudo-variable
+			(representing the unknown function) at each integration step;
+			the library has been developed by <a href="https://github.com/Zulko" target="_blank">Zulko</a>, the source is available at the address <a href="https://github.com/Zulko/ddeint" target="_blank">https://github.com/Zulko/ddeint</a>
+			and the library is installable with the following command:
+			<pre><code class="shell">$ pip install ddeint</code></pre>
+			See also <a href="https://pypi.org/project/ddeint/" target="_blank">https://pypi.org/project/ddeint/</a> for more details.
+		</p>
+
+        <h3>JiTCDDE</h3>
+        <p>
+			<em>JiTCDDE</em> stands for just-in-time compilation of DDEs; it takes an iterable of SymPy expressions, translates them into C code, compiles them on the fly
+			and invokes the compiled code from Python;
+			the library has been developed by <a href="https://github.com/neurophysik" target="_blank">Neurophysik</a>, the source is available at the address <a href="https://github.com/neurophysik/jitcdde" target="_blank">https://github.com/neurophysik/jitcddet</a>
+			and the library is installable with the following command:
+			<pre><code class="shell">$ pip install jitcdde</code></pre>
+			See also <a href="https://pypi.org/project/jitcdde/" target="_blank">https://pypi.org/project/jitcdde/</a> for more details.
+		</p>
+
+		<h2>Example #1: First-order DDE with constant delay and constant initial history function</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y'(t)=-y(t-1) $$
+			where the delay is $1 s$; the example compares the solutions of three different cases using three different constant history functions:
+			<ul>
+				<li>Case #1: $ihf(t)=-1$</li>
+				<li>Case #2: $ihf(t)=0$</li>
+				<li>Cas3 #3: $ihf(t)=1$</li>
+			</ul>
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def equation(Y, t):
+    return -Y(t - 1)
+
+def initial_history_func_m1(t):
+    return -1.
+
+def initial_history_func_0(t):
+    return 0.
+
+def initial_history_func_p1(t):
+    return 1.
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(3, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-1)$ solved by ddeint")
+
+ts = np.linspace(0, 20, 2000)
+
+ys = ddeint(equation, initial_history_func_m1, ts)
+axs[0].plot(ts, ys, color='red', linewidth=1)
+axs[0].set_title('$ihf(t)=-1$')
+
+ys = ddeint(equation, initial_history_func_0, ts)
+axs[1].plot(ts, ys, color='red', linewidth=1)
+axs[1].set_title('$ihf(t)=0$')
+
+ys = ddeint(equation, initial_history_func_p1, ts)
+axs[2].plot(ts, ys, color='red', linewidth=1)
+axs[2].set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_eq_oneconstdelay_constihf.py">dde_1stord_eq_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_ddeint_1.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the three cases obtained by ddeint">Graph of the numerical solutions of the DDE in the three cases obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+equation = [-y(0, t-1.)]
+dde = jitcdde(equation)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(3, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-1)$ solved by jitcdde")
+
+ts = np.linspace(0, 20, 2000)
+
+dde.constant_past([-1.])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[0].plot(ts, ys, color='red', linewidth=1)
+axs[0].set_title('$ihf(t)=-1$')
+
+dde.constant_past([0])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[1].plot(ts, ys, color='red', linewidth=1)
+axs[1].set_title('$ihf(t)=0$')
+
+dde.constant_past([1.])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[2].plot(ts, ys, color='red', linewidth=1)
+axs[2].set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub:  <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_oneconstdelay_constihf.py">dde_1stord_eq_oneconstdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_jitcdde_1.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the three cases obtained by JiTCDDE">Graph of the numerical solutions of the DDE in the three cases obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #2: First-order DDE with constant delay and non constant initial history function</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y'(t)=-y(t-2) $$
+			where the delay is $2 s$; the example compares the solutions of four different cases using two different non constant history functions
+			and two different intervals of $t$:
+			<ul>
+				<li>Case #1: $ihf(t)=e^{-t} - 1, t \in [0, 4]$</li>
+				<li>Case #2: $ihf(t)=e^{t} - 1, t \in [0, 4]$</li>
+				<li>Case #3: $ihf(t)=e^{-t} - 1, t \in [0, 60]$</li>
+				<li>Case #4: $ihf(t)=e^{t} - 1, t \in [0, 60]$</li>
+			</ul>
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def equation(Y, t):
+    return -Y(t - 2)
+
+def initial_history_func_exp_mt(t):
+    return np.exp(-t) - 1
+
+def initial_history_func_exp_pt(t):
+    return np.exp(t) - 1
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(2, 2)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-2)$ solved by ddeint")
+
+ts = np.linspace(0, 4, 2000)
+
+ys = ddeint(equation, initial_history_func_exp_mt, ts)
+axs[0, 0].plot(ts, ys, color='red', linewidth=1)
+axs[0, 0].set_title('$ihf(t)=e^-t - 1, t \in [0, 4]$')
+
+ys = ddeint(equation, initial_history_func_exp_pt, ts)
+axs[0, 1].plot(ts, ys, color='red', linewidth=1)
+axs[0, 1].set_title('$ihf(t)=e^t - 1, t \in [0, 4]$')
+
+ts = np.linspace(0, 60, 2000)
+
+ys = ddeint(equation, initial_history_func_exp_mt, ts)
+axs[1, 0].plot(ts, ys, color='red', linewidth=1)
+axs[1, 0].set_title('$ihf(t)=e^-t - 1, t \in [0, 60]$')
+
+ys = ddeint(equation, initial_history_func_exp_pt, ts)
+axs[1, 1].plot(ts, ys, color='red', linewidth=1)
+axs[1, 1].set_title('$ihf(t)=e^t - 1, t \in [0, 60]$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_eq_oneconstdelay_variabihf.py">dde_1stord_eq_oneconstdelay_variabihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_ddeint_2.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the four cases obtained by ddeint">Graph of the numerical solutions of the DDE in the four cases obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+equation= [-y(0, t-2.)]
+dde = jitcdde(equation)
+
+def initial_history_func_exp_mt(t):
+    return [np.exp(-t) - 1]
+
+def initial_history_func_exp_pt(t):
+    return [np.exp(t) - 1]
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(2, 2)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=-y(t-2)$ solved by jitcdde")
+
+ts = np.linspace(0, 4, 2000)
+
+dde.past_from_function(initial_history_func_exp_mt)
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[0, 0].plot(ts, ys, color='red', linewidth=1)
+axs[0, 0].set_title('$ihf(t)=e^-t - 1, t \in [0, 4]$')
+
+dde.past_from_function(initial_history_func_exp_pt)
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[0, 1].plot(ts, ys, color='red', linewidth=1)
+axs[0, 1].set_title('$ihf(t)=e^t - 1, t \in [0, 4]$')
+
+ts = np.linspace(0, 60, 2000)
+
+dde.past_from_function(initial_history_func_exp_mt)
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[1, 0].plot(ts, ys, color='red', linewidth=1)
+axs[1, 0].set_title('$ihf(t)=e^-t - 1, t \in [0, 60]$')
+
+dde.past_from_function(initial_history_func_exp_mt)
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[1, 1].plot(ts, ys, color='red', linewidth=1)
+axs[1, 1].set_title('$ihf(t)=e^t - 1, t \in [0, 60]$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub:  <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_oneconstdelay_variabihf.py">dde_1stord_eq_oneconstdelay_variabihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_jitcdde_2.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the four cases obtained by JiTCDDE">Graph of the numerical solutions of the DDE in the four cases obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #3: First-order DDE with non constant delay and constant initial history function</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y'(t)=y(t-delay(y, t))$$
+			where the delay is not constant and is given by the function $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$; the example compares the solutions of two different cases using two different constant history functions:
+			<ul>
+				<li>Case #1: $ihf(t)=-1$</li>
+				<li>Case #2: $ihf(t)=1$</li>
+			</ul>
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def delay(Y, t):
+    return np.abs(0.1 * t * Y(0.1 * t))
+
+def equation(Y, t):
+    return Y(t - delay(Y, t))
+
+def initial_history_func_m1(t):
+    return -1.
+
+def initial_history_func_p1(t):
+    return 1.
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(2, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=y(t-delay(y, t))$ solved by ddeint")
+
+ts = np.linspace(0, 50, 10000)
+
+ys = ddeint(equation, initial_history_func_m1, ts)
+axs[0].plot(ts, ys, color='red', linewidth=1)
+axs[0].set_title('$ihf(t)=-1$')
+
+ys = ddeint(equation, initial_history_func_p1, ts)
+axs[1].plot(ts, ys, color='red', linewidth=1)
+axs[1].set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_eq_onevariabdelay_constihf.py">dde_1stord_eq_onevariabdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_ddeint_2.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the two cases obtained by ddeint">Graph of the numerical solutions of the DDE in the two cases obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+def delay(y, t):
+    return np.abs(0.1 * t * y(0, 0.1 * t))
+
+equation = [y(0, t - delay(y, t))]
+dde = jitcdde(equation, max_delay=1000)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(2, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=y(t-delay(y, t))$ solved by jitcdde")
+
+ts = np.linspace(0, 50, 10000)
+
+dde.constant_past([-1.])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[0].plot(ts, ys, color='red', linewidth=1)
+axs[0].set_title('$ihf(t)=-1$')
+
+dde.constant_past([1.])
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs[1].plot(ts, ys, color='red', linewidth=1)
+axs[1].set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub:  <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_onevariabdelay_constihf.py">dde_1stord_eq_onevariabdelay_constihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_jitcdde_3.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solutions of the DDE in the two cases obtained by JiTCDDE">Graph of the numerical solutions of the DDE in the two cases obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2>Example #4: First-order DDE with non constant delay and non constant initial history function</h2>
+		<p>
+            Let the following DDE be given:
+            $$ y'(t)=y(t-delay(y, t))$$
+			where the delay is not constant and is given by the function $delay(y, t)=|\frac{1}{10} t y(\frac{1}{10} t)|$
+			and the initial historical function is non-constant and is $ifh(t)=e^t$.
+        </p>
+
+        <h3>ddeint</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>ddeint</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from ddeint import ddeint
+
+def delay(Y, t):
+    return np.abs(0.1 * t * Y(0.1 * t))
+
+def equation(Y, t):
+    return Y(t - delay(Y, t))
+
+def initial_history_func_exp_pt(t):
+    return np.exp(t)
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=y(t-delay(y, t))$ solved by ddeint")
+
+ts = np.linspace(0, 30, 10000)
+
+ys = ddeint(equation, initial_history_func_exp_pt, ts)
+axs.plot(ts, ys, color='red', linewidth=1)
+axs.set_title('$ihf(t)=1$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/ddeint/dde_1stord_eq_onevariabdelay_variabihf.py">dde_1stord_eq_onevariabdelay_variabihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_ddeint_4.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the DDE obtained by ddeint">Graph of the numerical solution of the DDE obtained by <em>ddeint</em>.</div>
+        </br >
+        </br >
+
+        <h3>JiTCDDE</h3>
+        <p>
+            Below is an example of Python code that numerically solves the DDE using <em>JiTCDDE</em>:</br >
+            </br >
+            <pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from jitcdde import jitcdde, y, t
+
+def delay(y, t):
+    return np.abs(0.1 * t * y(0, 0.1 * t))
+
+equation = [y(0, t - delay(y, t))]
+dde = jitcdde(equation, max_delay=1000)
+
+def initial_history_func_exp_pt(t):
+    return [np.exp(t)]
+
+plt.rcParams['font.size'] = 8
+fig, axs = plt.subplots(1, 1)
+fig.tight_layout(rect=[0, 0, 1, 0.95], pad=3.0)
+fig.suptitle("$y'(t)=y(t-delay(y, t))$ solved by jitcdde")
+
+ts = np.linspace(0, 30, 10000)
+
+dde.past_from_function(initial_history_func_exp_pt)
+ys = []
+for t in ts:
+	ys.append(dde.integrate(t))
+axs.plot(ts, ys, color='red', linewidth=1)
+axs.set_title('$ihf(t)=e^t$')
+
+plt.show()</code></pre>
+            Here is the link to the code on GitHub:  <a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/DDEs/solver-demos/python/jitcdde/dde_1stord_eq_onevariabdelay_variabihf.py">dde_1stord_eq_onevariabdelay_variabihf.py</a>.
+        </p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods/nn_solddepytnm_result_jitcdde_4.png" /></div>
+		<div class="photocaption" alt="Graph of the numerical solution of the DDE obtained by JiTCDDE">Graph of the numerical solution of the DDE obtained by <em>JiTCDDE</em>.</div>
+        </br >
+        </br >
+
+		<h2 id="downloadcode">Download of the complete code</h2>
+		<p>
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/DDEs/solver-demos/python/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/pruning-of-neural-networks-with-tensorflow.html">Pruning of neural networks with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/differential-equations-and-neural-networks.html">Differential Equations and Neural Networks</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods.html">Solving delay differential equations using numerical methods in Python</a></li>
+												<li><a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delay differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
