@@ -238,6 +238,32 @@
 			and the library is installable with the following command:
 			<pre><code class="shell">$ pip install ddeint</code></pre>
 			See also <a href="https://pypi.org/project/ddeint/" target="_blank">https://pypi.org/project/ddeint/</a> for more details.
+            See <a href="https://jitcdde.readthedocs.io/en/latest/#short-integrations-and-textbook-examples" target="_blank">https://jitcdde.readthedocs.io/en/latest/#short-integrations-and-textbook-examples</a> for further details.
+		</p>
+
+        <h4>Syntactical notes</h4>
+        <p>
+            In the code, the definition of the DDE (or DDE system) is a Python function with at least two arguments:<br />
+            <ul>
+                <li>the first argument is the unknown (usually named <code>Y</code>);</li>
+                <li>the second argument is time (usually named <code>t</code>).</li>
+            </ul>
+            The <code>Y</code>, i.e., the unknown, is a tuple that contains a slot for each component of the unknown:
+            so for a single first-order DDE, the tuple <code>Y</code> has only one slot, while in a system with two unknowns $y_1$ and $y_2$, 
+            the tuple <code>Y</code> has two slots, and so on.<br />
+            The function that defines the DDE (or system of DDEs) may have additional arguments that are used to implement a parametric DDE (or parametric systems of DDEs);
+            Example #6 shows the resolution of a parametric system of two DDEs.<br />
+            The name of the Python function that defines the equation is free:
+            in the following examples will be <code>equation</code>; often, on the Internet, it is <code>model</code>.<br />
+            <br />
+            Here is an example of a DDE (so only one unknown, so <code>Y</code> is a tuple of one slot) that is not parametric:
+            <pre><code class="python">def equation(Y, t):
+    return -Y(t - 1)</code></pre>
+            Here is an example of a parametric system (<code>d</code> is the parameter) of two DDEs (so <code>Y</code> has two slots):
+            <pre><code class="python">def equation(Y, t, d):
+    x,y = Y(t)
+    xd,yd = Y(t-d)
+    return [x * yd, y * xd]</code></pre>
 		</p>
 
         <h3>JiTCDDE</h3>
@@ -248,6 +274,35 @@
 			and the library is installable with the following command:
 			<pre><code class="shell">$ pip install jitcdde</code></pre>
 			See also <a href="https://pypi.org/project/jitcdde/" target="_blank">https://pypi.org/project/jitcdde/</a> for more details.
+		</p>
+
+        <h4>Syntactical notes</h4>
+        <p>
+            In the code, the definition of the DDE (or system of DDEs) is a Python list; for each element in the list, these rules apply:<br />
+            <ul>
+                <li>
+                    the name <code>y</code> is the unknown; it is a SymPy symbolic name imported from <code>jitcdde</code>;
+                    y in turn is a Python function where the first argument is the component index of the unknown itself
+                    while the second argument is the time <code>t</code>;
+                </li>
+                <li>the name <code>t</code> is the time; this is also a SymPy symbolic name imported from <code>jitcdde</code></li>
+            </ul>
+            the length of the list is the number of components of the unknown:
+            so for a single first-order DDE, the list has only one element, whereas in a system with two unknowns $y_1$ and $y_2$, 
+            the list has two elements, and so on.<br />
+            Additional SymPy symbols can be used in the list defining the DDE (or DDE system),
+            which must be explicitly instantiated with <code>symengine.symbols</code> and they are used to implement parametric DDEs (or parametric systems of DDEs);
+            example #6 shows the resolution of a parametric system of two DDEs.<br />
+            The name of the variable that contains the list of equations is free:
+            in the following examples will be <code>equation</code> or <code>equations</code>; often, on the Internet, it is <code>f</code>.<br />
+            <br />
+            Here is an example of a DDE (so only one unknown, so <code>y</code> can have the value 0 as the first argument) that is not parametric:
+            <pre><code class="python">equation = [-y(0, t-1.)]</code></pre>
+            Here is an example of a parametric system (<code>d</code> is the parameter) of two DDEs (so <code>Y</code> can have the value 0 and 1 as the first argument):
+            <pre><code class="python">d=symengine.symbols("d")
+equations=[
+	y(0, t) * y(1, t-d),
+	y(1, t) * y(0, t-d)]</code></pre>
 		</p>
 
 		<h2>Example #1: First-order DDE with one constant delay and a constant initial history function</h2>

@@ -238,6 +238,31 @@
 			Si veda anche <a href="https://pypi.org/project/ddeint/" target="_blank">https://pypi.org/project/ddeint/</a> per altri dettagli.
 		</p>
 
+        <h4>Note sintattiche</h4>
+        <p>
+            Nel codice, la definizione della DDE (o del sistema di DDE) &egrave una funzione Python con almeno due argomenti:<br />
+            <ul>
+                <li>il primo argomento &egrave; l&apos;incognita (generamente con nome <code>Y</code>);</li>
+                <li>il secondo argomento &egrave; il tempo (generalmente con nome <code>t</code>).</li>
+            </ul>
+            La <code>Y</code>, cio&egrave; l&apos;incognita, &egrave; una tupla che contiene uno slot per ogni componente dell&apos;incognita:
+            quindi per una DDE singola del primo ordine, la tupla <code>Y</code> ha un solo slot, mentre in un sistema con due incognite $y_1$ e $y_2$, 
+            la tupla <code>Y</code> ha due slot, e cos&igrave; via.<br />
+            La funzione che definisce la DDE (o il sistema di DDE) pu&ograve; avere ulteriori argomenti che servono per implementare DDE parametriche (o sistemi parametrici di DDE);
+            l&apos;esempio #6 mostra la risoluzione di un sistema parametrico di due DDE.<br />
+            Il nome della funzione Python che definisce l&apos;equazione &egrave; libero:
+            nei seguenti esempi sar&agrave; <code>equation</code> o <code>equations</code>; spesso, su Internet, &egrave; <code>model</code>.<br />
+            <br />
+            Qui un esempio di una DDE (quindi una sola incognita, per cui <code>Y</code> &egrave; una tupla di un solo slot) non parametrica:
+            <pre><code class="python">def equation(Y, t):
+    return -Y(t - 1)</code></pre>
+            Qui un esempio di un sistema parametrico (<code>d</code> &egrave; il parametro) di due DDE (quindi <code>Y</code> ha due slot):
+            <pre><code class="python">def equations(Y, t, d):
+    x,y = Y(t)
+    xd,yd = Y(t-d)
+    return [x * yd, y * xd]</code></pre>
+		</p>
+
         <h3>JiTCDDE</h3>
         <p>
 			<em>JiTCDDE</em> sta per compilazione just-in-time di DDE; prende un iterabile di espressioni SymPy, le traduce in codice C, le compila al volo
@@ -245,7 +270,37 @@
 			la libreria &egrave; stata sviluppa da <a href="https://github.com/neurophysik" target="_blank">Neurophysik</a>, il sorgente &egrave; disponibile all&apos;indirizzo: <a href="https://github.com/neurophysik/jitcdde" target="_blank">https://github.com/neurophysik/jitcddet</a>
 			e la libreria &egrave; installabile con il seguente comando:
 			<pre><code class="shell">$ pip install jitcdde</code></pre>
-			Si veda anche <a href="https://pypi.org/project/jitcdde/" target="_blank">https://pypi.org/project/jitcdde/</a> per altri dettagli.
+			Si veda anche <a href="https://pypi.org/project/jitcdde/" target="_blank">https://pypi.org/project/jitcdde/</a> per altri dettagli.<br />
+            Si veda <a href="https://jitcdde.readthedocs.io/en/latest/#short-integrations-and-textbook-examples" target="_blank">https://jitcdde.readthedocs.io/en/latest/#short-integrations-and-textbook-examples</a> per ulteriori dettagli.
+		</p>
+
+        <h4>Note sintattiche</h4>
+        <p>
+            Nel codice, la definizione della DDE (o del sistema di DDE) &egrave una lista Python; per ogni elemento della lista valgono queste regole:<br />
+            <ul>
+                <li>
+                    il nome <code>y</code> &egrave; l&apos;incognita; &egrave; un nome simbolico SymPy importato da <code>jitcdde</code>;
+                    y a sua volta &egrave; una funzione Python ove il primo argomento &egrave; l&apos;indice delle componenti dell&apos;incognita stessa
+                    mentre il secondo argomento &egrave; il tempo <code>t</code>;
+                </li>
+                <li>il nome <code>t</code> &egrave; il tempo; anche questo &egrave; un nome simbolico SymPy importato da <code>jitcdde</code></li>
+            </ul>
+            la lunghezza della lista &egrave; il numero delle componenti dell&apos;incognita:
+            quindi per una DDE singola del primo ordine, la lista ha un solo elemento, mentre in un sistema con due incognite $y_1$ e $y_2$, 
+            la lista ha due elementi, e cos&igrave; via.<br />
+            Nella lista che definisce la DDE (o il sistema di DDE) si possono usare ulteriori simboli SymPy,
+            che devono essere esplicitamente istanziati con <code>symengine.symbols</code> e servono per implementare DDE parametriche (o sistemi parametrici di DDE);
+            l&apos;esempio #6 mostra la risoluzione di un sistema parametrico di due DDE.<br />
+            Il nome della variabile che contiene la lista di equazioni &egrave; libero:
+            nei seguenti esempi sar&agrave; <code>equation</code> o <code>equations</code>; spesso, su Internet, &egrave; <code>f</code>.<br />
+            <br />
+            Qui un esempio di una DDE (quindi una sola incognita, per cui <code>y</code> pu&ograve; avere il valore 0 come primo argomento) non parametrica:
+            <pre><code class="python">equation = [-y(0, t-1.)]</code></pre>
+            Qui un esempio di un sistema parametrico (<code>d</code> &egrave; il parametro) di due DDE (quindi <code>Y</code> pu&ograve; avere il valore 0 e 1 come primo argomento):
+            <pre><code class="python">d=symengine.symbols("d")
+equations=[
+	y(0, t) * y(1, t-d),
+	y(1, t) * y(0, t-d)]</code></pre>
 		</p>
 
 		<h2>Esempio #1: DDE del primo ordine a ritardo costante e funzione storica iniziale costante</h2>
