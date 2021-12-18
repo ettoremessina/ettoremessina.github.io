@@ -36,12 +36,12 @@
 		</script>
 
 
-		<title>Fitting functions with a configurable Support Vector Regressor</title>
-		<meta name="description" content="Fitting of functions with a configurable Support Vector Regressor" >
-		<meta name="keywords" content="regression, svr, support vector regressor, support vector machine, approximation, fit, fitting, function, dataset, machine learning" >
-		<link rel="canonical" href="_website_url_en_ml_fitfnwcsrv_" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/fitting-with-configurable-svr.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html" />
+		<title>Fitting functions with PyCaret</title>
+		<meta name="description" content="Fitting of functions with PyCaret" >
+		<meta name="keywords" content="regression, pycaret, approximation, fit, fitting, function, dataset, machine learning" >
+		<link rel="canonical" href="https://computationalmindset.com/en/machine-learning/fitting-functions-with-pycaret.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/fitting-functions-with-pycaret.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-pycaret.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -94,8 +94,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/machine-learning/fitting-with-configurable-svr.html",
-              "name": "Fitting functions with a configurable Support Vector Regressor"
+              "@id": "https://computationalmindset.com/en/machine-learning/fitting-functions-with-pycaret.html",
+              "name": "Fitting functions with PyCaret"
             }
 		  }
 		
@@ -125,11 +125,11 @@
 		</script>
 
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
-		<meta property="og:url" content="https://computationalmindset.com/en/machine-learning/fitting-with-configurable-svr.html" />
+		<meta property="og:url" content="https://computationalmindset.com/en/machine-learning/fitting-functions-with-pycaret.html" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="" />
 		<meta property="og:description" content="" />
-		<meta property="og:image" content="/social-previews/thumbnail10.jpg" />
+		<meta property="og:image" content="/social-previews/thumbnail24.jpg" />
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
 
 
@@ -170,22 +170,22 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Fitting functions with a configurable Support Vector Regressor</h1>
+			<h1>Fitting functions with PyCaret</h1>
 		</header>
 
 		<p>
-			This post deals with the approximation of real mathematical scalar functions to one or more real variables using a <em>PyCaret</em>
+			This post deals with the approximation of real mathematical functions to one or more real variables using <a href="https://pycaret.org/" target="_blank"><em>PyCaret</em></a>
 			without writing code but only acting on the command line of Python scripts that implement the functionality of:
 			<ul>
 				<li>
-					<em>Regressor Configuration and training</em>
+					<em>Configuration of general parameters of PyCaret regressor and training</em>
 				</li>
 				<li>
 					<em>Prediction and error calculation</em>
 				</li>
 			</ul>
 
-			The code described by this post requires Python version 3 and uses the SciKit-Learn library; it also requires the NumPy, Pandas, MatPlotLib and JobLib libraries.<br/>
+			The code described by this post requires Python version 3 and uses the PyCaret library; it also requires the NumPy, Pandas, nad MatPlotLib libraries.<br/>
 			To get the code please see the paragraph <a href="#downloadcode">Download of the complete code</a> at the end of this post.<br/>
 			<br/>
 			For the generation of synthetic training and test datasets, the following common tools (available in the repository) will be used:
@@ -196,12 +196,6 @@
 				<li>
 					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_gen"><code>fxy_gen.py</code></a> for the real-valued scalar functions of two real-valued variables $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
 				</li>
-				<li>
-					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_gen"><code>pcm2t_gen.py</code></a> for parametric curves on the plane, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R}$
-				</li>
-				<li>
-					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_gen"><code>pmc3t_gen.py</code></a> for parametric curves in space, so real-valued vector functions $f(t) \colon [a,b] \to {\rm I\!R \times \rm I\!R \times \rm I\!R}$
-				</li>
 			</ul>			
 			Also for the visualization of the results, and precisely for the comparison of the test dataset with the prediction, the following common tools (always available in the repository) will be used:
 			<ul>
@@ -211,64 +205,82 @@
 				<li>
 					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fxy_scatter"><code>fxy_scatter.py</code></a> for the real scalar generator functions of two real variables
 				</li>
-				<li>
-					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc2t_scatter"><code>pmc2t_scatter.py</code></a> for parametric curves on the plane
-				</li>
-				<li>
-					<a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#pmc3t_scatter"><code>pmc3t_scatter.py</code></a> for parametric curves in space
-				</li>
 			</ul>
 		</p>
 
-		<h2>Regressor Configuration and training</h2>
+		<h2>Configuration of general parameters of PyCaret regressor and training</h2>
 		<p>
-			In this chapter two programs are presented:  <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> and
-			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>
-			which technically are wrappers respectively of the classes
-			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a> and
-			<a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>
-			of the SciKit-Learn library and their purpose is to allow the use of the underlying regressors to fit functions
-			without having to write code but only acting on the command line.<br />
-			In fact through the argument <code>--svrparams</code> the user passes a series of hyper-parameters to adjust the behavior of the&apos;underlying SVR algorithm
-			and others to configure its learning phase.
-			In addition to the parameters of the underlying regressor the program supports its own arguments to allow the user to pass
-			the training dataset and on which file to save the trained model.<br />
+			This chapter presents the program: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py"><code>fit_func.py</code></a>
+			that implements in sequence five calls to as many functions of the <em>PyCaret</em> library:
+			<ul>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20setup#pycaret.regression.setup"><code>regression.setup</code></a>
+					which initializes the training environment and creates the transformation pipeline.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20compare_models#pycaret.regression.compare_models"><code>regression.compare_models</code></a>
+					which trains and evaluates the performance of all available estimators in the model library using cross-validation.<br />
+					<b>Note</b>: in general <code>compare_models</code> returns a grid of average scores from the various cross-validated estimators;
+					the <code>fit_func.py</code> program will use the best performing estimator, namely the one in the first row of the grid.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20tune_model#pycaret.regression.tune_model"><code>regression.tune_model</code></a>
+					which tunes the hyperparameters of a given estimator; the <code>fit_func.py</code> program will apply <code>tune_model</code> to the best estimator found by <code>compare_models</code> in the previous step.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20finalize_model#pycaret.regression.finalize_model"><code>regression.finalize_model</code></a>
+					that trains a data estimator on the entire data set; the <code>fit_func.py</code> program will apply <code>finalize_model</code> to the estimator returned by <code>tune_model</code> in the previous step.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20save_model#pycaret.regression.save_model"><code>regression.save_model</code></a>
+					saves the transformation pipeline and the trained model object to a file in <em>pickle</em> format for later use by <code>predict_func.py</code>.
+				</li>
+			</ul>
+
+			The purpose of this program is to execute the above sequence of commands to allow PyCaret
+			to choose the best machine learning algorithm to perform regression to approximate functions
+			without having to write code but acting only on the command line.<br />
+			In fact through the <code>--setupparams</code> argument the user passes a series of hyperparameters to configure the regression of PyCaret
+			and through the argument <code>--compareparams</code> instead the user passes a series of hyperparameters to the comparison between the algorithms made by PyCaret.
+			Besides the hyperparameters of the underlying PyCaret library, the program supports its own arguments to allow the user to pass
+			the training dataset and the file where to save the trained model.<br />
 			<br />
-			Both programs are of type <em>M.I.M.O.</em>, that is <em>Multiple Input Multiple Output</em>:
-			are designed to approximate a function of the shape $f \colon \rm I\!R^n \to \rm I\!R^m$ using in the implementation
-			the <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html#sklearn.multioutput.MultiOutputRegressor"><code>sklearn.multioutput.MultiOutputRegressor</code></a> class.<br />
-			The format of the input datasets is in csv format (with header), with $n+m$ columns, of which the first $n$ columns contain the values of the $n$ independent variables and
-			the last $m$ containing the values of the dependent variables.
+			The program is of type <em>M.I.S.O.</em>, that is <em>Multiple Input Simple Output</em>:
+			is designed to approximate a function of the form $f \colon \rm I\!R^n \to \rm I\!R$.<br />
+			The format of the input dataset is in csv format (with header); one of these columns (indicated by a mandatory argument in the command line)
+			is the target column (the one related to the dependent variable) while all other columns contain the values of the independent variables.
 		</p>
 
-		<h3 id="fit_func_esvr">Usage of the fit_func_esvr.py program</h3>
+		<h3 id="fit_func">Usage of the fit_func.py program</h3>
 		<p>
 			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fit_func_esvr.py --help</code></pre>
+			<pre><code class="shell">$ python fit_func.py --help</code></pre>
 			and the output got is:
 			<br/>
 			<br/>
-			<pre><code class="shell">usage: fit_func_esvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
-                        --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
-                        MODEL_FILE [--dumpout DUMPOUT_PATH]
-                        [--svrparams SVR_PARAMS]
+			<pre><code class="shell">usage: fit_func.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                   --targetcol TARGET_COLUMN --modelout MODEL_FILE
+                   [--metric METRIC] [--setupparams SETUP_PARAMS]
+                   [--compareparams COMPARE_PARAMS]
 
-fit_func_esvr.py fits a multiple-input multiple-output function dataset using
-a configurable Epsilon-Support Vector Regressor
+fit_func.py fits a multiple-input single-output function dataset using the
+best regressor chosen by PyCaret
 
 optional arguments:
   -h, --help            show this help message and exit
-  --version             show program&apos;s version number and exit
+  --version             show program's version number and exit
   --trainds TRAIN_DATASET_FILENAME
                         Train dataset file (csv format)
-  --outputdim NUM_OF_DEPENDENT_COLUMNS
-                        Output dimension (alias the number of dependent
-                        columns, that must be last columns)
+  --targetcol TARGET_COLUMN
+                        Target column name
   --modelout MODEL_FILE
                         Output model file
-  --svrparams SVR_PARAMS
-                        Parameters of Epsilon-Support Vector Regressor
-                        constructor</code></pre>
+  --metric METRIC       metric to evaluate the best model
+  --setupparams SETUP_PARAMS
+                        Parameters of PyCaret regression.setup function
+  --compareparams COMPARE_PARAMS
+                        Parameters of PyCaret regression.compare_models
+                        function</code></pre>
 			Where:
 			<ul>
 				<li>
@@ -280,87 +292,34 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--trainds</b>: path (relative or absolute) of a $n$+$m$ columns csv file (with header) that contains the dataset to be used for the training;
+					<b>--trainds</b>: path (relative or absolute) of a csv file (with header) that contains the dataset to be used for the training;
 					this file can be generated synthetically e.g. via the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a>.
 					or be a dataset actually obtained by measuring a scalar and real phenomenon that depends on a single real-valued variable.<br />
 					<br />
 				</li>
 				<li>
-					<b>--outputdim</b>:
-						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
-						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
+					<b>--targetcol</b>: name of the column representing the dependent variable.<br />
 					<br />
 				</li>
 				<li>
-					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in joblib format (.jl).<br />
+					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in <em>pickle</em> format.<br />
 					<br />
 				</li>
 				<li>
-					<b>--svrparams</b>:
-						list of parameters to pass to the regression algorithm below;
-						see documentation of <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR"><code>sklearn.svm.SVR</code></a>.<br />
-					<br />
-				</li>
-			</ul>
-		</p>
-
-		<h3 id="fit_func_nusvr">Usage of the fit_func_nusvr.py program</h3>
-		<p>
-			To get the program usage you can run this following command:
-			<pre><code class="shell">$ python fit_func_nusvr.py --help</code></pre>
-			and the output got is:
-			<br/>
-			<br/>
-			<pre><code class="shell">usage: fit_func_nusvr.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
-                         --outputdim NUM_OF_DEPENDENT_COLUMNS --modelout
-                         MODEL_FILE [--dumpout DUMPOUT_PATH]
-                         [--svrparams SVR_PARAMS]
-
-fit_func_nusvr.py fits a multiple-input multiple-output function dataset using
-a configurable Nu-Support Vector Regressor
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --version             show program&apos;s version number and exit
-  --trainds TRAIN_DATASET_FILENAME
-                        Train dataset file (csv format)
-  --outputdim NUM_OF_DEPENDENT_COLUMNS
-                        Output dimension (alias the number of dependent
-                        columns, that must be last columns)
-  --modelout MODEL_FILE
-                        Output model file
-  --svrparams SVR_PARAMS
-                        Parameters of Nu-Support Vector Regressor constructor</code></pre>
-			Where:
-			<ul>
-				<li>
-					<b>-h, --help</b>: shows the usage of the program and ends the execution.<br />
+					<b>--metric</b>: The metrics to be used in sorting the scoring grid.
+					Allowed values are: MAE, MSE, RMSE, R2, RMSLE, MAPE; the default is R2.<br />
 					<br />
 				</li>
 				<li>
-					<b>--version</b>: shows the version of the program and ends the execution.<br />
+					<b>--setupparams</b>:
+						list of parameters to pass to the function <code>regression.setup</code> below;
+						see documentation of <a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20setup#pycaret.regression.setup"><code>regression.setup</code></a>.<br />
 					<br />
 				</li>
 				<li>
-					<b>--trainds</b>: path (relative or absolute) of a $n$+$m$ columns csv file (with header) that contains the dataset to be used for the training;
-					this file can be generated synthetically e.g. via the program <a target="_blank" href="../../en/machine-learning/common-tools-for-function-fitting.html#fx_gen"><code>fx_gen.py</code></a>.
-					or be a dataset actually obtained by measuring a scalar and real phenomenon that depends on a single real-valued variable.<br />
-					<br />
-				</li>
-				<li>
-					<b>--outputdim</b>:
-						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
-						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
-					<br />
-				</li>
-				<li>
-					<b>--modelout</b>: path (relative or absolute) to a file where to save the trained model in joblib format (.jl).<br />
-					<br />
-				</li>
-				<li>
-					<b>--svrparams</b>:
-						list of parameters to pass to the regression algorithm below;
-						see documentation of <a target="_blank" href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR"><code>sklearn.svm.NuSVR</code></a>.<br />
+					<b>--compareparams</b>:
+						list of parameters to pass to the function <code>regression.compare_models</code> below;
+						see documentation of <a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20compare_models#pycaret.regression.compare_models"><code>regression.compare_models</code></a>
 					<br />
 				</li>
 			</ul>
@@ -368,15 +327,14 @@ optional arguments:
 
 		<h2>Prediction and error calculation</h2>
 		<p>
-			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/predict_func.py" target="_blank"><code>predict_func.py</code></a> is presented
-			and which purpose is to make predictions on a test dataset applying it to a previously trained e-SVR or nu-SVR model
-			respectively via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py"><code>fit_func_esvr.py</code></a> or
-			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py"><code>fit_func_nusvr.py</code></a>,
+			In this chapter the program <a href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/predict_func.py" target="_blank"><code>predict_func.py</code></a> is presented
+			and which purpose is to make predictions on a test dataset applying it to a previously selected and trained model by PyCaret
+			via the program <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py"><code>fit_func.py</code></a>
 			always without having to write code but only through the command line.<br />
-			In fact, this program supports arguments through which the user passes the previously trained model, the test dataset
+			In fact, this program supports arguments through which the user passes the previously selected and trained model, the test dataset
 			and the error measurements to be calculated between the predictions and the true values.<br />
-			The format of the incoming test datasets is identical to that of the training programs mentioned above; obviously here the last columns
-			(those of dependent variables) are only used to compare the predicted values with the true values by calculating passed error measurements.<br />
+			The format of the incoming test datasets is identical to that of the training programs mentioned above; obviously here the target column
+			(that of dependent variables) is only used to compare the predicted values with the true values by calculating passed error measurements.<br />
 		</p>
 
 		<h3 id="predict_func_miso">Usage of the predict_func.py program</h3>
@@ -387,26 +345,25 @@ optional arguments:
 			<br/>
 			<br/>
 			<pre><code class="shell">usage: predict_func.py [-h] [--version] --model MODEL_FILE --ds DF_PREDICTION
-                       --outputdim NUM_OF_DEPENDENT_COLUMNS --predictionout
+                       --targetcol TARGET_COLUMN --predictionout
                        PREDICTION_DATA_FILE
                        [--measures MEASURES [MEASURES ...]]
 
-predict_func.py makes prediction of the values of a multiple-input multiple-
-output function with a pretrained Standard Vector Regressor model
+predict_func.py makes prediction of the values of a multiple-input single-
+output function with the best pretrained regressor chosen by PyCaret
 
 optional arguments:
   -h, --help            show this help message and exit
-  --version             show program&apos;s version number and exit
+  --version             show program's version number and exit
   --model MODEL_FILE    model file
   --ds DF_PREDICTION    dataset file (csv format)
-  --outputdim NUM_OF_DEPENDENT_COLUMNS
-                        Output dimension (alias the number of dependent
-                        columns, that must be last columns)
+  --targetcol TARGET_COLUMN
+                        Target column name
   --predictionout PREDICTION_DATA_FILE
                         prediction data file (csv format)
   --measures MEASURES [MEASURES ...]
-                        List of built-in sklearn regression metrics to compare
-                        prediction with input dataset</code></pre>
+                        List of built-in sklearn regression measures to
+                        compare prediction with input dataset</code></pre>
 			Where:
 			<ul>
 				<li>
@@ -418,7 +375,7 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--model</b>: path (relative or absolute) to the file in joblib (.jl) format of the model generated by a training program mentioned above.<br />
+					<b>--model</b>: path (relative or absolute) to the file in <em>pickle</em> format of the model selected and trained by PyCaret and generated by the program mentioned above.<br />
 					<br />
 				</li>
 				<li>
@@ -426,9 +383,7 @@ optional arguments:
 					<br />
 				</li>
 				<li>
-					<b>--outputdim</b>:
-						the $n$ number of independent variables that are the first $n$ columns of the csv dataset;
-						the rest of the columns on the right are the $m$ dependent variables accordingly.<br />
+					<b>--targetcol</b>: name of the column representing the dependent variable.<br />
 					<br />
 				</li>
 				<li>
@@ -443,127 +398,21 @@ optional arguments:
 			</ul>
 		</p>
 
-		<h2>An example of using of all the programs</h3>
-		<p>
-			Suppose you want to approximate the function $$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$$ in the range $[-10.0,10.0]$.
-			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
-			<pre><code class="python">0.5*x**3 - 2*x**2 - 3*x - 1</code></pre>
-			To generate the training dataset, run the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
-  --dsout mytrain.csv \
-  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
-  --xbegin -10.0 \
-  --xend 10.0 \
-  --xstep 0.01</code></pre>
-			instead to generate the test dataset, run the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_gen.py \
-  --dsout mytest.csv \
-  --funcx "0.5*x**3 - 2*x**2 - 3*x - 1" \
-  --xbegin -10.0 \
-  --xend 10.0 \
-  --xstep 0.0475</code></pre>
-			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
-			because the training, to be accurate, it must be run on more data.
-			Also note that it is appropriate for the discretization step of the test dataset is <u>not</u> a multiple of the training one
-			in order to ensure that the test dataset contains most of the data that is not present in training dataset, and this makes prediction more interesting.
-			<br />
-			To this we intend to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_esvr.py" target="_blank"><code>fit_func_esvr.py</code></a>
-			passing to the underlying regressor: kernel: rbf, C: 100, gamma: 0.1, epsilon: 0.1;
-			then run the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fit_func_esvr.py \
-  --trainds mytrain.csv \
-  --modelout mymodel.jl \
-  --outputdim 1 \
-  --svrparams "'kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1"</code></pre>
-			and at the end of the execution the saved mymodel.jl file contains the model of the e-svr regressor configured and trained.<br />
-			<br />
-			Now we intend to perform the prediction and calculation of the error using the measurements <em>mean_absolute_error</em> and <em>mean_squared_error</em>;
-			then execute the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python predict_func.py \
-  --model mymodel.jl \
-  --ds mytest.csv \
-  --outputdim 1 \
-  --predictionout mypred.csv \
-  --measures mean_absolute_error mean_squared_error</code></pre>
-  			and at the end of the execution the saved mypred.csv file contains the prediction performed by applying the model on the test data;
-			the output of the program displays the error measures passed through the argument <code>--measures</code>
-			and are acceptable: the first around $0.4$ and the second around $1.9$.<br />
-			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.
-			<br />
-			Finally you want to make the comparative display of the test dataset with the prediction;
-			therefore run the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_scatter.py \
-  --ds mytest.csv \
-  --prediction mypred.csv \
-  --title "e-svr ('kernel': 'rbf', 'C': 100, 'gamma': 0.1, 'epsilon': 0.1)" \
-  --xlabel "x" \
-  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
-			that shows the dispersion graphs of the test dataset and the superimposed prediction: in blue the one of the test dataset, in red the prediction.
-			The comparison of the two graphs clearly shows that the approximation has reached very high levels.<br />
-			<br />
-			<b>Note</b>: Given the stochastic nature of the training phase, your specific results may vary. Consider running the training phase a few times.
-		</p>
-		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-with-configurable-svr/ml-fitfnwcsvr-example1.png" /></div>
-		<div class="photocaption">Figure with dispersion graphs generated by the program <code>fx_scatter.py</code> showing the fitting in red overlay of the function $f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$
-		and the original function below in blue.</div>
-		<br />
-		<p>
-			If you want to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/svr/fit_func_nusvr.py" target="_blank"><code>fit_func_nusvr.py</code></a>
-			switching to the underlying regressor: C: 10, gamma: auto
-			then execute the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fit_func_nusvr.py \
-  --trainds mytrain.csv \
-  --modelout mymodel.jl \
-  --outputdim 1 \
-  --svrparams "'C': 10, 'gamma': 'auto'"</code></pre>
-			then run the prediction using the <code>predict_func.py</code> command with the same parameters as above
-			and finally to generate the dispersion graphs run the following command:
-			<br/>
-			<br/>
-			<pre><code class="shell">$ python fx_scatter.py \
-  --ds mytest.csv \
-  --prediction mypred.csv \
-  --title "nu-svr ('C': 10, 'gamma': 'auto')" \
-  --xlabel "x" \
-  --ylabel "y=1/2 x^3 - 2x^2 - 3x - 1"</code></pre>
-
-			The repository contains examples in shell scripts that show the use of these cascading programs:
-			<ul>
-				<li>
-					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/svr/examples"><code>one-variable-function/svr/examples</code></a>
-					for examples on the fitting of real-valued scalar functions of one real-valued variable via <em>SVR</em>.
-				</li>
-				<li>
-					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/svr/examples"><code>two-variables-function/svr/examples</code></a> p
-					for examples on the fitting of real-valued scalar functions of two real-valued variables via <em>SVR</em>.
-				</li>
-				<li>
-					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-on-plane/svr/examples"><code>parametric-curve-on-plane/svr/examples</code></a>
-					for examples about fitting parametric curves on the plane via <em>SVR</em>.
-				</li>
-				<li>
-					<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/parametric-curve-in-space/svr/examples"><code>parametric-curve-in-space/svr/examples</code></a>
-					for examples about fitting parametric curves on the space via <em>SVR</em>.
-				</li>
-			</ul>
-		</p>
-		<br/>
+        <h2>Citations</h2>
+        <p>
+            <pre><code class="text">@ManualPyCaret,
+  author  = {Moez Ali},
+  title   = {PyCaret: An open source, low-code machine learning library in Python},
+  year    = {2020},
+  month   = {April},
+  note    = {PyCaret version 1.0.0},
+  url     = {https://www.pycaret.org}
+</code></pre>
+        </p>
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
-			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/svr/">GitHub</a>.
+			The complete code is available at <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/pycaret/">GitHub</a>.
 			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.

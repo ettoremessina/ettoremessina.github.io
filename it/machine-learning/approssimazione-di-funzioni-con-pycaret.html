@@ -1,0 +1,545 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Approssimazione di funzioni tramite PyCaret</title>
+		<meta name="description" content="Approssimazione di funzioni tramite PyCaret" >
+		<meta name="keywords" content="regressione, pycaret, approssimazione, funzione, dataset, machine learning" >
+		<link rel="canonical" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-pycaret.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/machine-learning/fitting-functions-with-pycaret.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-pycaret.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/machine-learning/",
+              "name": "Machine Learning"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-pycaret.html",
+              "name": "Approssimazione di funzioni tramite PyCaret"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
+		<meta property="og:url" content="https://computationalmindset.com/it/machine-learning/approssimazione-di-funzioni-con-pycaret.html" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="" />
+		<meta property="og:description" content="" />
+		<meta property="og:image" content="/social-previews/thumbnail24.jpg" />
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Approssimazione di funzioni tramite PyCaret</h1>
+		</header>
+
+		<p>
+			Questo post tratta l&apos;approssimazione di funzioni matematiche reali scalari a una o pi&ugrave; variabili reali tramite <a href="https://pycaret.org/" target="_blank"><em>PyCaret</em></a>
+			senza scrivere codice ma agendo solo sulla linea di comando di script Python che implementano le funzionalit&agrave; di:
+			<ul>
+				<li>
+					<em>Configurazione di parametri generali del regressore di PyCaret e addestramento</em>
+				</li>
+				<li>
+					<em>Predizione e calcolo dell&apos;errore</em>
+				</li>
+			</ul>
+
+			Il codice descritto da questo post richiede la versione 3 di Python e utilizza la libreria <em>PyCaret</em>; richiede inoltre le librerie NumPy, Pandas e MatPlotLib.
+			Per ottenere il codice si veda il paragrafo <a href="#downloadcode">Download del codice completo</a> in fondo a questo post.<br/>
+			<br/>
+			Per quanto riguarda la generazione dei dataset sintetici di training e di test si far&agrave; uso dei seguenti strumenti (presenti nel repository):
+			<ul>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_gen"><code>fx_gen.py</code></a> per le funzioni generatrici scalari reali di una variabile reale $f(x) \colon [a,b] \to {\rm I\!R}$
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_gen"><code>fxy_gen.py</code></a> per le funzioni generatrici scalari reali di due variabili reali $f(x,y) \colon [a,b] \times [c,d] \to {\rm I\!R}$
+				</li>
+			</ul>
+			Per la visualizzazione dei risultati, e precisamente per la comparazione del dataset di test con la predizione, si far&agrave; uso dei seguenti strumenti (sempre presenti nel repository):
+			<ul>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fx_scatter"><code>fx_scatter.py</code></a> per le funzioni scalari reali di una variabile reale
+				</li>
+				<li>
+					<a target="_blank" href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html#fxy_scatter"><code>fxy_scatter.py</code></a> per le funzioni scalari reali di due variabili reali
+				</li>
+			</ul>
+		</p>
+
+		<h2>Configurazione di parametri generali del regressore di PyCaret e addestramento</h2>
+		<p>
+			In questo capitolo viene presentato il programma: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py"><code>fit_func.py</code></a>
+			che implementa in sequenza cinque chiamate ad altrettante funzioni della libreria <em>PyCaret</em>:
+			<ul>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20setup#pycaret.regression.setup"><code>regression.setup</code></a>
+					che inizializza l&apos;ambiente di addestramento e crea la pipeline di trasformazione.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20compare_models#pycaret.regression.compare_models"><code>regression.compare_models</code></a>
+					che addestra e valuta le performance di tutti gli estimatori disponibili nella libreria dei modelli utilizzando la validazione incrociata.<br />
+					<b>Nota</b>: <code>compare_models</code> in generale restituisce una griglia di punteggi medi dei vari estimatori convalidati in modo incrociato;
+					il programma <code>fit_func.py</code> comunque utilizzer&agrave; l&apos;estimatore che ha performato meglio, cio&egrave; quello che sta nella prima riga della griglia.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20tune_model#pycaret.regression.tune_model"><code>regression.tune_model</code></a>
+					che mette a punto gli iperparametri di un dato estimatore; il programma <code>fit_func.py</code> applicher&agrave; <code>tune_model</code> sul migliore estimatore trovato da <code>compare_models</code> al punto precedente.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20finalize_model#pycaret.regression.finalize_model"><code>regression.finalize_model</code></a>
+					che addestra un dato estimatore sull&apos;intero set di dati; il programma <code>fit_func.py</code> applicher&agrave; <code>finalize_model</code> all&apos;estimatore restituito <code>tune_model</code> al punto precedente.
+				</li>
+				<li>
+					<a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20save_model#pycaret.regression.save_model"><code>regression.save_model</code></a>
+					salva la pipeline di trasformazione e l&apos;oggetto modello addestrato su un file in formato <em>pickle</em> per l&apos;uso successivo da parte di <code>predict_func.py</code>.
+				</li>
+			</ul>
+
+			Il fine di questo programma &egrave; di eseguire la sequenza di comandi ci cui sopra per consentire a PyCaret
+			di scegliere il miglior algoritmo di machine learning per effettuare la regressione per approssimare funzioni
+			senza dover scrivere codice ma agendo solo sulla linea di comando.<br />
+			Infatti tramite l&apos;argomento <code>--setupparams</code> l&apos;utente passa una serie di iperparametri per configurare la regressione di PyCaret
+			e tramite l&apos;argomento <code>--compareparams</code> invece l&apos;utente passa una serie di iperparametri alla comparazione tra gli algoritmi effettuata da PyCaret.
+			Oltre agli iperparametri della libreria PyCaret sottostante, il programma supporta dei propri argomenti per consentire all&apos;utente di passare
+			il dataset di training e il file ove salvare il modello addestrato.<br />
+			<br />
+			Il programmi &grave; di tipo <em>M.I.S.O.</em>, cio&egrave; <em>Multiple Input Simple Output</em>:
+			&egrave; progettato per approssimare una funzione della forma $f \colon \rm I\!R^n \to \rm I\!R$.<br />
+			Il formato dei dataset in ingresso &egrave; in formato csv (con header); una di queste colonne (indicata tramite un argomento obbligatorio della lina di comando)
+			&egrave; la colonna target (quella relativa alla variabile dipendente) mentre tutte le altre colonne contengono i valori delle variabili indipendenti.
+		</p>
+
+		<h3 id="fit_func">Usage del programma fit_func.py</h3>
+		<p>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python fit_func.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: fit_func.py [-h] [--version] --trainds TRAIN_DATASET_FILENAME
+                   --targetcol TARGET_COLUMN --modelout MODEL_FILE
+                   [--metric METRIC] [--setupparams SETUP_PARAMS]
+                   [--compareparams COMPARE_PARAMS]
+
+fit_func.py fits a multiple-input single-output function dataset using the
+best regressor chosen by PyCaret
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --trainds TRAIN_DATASET_FILENAME
+                        Train dataset file (csv format)
+  --targetcol TARGET_COLUMN
+                        Target column name
+  --modelout MODEL_FILE
+                        Output model file
+  --metric METRIC       metric to evaluate the best model
+  --setupparams SETUP_PARAMS
+                        Parameters of PyCaret regression.setup function
+  --compareparams COMPARE_PARAMS
+                        Parameters of PyCaret regression.compare_models
+                        function</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--trainds</b>: percorso (relativo o assoluto) del file csv (con header) che contiene il dataset da utilizzare per il training;
+					questo file pu&ograve; essere generato in modo sintetico ad esempio tramite uno dei programmi di cui sopra
+					oppure essere un dataset del mondo reale che mappa $n$ variabili indipendenti su $1$ variabile dipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--targetcol</b>: nome della colonna che rappresenta la variabile dipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--modelout</b>: percorso (relativo o assoluto) al file dove salvare il modello addestrato nel formato <em>pickle</em>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--metric</b>: la metrica da utilizzare nell&apos;ordinamento della griglia dei punteggi.
+					I valori ammessi sono: MAE, MSE, RMSE, R2, RMSLE, MAPE; il default &egrave; R2.<br />
+					<br />
+				</li>
+				<li>
+					<b>--setupparams</b>:
+						lista di parametri da passare alla funzione <code>regression.setup</code> sottostante;
+						si veda la documentazione di <a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20setup#pycaret.regression.setup"><code>regression.setup</code></a>.<br />
+					<br />
+				</li>
+				<li>
+					<b>--compareparams</b>:
+						lista di parametri da passare alla funzione <code>regression.compare_models</code> sottostante;
+						si veda la documentazione di <a target="_blank" href="https://pycaret.readthedocs.io/en/latest/api/regression.html?highlight=regression%20compare_models#pycaret.regression.compare_models"><code>regression.compare_models</code></a>
+					<br />
+				</li>
+			</ul>
+		</p>
+
+		<h2>Predizione e calcolo dell&apos;errore</h2>
+		<p>
+			In questo capitolo viene invece presentato il programma <a href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/predict_func.py" target="_blank"><code>predict_func.py</code></a>
+			il cui scopo &egrave; quello di effettuare le predizioni su un dataset di test applicandolo al modello precedentemente selezionato e addestrato da PyCaret tramite
+			il programma <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py"><code>fit_func.py</code></a>
+			sempre senza dover scrivere codice ma tramite la sola linea di comando.<br />
+			Infatti tale programma supporta argomenti tramite i quali l&apos;utente passa il modello selezionato e addestrato precentemente, il dataset di test
+			e le misure di errore da calcolare tra la predizione e il valore vero.<br />
+			Il formato dei dataset di test in ingresso &egrave; identico a quello del programma di training di cui sopra; ovviamente qui la colonna target
+			(quella della variabile dipendente) &egrave; adoperata solo per confrontare i valori predetti con i valori veri calcolando le misure di errore passate.<br />
+		</p>
+
+		<h3 id="predict_func">Usage del programma predict_func.py</h3>
+		<p>
+			Per ottenere l&apos;usage del programma &egrave; sufficiente eseguire il seguente comando:
+			<pre><code class="shell">$ python predict_func.py --help</code></pre>
+			e l&apos;output ottenuto &egrave;:
+			<br/>
+			<br/>
+			<pre><code class="shell">usage: predict_func.py [-h] [--version] --model MODEL_FILE --ds DF_PREDICTION
+                       --targetcol TARGET_COLUMN --predictionout
+                       PREDICTION_DATA_FILE
+                       [--measures MEASURES [MEASURES ...]]
+
+predict_func.py makes prediction of the values of a multiple-input single-
+output function with the best pretrained regressor chosen by PyCaret
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --model MODEL_FILE    model file
+  --ds DF_PREDICTION    dataset file (csv format)
+  --targetcol TARGET_COLUMN
+                        Target column name
+  --predictionout PREDICTION_DATA_FILE
+                        prediction data file (csv format)
+  --measures MEASURES [MEASURES ...]
+                        List of built-in sklearn regression measures to
+                        compare prediction with input dataset</code></pre>
+			Dove:
+			<ul>
+				<li>
+					<b>-h, --help</b>: mostra l&apos;usage del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--version</b>: mostra la versione del programma e termina l&apos;esecuzione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--model</b>: percorso (relativo o assoluto) al file nel formato <em>pickle</em> del modello selezionato e addestrato da PyCaret e generato dal programma di training sopra descritto.<br />
+					<br />
+				</li>
+				<li>
+					<b>--ds</b>: percorso (relativo o assoluto) del file csv (con header) che contiene il dataset di input su cui calcolare la predizione.<br />
+					<br />
+				</li>
+				<li>
+					<b>--targetcol</b>: nome della colonna che rappresenta la variabile dipendente.<br />
+					<br />
+				</li>
+				<li>
+					<b>--predictionout</b>: percorso (relativo o assoluto) del file csv da generare che conterr&agrave; la predizione, ovverosia l&apos;approssimazione della funzione applicata al dataset di input.<br />
+					<br />
+				</li>
+				<li>
+					<b>--measures</b>: lista di misure da calcolare confrontando i valori veri del dataset di input e i valori predetti in uscita;
+					la lista delle metriche supportate &egrave; definita in <a target="_blank" href="https://scikit-learn.org/stable/modules/classes.html#regression-metrics">SciKit Learn Regression Metrics</a>.<br />
+					<br />
+				</li>
+			</ul>
+		</p>
+
+        <h2>Citazioni</h2>
+        <p>
+            <pre><code class="text">@ManualPyCaret,
+  author  = {Moez Ali},
+  title   = {PyCaret: An open source, low-code machine learning library in Python},
+  year    = {2020},
+  month   = {April},
+  note    = {PyCaret version 1.0.0},
+  url     = {https://www.pycaret.org}
+</code></pre>
+        </p>
+
+		<h2 id="downloadcode">Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/pycaret/">GitHub</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html">Pruning di reti neurali con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/equazioni-differenziali-e-reti-neurali.html">Equazioni Differenziali e Reti Neurali</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html">Strumenti generali per l&apos;approssimazione di funzioni</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-pycaret.html">Approssimazione di funzioni tramite PyCaret</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Matematica</span>
+											<ul>
+												<li><a href="../../it/matematica/">INDICE</a></li>
+												<li><a href="../../it/matematica/risoluzione-equazioni-differenziali-con-ritardo-in-python-con-metodi-numerici.html">Risoluzione di equazioni differenziali con ritardo con metodi numerici in Python</a></li>
+												<li><a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html">Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
+												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../it/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
