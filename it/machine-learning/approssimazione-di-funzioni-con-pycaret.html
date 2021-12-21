@@ -176,10 +176,10 @@
 			senza scrivere codice ma agendo solo sulla linea di comando di script Python che implementano le funzionalit&agrave; di:
 			<ul>
 				<li>
-					<em>Configurazione di parametri generali del regressore di PyCaret e addestramento</em>
+					<a href="#training"><em>Configurazione di parametri generali del regressore di PyCaret e addestramento</em></a>
 				</li>
 				<li>
-					<em>Predizione e calcolo dell&apos;errore</em>
+					<a href="#prediction_errorcomp"><em>Predizione e calcolo dell&apos;errore</em></a>
 				</li>
 			</ul>
 
@@ -206,7 +206,7 @@
 			</ul>
 		</p>
 
-		<h2>Configurazione di parametri generali del regressore di PyCaret e addestramento</h2>
+		<h2 id="training">Configurazione di parametri generali del regressore di PyCaret e addestramento</h2>
 		<p>
 			In questo capitolo viene presentato il programma: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py"><code>fit_func.py</code></a>
 			che implementa in sequenza cinque chiamate ad altrettante funzioni della libreria <em>PyCaret</em>:
@@ -323,7 +323,7 @@ optional arguments:
 			</ul>
 		</p>
 
-		<h2>Predizione e calcolo dell&apos;errore</h2>
+		<h2 id="prediction_errorcomp">Predizione e calcolo dell&apos;errore</h2>
 		<p>
 			In questo capitolo viene invece presentato il programma <a href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/predict_func.py" target="_blank"><code>predict_func.py</code></a>
 			il cui scopo &egrave; quello di effettuare le predizioni su un dataset di test applicandolo al modello precedentemente selezionato e addestrato da PyCaret tramite
@@ -396,10 +396,12 @@ optional arguments:
 			</ul>
 		</p>
 
-		<h2>Esempio #1: approssimazione di funzione scalare reale di una variabile reale</h2>
+		<h2>Esempi di approssimazione di funzione scalare reale di una variabile reale</h2>
+
+		<h3>Esempio #1</h3>
 		<p>
-			Si supponga di voler approssimare nell&apos;intervallo $[-0.10,10.0]$ la seguente funzione $$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$$
-			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
+			Si supponga di voler approssimare nell&apos;intervallo $[-10,10]$ la seguente funzione $$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$$
+			Questa si traduce in sintassi lambda body Python cos&igrave;:
 			<pre><code class="python">0.5*x**3 - 2*x**2 - 3*x - 1</code></pre>
 			Per generare il dataset di training, tramite il programma <a href="https://github.com/ettoremessina/function-fitting/blob/master/one-variable-function/common/fx_gen.py" target="_blank"><code>fx_gen.py</code></a>,
 			si esegua quindi il seguente comando:
@@ -469,14 +471,49 @@ optional arguments:
 			La comparazione dei due grafici evidenzia chiaramente che l&apos;approssimazione ha raggiunto livelli molto elevati.<br />
 		</p>
 		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-functions-with-pycaret/ml-fitfnwcaret-example1.png" alt="Confronto del grafico tra funzione originale e la funzione approssimata dal regressore selezionato e addestrato da PyCaret" /></div>
-		<div class="photocaption">Figura con grafici a dispersione generata dal programma <code>fx_scatter.py</code> che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione y=$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$
-		e la funzione originale sottostante in blu.</div>
+		<div class="photocaption">Figura con grafici a dispersione che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione<br />
+		$f(x)=\frac {1}{2} x^3 - 2 x^2 - 3 x - 1$ e la funzione originale sottostante in blu.</div>
 		<br />
 		<br />
 		<p>
-			Il repository, a questo url:
-			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/pycaret/examples"><code>one-variable-function/pycaret/examples</code></a>,
-			contiene questo ed altri esempi in shell script che mostrano l&apos;uso in cascata di questi programmi. 
+			Lo script shell di questo esempio (che mostra l&apos;uso in cascata di questi programmi) al seguente url:<br />
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/pycaret/examples/example1.sh"><code>one-variable-function/pycaret/examples/example1.sh</code></a>.
+		</p>
+
+		<h3>Esempio #2</h3>
+		<p>
+			Si supponga di voler approssimare nell&apos;intervallo $[-6,6]$ la seguente funzione $$f(x)=\sin x $$
+			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
+			<pre><code class="python">np.sin(x)</code></pre>
+			Eseguendo gli stessi passi dell&apos;esempio precedente, alla fine vengono mostrati i grafici a dispersione del dataset di test e la predizione sovrapposti: in blu quello del dataset di test, in rosso la predizione.
+			La comparazione dei due grafici evidenzia chiaramente che l&apos;approssimazione ha raggiunto livelli molto elevati.<br />
+		</p>
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-functions-with-pycaret/ml-fitfnwcaret-example2.png" alt="Confronto del grafico tra funzione originale e la funzione approssimata dal regressore selezionato e addestrato da PyCaret" /></div>
+		<div class="photocaption">Figura con grafici a dispersione che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione<br />
+		$f(x)=\sin x $ e la funzione originale sottostante in blu.</div>
+		<br />
+		<br />
+		<p>
+			Lo script shell di questo esempio (che mostra l&apos;uso in cascata di questi programmi) al seguente url:<br />
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/pycaret/examples/example2.sh"><code>one-variable-function/pycaret/examples/example2.sh</code></a>.
+		</p>
+
+		<h3>Esempio #3</h3>
+		<p>
+			Si supponga di voler approssimare nell&apos;intervallo $[-8,8]$ la seguente funzione $$f(x)=e^{\sin x}$$
+			Tenendo presente che <em>np</em> &egrave; l&apos;alias della libreria NumPy, questa si traduce in sintassi lambda body Python cos&igrave;:
+			<pre><code class="python">np.exp(np.sin(x))</code></pre>
+			Eseguendo gli stessi passi dell&apos;esempio precedente, alla fine vengono mostrati i grafici a dispersione del dataset di test e la predizione sovrapposti: in blu quello del dataset di test, in rosso la predizione.
+			La comparazione dei due grafici evidenzia chiaramente che l&apos;approssimazione ha raggiunto livelli molto elevati.<br />
+		</p>
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-functions-with-pycaret/ml-fitfnwcaret-example3.png" alt="Confronto del grafico tra funzione originale e la funzione approssimata dal regressore selezionato e addestrato da PyCaret" /></div>
+		<div class="photocaption">Figura con grafici a dispersione che mostra l&apos;approssimazione in sovraimpressione in rosso della funzione<br />
+		$f(x)=e^{\sin x}$ e la funzione originale sottostante in blu.</div>
+		<br />
+		<br />
+		<p>
+			Lo script shell di questo esempio (che mostra l&apos;uso in cascata di questi programmi) al seguente url:<br />
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/pycaret/examples/example3.sh"><code>one-variable-function/pycaret/examples/example3.sh</code></a>.
 		</p>
 
         <h2>Citazioni</h2>
