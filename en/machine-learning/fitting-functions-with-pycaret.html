@@ -517,6 +517,110 @@ optional arguments:
 			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/one-variable-function/pycaret/examples/example3.sh"><code>one-variable-function/pycaret/examples/example3.sh</code></a>.
 		</p>
 
+
+
+		<h2>Examples of approximation of real-valued scalar function of two real-valued variables</h2>
+
+		<h3>Example #1</h3>
+		<p>
+			Suppose you want to approximate the function $$f(x,y)=x^2 + y^2$$ in the set $[-5,5] \times [-5,5]$.
+			The translation of this function in lambda body Python syntax is:
+			<pre><code class="python">x**2 + y**2</code></pre>
+			To generate the training dataset, by the <a href="https://github.com/ettoremessina/function-fitting/blob/master/two-variables-function/common/fxy_gen.py" target="_blank"><code>fxy_gen.py</code></a> program,
+			run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fxy_gen.py \
+  --dsout mytrain.csv \
+  --funcxy "x**2 + y**2" \
+  --xbegin -3.0 --xend 3.0 \
+  --ybegin -3.0 --yend 3.0 \
+  --xstep 0.05 --ystep 0.1</code></pre>
+			instead to generate the test dataset, run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fyx_gen.py \
+  --dsout mytest.csv \
+  --funcxy "x**2 + y**2" \
+  --xbegin -3.0 --xend 3.0 \
+  --ybegin -3.0 --yend 3.0 \
+  --xstep 0.0875 --ystep 0.5</code></pre>
+			Note that the discretization step of the test dataset is larger than that of training and it is a normal fact
+			because the training, to be accurate, it must be run on more data.
+			Also note that it is appropriate for the discretization step of the test dataset is <u>not</u> a multiple of the training one
+			in order to ensure that the test dataset contains most of the data that is not present in training dataset, and this makes prediction more interesting.
+			<br />
+			To this we intend to make a regression by <a href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/fit_func.py" target="_blank"><code>fit_func.py</code></a> program
+			passing to the underlying regressor the following arguments: 'train_size': 0.8, 'session_id': 987654321, 'log_experiment': True, 'experiment_name': 'example1_pycaret';
+			then run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fit_func.py \
+  --trainds mytrain.csv \
+  --targetcol z \
+  --metric MAE \
+  --modelout mymodel.pickle \
+  --setupparams "'train_size': 0.8, 'session_id': 987654321,
+    'log_experiment': True, 'experiment_name': 'example1_pycaret'"</code></pre>
+			and at the end of the execution the program shows the best regression algorithm selected by PyCaret, which is in this experiment <em>ExtraTreesRegressor</em>
+			and saves the file mymodel.pickle which contains the model of the selected, configured and trained regressor.<br />
+			<br />
+			Now we intend to perform the prediction and calculation of the error using the measurements <em>mean_absolute_error</em> and <em>mean_squared_error</em>
+			by the <a href="https://github.com/ettoremessina/function-fitting/blob/master/pycaret/predict_func.py" target="_blank"><code>predict_func.py</code></a> program;
+			then execute the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python predict_func.py \
+  --model mymodel.pickle \
+  --ds mytest.csv \
+  --targetcol z \
+  --predictionout mypred.csv \
+  --measures mean_absolute_error mean_squared_error</code></pre>
+  			and at the end of the execution the saved mypred.csv file contains the prediction performed by applying the model on the test data;
+			the output of the program displays the error measures passed through the argument <code>--measures</code>
+			and are very low: the first around $0.00389864$ and the second around $0.00004255$.<br />
+			Finally you want to make the comparative display of the test dataset with the prediction
+			by the <a href="https://github.com/ettoremessina/function-fitting/blob/master/two-variables-function/common/fxy_scatter.py" target="_blank"><code>fxy_scatter.py</code></a> program;
+			therefore run the following command:
+			<br/>
+			<br/>
+			<pre><code class="shell">$ python fxy_scatter.py \
+  --ds mytest.csv \
+  --prediction mypred.csv \
+  --xlabel "x" \
+  --ylabel "y" \
+  --zlabel "z=x**2 + y**2"</code></pre>
+			that shows alongside the dispersion graphs of the test dataset and the prediction: in blue the one of the test dataset, in red the prediction.
+			The comparison of the two graphs clearly shows that the approximation has reached very high levels.<br />
+		</p>
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-functions-with-pycaret/ml-fitfnwcaret-example4.png" alt="Graph comparison between original function and the function approximated by the regressor selected and trained by PyCaret" /></div>
+		<div class="photocaption">Figure with dispersion graphs showing the fitting in red overlay of the function<br />
+		$f(x,y)=x^2 + y^2$ and alongside the original function in blue.</div>
+		<br />
+		<br />
+		<p>
+			The shell script of this example (that show the use of these cascading programs) at the following url:<br />
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/pycaret/examples/example1.sh"><code>two-variables-function/pycaret/examples/example1.sh</code></a>.
+		</p>
+
+		<h3>Example #2</h3>
+		<p>
+			Suppose you want to approximate the function $$f(x,y)=\sin \sqrt{x^2 + y^2}$$ in the range $[-5,5] \times [-5,5]$.
+			Keeping in mind that <em>np</em> is the alias of NumPy library, the translation of this function in lambda body Python syntax is:
+			<pre><code class="python">np.sin(np.sqrt(x**2 + y**2))</code></pre>
+			Executing the same steps as in the previous example, at the end the scatter plots of the test dataset and the prediction are shown alongside: in blue that of the test dataset, in red the prediction.
+			The comparison of the two graphs clearly shows that the approximation has reached very high levels.<br />
+		</p>
+		<div class="betweentextlines"><img src="../../posts/machine-learning/fitting-functions-with-pycaret/ml-fitfnwcaret-example5.png" alt="Graph comparison between original function and the function approximated by the regressor selected and trained by PyCaret" /></div>
+		<div class="photocaption">Figure with dispersion graphs showing alongside the fitting in red overlay of the function<br />
+		$f(x,y)=\sin \sqrt{x^2 + y^2}$ and the original function below in blue.</div>
+		<br />
+		<br />
+		<p>
+			The shell script of this example (that show the use of these cascading programs) at the following url:<br />
+			<a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/two-variables-function/pycaret/examples/example2.sh"><code>two-variables-function/pycaret/examples/example2.sh</code></a>.
+		</p>
+
         <h2>Citations</h2>
         <p>
             <pre><code class="text">@ManualPyCaret,
