@@ -1,0 +1,521 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance" src="https://www.googletagmanager.com/gtag/js?id=UA-149444322-1"></script>
+		<script type="text/plain" data-cookiescript="accepted" data-cookiecategory="performance">
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-149444322-1', { 'anonymize_ip': true });
+		</script>
+
+
+		<title>Serie di Fourier in Python</title>
+		<meta name="description" content="Esempi di uso di comuni librerie per Python per approssimare funzioni periodiche tramite serie di Fourier." >
+		<meta name="keywords" content="fourier serie, funzione, funzioni, periodica, periodiche, approssimazione, SciPy, Python" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/fourier-series-in-python.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/",
+              "name": "Matematica"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html",
+              "name": "Serie di Fourier in Python"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/javascript" src="https://latex.codecogs.com/latexit.js"></script>
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+		<script language="javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script language="javascript">
+			function resizeCodeWidgets()
+			{
+				var codeWidth = $(".main").width() - 50;
+  				$("#demo1_code").css("width", codeWidth);
+  				$("#demo2_code").css("width", codeWidth);
+  				$("#demo3_code").css("width", codeWidth);
+  				$("#demo4_code").css("width", codeWidth);
+  				$("#demo5_code").css("width", codeWidth);
+			}
+			$( document ).ready(function()
+			{
+				$("#demo1_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtor-using-definition-with-real-coeffs.py");
+				$("#demo2_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtor-using-definition-with-complex-coeffs.py");
+				$("#demo3_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtoc-using-definition-with-complex-coeffs.py");
+				$("#demo4_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-real-coeffs.py");
+				$("#demo5_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-complex-coeffs.py");
+				resizeCodeWidgets();
+			});
+			$(window).resize(function()
+			{
+				resizeCodeWidgets();
+			});
+		</script>
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
+		<meta property="og:url" content="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="" />
+		<meta property="og:description" content="" />
+		<meta property="og:image" content="/social-previews/thumbnail37.jpg" />
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->		
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://medium.com/@ettoremessina/" class="icon brands fa-medium-m" target="_blank"><span class="label">Medium</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+    $\newcommand{\dee}{\mathop{\mathrm{d}\!}}$
+	<section>
+		<header class="main">
+			<h1>Serie di Fourier in Python</h1>			
+		</header>
+		<p>
+            La <em>serie di Fourier</em> &egrave; una rappresentazione di una funzione periodica tramite una combinazione lineare di funzioni sinusoidali.<br />
+            Nel caso di funzioni a valori reali di una variabile reale, sia $f(t)$ una funzione $\mathbb{R} \to \mathbb{R}$ periodica di periodo $P$ integrabile, limitata e continua a tratti nell&apos;intervallo $[0, P]$:
+			tale funzione pu&ograve; essere rappresentata come <em>serie di Fourier in forma reale</em>:
+            
+    $$ f(t) = \frac{a_0}{2} + \sum_{n=1}^\infty [a_n \cos{\frac{2 \pi n t}{P}} + b_n \sin{\frac {2 \pi n t}{P}}] $$
+
+            dove i coefficienti $a_n$ e $b_n$ sono reali e sono cos&igrave; definiti:
+            
+    $$ a_0 = \frac{2}{P} \int_{0}^{P} f(t) \,dx $$
+
+            
+    $$ a_n = \frac{2}{P} \int_{0}^{P} f(t) \cos{\frac{ 2 \pi n t}{P}}\,dx $$
+
+            
+    $$ b_n = \frac{2}{P} \int_{0}^{P} f(t) \sin{\frac{2 \pi n t}{P}}\,dx $$
+
+            Applicando la formula di Eulero, la funzione $f(t)$ pu&ograve; essere anche rappresentata nella <em>forma complessa</em>:
+            
+    $$ f(t) = \sum_{n=-\infty}^\infty c_n e^{\frac{2 i \pi n t}{P}}$$
+ dove i coefficienti $c_n$ sono complessi e cos&igrave; definiti:
+            
+    $$ c_n = \frac{1}{P} \int_{0}^{P} f(t) e^{\frac{-2 i \pi n t}{P}}\,dt $$
+
+			Nel caso di funzioni a valori complessi di una variabile reale, sia $f(t)$ una funzione $\mathbb{R} \to \mathbb{C}$ periodica di periodo $P$ integrabile, limitata e continua a tratti nell&apos;intervallo $[0, P]$:
+			la forma reale della serie di Fourier non pu&ograve; essere utilizzata, ma quella complessa appena mostrata s&igrave.<br />
+			Nei punti di discontinuit&agrave;, il valore della serie di Fourier &egrave; uguale alla media del limite sinistro e del limite destro.<br />
+			<br />
+			<b>Nota:</b> In alcuni testi, nel presentare la formula della serie di Fourier, si assume implicitamente che il periodo sia $2 \pi$, mentre in questo post
+			viene fornita la forma pi&ugrave; generale ove il periodo pu&ograve; assumere qualsiasi valore ed &egrave; indicato con $P$.<br />
+			<b>Nota:</b> In alcuni testi gli integrali nella formula della serie di Fourier sono calcolati nell'intervanno $[\frac{-P}{2}, \frac{P}{2}]$;
+			per un teorema sulle serie di Fourier, l&apos;intervallo di integrazione pu&ograve; essere liberamente spostato e
+			l&apos;unica cosa importante &egrave; che sia di lunghezza uguale per periodo;
+			per semplicit&agrave; implementativa qui si &egrave; scelto l&apos;intervallo $[0, P].$<br />
+			<b>Nota:</b> In alcuni testi il periodo &egrave; indicato con $2P$, quindi $P$ diventerebbe il semiperiodo e questo consentirebbe di eliminare un fattore $2$ nel numeratore nelle formule nella forma reale;
+			invece in questo post e nel codice relativo, il periodo &egrave; indicato con $P$ e il fattore $2$ nel numeratore delle formule rimane.<br />
+			<br />
+			Questo post &egrave; organizzato in demo, ovverosia piccoli programmi scritti in Python 3.x tramite la libreria <a href="https://www.scipy.org/" target="_blank">SciPy</a>
+			(servono inoltre le librerie <a target="_blank" href="https://numpy.org/">NumPy</a> e <a target="_blank" href="https://matplotlib.org/">MatPlotLib</a>)
+			che mostrano varie casistiche di approssimazione di una funzione periodica tramite serie di Fourier.<br />
+			Si ringrazia la prof.ssa Fausta D&apos;Acunzo di <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> per il supporto teorico fornito sulle serie di Fourier.<br />
+			<br/>
+			Per ottenere il codice di tutte le demo si veda il paragrafo <a href="#downloadcode">Download del codice completo</a> in fondo a questo post.<br/>
+			<br/>
+        </p>
+
+        <h2>Calcolo della serie di Fourier applicando la definizione</h2>
+		<p>
+			La prima demo di questo post mostra l&apos;approssimazione di una funzione periodica tramite serie di Fourier applicando la definizione nella forma reale.
+			Naturalmente la sommatoria non pu&ograve; andare fino all&apos;infinito, quindi i cicli di sommatoria dovranno essere limitati ad un valore di $N$
+			non molto grande, per ovvi motivi di performance, ma sufficiente da avere una approssimazione accettabile.
+			Per quanto riguarda i calcoli degli integrali si fa uso della libreria <em>SciPy</em> e in particolare della funzione <code>quad</code>;
+			si rimanda al post <a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a> su questo sito per dettagli sull&apos;integrazione in Python.<br />
+			<br />
+			La seconda demo mostra l&apos;approssimazione della stessa funzione periodica ma tramite serie di Fourier applicando la definizione nella forma complessa.
+			Per quanto riguarda i calcoli degli integrali complessi si fa uso della libreria <em>SciPy</em> integrando separatamente la parte reale e la parte immaginaria.<br />
+			<br />
+			La terza demo mostra l&apos;approssimazione di una funzione periodica a valori complessi tramite serie di Fourier applicando naturalmente la definizione nella forma complessa.<br />
+			<br />
+			Da un punto di vista applicativo, potrebbe essere lecito domandarsi a che serve approssimare una funzione se si conosce gi&agrave; la funzione stessa.
+			La risposta &egrave; semplice (e quella fornita qui non &egrave; l&apos;unica risposta possibile): nel mondo reale la funzione periodica potrebbe essere non nota
+			ma potrebbe essere disponibile sotto forma di dati discreti (ad esempio acquisiti tramite sensori o misure sul campo); in tal caso l&apos;approssimazione tramite serie di Fourier
+			diventa molto utile ovviamente realizzando i calcoli degli integreali usando tecniche di integrazione discreta.<br />
+			La quarta e la quinta demo mostrano come ottenere la serie di Fourier a partire da un insieme discreto di valori (e quindi non pi&ugrave; da una funzione analitica data a priori);
+			precisamente la quarta demo opera su un dataset di valori reali mentre la quinta demo su un dataset di valori complessi.
+        </p>
+
+        <h3>1. Calcolo della serie di Fourier nella forma reale di una funzione a valori reali di una variabile reale</h3>
+		<p>
+			Sia data la funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			<br />
+			Qui di seguito l&apos;esempio di codice Python che applica la definizione della serie di Fourier nella forma reale per approssimare tale funzione:
+            <pre><code class="python" id="demo1_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtor-using-definition-with-real-coeffs.py">fourier-series-func-rtor-using-definition-with-real-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo1_graph.png" alt="Confronti dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+		<div class="photocaption">
+			Confronti dei grafici della funzione approssimata in rosso al variare di $N$<br />
+			e della funzione originale in blu.
+		</div>
+        <br /><br />
+
+        <h3>2. Calcolo della serie di Fourier nella forma complessa di una funzione a valori reali di una variabile reale</h3>
+		<p>
+			Sia data la funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			<br />
+			Qui di seguito l&apos;esempio di codice Python che applica la definizione della serie di Fourier nella forma complessa per approssimare tale funzione:
+            <pre><code class="python" id="demo2_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtor-using-definition-with-complex-coeffs.py">fourier-series-func-rtor-using-definition-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo2_graph.png" alt="Confronti dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+		<div class="photocaption">
+			Confronti dei grafici della funzione approssimata in rosso al variare di $N$<br />
+			e della funzione originale in blu.
+		</div>
+        <br /><br />
+
+        <h3>3. Calcolo della serie di Fourier nella forma complessa di una funzione a valori complessi di una variabile reale</h3>
+		<p>
+			Sia data la funzione $\mathbb{R} \to \mathbb{C}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 2 + ((t \mod P) - (P / 2)) i, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			<br />
+			Qui di seguito l&apos;esempio di codice Python che applica la definizione della serie di Fourier nella forma complessa per approssimare tale funzione:
+            <pre><code class="python" id="demo3_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtoc-using-definition-with-complex-coeffs.py">fourier-series-func-rtoc-using-definition-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria);
+			sulla colonna di sinistra &egrave; mostrata la parte reale, sulla colonna di destra quella immaginaria.
+			Si osservi che gi&agrave; per $N$ uguale a $4$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Confronti dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+		<div class="photocaption">
+			Confronti dei grafici della funzione approssimata in rosso al variare di $N$<br />
+			e della funzione originale in blu;
+			sulla colonna di sinistra &egrave; mostrata la parte reale, sulla colonna di destra quella immaginaria.
+		</div>
+        <br /><br />
+
+        <h3>4. Calcolo della serie di Fourier nella forma reale di un dataset periodico, discreto e a valori reali</h3>
+		<p>
+			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			Come gi&agrave; detto sopra, nel mondo reale questo dataset non &egrave; generato da una funzione ma ottenuto tramite sensori, campionamenti, misure sul campo.<br />
+			<br />
+			Qui di seguito l&apos;esempio di codice Python che applica la definizione della serie di Fourier nella forma reale per approssimare tale dataset discreto:
+            <pre><code class="python" id="demo4_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-real-coeffs.py">fourier-series-discrete-set-using-definition-with-real-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo4_graph.png" alt="Confronti dei grafici del dataset originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+		<div class="photocaption">
+			Confronti dei grafici della funzione approssimata in rosso al variare di $N$<br />
+			e del dataset originale in blu.
+		</div>
+        <br /><br />
+
+        <h3>5. Calcolo della serie di Fourier nella forma complessa di un dataset periodico, discreto e a valori reali</h3>
+		<p>
+			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			Come gi&agrave; detto sopra, nel mondo reale questo dataset non &egrave; generato da una funzione ma ottenuto tramite sensori, campionamenti, misure sul campo.<br />
+			<br />
+			Qui di seguito l&apos;esempio di codice Python che applica la definizione della serie di Fourier nella forma complessa per approssimare tale dataset discreto:
+            <pre><code class="python" id="demo5_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-complex-coeffs.py">fourier-series-discrete-set-using-definition-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo5_graph.png" alt="Confronti dei grafici del dataset originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+		<div class="photocaption">
+			Confronti dei grafici della funzione approssimata in rosso al variare di $N$<br />
+			e del dataset originale in blu.
+		</div>
+        <br /><br />		
+
+        <h2 id="downloadcode">Download del codice completo</h2>
+		<p>
+			Il codice completo &egrave; disponibile su GitHub a questo indirizzo: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/tree/master/demos/python/fourier-series/">fourier-series</a>.
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html">Pruning di reti neurali con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/equazioni-differenziali-e-reti-neurali.html">Equazioni Differenziali e Reti Neurali</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html">Strumenti generali per l&apos;approssimazione di funzioni</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-pycaret.html">Approssimazione di funzioni tramite PyCaret</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Matematica</span>
+											<ul>
+												<li><a href="../../it/matematica/">INDICE</a></li>
+												<li><a href="../../it/matematica/serie-di-fourier-in-python.html">Serie di Fourier in Python</a></li>
+												<li><a href="../../it/matematica/risoluzione-equazioni-differenziali-con-ritardo-in-python-con-metodi-numerici.html">Risoluzione di equazioni differenziali con ritardo con metodi numerici in Python</a></li>
+												<li><a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html">Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
+												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../it/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
