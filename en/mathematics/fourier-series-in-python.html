@@ -152,8 +152,8 @@
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
 		<meta property="og:url" content="https://computationalmindset.com/en/mathematics/fourier-series-in-python.html" />
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="" />
-		<meta property="og:description" content="" />
+		<meta property="og:title" content="Fourier Series in Python" />
+		<meta property="og:description" content="Examples of using common Python libraries to approximate periodic functions by Fourier series." />
 		<meta property="og:image" content="/social-previews/thumbnail37.jpg" />
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->        
 
@@ -199,7 +199,8 @@
 			<h1>Fourier Series in Python</h1>
 		</header>
 		<p>
-			The <em>Fourier series</em> is a representation of a periodic function by a linear combination of sinusoidal functions.<br />
+			The <em>Fourier series</em> is a representation of a periodic function by an infinite sum (a series then)
+			of functions $\sin$ and $\cos$ multiplied by appropriate coefficients.<br />
 			In the case of real-valued functions of one real variable, let $f(t)$ be a $\mathbb{R} \to \mathbb{R}$ periodic of period $P$ integrable, limited and continuous at intervals in the interval $[0, P]$:
 			such a function can be represented as <em>real-form Fourier series</em>:
             
@@ -280,10 +281,10 @@
 			as the value of $N$ (the maximum index of the summation) increases.
 			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo1_graph.png" alt="Comparison of the graphs of the original function and the approximate function with the Fourier series as N varies"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo1_graph.png" alt="Comparison of the graphs as N changes: in blue the original real-valued function and in red the function approximated using the real form of the Fourier series"/></div>
 		<div class="photocaption">
-			Comparison of the graphs of the approximate function in red as $N$ varies<br />
-			and of the original function in blue.
+			Comparison of the graphs as $N$ changes: in blue the original real-valued function<br />
+			and in red the function approximated using the real form of the Fourier series.
 		</div>
         <br /><br />
 
@@ -303,10 +304,10 @@
 			as the value of $N$ (the maximum index of the summation) increases.
 			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo2_graph.png" alt="Comparison of the graphs of the original function and the approximate function with the Fourier series as N varies"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo2_graph.png" alt="Comparison of the graphs as N changes: in blue the original real-valued function and in red the function approximated using the complex form of the Fourier series"/></div>
 		<div class="photocaption">
-			Comparison of the graphs of the approximate function in red as $N$ varies<br />
-			and of the original function in blue.
+			Comparison of the graphs as $N$ changes: in blue the original real-valued function<br />
+			and in red the function approximated using the complex form of the Fourier series.
 		</div>
         <br /><br />
 
@@ -327,10 +328,10 @@
 			on the left column is shown the real part, on the right column the imaginary one.
 			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Comparison of the graphs of the original function and the approximate function with the Fourier series as N varies"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Comparison of the graphs as N changes: in blue the original complex-valued function and in red the function approximated using the complex form of the Fourier series"/></div>
 		<div class="photocaption">
-			Comparison of the graphs of the approximate function in red as $N$ varies<br />
-			and of the original function in blue;
+			Comparison of the graphs as $N$ changes: in blue the original complex-valued function<br />
+			and in red the function approximated using the complex form of the Fourier series;<br />
 			on the left column is shown the real part, on the right column the imaginary one.
 		</div>
         <br /><br />
@@ -352,10 +353,10 @@
 			as the value of $N$ (the maximum index of the summation) increases;
 			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo4_graph.png" alt="Comparison of the graphs of the original function and the approximate function with the Fourier series as N varies"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo4_graph.png" alt="Comparison of graphs as N changes: in blue the original real-valued dataset and in red the discrete approximation obtained using the real form of the Fourier series"/></div>
 		<div class="photocaption">
-			Comparison of the graphs of the approximate function in red as $N$ varies<br />
-			and of the original function in blue.
+			Comparison of graphs as $N$ changes: in blue the original real-valued dataset<br />
+			and in red the discrete approximation obtained using the real form of the Fourier series.
 		</div>
         <br /><br />
 
@@ -376,10 +377,10 @@
 			as the value of $N$ (the maximum index of the summation) increases;
 			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo5_graph.png" alt="Comparison of the graphs of the original function and the approximate function with the Fourier series as N varies"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo5_graph.png" alt="Comparison of graphs as N changes: in blue the original real-valued dataset and in red the discrete approximation obtained using the complex form of the Fourier series"/></div>
 		<div class="photocaption">
-			Comparison of the graphs of the approximate function in red as $N$ varies<br />
-			and of the original function in blue.
+			Comparison of graphs as $N$ changes: in blue the original real-valued dataset<br />
+			and in red the discrete approximation obtained using the complex form of the Fourier series.
 		</div>
         <br /><br />
 

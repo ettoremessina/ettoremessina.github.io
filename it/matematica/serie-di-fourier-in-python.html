@@ -150,8 +150,8 @@
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
 		<meta property="og:url" content="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
 		<meta property="og:type" content="article" />
-		<meta property="og:title" content="" />
-		<meta property="og:description" content="" />
+		<meta property="og:title" content="Serie di Fourier in Python" />
+		<meta property="og:description" content="Esempi di uso di comuni librerie per Python per approssimare funzioni periodiche tramite serie di Fourier." />
 		<meta property="og:image" content="/social-previews/thumbnail37.jpg" />
 		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->		
 
@@ -197,7 +197,8 @@
 			<h1>Serie di Fourier in Python</h1>			
 		</header>
 		<p>
-            La <em>serie di Fourier</em> &egrave; una rappresentazione di una funzione periodica tramite una combinazione lineare di funzioni sinusoidali.<br />
+            La <em>serie di Fourier</em> &egrave; una rappresentazione di una funzione periodica tramite una somma infinita (una serie quindi)
+			di funzioni $\sin$ e $\cos$ moltiplicate per opportuni coefficienti.<br />
             Nel caso di funzioni a valori reali di una variabile reale, sia $f(t)$ una funzione $\mathbb{R} \to \mathbb{R}$ periodica di periodo $P$ integrabile, limitata e continua a tratti nell&apos;intervallo $[0, P]$:
 			tale funzione pu&ograve; essere rappresentata come <em>serie di Fourier in forma reale</em>:
             
@@ -279,10 +280,10 @@
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo1_graph.png" alt="Confronto dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo1_graph.png" alt="Confronto dei grafici al variare di N: in blu la funzione a valori reali originale e in rosso la funzione approssimata usando la forma reale della serie di Fourier"/></div>
 		<div class="photocaption">
-			Confronto dei grafici della funzione approssimata in rosso al variare di $N$<br />
-			e della funzione originale in blu.
+			Confronto dei grafici al variare di $N$: in blu la funzione a valori reali originale<br />
+			e in rosso la funzione approssimata usando la forma reale della serie di Fourier.
 		</div>
         <br /><br />
 
@@ -302,10 +303,10 @@
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo2_graph.png" alt="Confronto dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo2_graph.png" alt="Confronto dei grafici al variare di N: in blu la funzione a valori reali originale e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier"/></div>
 		<div class="photocaption">
-			Confronto dei grafici della funzione approssimata in rosso al variare di $N$<br />
-			e della funzione originale in blu.
+			Confronto dei grafici al variare di $N$: in blu la funzione a valori reali originale<br />
+			e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier.
 		</div>
         <br /><br />
 
@@ -326,10 +327,10 @@
 			sulla colonna di sinistra &egrave; mostrata la parte reale, sulla colonna di destra quella immaginaria.
 			Si osservi che gi&agrave; per $N$ uguale a $4$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Confronto dei grafici della funzione originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Confronto dei grafici al variare di N: in blu la funzione a valori complessi originale e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier"/></div>
 		<div class="photocaption">
-			Confronto dei grafici della funzione approssimata in rosso al variare di $N$<br />
-			e della funzione originale in blu;
+			Confronto dei grafici al variare di $N$: in blu la funzione a valori complessi originale<br />
+			e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier;<br />
 			sulla colonna di sinistra &egrave; mostrata la parte reale, sulla colonna di destra quella immaginaria.
 		</div>
         <br /><br />
@@ -351,10 +352,10 @@
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo4_graph.png" alt="Confronto dei grafici del dataset originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo4_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma reale della serie di Fourier"/></div>
 		<div class="photocaption">
-			Confronto dei grafici della funzione approssimata in rosso al variare di $N$<br />
-			e del dataset originale in blu.
+			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
+			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma reale della serie di Fourier.
 		</div>
         <br /><br />
 
@@ -375,10 +376,10 @@
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo5_graph.png" alt="Confronto dei grafici del dataset originale e della funzione approssimata con la serie di Fourier al variare di N"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo5_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier"/></div>
 		<div class="photocaption">
-			Confronto dei grafici della funzione approssimata in rosso al variare di $N$<br />
-			e del dataset originale in blu.
+			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
+			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier.
 		</div>
         <br /><br />		
 
