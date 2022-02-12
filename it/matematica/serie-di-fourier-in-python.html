@@ -234,7 +234,7 @@ dnldnl
 			<br />
 			<b>Nota:</b> In alcuni testi, nel presentare la formula della serie di Fourier, si assume implicitamente che il periodo sia $2 \pi$, mentre in questo post
 			viene fornita la forma pi&ugrave; generale ove il periodo pu&ograve; assumere qualsiasi valore ed &egrave; indicato con $P$.<br />
-			<b>Nota:</b> In alcuni testi gli integrali nella formula della serie di Fourier sono calcolati nell&apos;intervanno $[\frac{-P}{2}, \frac{P}{2}]$;
+			<b>Nota:</b> In alcuni testi gli integrali nella formula della serie di Fourier sono calcolati nell&apos;intervallo $[\frac{-P}{2}, \frac{P}{2}]$;
 			per un teorema sulle serie di Fourier, l&apos;intervallo di integrazione pu&ograve; essere liberamente spostato e
 			l&apos;unica cosa importante &egrave; che sia di lunghezza uguale per periodo;
 			per semplicit&agrave; implementativa qui si &egrave; scelto l&apos;intervallo $[0, P].$<br />
@@ -254,7 +254,7 @@ dnldnl
 			Ai fini del calcolo dei coefficienti della serie di Fourier per rappresentare una funzione periodica $f(t)$
 			non &egrave; possibile applicare la trasformata di Fourier a tale funzione, in quanto periodica appunto;
 			bens&igrave; bisogna considerare solamente un periodo di tale funzione (ad esempio l&apos;intervallo $[0, P]$)
-			e quindi definire una funzione estesa $f_P$ che assume il valore della funzione $f(t)$ per ogni $t \in [0, P]$
+			e quindi definire una funzione estesa $f_P(t)$ che assume il valore della funzione $f(t)$ per ogni $t \in [0, P]$
 			e vale $0$ per i valori di $t$ al di fuori di questo intervallo. Formalmente:
 			
     $$ 
@@ -316,13 +316,13 @@ dnldnl
 			La risposta &egrave; semplice (e quella fornita qui non &egrave; l&apos;unica risposta possibile): nel mondo reale la funzione periodica potrebbe essere non nota
 			ma potrebbe essere disponibile sotto forma di dati discreti (ad esempio acquisiti tramite sensori o misure sul campo); in tal caso l&apos;approssimazione tramite serie di Fourier
 			diventa molto utile ovviamente realizzando i calcoli degli integreali usando tecniche di integrazione discreta.<br />
-			Le demo demo n&deg; 4 e n&deg; 5 mostrano come ottenere la serie di Fourier a partire da un insieme discreto di valori (e quindi non pi&ugrave; da una funzione analitica data a priori);
-			precisamente la quarta demo opera su un dataset di valori reali mentre la quinta demo su un dataset di valori complessi.<br />
+			Le demo n&deg; 4 e n&deg; 5 mostrano come ottenere la serie di Fourier a partire da un insieme discreto di valori (e quindi non pi&ugrave; da una funzione analitica data a priori);
+			precisamente la demo n&deg; 4 opera su un dataset di valori reali mentre la demo n&deg; 5 su un dataset di valori complessi.<br />
 			<br />
-			Le demo demo n&deg; 6, n&deg; 7 e n&deg; 8 mostrano come calcolare i coefficienti complessi $c_n$ usando la trasformata di Fourier;
+			Le demo n&deg; 6, n&deg; 7 e n&deg; 8 mostrano come calcolare i coefficienti complessi $c_n$ usando la trasformata di Fourier;
 			in particolare la demo n&deg; 6 si applica al caso continuo e richiede l&apos;uso di integrali,
 			mentre le altre due si applicano al caso discreto e non richiedono calcolo integrale;
-			in particolare la n&deg; 8 utilizza la funzione della libreria SciPy per il calcolo della <em>trasformata di Fourier veloce</em> che &egrave; un algoritmo ottimizzato
+			in particolare la demo n&deg; 8 utilizza la funzione della libreria SciPy per il calcolo della <em>trasformata di Fourier veloce</em> che &egrave; un algoritmo ottimizzato
 			per calcolare la trasformata di Fourier discreta in maniera efficiente.
         </p>
 
@@ -454,7 +454,7 @@ dnldnl
     $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
 
 			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
-			Nelle demo 1, 2 e 3 si sono calcolati i coefficienti della serie di Fourier (reali nella demo 1, complessi nelle altre 2) utilizzando la definizione
+			Nelle demo n&deg; 1, n&deg; 2 e n&deg; 3 si sono calcolati i coefficienti della serie di Fourier (reali nella demo n&deg; 1, complessi nelle altre due) utilizzando la definizione
 			dei coefficienti come descritto all&apos;inizio del post.
 			In questa demo invece si mostra come usare la trasformata di Fourier per calcolare i coefficienti della forma complessa della serie di Fourier,
 			applicando la relazione tra i coefficienti $c_n$ e la trasformata di Fourier come descritto sempre nella parte iniziale di questo post.<br />
@@ -487,11 +487,11 @@ dnldnl
 			In questa demo si sfrutta la stessa relazione, ma il calcolo della trasformata di Fuorier, trattandosi di valori discreti, si calcola applicando la <em>trasformata discreta di Fuorier</em>
 			che &egrave; definita nel seguente modo:
 			
-    $$ F_P(t) =  \sum_{n=0}^{N-1} x_n e^{\frac{-2 i \pi n t}{N}}  $$
+    $$ F_P(t) =  \sum_{k=0}^{K-1} x_k e^{\frac{-2 i \pi k t}{K}}  $$
 
-			dove $N$ &egrave; il numero dei valori del dataset e $x_n$ &egrave; l&apos;n-esimo valore discreto del dataset (partendo da $0$).</br >
+			dove $K$ &egrave; il numero dei valori del dataset e $x_k$ &egrave; il k-esimo valore discreto del dataset (partendo da $0$).</br >
 			</br >
-			Qui di seguito l&apos;esempio di codice Python che approssima la funzione tramite la serie nella forma complessa calcolando i coefficienti tramite la trasformata discreta di Fourier:
+			Qui di seguito l&apos;esempio di codice Python che approssima il dataset tramite la serie nella forma complessa calcolando i coefficienti tramite la trasformata discreta di Fourier:
             <pre><code class="python" id="demo7_code"></code></pre>
             Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py</a>.<br />
 			<br />
@@ -499,7 +499,7 @@ dnldnl
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo7_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata discreta di Fourier"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo7_graph.png" alt="Confronto dei grafici al variare di N: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata discreta di Fourier"/></div>
 		<div class="photocaption">
 			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
 			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier<br />
@@ -519,7 +519,7 @@ dnldnl
 			In questa demo si sfrutta la stessa tecnica, ma il calcolo della trasformata di Fuorier, si calcola applicando la <em>trasformata veloce di Fuorier</em>
 			disponibile nella libreria SciPy tramite la funzione Python <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.fft.html" target="_blank"><code>scipy.fft.fft</code></a>.</br >
 			</br >
-			Qui di seguito l&apos;esempio di codice Python che approssima la funzione tramite la serie nella forma complessa calcolando i coefficienti per mezzo della trasformata veloce di Fourier:
+			Qui di seguito l&apos;esempio di codice Python che approssima il dataset tramite la serie nella forma complessa calcolando i coefficienti per mezzo della trasformata veloce di Fourier:
             <pre><code class="python" id="demo8_code"></code></pre>
             Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py</a>.<br />
 			<br />
@@ -527,7 +527,7 @@ dnldnl
 			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
 			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
         </p>
-        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo8_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata veloce di Fourier"/></div>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo8_graph.png" alt="Confronto dei grafici al variare di N: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata veloce di Fourier"/></div>
 		<div class="photocaption">
 			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
 			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier<br />
