@@ -1,3 +1,4 @@
+dnldnl
 <!DOCTYPE HTML>
 <!--
 	Editorial by HTML5 UP
@@ -35,8 +36,8 @@
 
 
 		<title>Serie di Fourier in Python</title>
-		<meta name="description" content="Esempi di uso di comuni librerie per Python per approssimare funzioni periodiche tramite serie di Fourier." >
-		<meta name="keywords" content="fourier serie, funzione, funzioni, periodica, periodiche, approssimazione, SciPy, Python" >
+		<meta name="description" content="Esempi di uso di comuni librerie per Python per approssimare funzioni periodiche tramite serie di Fourier usando varie tecniche per calcolare i coefficienti." >
+		<meta name="keywords" content="serie di fourier, transformata di fourier, serie, trasformata, fourier, funzione, funzioni, periodica, periodiche, approssimazione, SciPy, Python" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/fourier-series-in-python.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
@@ -132,6 +133,9 @@
   				$("#demo3_code").css("width", codeWidth);
   				$("#demo4_code").css("width", codeWidth);
   				$("#demo5_code").css("width", codeWidth);
+  				$("#demo6_code").css("width", codeWidth);
+  				$("#demo7_code").css("width", codeWidth);
+  				$("#demo8_code").css("width", codeWidth);
 			}
 			$( document ).ready(function()
 			{
@@ -140,6 +144,9 @@
 				$("#demo3_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtoc-using-definition-with-complex-coeffs.py");
 				$("#demo4_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-real-coeffs.py");
 				$("#demo5_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-definition-with-complex-coeffs.py");
+				$("#demo6_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py");
+				$("#demo7_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py");
+				$("#demo8_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py");
 				resizeCodeWidgets();
 			});
 			$(window).resize(function()
@@ -206,13 +213,13 @@
 
             dove i coefficienti $a_n$ e $b_n$ sono reali e sono cos&igrave; definiti:
             
-    $$ a_0 = \frac{2}{P} \int_{0}^{P} f(t) \,dx $$
+    $$ a_0 = \frac{2}{P} \int_{0}^{P} f(t) \,dt $$
 
             
-    $$ a_n = \frac{2}{P} \int_{0}^{P} f(t) \cos{\frac{ 2 \pi n t}{P}}\,dx $$
+    $$ a_n = \frac{2}{P} \int_{0}^{P} f(t) \cos{\frac{ 2 \pi n t}{P}}\,dt $$
 
             
-    $$ b_n = \frac{2}{P} \int_{0}^{P} f(t) \sin{\frac{2 \pi n t}{P}}\,dx $$
+    $$ b_n = \frac{2}{P} \int_{0}^{P} f(t) \sin{\frac{2 \pi n t}{P}}\,dt $$
 
             Applicando la formula di Eulero, la funzione $f(t)$ pu&ograve; essere anche rappresentata nella <em>forma complessa</em>:
             
@@ -227,17 +234,66 @@
 			<br />
 			<b>Nota:</b> In alcuni testi, nel presentare la formula della serie di Fourier, si assume implicitamente che il periodo sia $2 \pi$, mentre in questo post
 			viene fornita la forma pi&ugrave; generale ove il periodo pu&ograve; assumere qualsiasi valore ed &egrave; indicato con $P$.<br />
-			<b>Nota:</b> In alcuni testi gli integrali nella formula della serie di Fourier sono calcolati nell'intervanno $[\frac{-P}{2}, \frac{P}{2}]$;
+			<b>Nota:</b> In alcuni testi gli integrali nella formula della serie di Fourier sono calcolati nell&apos;intervanno $[\frac{-P}{2}, \frac{P}{2}]$;
 			per un teorema sulle serie di Fourier, l&apos;intervallo di integrazione pu&ograve; essere liberamente spostato e
 			l&apos;unica cosa importante &egrave; che sia di lunghezza uguale per periodo;
 			per semplicit&agrave; implementativa qui si &egrave; scelto l&apos;intervallo $[0, P].$<br />
 			<b>Nota:</b> In alcuni testi il periodo &egrave; indicato con $2P$, quindi $P$ diventerebbe il semiperiodo e questo consentirebbe di eliminare un fattore $2$ nel numeratore nelle formule nella forma reale;
 			invece in questo post e nel codice relativo, il periodo &egrave; indicato con $P$ e il fattore $2$ nel numeratore delle formule rimane.<br />
 			<br />
+			Esiste un modo alternativo per calcolare i coefficienti complessi della serie di Fourier e consiste nell&apos;utilizzare la <em>trasformata di Fourier</em>.<br />
+			La trasformata di Fourier &egrave; utilizzata moltissimo in fisica e in ingegneria in quanto consente di scrivere una funzione che dipende dal tempo
+			come combinazione lineare di una base di funzioni esponenziali. Questo post non tratta n&eacute; la teoria n&eacute; le applicazioni
+			della trasformata di Fourier, ma si limita a utilizzarla per calcolare i coefficienti complessi $c_n$ della serie di Fourier
+			in quanto esiste una relazione tra i coefficienti della serie e la trasformata di Fourier.</br >
+			<br />
+			Sia $x(t)$ una funzione aperiodica; la definizione della trasformata di Fourier della funzione $x(t)$ &egrave; la seguente:
+			
+    $$ X(\omega) = \int_{-\infty}^{+\infty} x(t) e^{-i \omega t} \,dt $$
+
+			Ai fini del calcolo dei coefficienti della serie di Fourier per rappresentare una funzione periodica $f(t)$
+			non &egrave; possibile applicare la trasformata di Fourier a tale funzione, in quanto periodica appunto;
+			bens&igrave; bisogna considerare solamente un periodo di tale funzione (ad esempio l&apos;intervallo $[0, P]$)
+			e quindi definire una funzione estesa $f_P$ che assume il valore della funzione $f(t)$ per ogni $t \in [0, P]$
+			e vale $0$ per i valori di $t$ al di fuori di questo intervallo. Formalmente:
+			
+    $$ 
+    f_P(t) =
+    \begin{cases}f(t) & t \in [0, P] \\ 0 & t \notin [0, P] \end{cases} 
+    $$
+
+			Sia $F_P$ la trasformata di Fourier applicata a $f_P(t)$: valendo quest&apos;ultima $0$ fuori dall&apos;intervallo $[0, P]$, valgono i seguenti passaggi:
+			
+    $$
+        F_P(\omega) = \int_{-\infty}^{+\infty} f_P(t) e^{-i \omega t} \,dt
+        = \int_{0}^{P} f_P(t) e^{-i \omega t} \,dt
+        = \int_{0}^{P} f(t) e^{-i \omega t} \,dt
+    $$
+
+			Ricordando che $c_n$ vale:
+			
+    $$ c_n = \frac{1}{P} \int_{0}^{P} f(t) e^{\frac{-2 i \pi n t}{P}}\,dt $$
+
+			ponendo:
+			$$ \omega_0 = \frac{2 \pi}{P} $$
+			si ricava la relazione tra un qualsiasi coefficiente $c_n$ e la trasformata di Fuorier seguendo i seguenti passaggi:
+			
+    $$
+        F_P(n \omega_0) 
+        = \int_{0}^{P} f(t) e^{-i n \omega_0 t} \,dt
+        = \int_{0}^{P} f(t) e^{\frac{-2 i \pi n t}{P}} \,dt
+        = c_n P
+    $$
+
+			e quindi:
+			
+    $$ c_n = \frac{1}{P} F_P(n \omega_0) $$
+ 
+			<br />
 			Questo post &egrave; organizzato in demo, ovverosia piccoli programmi scritti in Python 3.x tramite la libreria <a href="https://www.scipy.org/" target="_blank">SciPy</a>
 			(servono inoltre le librerie <a target="_blank" href="https://numpy.org/">NumPy</a> e <a target="_blank" href="https://matplotlib.org/">MatPlotLib</a>)
 			che mostrano varie casistiche di approssimazione di una funzione periodica tramite serie di Fourier.<br />
-			Si ringrazia la prof.ssa Fausta D&apos;Acunzo di <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> per il supporto teorico fornito sulle serie di Fourier.<br />
+			Si ringrazia la prof.ssa Fausta D&apos;Acunzo di <a href="https://youtube.com/c/Preparazione20" target="_blank">Preparazione 2.0</a> per il supporto teorico fornito sulla serie e sulla trasformata di Fourier.<br />
 			<br/>
 			Per ottenere il codice di tutte le demo si veda il paragrafo <a href="#downloadcode">Download del codice completo</a> in fondo a questo post.<br/>
 			<br/>
@@ -245,26 +301,32 @@
 
         <h2>Calcolo della serie di Fourier applicando la definizione</h2>
 		<p>
-			La prima demo di questo post mostra l&apos;approssimazione di una funzione periodica tramite serie di Fourier applicando la definizione nella forma reale.
+			La demo n&deg; 1 di questo post mostra l&apos;approssimazione di una funzione periodica tramite serie di Fourier applicando la definizione nella forma reale.
 			Naturalmente la sommatoria non pu&ograve; andare fino all&apos;infinito, quindi i cicli di sommatoria dovranno essere limitati ad un valore di $N$
 			non molto grande, per ovvi motivi di performance, ma sufficiente da avere una approssimazione accettabile.
 			Per quanto riguarda i calcoli degli integrali si fa uso della libreria <em>SciPy</em> e in particolare della funzione <code>quad</code>;
 			si rimanda al post <a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a> su questo sito per dettagli sull&apos;integrazione in Python.<br />
 			<br />
-			La seconda demo mostra l&apos;approssimazione della stessa funzione periodica ma tramite serie di Fourier applicando la definizione nella forma complessa.
+			La demo n&deg; 2 mostra l&apos;approssimazione della stessa funzione periodica ma tramite serie di Fourier applicando la definizione nella forma complessa.
 			Per quanto riguarda i calcoli degli integrali complessi si fa uso della libreria <em>SciPy</em> integrando separatamente la parte reale e la parte immaginaria.<br />
 			<br />
-			La terza demo mostra l&apos;approssimazione di una funzione periodica a valori complessi tramite serie di Fourier applicando naturalmente la definizione nella forma complessa.<br />
+			La demo n&deg; 3 mostra l&apos;approssimazione di una funzione periodica a valori complessi tramite serie di Fourier applicando naturalmente la definizione nella forma complessa.<br />
 			<br />
 			Da un punto di vista applicativo, potrebbe essere lecito domandarsi a che serve approssimare una funzione se si conosce gi&agrave; la funzione stessa.
 			La risposta &egrave; semplice (e quella fornita qui non &egrave; l&apos;unica risposta possibile): nel mondo reale la funzione periodica potrebbe essere non nota
 			ma potrebbe essere disponibile sotto forma di dati discreti (ad esempio acquisiti tramite sensori o misure sul campo); in tal caso l&apos;approssimazione tramite serie di Fourier
 			diventa molto utile ovviamente realizzando i calcoli degli integreali usando tecniche di integrazione discreta.<br />
-			La quarta e la quinta demo mostrano come ottenere la serie di Fourier a partire da un insieme discreto di valori (e quindi non pi&ugrave; da una funzione analitica data a priori);
-			precisamente la quarta demo opera su un dataset di valori reali mentre la quinta demo su un dataset di valori complessi.
+			Le demo demo n&deg; 4 e n&deg; 5 mostrano come ottenere la serie di Fourier a partire da un insieme discreto di valori (e quindi non pi&ugrave; da una funzione analitica data a priori);
+			precisamente la quarta demo opera su un dataset di valori reali mentre la quinta demo su un dataset di valori complessi.<br />
+			<br />
+			Le demo demo n&deg; 6, n&deg; 7 e n&deg; 8 mostrano come calcolare i coefficienti complessi $c_n$ usando la trasformata di Fourier;
+			in particolare la demo n&deg; 6 si applica al caso continuo e richiede l&apos;uso di integrali,
+			mentre le altre due si applicano al caso discreto e non richiedono calcolo integrale;
+			in particolare la n&deg; 8 utilizza la funzione della libreria SciPy per il calcolo della <em>trasformata di Fourier veloce</em> che &egrave; un algoritmo ottimizzato
+			per calcolare la trasformata di Fourier discreta in maniera efficiente.
         </p>
 
-        <h3>1. Calcolo della serie di Fourier nella forma reale di una funzione a valori reali di una variabile reale</h3>
+        <h3>Demo n&deg; 1: Calcolo della serie di Fourier nella forma reale di una funzione a valori reali di una variabile reale</h3>
 		<p>
 			Sia data la funzione $\mathbb{R} \to \mathbb{R}$:
 			
@@ -287,7 +349,7 @@
 		</div>
         <br /><br />
 
-        <h3>2. Calcolo della serie di Fourier nella forma complessa di una funzione a valori reali di una variabile reale</h3>
+        <h3>Demo n&deg; 2: Calcolo della serie di Fourier nella forma complessa di una funzione a valori reali di una variabile reale</h3>
 		<p>
 			Sia data la funzione $\mathbb{R} \to \mathbb{R}$:
 			
@@ -310,7 +372,7 @@
 		</div>
         <br /><br />
 
-        <h3>3. Calcolo della serie di Fourier nella forma complessa di una funzione a valori complessi di una variabile reale</h3>
+        <h3>Demo n&deg; 3: Calcolo della serie di Fourier nella forma complessa di una funzione a valori complessi di una variabile reale</h3>
 		<p>
 			Sia data la funzione $\mathbb{R} \to \mathbb{C}$:
 			
@@ -335,7 +397,7 @@
 		</div>
         <br /><br />
 
-        <h3>4. Calcolo della serie di Fourier nella forma reale di un dataset periodico, discreto e a valori reali</h3>
+        <h3>Demo n&deg; 4: Calcolo della serie di Fourier nella forma reale di un dataset periodico, discreto e a valori reali</h3>
 		<p>
 			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
 			
@@ -359,7 +421,7 @@
 		</div>
         <br /><br />
 
-        <h3>5. Calcolo della serie di Fourier nella forma complessa di un dataset periodico, discreto e a valori reali</h3>
+        <h3>Demo n&deg; 5: Calcolo della serie di Fourier nella forma complessa di un dataset periodico, discreto e a valori reali</h3>
 		<p>
 			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
 			
@@ -380,6 +442,96 @@
 		<div class="photocaption">
 			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
 			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier.
+		</div>
+        <br /><br />		
+
+        <h2>Calcolo della serie di Fourier applicando la trasformata di Fourier</h2>
+
+        <h3>Demo n&deg; 6: Calcolo della serie di Fourier nella forma complessa di una funzione a valori reali di una variabile reale con coefficienti calcolati tramite trasformata di Fourier</h3>
+		<p>
+			Sia data la funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			Nelle demo 1, 2 e 3 si sono calcolati i coefficienti della serie di Fourier (reali nella demo 1, complessi nelle altre 2) utilizzando la definizione
+			dei coefficienti come descritto all&apos;inizio del post.
+			In questa demo invece si mostra come usare la trasformata di Fourier per calcolare i coefficienti della forma complessa della serie di Fourier,
+			applicando la relazione tra i coefficienti $c_n$ e la trasformata di Fourier come descritto sempre nella parte iniziale di questo post.<br />
+			</br >
+			Qui di seguito l&apos;esempio di codice Python che approssima la funzione tramite la serie nella forma complessa calcolando i coefficienti per mezzo della trasformata di Fourier:
+            <pre><code class="python" id="demo6_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py">fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo6_graph.png" alt="Confronto dei grafici al variare di N: in blu la funzione a valori reali originale e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata di Fourier"/></div>
+		<div class="photocaption">
+			Confronto dei grafici al variare di $N$: in blu la funzione a valori reali originale<br />
+			e in rosso la stessa funzione approssimata usando la forma complessa della serie di Fourier<br />
+			i cui coefficienti complessi sono calcolati tramite la trasformata di Fourier.
+		</div>
+        <br /><br />
+
+        <h3>Demo n&deg; 7: Calcolo della serie di Fourier nella forma complessa di un dataset periodico, discreto e a valori reali con coefficienti calcolati tramite trasformata discreta di Fourier</h3>
+		<p>
+			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			Come gi&agrave; detto nella demo n&deg; 4, nel mondo reale questo dataset non &egrave; generato da una funzione ma ottenuto tramite sensori, campionamenti, misure sul campo.<br />
+			Nella demo n&deg; 6 si sono calcolati i coefficienti della serie di Fourier in forma complessa utilizzando la definizione dei coefficienti come descritto all&apos;inizio del post.
+			In questa demo si sfrutta la stessa relazione, ma il calcolo della trasformata di Fuorier, trattandosi di valori discreti, si calcola applicando la <em>trasformata discreta di Fuorier</em>
+			che &egrave; definita nel seguente modo:
+			
+    $$ F_P(t) =  \sum_{n=0}^{N-1} x_n e^{\frac{-2 i \pi n t}{N}}  $$
+
+			dove $N$ &egrave; il numero dei valori del dataset e $x_n$ &egrave; l&apos;n-esimo valore discreto del dataset (partendo da $0$).</br >
+			</br >
+			Qui di seguito l&apos;esempio di codice Python che approssima la funzione tramite la serie nella forma complessa calcolando i coefficienti tramite la trasformata discreta di Fourier:
+            <pre><code class="python" id="demo7_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo7_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata discreta di Fourier"/></div>
+		<div class="photocaption">
+			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
+			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier<br />
+			i cui coefficienti complessi sono calcolati tramite la trasformata discreta di Fourier.
+		</div>
+        <br /><br />
+
+        <h3>Demo n&deg; 8: Calcolo della serie di Fourier nella forma complessa di un dataset periodico, discreto e a valori reali con coefficienti calcolati tramite trasformata veloce di Fourier</h3>
+		<p>
+			Sia dato un dataset discreto, che in questa demo &egrave; generato dalla funzione $\mathbb{R} \to \mathbb{R}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
+
+			che &egrave; periodica di periodo uguale a $3$, limitata e continua a tratti.<br />
+			Come gi&agrave; detto nella demo n&deg; 4, nel mondo reale questo dataset non &egrave; generato da una funzione ma ottenuto tramite sensori, campionamenti, misure sul campo.<br />
+			Nella demo n&deg; 7 si sono calcolati i coefficienti della serie di Fourier in forma complessa utilizzando la trasformata discreta di Fourier.<br />
+			In questa demo si sfrutta la stessa tecnica, ma il calcolo della trasformata di Fuorier, si calcola applicando la <em>trasformata veloce di Fuorier</em>
+			disponibile nella libreria SciPy tramite la funzione Python <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.fft.html" target="_blank"><code>scipy.fft.fft</code></a>.</br >
+			</br >
+			Qui di seguito l&apos;esempio di codice Python che approssima la funzione tramite la serie nella forma complessa calcolando i coefficienti per mezzo della trasformata veloce di Fourier:
+            <pre><code class="python" id="demo8_code"></code></pre>
+            Questo il link al codice su GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py</a>.<br />
+			<br />
+			La seguente immagine mostra graficamente come la funzione approssimata con la serie di Fourier migliora l&apos;approssimazione
+			all&apos;aumentare del valore di $N$ (l&apos;indice massimo della sommatoria).
+			Si osservi che gi&agrave; per $N$ uguale a $8$ si ottiene una approssimazione accettabile.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo8_graph.png" alt="Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier i cui coefficienti complessi sono calcolati tramite la trasformata veloce di Fourier"/></div>
+		<div class="photocaption">
+			Confronto dei grafici al variare di $N$: in blu il dataset a valori reali originale<br />
+			e in rosso l&apos;approssimatazione discreta ottenuta usando la forma complessa della serie di Fourier<br />
+			i cui coefficienti complessi sono calcolati tramite la trasformata veloce di Fourier.
 		</div>
         <br /><br />		
 
