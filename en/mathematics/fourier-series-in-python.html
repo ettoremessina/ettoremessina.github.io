@@ -38,7 +38,7 @@
 
 		<title>Fourier Series in Python</title>
 		<meta name="description" content="Examples of using common Python libraries to approximate periodic functions by Fourier series using various techniques to calculate the coefficients." >
-		<meta name="keywords" content="fourier series, fourier transform, fourier analysis, series, transform, analysis, fourier, function, approximate, fit, fitting, periodic, SciPy, Python" >
+		<meta name="keywords" content="fourier series, fourier transform, fourier analysis, series, transform, bidimensional, multidimensional, analysis, fourier, function, approximate, fit, fitting, periodic, SciPy, Python" >
 		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/fourier-series-in-python.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/fourier-series-in-python.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/serie-di-fourier-in-python.html" />
@@ -137,6 +137,10 @@
   				$("#demo6_code").css("width", codeWidth);
   				$("#demo7_code").css("width", codeWidth);
   				$("#demo8_code").css("width", codeWidth);
+  				$("#demo9_code").css("width", codeWidth);
+  				$("#demo10_code").css("width", codeWidth);
+  				$("#demo11_code").css("width", codeWidth);
+  				$("#demo12_code").css("width", codeWidth);				  
 			}
 			$( document ).ready(function()
 			{
@@ -148,6 +152,10 @@
 				$("#demo6_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py");
 				$("#demo7_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-discrete-fourier-transform-with-complex-coeffs.py");
 				$("#demo8_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py");
+				$("#demo9_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-rtoc-using-fourier-transform-with-complex-coeffs.py");
+				$("#demo10_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-complex-set-using-fast-fourier-transform.py");
+				$("#demo11_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-func-r2tor-using-definition-with-complex-coeffs.py");
+				$("#demo12_code").load("https://raw.githubusercontent.com/ettoremessina/function-fitting/master/demos/python/fourier-series/fourier-series-discrete-2d-set-using-fast-fourier-transform-with-complex-coeffs.py");
 				resizeCodeWidgets();
 			});
 			$(window).resize(function()
@@ -291,6 +299,26 @@
     $$ c_n = \frac{1}{P} F_P(n \omega_0) $$
  
 			<br />
+			There is also an n-dimensional formulation of the Fourier series, but its real form is uncompact and of little use for practical purposes;
+			instead the complex form of the multidimensional Fourier series is compact and is obtained by generalization of the one-dimensional complex form.
+			In the two-dimensional case (2 independent variables) formula is as follows:
+			
+    $$ f(x, y) = \sum_{n_1, n_2=-\infty}^\infty c_{n_1, n_2} e^{\frac{2 i \pi n_1 x}{P_x}} e^{\frac{2 i \pi n_2 y}{P_y}} $$
+
+			where
+			
+    $$ c_{n_1, n_2} = \frac{1}{P_x} \frac{1}{P_y} \int_{0}^{P_y} \int_{0}^{P_x} f(x, y) e^{\frac{-2 i \pi n_1 x}{P_x}} e^{\frac{-2 i \pi n_2 y}{P_y}}\,dx\,dy $$
+
+			In the multidimensional case with $d$ dimensions it is good to use vector notation; let $\mathbf{x}$ be the vector of independent variables
+			and the formula for the multidimensional Fourier series in the complex form is as follows:
+			
+    $$ f(\mathbf{x}) = \sum_{\mathbf{n} \in \mathbb{Z}^d} c_{\mathbf{n}} e^{\frac{2 i \pi n_1 x_1}{P_1}} ... e^{\frac{2 i \pi n_d x_d}{P_d}} $$
+
+			where
+			
+    $$ c_{\mathbf{n}} = \frac{1}{P_1} ... \frac{1}{P_d} \int_{[0, P_1] \times ... \times [0, P_d]} f(\mathbf{x}) e^{\frac{-2 i \pi n_1 x_1}{P_1}} ... e^{\frac{-2 i \pi n_d x_d}{P_d}}\,d\mathbf{x} $$
+
+			<br />
 			This post is organized in demos, which are small programs written in Python 3.x using the <a href="https://www.scipy.org/" target="_blank">SciPy</a> library
 			(also need the libraries <a target="_blank" href="https://numpy.org/">NumPy</a> and <a target="_blank" href="https://matplotlib.org/">MatPlotLib</a>)
 			showing various case histories of approximating a periodic function by Fourier series.<br />
@@ -299,34 +327,45 @@
 			To get the code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br/>
         </p>
 
-		<h2>Calculation of the Fourier series by applying the definition</h2>
+		<h2>Demo index</h2>
 		<p>
-			The demo #1 in this post shows the approximation of a periodic function via Fourier series by applying the definition in the real form.
+			The <a href="#hdemo1">demo #1</a> shows the approximation of a periodic function via Fourier series by applying the definition in the real form.
 			Of course, summation cannot go all the way to infinity, so the summation cycles will have to be limited to a value of $N$
 			not very large, for obvious performance reasons, but enough to have an acceptable approximation.
 			As far as integral calculations are concerned, the <em>SciPy</em> library is used and in particular the <code>quad</code> function;
 			please refer to the post <a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a> on this site for details about integration in Python.<br />
 			<br />
-			The demo #2 shows the approximation of the same periodic function but through Fourier series by applying the definition in the complex form.
+			The <a href="#hdemo2">demo #2</a> shows the approximation of the same periodic function but through Fourier series by applying the definition in the complex form.
 			As for the calculations of complex integrals we use the <em>SciPy</em> library integrating separately the real and imaginary part.
 			<br />
-			The demo #3 shows the approximation of a complex-valued periodic function by Fourier series applying of course the definition in the complex form.<br />
+			The <a href="#hdemo3">demo #3</a> shows the approximation of a complex-valued periodic function by Fourier series applying of course the definition in the complex form.<br />
 			<br />
 			From an application point of view, you might wonder what is the point of approximating a function if you already know the function itself.
 			The answer is simple (and the one provided here is not the only possible answer): in the real world, the periodic function may not be known
 			but may be available in the form of discrete data (e.g., acquired via sensors or field measurements); in this case the approximation by Fourier series
 			becomes very useful obviously by performing calculations of integrals using discrete integration techniques.<br />
-			The demos #4 and #5 show how to obtain the Fourier series starting from a discrete set of values (and therefore no longer from an analytical function given a priori);
-			precisely the demo #4 operates on a dataset of real values while the demo #4 on a dataset of complex values.<br />
+			The <a href="#hdemo4">demo #4</a> and the <a href="#hdemo5">demo #5</a> show how to obtain the Fourier series starting from a discrete set of values (and therefore no longer from an analytical function given a priori);
+			precisely the demo #4 operates on a real-valued dataset while the demo #4 on a complex-valued dataset.<br />
 			<br />
-			The demos #6, #7 and #8 the demos show how to compute the complex coefficients $c_n$ using the Fourier transform;
+			The <a href="#hdemo6">demo #6</a>, the <a href="#hdemo7">demo #7</a> and the <a href="#hdemo8">demo #8</a> show how to compute the complex coefficients $c_n$ using the Fourier transform;
 			in particular demo #6 applies to the continuous case and requires the use of integrals,
 			while the other two apply to the discrete case and do not require integral calculus;
 			in particular demo #8 uses the function of the SciPy library to compute the <em>fast Fourier transform</em> which is an optimized algorithm
-			to compute the discrete Fourier transform efficiently.
+			to compute the discrete Fourier transform efficiently.<br />
+			<br />
+			The <a href="#hdemo9">demo #9</a> and the <a href="#hdemo10">demo #10</a> are like demo #6 and demo #8
+			but apply to a complex-valued function and a complex-valued discrete dataset, respectively.<br />
+			<br />
+			The <a href="#hdemo11">demo #11</a> and the <a href="#hdemo12">demo #12</a> concern the two-dimensional Fourier series and apply respectively
+			to the case of a real-valued function of two real variables and to a two-dimensional discrete dataset (in the sense of a set of points lying on a surface in three-dimensional space), respectively.<br />
+			<br />
+			The reader is invited to generalize these cases, for example by extending demo #11 and demo #12
+			to the case of functions (or datasets) with complex values and/or to the n-dimensional case (where the vector notation is certainly more suitable than having a variable for each dimension). 
 		</p>
 
-        <h3>Demo #1: Calculation of the Fourier series in the real form of a real-valued function of one real variable</h3>
+		<h2>Calculation of the Fourier series by applying the definition</h2>
+
+        <h3 id="hdemo1">Demo #1: Calculation of the Fourier series in the real form of a real-valued function of one real variable</h3>
 		<p>
 			Let the function $\mathbb{R} \to \mathbb{R}$ be given:
 			
@@ -349,7 +388,7 @@
 		</div>
         <br /><br />
 
-        <h3>Demo #2: Calculation of the Fourier series in the complex form of a real-valued function of one real variable</h3>
+        <h3 id="hdemo2">Demo #2: Calculation of the Fourier series in the complex form of a real-valued function of one real variable</h3>
 		<p>
 			Let the function $\mathbb{R} \to \mathbb{R}$ be given:
 			
@@ -372,7 +411,7 @@
 		</div>
         <br /><br />
 
-        <h3>Demo #3: Calculation of the Fourier series in the complex form of a complex-valued function of one real variable</h3>
+        <h3 id="hdemo3">Demo #3: Calculation of the Fourier series in the complex form of a complex-valued function of one real variable</h3>
 		<p>
 			Let the function $\mathbb{R} \to \mathbb{C}$ be given:
 			
@@ -387,7 +426,7 @@
 			The following image shows graphically how the function approximated with the Fourier series improves in approximation
 			as the value of $N$ (the maximum index of the summation) increases;
 			on the left column is shown the real part, on the right column the imaginary one.
-			Observe that already for $N$ equal to $8$ an acceptable approximation is obtained.
+			Observe that already for $N$ equal to $4$ an acceptable approximation is obtained.
         </p>
         <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo3_graph.png" alt="Comparison of the graphs as N changes: in blue the original complex-valued function and in red the function approximated using the complex form of the Fourier series"/></div>
 		<div class="photocaption">
@@ -397,14 +436,14 @@
 		</div>
         <br /><br />
 
-        <h3>Demo #4: Calculation of the Fourier series in the real form of a periodic, discrete, real-valued dataset</h3>
+        <h3 id="hdemo4">Demo #4: Calculation of the Fourier series in the real form of a periodic, discrete, real-valued dataset</h3>
 		<p>
 			Let a discrete dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{R}$:
 			
     $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
 
 			which is periodic of period equal to $3$, finite and step continuous.<br />
-			As mentioned above, in the real world this dataset is not generated by a function but obtained through sensors, sampling, and field measurements.<br />
+			As mentioned above, in the real world the dataset is not generated by a function but obtained through sensors, sampling, and field measurements.<br />
 			<br />
 			Below is the example of Python code that applies the definition of the Fourier series in real form to approximate such a discrete dataset:
             <pre><code class="python" id="demo4_code"></code></pre>
@@ -421,14 +460,14 @@
 		</div>
         <br /><br />
 
-        <h3>Demo #5: Calculation of the Fourier series in the complex form of a periodic, discrete, real-valued dataset</h3>
+        <h3 id="hdemo5">Demo #5: Calculation of the Fourier series in the complex form of a periodic, discrete, real-valued dataset</h3>
 		<p>
 			Let a discrete dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{R}$:
 			
     $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
 
 			which is periodic of period equal to $3$, finite and step continuous.<br />
-			As mentioned above, in the real world this dataset is not generated by a function but obtained through sensors, sampling, and field measurements.<br />
+			As mentioned above, in the real world the dataset is not generated by a function but obtained through sensors, sampling, and field measurements.<br />
 			<br />
 			Below is the example of Python code that applies the definition of the Fourier series in real form to approximate such a discrete dataset:
             <pre><code class="python" id="demo5_code"></code></pre>
@@ -447,7 +486,7 @@
 
         <h2>Calculating the Fourier series by applying the Fourier transform</h2>
 
-        <h3>Demo #6: Calculation of the Fourier series in the complex form of a real-valued function of one real variable with coefficients calculated by Fourier transform</h3>
+        <h3 id="hdemo6">Demo #6: Calculation of the Fourier series in the complex form of a real-valued function of one real variable with coefficients calculated by Fourier transform</h3>
 		<p>
 			Let the function $\mathbb{R} \to \mathbb{R}$ be given:
 			
@@ -459,7 +498,7 @@
 			In this demo instead we show how to use the Fourier transform to calculate the coefficients of the complex form of the Fourier series,
 			by applying the relationship between the $c_n$ coefficients and the Fourier transform as always described in the initial part of this post.<br />
 			</br >
-			Below is an example of Python code that approximates the function via the series in the complex form by calculating the coefficients using the Fourier transform:
+			Below is an example of Python code that approximates the real-valued function via the series in the complex form by calculating the coefficients using the Fourier transform:
             <pre><code class="python" id="demo6_code"></code></pre>
             Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py">fourier-series-func-rtor-using-fourier-transform-with-complex-coeffs.py</a>.<br />
 			<br />
@@ -475,14 +514,14 @@
 		</div>
         <br /><br />
 
-        <h3>Demo #7: Computation of Fourier series in the complex form of a periodic, discrete, real-valued dataset with coefficients computed by discrete Fourier transform</h3>
+        <h3 id="hdemo7">Demo #7: Computation of Fourier series in the complex form of a periodic, discrete, real-valued dataset with coefficients computed by discrete Fourier transform</h3>
 		<p>
 			Let a discrete dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{R}$:
 			
     $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
 
 			which is periodic of period equal to $3$, finite and step continuous.<br />
-			As mentioned in demo #4, in the real world this dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
+			As mentioned in demo #4, in the real world the dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
 			In demo #6 we calculated the coefficients of the Fourier series in complex form using the definition of coefficients as described at the beginning of the post.
 			In this demo we use the same relationship, but the calculation of the Fuorier transform, since we are dealing with discrete values, is calculated by applying the <em>discrete Fuorier transform</em>
 			which is defined in the following way:
@@ -501,25 +540,25 @@
         </p>
         <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo7_graph.png" alt="Comparison of the graphs as N changes: in blue the original real-valued dataset and in red the discrete approximation obtained using the complex form of the Fourier series whose complex coefficients are calculated using the discrete Fourier transform."/></div>
 		<div class="photocaption">
-			Comparison of the graphs as $N$ changes: in blue the original real value dataset<br />
+			Comparison of the graphs as $N$ changes: in blue the original real-valued dataset<br />
 			and in red the discrete approximation obtained using the complex form of the Fourier series<br />
 			whose complex coefficients are calculated via the discrete Fourier transform.
 		</div>
         <br /><br />
 
-        <h3>Demo #8: Computation of the Fourier series in the complex form of a periodic, discrete, real-valued dataset with coefficients computed by fast Fourier transform</h3>
+        <h3 id="hdemo8">Demo #8: Computation of the Fourier series in the complex form of a periodic, discrete, real-valued dataset with coefficients computed by fast Fourier transform</h3>
 		<p>
-			Let a discrete dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{R}$:
+			Let a discrete real-valued dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{R}$:
 			
     $$ f(t) = ((t \mod P) - (P / 2)) ^ 3, P=3$$
 
 			which is periodic of period equal to $3$, finite and step continuous.<br />
-			As mentioned in demo #4, in the real world this dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
+			As mentioned in demo #4, in the real world the dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
 			In demo #7 we calculated the coefficients of the Fourier series in complex form using the discrete Fourier transform.<br />
-			In this demo we use the same technique, but the calculation of the Fuorier transform, is calculated by applying the <em>fast Fuorier transform</em>
+			In this demo we use the same technique, but the calculation of the Fuorier transform is calculated by applying the <em>fast Fuorier transform</em>
 			available in the SciPy library using the Python function <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.fft.html" target="_blank"><code>scipy.fft.fft</code></a>.</br >
 			</br >
-			Below is an example of Python code that approximates the dataset via the series in the complex form by calculating the coefficients using the fast Fourier transform:
+			Below is an example of Python code that approximates the real-valued dataset via the series in the complex form by calculating the coefficients using the fast Fourier transform:
             <pre><code class="python" id="demo8_code"></code></pre>
             Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-set-using-fast-fourier-transform-with-complex-coeffs.py</a>.<br />
 			<br />
@@ -529,11 +568,122 @@
         </p>
         <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo8_graph.png" alt="Comparison of the graphs as N varies: in blue the original real-valued dataset and in red the discrete approximation obtained using the complex form of the Fourier series whose complex coefficients are calculated using the fast Fourier transform"/></div>
 		<div class="photocaption">
-			Comparison of the graphs as $N$ changes: in blue the original real value dataset<br />
+			Comparison of the graphs as $N$ changes: in blue the original real-valued dataset<br />
+			and in red the discrete approximation obtained using the complex form of the Fourier series<br />
+			whose complex coefficients are calculated via the fast Fourier transform.
+		</div>
+        <br /><br />
+
+        <h3 id="hdemo9">Demo #9: Calculation of the Fourier series in the complex form of a complex-valued function of a real variable with coefficients calculated by Fourier transform</h3>
+		<p>
+			Let the function $\mathbb{R} \to \mathbb{C}$ be given:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 2 + ((t \mod P) - (P / 2)) i, P=3$$
+
+			which is periodic of period equal to $3$, finite and step continuous.<br />
+			In demo #6 we calculated the coefficients of the Fourier series in the complex form using the Fourier transform applied to a real-valued function
+			using the relationship between the $c_n$ coefficients and the Fourier transform as described in the initial part of this post.<br />
+			In this demo instead we show how to use the Fourier transform applied to a complex-valued function
+			to calculate the coefficients of the Fourier series in the complex form using the same procedure.<br />
+			</br >
+			Below is an example of Python code that approximates the complex-valued function via the series in the complex form by calculating the coefficients using the Fourier transform:
+            <pre><code class="python" id="demo9_code"></code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-rtoc-using-fourier-transform-with-complex-coeffs.py">fourier-series-func-rtoc-using-fourier-transform-with-complex-coeffs.py</a>.<br />
+			<br />
+			The following image shows graphically how the function approximated with the Fourier series improves in approximation
+			as the value of $N$ (the maximum index of the summation) increases;
+			on the left column is shown the real part, on the right column the imaginary one.
+			Observe that already for $N$ equal to $4$ an acceptable approximation is obtained.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo9_graph.png" alt="Comparison of the graphs as N changes: in blue the original real-valued function and in red the discrete approximation obtained using the complex form of the Fourier series whose complex coefficients are calculated via the fast Fourier transform"/></div>
+		<div class="photocaption">
+			Comparison of the graphs as $N$ changes: in blue the original real-valued function<br />
+			and in red the discrete approximation obtained using the complex form of the Fourier series<br />
+			whose complex coefficients are calculated via the fast Fourier transform.
+		</div>
+        <br /><br />
+
+        <h3 id="hdemo10">Demo #10: Computation of the Fourier series in the complex form of a periodic, discrete, complex-valued dataset with coefficients computed by fast Fourier transform</h3>
+		<p>
+			Let a discrete complex-valued dataset, which in this demo is generated by the function $\mathbb{R} \to \mathbb{C}$:
+			
+    $$ f(t) = ((t \mod P) - (P / 2)) ^ 2 + ((t \mod P) - (P / 2)) i, P=3$$
+
+			which is periodic of period equal to $3$, finite and step continuous.<br />
+			As mentioned in demos #4 and #8, in the real world the dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
+			In demo #8 we calculated the coefficients of the Fourier series in complex form using the discrete fast Fourier transform from real discrete data.<br />
+			In this demo, the same technique is used, but the fast Fuorier transform is computed by applying the fast Fuorier transform from complex discrete data;
+			the function of Scipy to use is the same of the demo #8, that is <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.fft.html" target="_blank"><code>scipy.fft.fft</code></a>.</br >
+			</br >
+			Below is the example of Python code that approximates the dataset to complex values via the series in the complex form by calculating the coefficients by means of the fast Fourier transform:
+            <pre><code class="python" id="demo10_code"></code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-complex-set-using-fast-fourier-transform.py">fourier-series-discrete-complex-set-using-fast-fourier-transform.py</a>.<br />
+			<br />
+			The following image shows graphically how the function approximated with the Fourier series improves in approximation
+			as the value of $N$ (the maximum index of the summation) increases;
+			on the left column is shown the real part, on the right column the imaginary one.
+			Observe that already for $N$ equal to $4$ an acceptable approximation is obtained.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo10_graph.png" alt="Comparison of the graphs as $N$ changes: in blue the original real-valued dataset and in red the discrete approximation obtained using the complex form of the Fourier series whose complex coefficients are calculated via the fast Fourier transform"/></div>
+		<div class="photocaption">
+			Comparison of the graphs as $N$ changes: in blue the original real-valued dataset<br />
 			and in red the discrete approximation obtained using the complex form of the Fourier series<br />
 			whose complex coefficients are calculated via the fast Fourier transform.
 		</div>
         <br /><br />		
+
+        <h2>Two-dimensional Fourier series calculation</h2>
+
+        <h3 id="hdemo11">Demo #11: Calculating the Fourier series in the complex form of a real-valued function of two real variables</h3>
+		<p>
+			Let the function $\mathbb{R}^2 \to \mathbb{R}$ be given:
+			
+    $$ f(x, y) = (x \mod PX) + (y \mod PY), PX=3, PY=3$$
+
+			which is periodic of period equal to $3$ on variable $x$ and $2$ on variable $y$, finite and continuous at times.<br />
+			<br />
+			Here is the example of Python code that applies the definition of the Fourier series in the two-dimensional complex form to approximate that function:
+            <pre><code class="python" id="demo11_code"></code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-func-r2tor-using-definition-with-complex-coeffs.py">fourier-series-func-r2tor-using-definition-with-complex-coeffs.py</a>.<br />
+			<br />
+			The following image graphically compares the original function and the approximate function for $N=24$.<br />
+			<b>Note:</b>The code of the demo is not optimized and is a bit slow; it has not been deliberately optimized to make it easy to
+			the comprehension of the code, so much its scope is demonstrative and in the real world normally is not used such mechanism
+			but we use the one that uses the two-dimensional Fourier transform (see next demo).
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo11_graph.png" alt="Comparison of graphs for N=24: in blue the original real-valued function of two variables and in red the same function approximated using the two-dimensional complex form of the Fourier series"/></div>
+		<div class="photocaption">
+			Comparison of graphs for $N=24$: in blue the original real-valued function of two variables<br />
+			and in red the same function approximated using the two-dimensional complex form of the Fourier series.
+		</div>
+        <br /><br />
+
+        <h3 id="hdemo12">Demo #12: Computation of the Fourier series in the complex form of a periodic, discrete, two-dimensional, real-valued dataset with coefficients computed by fast Fourier transform</h3>
+		<p>
+			Let a discrete real-valued dataset, which in this demo is generated by the function $\mathbb{R}^2 \to \mathbb{R}$:
+			
+    $$ f(x, y) = (x \mod PX) + (y \mod PY), PX=3, PY=3$$
+
+			which is periodic of period equal to $3$ on variable $x$ and $2$ on variable $y$, finite and continuous at times.<br />
+			As mentioned in demos #4, #8 and #10, in the real world the dataset is not generated by a function but obtained through sensors, sampling, field measurements.<br />
+			Nella demo #8 si sono calcolati i coefficienti della serie di Fourier nella forma complessa utilizzando la trasformata discreta veloce di Fourier nel caso di un dataset monodimensionale<br />
+			In this demo, the same technique is exploited, but the Fuorier transform is computed by applying the fast Fuorier transform
+			to the case of a two-dimensional dataset.<br />
+			The Scipy function to use is <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.fftpack.fft2.html" target="_blank"><code>scipy.fft.fft2</code></a>.</br >
+			</br >
+			Below is the example of Python code that approximates the two-dimensional real-valued dataset via the series in the complex form by calculating the coefficients by means of the two-dimensional fast Fourier transform:
+            <pre><code class="python" id="demo12_code"></code></pre>
+            Here is the link to the code on GitHub: <a target="_blank" href="https://github.com/ettoremessina/function-fitting/blob/master/demos/python/fourier-series/fourier-series-discrete-2d-set-using-fast-fourier-transform-with-complex-coeffs.py">fourier-series-discrete-2d-set-using-fast-fourier-transform-with-complex-coeffs.py</a>.<br />
+			<br />
+			The following image graphically compares the original dataset and the approximation for $N=24$.
+        </p>
+        <div class="betweentextlines"><img src="../../posts/mathematics/fourier-series-in-python/ma_fourserpython_scipy_demo12_graph.png" alt="Comparison of graphs for N=24: in blue the original two-dimensional real-valued datase and in red the discrete approximation obtained using the two-dimensional complex form of the Fourier series whose complex coefficients are calculated via the two-dimensional fast Fourier transform"/></div>
+		<div class="photocaption">
+			Comparison of graphs for $N=24$: in blue the original two-dimensional real-valued dataset<br />
+			and in red the discrete approximation obtained using the two-dimensional complex form of the Fourier series<br />
+			whose complex coefficients are calculated via the two-dimensional fast Fourier transform.			
+		</div>
+        <br /><br />
 
 		<h2 id="downloadcode">Download of the complete code</h2>
 		<p>
