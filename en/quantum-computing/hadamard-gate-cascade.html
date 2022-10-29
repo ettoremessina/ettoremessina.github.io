@@ -176,9 +176,9 @@
 
 		<p>
 			The Hadamard gate applied to a qubit with an initial value that is $|0\rangle$ or $|1\rangle$ brings the qubit itself into an superposition state so that
-			making a measurement (and therefore the collapse of the wave function) you get the result of 0 or 1 with the same probability.
+			making a measurement (and therefore the collapse of the wave function) with respect to <em>computational canonical basis</em> you get the result of 0 or 1 with the same probability.
 			<br />
-			Thinking classically we could think that the application of a Hadamard gate and a following measure is like the launch of a coin where the probability that it comes out
+			Thinking classically we could think that the application of a Hadamard gate and a following measure are like the launch of a coin where the probability that it comes out
 			heads (or tails) is 50%. Continuing the comparison, raising the coin in the air a second time and going to look at the result, it is trivially deduced that the probability
 			getting heads (or tails) is always 50%. In other words, a second throw does not change the probability distribution of the result compared to the case of a single throw.
 			<br />
@@ -265,7 +265,7 @@
 		</p>
 
 		<h2>QASM code</h2>
-		<p>The following program is the translation in QASM language of the circuit illustrated above; this program has been tested both on IBM&apos;s quantum computer &apos;ibmq_london&apos; and on the IBM &apos;qasm_simulator&apos; simulator.</p>
+		<p>The following program is the translation in QASM language of the circuit illustrated above; this program has been tested both on IBM&apos;s quantum computer &apos;ibm_oslo&apos; and on the IBM &apos;qasm_simulator&apos; simulator.</p>
 		<pre><code class="asm">include "qelib1.inc";
 
 qreg q[5];
@@ -288,7 +288,7 @@ measure q[3] -> c[3];
 measure q[4] -> c[4];</code></pre>
 
 		<h2>Python with Qiskit code</h2>
-		<p>The following program is the translation in Python with Qiskit of the circuit shown above; this program was tested inside a Jupyter Notebook using as backend both IBM&apos;s quantum computer &apos;ibmq_london&apos; and IBM&apos;s &apos;qasm_simulator&apos; simulator.</p>
+		<p>The following program is the translation in Python with Qiskit of the circuit shown above; this program was tested inside a Jupyter Notebook using as backend both IBM&apos;s quantum computer &apos;ibm_oslo&apos; and IBM&apos;s &apos;qasm_simulator&apos; simulator.</p>
 		<pre><code class="python">q = QuantumRegister(5, 'q')
 c = ClassicalRegister(5, 'c')
 circuit = QuantumCircuit(q, c)
@@ -337,7 +337,7 @@ circuit.measure(q, c)</code></pre>
 
 		<h2>Results on IBM Q Experience</h2>
 		<p>
-			Both programs for IBM Q Experience were executed with a number of shots equals to 1024 both on the IBM&apos;s simulator &apos;qasm_simulator&apos; and on the real computer IBM&apos;s &apos;ibmq_london&apos;
+			Both programs for IBM Q Experience were executed with a number of shots equals to 1024 both on the IBM&apos;s simulator &apos;qasm_simulator&apos; and on the real computer IBM&apos;s &apos;ibm_oslo&apos;
 			obtaining the expected result, ie the bits 1, 2 and 4 are constants (their measured values is always respectively 0, 1 and 1).
 			<br/>
 			The bits 0 and 3 combine in the 4 pairs 00 01 10 and 11 each with 25% probability.
@@ -351,13 +351,13 @@ circuit.measure(q, c)</code></pre>
 		<div class="photocaption">QASM program execution result on IBM simulator &apos;qasm_simulator&apos;</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-real.png" /></div>
-		<div class="photocaption">QASM program execution result on IBM real quantum computer 'ibmq_london'</div>
+		<div class="photocaption">QASM program execution result on IBM real quantum computer 'ibm_oslo'</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-sim.png" /></div>
 		<div class="photocaption">Python + Qiskit program execution result on IBM simulator &apos;qasm_simulator&apos;</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-real.png" /></div>
-		<div class="photocaption">Python + Qiskit program execution result on IBM real quantum computer &apos;ibmq_london&apos;</div>
+		<div class="photocaption">Python + Qiskit program execution result on IBM real quantum computer &apos;ibm_oslo&apos;</div>
 		</p>
 
 		<br />

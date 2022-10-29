@@ -174,9 +174,9 @@
 
 		<p>
 			La porta Hadamard applicata a un qubit con valore iniziale che sia $|0\rangle$ oppure $|1\rangle$ porta il qubit stesso in uno stato di sovrapposizione in modo tale che 
-			effettuando una misura (e quindi il collasso della funzione d&apos;onda) si ottiene il risultato di 0 o 1 con la stessa probabilit&agrave;.
+			effettuando una misura (e quindi il collasso della funzione d&apos;onda) rispetto alla <em>base computazionale canonica</em> si ottiene il risultato di 0 o 1 con la stessa probabilit&agrave;.
 			<br />
-			Ragionando classicamente potremmo pensare che l&apos;applicazione di una porta Hadamard e una seguente misura sia come il lancio di una moneta ove la probabilit&agrave; che esca
+			Ragionando classicamente potremmo pensare che l&apos;applicazione di una porta Hadamard e una seguente misura siano come il lancio di una moneta ove la probabilit&agrave; che esca
 			testa (o croce) &egrave; del 50%. Continuando il paragone, rilanciando in aria la moneta una seconda volta e andando a guardare il risultato, si deduce banalmente che la probabilit&agrave; 
 			di ottenere testa (o croce) &egrave; sempre del 50%. In altre parole un secondo lancio non cambia la distribuzione di probabilit&agrave; del risultato rispetto al caso di un singolo lancio.
 			<br />
@@ -265,7 +265,7 @@
 		</p>
 
 		<h2>Codice in QASM</h2>
-		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quanstico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quanstico &apos;ibm_oslo&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
 		<pre><code class="asm">include "qelib1.inc";
 
 qreg q[5];
@@ -288,7 +288,7 @@ measure q[3] -> c[3];
 measure q[4] -> c[4];</code></pre>
 
 		<h2>Codice in Python con Qiskit</h2>
-		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quanstico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
+		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quanstico &apos;ibm_oslo&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
 		<pre><code class="python">q = QuantumRegister(5, 'q')
 c = ClassicalRegister(5, 'c')
 circuit = QuantumCircuit(q, c)
@@ -337,7 +337,7 @@ circuit.measure(q, c)</code></pre>
 
 		<h2>Risultati su IBM Q Experience</h2>
 		<p>
-			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot=1024 sia sul simulatore IBM &apos;qasm_simulator&apos; che sul computer quantisco IBM &apos;ibmq_london&apos;
+			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot=1024 sia sul simulatore IBM &apos;qasm_simulator&apos; che sul computer quantisco IBM &apos;ibm_oslo&apos;
 			ottenendo la distribuzione attesa: i bit 1, 2 e 4 sono costanti (valgono rispettivamente sempre 0, 1 e 1).
 			<br/>
 			I bit 0 e 3 si combinano nelle 4 coppie 00 01 10 e 11 ciascuna con il 25% di probabilit&agrave;.
@@ -351,13 +351,13 @@ circuit.measure(q, c)</code></pre>
 		<div class="photocaption">Risultato del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos;</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qasm-real.png" /></div>
-		<div class="photocaption">Risultato del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos;</div>
+		<div class="photocaption">Risultato del programma scritto in QASM su computer quantistico IBM &apos;ibm_oslo&apos;</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-sim.png" /></div>
 		<div class="photocaption">Risultato del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
 		<br />
 		<div class="belowtextlines"><img src="../../posts/quantum-computing/hadamard-gate-cascade/qc-hdmgatecsd-result-qiskit-real.png" /></div>
-		<div class="photocaption">Risultato del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
+		<div class="photocaption">Risultato del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibm_oslo&apos;</div>
 		</p>
 
 		<br />
