@@ -27,12 +27,12 @@
 		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 
 
-		<title>Generazione di un numero casuale</title>
-		<meta name="description" content="La generazione di numeri casuali su un computer quantistico si ottiene sfruttando l&apos;impredicibilit&agrave; della misura di un qubit in sovrapposizione." >
-		<meta name="keywords" content="porta hadamard, casuale, random, qubit, sovrapposizione, matrice, vettore, ibm experience, qiskit, q#, qasm, quantistico, meccanica" >
-		<link rel="canonical" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/quantum-computing/random-number-generation.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
+		<title>Computazione High Performance</title>
+		<meta name="description" content="Questa pagina &egrave; l&apos;indice di tutti i post sulla matematica applicata pubblicati su questo sito web con esperimenti ed esempi in Python e Julia usando librerie di calcolo scientifico." >
+		<meta name="keywords" content="matematica, funzione, curva, equazione differenziale, ode, dde, integrale, derivata, differenziale, analisi, calcolo" >
+		<link rel="canonical" href="https://computationalmindset.com/it/high-performance/" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/high-performance/" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/high-performance/" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -76,52 +76,14 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/",
-              "name": "Computazione Quantistica"
+              "@id": "https://computationalmindset.com/it/high-performance/",
+              "name": "High Performance"
             }
-          },
-
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "item":
-            {
-              "@id": "https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html",
-              "name": "Generazione di un numero casuale"
-            }
-		  }
+          }
 		
         ]
     }
     </script>
-		
-
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-		
-		<script>hljs.initHighlightingOnLoad();</script>
-		<style>
-			pre > code 
-			{
-				font-size: 1.2em;
-			}
-		</style>
-
-		
-		<script type="text/x-mathjax-config">
-			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-		</script>
-		<script type="text/javascript"
-			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-		</script>
-
-		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
-		<meta property="og:url" content="https://computationalmindset.com/it/computazione-quantistica/generazione-numero-casuale.html" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="" />
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="/social-previews/thumbnail2.jpg" />
-		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
 
 
 		<meta charset="utf-8" />
@@ -158,280 +120,41 @@
 									</ul>
 								</header>
 
-<!-- Content -->
-	<section>
-		<header class="main">
-			<h1>Generazione di un numero casuale</h1>
-		</header>
-
-		<p>
-			Generare numeri casuali su un computer quantistico non &egrave; cosa difficile in quanto l&apos;impredicibilit&agrave; della misura di un qubit
-			in stato di sovrapposizione &egrave; di fatto una forma di casualit&agrave; naturale.
-			Tradurre tale idea in codice &egrave; relativamente semplice: prendendo n qubit (quindi il numero casuale ottenuto da ogni esecuzione sar&agrave; 
-			un numero intero da 0 a 2<sup>n</sup> - 1) con stato iniziale uguale a $|0\rangle$, 
-			si applica su ciascuno degli n qubit la porta quantistica Hadamard e infine si effettua la misura. 
-			La porta Hadamard applicata a $|0\rangle$ porta il qubit nello stato di sovrapposizione:
-						$$\frac{|0\rangle + |1\rangle}{\sqrt{2}}$$
-						e ci&ograve; significa che la misura avr&agrave; la probabilit&agrave; del 50% di essere uguale a 0 e del 50% di essere uguale a 1.
-		</p>
-
-		<h2>Schema circuitale</h2>
-		<p>Considerando di avere a disposizione un computer quantistico con 5 qubit, lo schema circuitale che realizza quanto detto sopra &egrave; il seguente:</p>
-		<div class="betweentextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-circuit.png" /></div>
-		<br/>
-
-		<h2>Codice in QASM</h2>
-		<p>Il seguente programma &egrave; la traduzione in linguaggio QASM del circuito illustrato sopra; questo programma &egrave; stato testato sia sul computer quantistico &apos;ibmq_london&apos; di IBM che sul simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="asm">OPENQASM 2.0;
-include "qelib1.inc";
-
-qreg q[5];
-creg c[5];
-
-h q[0];
-h q[1];
-h q[2];
-h q[3];
-h q[4];
-
-measure q[0] -> c[0];
-measure q[1] -> c[1];
-measure q[2] -> c[2];
-measure q[3] -> c[3];
-measure q[4] -> c[4];</code></pre>
-		<br/>
-	
-		<h2>Codice in Python con Qiskit</h2>
-		<p>Il seguente programma &egrave; la traduzione in Python Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato all&apos;interno di un Jupyter Notebook utilizzando come backend sia il computer quantistico &apos;ibmq_london&apos; di IBM che il simulatore &apos;qasm_simulator&apos; di IBM.</p>
-		<pre><code class="python">q = QuantumRegister(5, 'q')
-c = ClassicalRegister(5, 'c')
-circuit = QuantumCircuit(q, c)
-
-circuit.h(q[0])
-circuit.h(q[1])
-circuit.h(q[2])
-circuit.h(q[3])
-circuit.h(q[4])
-
-circuit.measure(q, c)</code></pre>
-		<br/>
-	
-		<h2>Codice in Microsoft .NET Core Q# per simulatore quantistico</h2>
-		<p>Il seguente programma &egrave; la traduzione in Microsoft Q# Qiskit del circuito illustrato sopra; questo programma &egrave; stato testato su un Linux con .NET Core, runtime Q# e simulatore quantistico Microsoft installati.</p>
-		<pre><code class="cs">namespace ComputationalMindset.QuantumExperiments
-
-    open Microsoft.Quantum.Intrinsic;
-    open Microsoft.Quantum.Canon;
-    open Microsoft.Quantum.Measurement;
-
-    operation RandomNumberGenerator() : (Result, Result, Result, Result, Result)
-    {
-        using (q = Qubit[5])
-        {
-            H(q[0]);
-            H(q[1]);
-            H(q[2]);
-            H(q[3]);
-            H(q[4]);
-
-            let result = (M(q[0]), M(q[1]), M(q[2]), M(q[3]), M(q[4]));
-
-            ResetAll(q);
-            return result;
-        }
-    }
-</code></pre>
-		<br/>
-
-		<h2>Risultati su IBM Q Experience</h2>
-		<p>
-			Entrambi i programmi per IBM Q Experience sono stati eseguiti con un numero di shot uguale a 8192 sia sul simulatore &apos;qasm_simulator&apos; di IBM che sul computer quantisco IBM &apos;ibmq_london&apos; di IBM
-			ottenendo il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			La non perfetta uniformit&agrave; mostrata nel caso dei computer quantistici reali rispetto ai simulatori &egrave; riconducibile a rumore.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
-		</p>
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su simulatore IBM &apos;qasm_simulator&apos; (prime 20 combinazioni)</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qasm-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in QASM su computer quantistico IBM &apos;ibmq_london&apos; (prime 20 combinazioni)</div>
-		<br />
-
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-sim.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su simulatore IBM &apos;qasm_simulator&apos;</div>
-		<br />
-		<div class="belowtextlines"><img src="../../posts/quantum-computing/random-number-generation/qc-rndnmgen-result-qiskit-real.png" /></div>
-		<div class="photocaption">Risultato dell&apos;esecuzione del programma scritto in Python + Qiskit su computer quantistico IBM &apos;ibmq_london&apos;</div>
-		<br />
-		<br />
-
-		<h2>Risultati su simulatore Microsoft</h2>
-		<p>
-			L&apos;esecuzione del programma scritto in Q# per .NET Core ha prodotto il risultato atteso, ovverosia una distribuzione uniforme di tutte le combinazioni di 5 bit.
-			<br />
-			<b>Nota</b>: Data la natura stocastica di questo codice, i singoli specifici risultati possono variare. Si consideri di eseguire il codice pi&ugrave; volte.
-		</p>
-
-		<div class="table-wrapper">
-			<table class="alt">
-				<thead>
-					<tr>
-						<th>Binario</th>
-						<th>Decimale</th>
-						<th>Conteggio</th>
-						<th>Probabilit&agrave; (%)</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-					<tr>
-						<td>00000</td><td>00</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>00001</td><td>01</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>00010</td><td>02</td><td>240</td><td>2.93%</td>
-					</tr>
-					<tr>
-						<td>00011</td><td>03</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>00100</td><td>04</td><td>237</td><td>2.89%</td>
-					</tr>
-					<tr>
-						<td>00101</td><td>05</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>00110</td><td>06</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>00111</td><td>07</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>01000</td><td>08</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>01001</td><td>09</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>01010</td><td>10</td><td>241</td><td>2.94%</td>
-					</tr>
-					<tr>
-						<td>01011</td><td>11</td><td>246</td><td>3.00%</td>
-					</tr>
-					<tr>
-						<td>01100</td><td>12</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>01101</td><td>13</td><td>264</td><td>3.22%</td>
-					</tr>
-					<tr>
-						<td>01110</td><td>14</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>01111</td><td>15</td><td>265</td><td>3.24%</td>
-					</tr>
-					<tr>
-						<td>10000</td><td>16</td><td>223</td><td>2.72%</td>
-					</tr>
-					<tr>
-						<td>10001</td><td>17</td><td>244</td><td>2.98%</td>
-					</tr>
-					<tr>
-						<td>10010</td><td>18</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>10011</td><td>19</td><td>245</td><td>2.99%</td>
-					</tr>
-					<tr>
-						<td>10100</td><td>20</td><td>255</td><td>3.11%</td>
-					</tr>
-					<tr>
-						<td>10101</td><td>21/td><td>248</td><td>3.03%</td>
-					</tr>
-					<tr>
-						<td>10110</td><td>22</td><td>251</td><td>3.06%</td>
-					</tr>
-					<tr>
-						<td>10111</td><td>23</td><td>256</td><td>3.13%</td>
-					</tr>
-					<tr>
-						<td>11000</td><td>24</td><td>272</td><td>3.32%</td>
-					</tr>
-					<tr>
-						<td>11001</td><td>25</td><td>267</td><td>3.26%</td>
-					</tr>
-					<tr>
-						<td>11010</td><td>26</td><td>292</td><td>3.56%</td>
-					</tr>
-					<tr>
-						<td>11011</td><td>27</td><td>227</td><td>2.77%</td>
-					</tr>
-					<tr>
-						<td>11100</td><td>28</td><td>278</td><td>3.39%</td>
-					</tr>
-					<tr>
-						<td>11101</td><td>29</td><td>262</td><td>3.20%</td>
-					</tr>
-					<tr>
-						<td>11110</td><td>30</td><td>257</td><td>3.14%</td>
-					</tr>
-					<tr>
-						<td>11111</td><td>31</td><td>260</td><td>3.17%</td>
-					</tr>
-
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="2">Totale:</td>
-						<td>8192</td>
-						<td>100.00%</td>
-					</tr>
-				</tfoot>
-			</table>
+<!-- Banner -->
+	<section id="banner">
+		<div class="content">
+			<header>
+				<h1>Computazione High Performance</h1>
+				<p>Esempi di implementazione di computazione high performance</p>
+			</header>
 		</div>
-		<div class="photocaption">Risultato del programma scritto in Q# ed eseguito su Linux con .NET Core e simulatore quantistico Microsoft</div>
-		<br />
-		<br />
-
-		<h2>Media</h2>
-		<div class="table-wrapper">
-			<table class="alt">
-				<thead>
-					<tr>
-						<th>Tipo</th>
-						<th>Titolo</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://youtu.be/OLgoCS-ALYY" target="_blank" class="icon brands fa-youtube" style="color: red;"></a>
-						</td>
-						<td>
-							<a href="https://youtu.be/OLgoCS-ALYY" target="_blank">Generazione di un numero casuale su un computer quantistico</a>
-						</td>
-					</tr>
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
+		<div class="image object">
+			<img src="../../images/banner-hp.jpg" alt="Computazione High Performance" />
 		</div>
-
-		<h2>Download del codice completo</h2>
-		<p>
-			Il codice completo &egrave; disponibile su <a target="_blank" href="https://github.com/ettoremessina/quantum-experiments/tree/master/RandomNumberGenerator">GitHub</a>.
+		<div class="content">
 			<br/>
-			
-			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
-			<br/>
-			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
-			<br/>
-
-		</p>
+			<p>
+	Studi, esperimenti ed esempi di problemi e relative soluzioni implementate usando tecniche di computazione high performance, quali CUDA toolkit
+	o alcune librerie Python che gestiscono GPU.
+	Codice ed esempi rigorosamente originali, funzionanti e liberamente disponibili su <a href="https://github.com/ettoremessina/" target="_blank">GitHub</a>.
+</p>
+		</div>
 	</section>
+
+	<header class="major">
+		<h3>Tutti i Post sulla Computazione High Performance</h3>
+	</header>
+
+	<dl>
+		<dt><h4><a href="https://ettoremessina.tech/2024/09/14/high-performance-computing-of-discrete-single-variable-derivative-with-cuda/" target="_blank">High-Performance Computing of Discrete Single Variable Derivative with CUDA<br />
+(post disponibile solo in lingua inglese)</a><h4></dt>
+		<dd>
+			<p>
+    Un esempio di implementazione del calcolo della derivata discreta ad una variable tramite CUDA toolkit.
+</p>
+		</dd>
+	</dl>
+
 
 						</div>
 				</div>
