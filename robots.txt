@@ -3,3 +3,4 @@ User-agent:*
 Disallow: /html5up-license/
 Disallow: /posts/machine-learning/common-tools-for-function-fitting/datafx/
 Disallow: /posts/machine-learning/common-tools-for-function-fitting/datafxy/
+Disallow: /apps/
