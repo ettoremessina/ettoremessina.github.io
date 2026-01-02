@@ -1,0 +1,557 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+
+
+		<title>NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</title>
+		<meta name="description" content="NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes" >
+		<meta name="keywords" content="teorema di stokes, teorema del gradiente, teorema del rotore, teorema della divergenza, calcolo vettoriale, integrale di linea, integrale di superficie, campo vettoriale, interattivo, visualizzazione, matematica, calcolo, three.js, react" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/nablavis-stokes-theorem.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset", "https://ettoremessina.tech/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/",
+              "name": "Matematica"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html",
+              "name": "NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+										<li><a href="https://ettoremessina.tech/" class="icon brands fa-wordpress" target="_blank"><span class="label">WordPress</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</h1>
+		</header>
+
+		<p>
+			Questo post introduce <strong>NablaVis</strong>, un'applicazione web didattica e interattiva progettata per aiutare studenti
+			a visualizzare e comprendere i teoremi fondamentali del calcolo vettoriale attraverso scene 3D interattive. Lo strumento permette agli utenti di esplorare
+			campi scalari e vettoriali, manipolare percorsi e superfici e osservare la verifica numerica in tempo reale delle relazioni matematiche.
+		</p>
+
+		<p>
+			<strong>NablaVis</strong> copre tre applicazioni fondamentali che sono tutte unificate nel quadro generale del Teorema di Stokes:
+			<ul>
+				<li><strong>Teorema del Gradiente</strong> - relazione tra un integrale di linea di un campo gradiente e la differenza dei valori del campo scalare agli estremi</li>
+				<li><strong>Teorema del Rotore</strong> - relazione tra un integrale di linea lungo una curva chiusa e un integrale di superficie del rotore sulla superficie racchiusa</li>
+				<li><strong>Teorema della Divergenza</strong> - relazione tra il flusso di un campo vettoriale attraverso una superficie chiusa e la divergenza sul volume racchiuso</li>
+			</ul>
+		</p>
+
+		<p>
+			L'applicazione &egrave; disponibile e accessibile liberamente all'indirizzo:
+			<a href="https://computationalmindset.com/apps/NablaVis" target="_blank">https://computationalmindset.com/apps/NablaVis</a>
+		</p>
+
+		<h2>Filosofia Educativa</h2>
+		<p>
+			I concetti del calcolo vettoriale come gradiente, rotore e divergenza sono spesso difficili da comprendere per gli studenti attraverso le sole presentazioni tradizionali dei libri di testo.
+			<strong>NablaVis</strong> colma questa lacuna rendendo questi concetti matematici astratti tangibili e interattivi. Invece di un apprendimento passivo,
+			gli studenti possono manipolare oggetti matematici in tempo reale e osservare immediatamente come i cambiamenti influenzano la verifica dei teoremi.
+		</p>
+
+		<p>
+			Lo strumento enfatizza l'esplorazione pratica: gli utenti possono trascinare gli estremi dei percorsi, regolare le superfici, cambiare i campi vettoriali e osservare mentre l'applicazione
+			calcola e confronta istantaneamente entrambi i membri dell'equazione di ciascun teorema. Questo feedback visivo e numerico immediato aiuta a costruire l'intuizione su
+			cosa significano realmente questi teoremi e perch&eacute; funzionano.
+		</p>
+
+		<h2>Il Teorema del Gradiente</h2>
+		<p>
+			Il Teorema del Gradiente afferma che per un campo scalare $f$ e un percorso dal punto $P$ al punto $Q$:
+			$$\int_C \nabla f \cdot \mathrm{d}\mathbf{r} = f(Q) - f(P)$$
+		</p>
+
+		<p>
+			In <strong>NablaVis</strong>, questo teorema &egrave; visualizzato attraverso:
+			<ul>
+				<li><strong>Rappresentazione 3D del campo scalare</strong>: Una mappa di altezza dove la coordinata z rappresenta il valore del campo scalare $f(x,y)$</li>
+				<li><strong>Percorso interattivo</strong>: Una curva che collega i punti P e Q che pu&ograve; essere modificata cliccando sul terreno per riposizionare gli estremi</li>
+				<li><strong>Verifica in tempo reale</strong>: L'HUD mostra sia $f(Q) - f(P)$ che l'integrale di linea calcolato $\int_C \nabla f \cdot \mathrm{d}\mathbf{r}$,
+				confermando che sono uguali indipendentemente dal percorso scelto</li>
+			</ul>
+		</p>
+
+		<p>
+			Quattro campi scalari predefiniti sono disponibili per l'esplorazione:
+			<ul>
+				<li><strong>Paraboloide</strong>: $f(x,y) = x^2 + y^2$ - una semplice superficie convessa</li>
+				<li><strong>Superficie a Sella</strong>: $f(x,y) = x^2 - y^2$ - dimostra un paraboloide iperbolico</li>
+				<li><strong>Picco Gaussiano</strong>: $f(x,y) = e^-(x^2 + y^2)$ - una superficie liscia a forma di campana</li>
+				<li><strong>Collina e Valle</strong>: Un terreno pi&uacute; complesso con pi&uacute; punti critici</li>
+			</ul>
+		</p>
+
+		<p>
+			La visualizzazione dimostra chiaramente una propriet&agrave; chiave dei campi gradiente: sono <em>conservativi</em>, il che significa che l'integrale di linea dipende
+			solo dagli estremi, non dal percorso scelto tra di essi.
+		</p>
+
+		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis-gradient.png" alt="Visualizzazione NablaVis del Teorema del Gradiente che mostra un campo scalare 3D con percorso tra i punti P e Q" width="840" /></div>
+		<div class="photocaption">
+			Figura: Visualizzazione NablaVis del Teorema del Gradiente con un campo scalare 3D.
+			<br />
+			Il percorso collega i punti P e Q, e l'HUD verifica che $\int_C \nabla f \cdot \mathrm{d}\mathbf{r} = f(Q) - f(P)$.
+		</div>
+		<br />
+		<br />
+
+		<h2>Il Teorema del Rotore</h2>
+		<p>
+			Il Teorema del Rotore mette in relazione la circuitazione di un campo vettoriale lungo una curva chiusa con il flusso del suo rotore attraverso la superficie racchiusa:
+			$$\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$$
+		</p>
+
+		<p>
+			La visualizzazione presenta:
+			<ul>
+				<li><strong>Campo vettoriale 2D</strong>: Frecce sul piano xy che mostrano il campo vettoriale $\mathbf{F}(x,y)$</li>
+				<li><strong>Percorso circolare</strong>: Una curva chiusa $C$ che delimita una superficie $S$</li>
+				<li><strong>Verifica matematica</strong>: Confronto in tempo reale della circuitazione $\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r}$
+				(membro sinistro) con l'integrale di superficie $\iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$ (membro destro)</li>
+			</ul>
+		</p>
+
+		<p>
+			Quattro campi vettoriali predefiniti illustrano comportamenti diversi:
+			<ul>
+				<li><strong>Rotazione Semplice</strong>: $\mathbf{F} = (-y, x)$ - rotazione uniforme intorno all'origine</li>
+				<li><strong>Flusso di Taglio</strong>: $\mathbf{F} = (y, 0)$ - movimento di taglio orizzontale</li>
+				<li><strong>Spirale Espansiva</strong>: Combinazione di rotazione ed espansione radiale</li>
+				<li><strong>Campo a Sella</strong>: Un campo con distribuzione del rotore pi&uacute; complessa</li>
+			</ul>
+		</p>
+
+		<p>
+			Questa visualizzazione aiuta gli studenti a comprendere che il rotore misura la "tendenza rotazionale" di un campo vettoriale, e il Teorema del Rotore
+			mette in relazione la rotazione microscopica (rotore in ogni punto) con la circuitazione macroscopica lungo un contorno.
+		</p>
+
+		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis_curl.png" alt="Visualizzazione NablaVis del Teorema del Rotore che mostra un campo vettoriale 2D con percorso circolare" width="840" /></div>
+		<div class="photocaption">
+			Figura: Visualizzazione NablaVis del Teorema del Rotore con un campo vettoriale 2D.
+			<br />
+			Il percorso circolare delimita una superficie, e l'HUD verifica che $\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$.
+		</div>
+		<br />
+		<br />
+
+		<h2>Il Teorema della Divergenza</h2>
+		<p>
+			Il Teorema della Divergenza mette in relazione il flusso di un campo vettoriale attraverso una superficie chiusa con la divergenza
+			nel volume racchiuso:
+			$$\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$$
+		</p>
+
+		<p>
+			La visualizzazione 3D include:
+			<ul>
+				<li><strong>Campo vettoriale 3D</strong>: Frecce nello spazio tridimensionale che mostrano $\mathbf{F}(x,y,z)$</li>
+				<li><strong>Superficie sferica</strong>: Una superficie chiusa $S$ che racchiude un volume $V$</li>
+				<li><strong>Verifica in tempo reale</strong>: Confronto del flusso totale $\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S}$ attraverso la superficie
+				con l'integrale di volume $\iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$</li>
+			</ul>
+		</p>
+
+		<p>
+			Quattro campi predefiniti dimostrano comportamenti di divergenza diversi:
+			<ul>
+				<li><strong>Sorgente (Carica Puntiforme)</strong>: $\mathbf{F} = (x, y, z)$ - flusso radiale verso l'esterno, divergenza positiva</li>
+				<li><strong>Pozzo</strong>: $\mathbf{F} = (-x, -y, -z)$ - flusso radiale verso l'interno, divergenza negativa</li>
+				<li><strong>Campo Uniforme</strong>: $\mathbf{F} = (1, 0, 0)$ - campo costante con divergenza zero</li>
+				<li><strong>Espansione Verticale</strong>: $\mathbf{F} = (0, 0, z)$ - espansione in una sola direzione</li>
+			</ul>
+		</p>
+
+		<p>
+			La visualizzazione mostra chiaramente che la divergenza misura l'"intensit&agrave; della sorgente" o l'"intensit&agrave; del pozzo" in ogni punto - se il campo
+			si sta espandendo verso l'esterno (divergenza positiva) o contraendo verso l'interno (divergenza negativa).
+		</p>
+
+		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis-divergence.png" alt="Visualizzazione NablaVis del Teorema della Divergenza che mostra un campo vettoriale 3D con superficie sferica" width="840" /></div>
+		<div class="photocaption">
+			Figura: Visualizzazione NablaVis del Teorema della Divergenza con un campo vettoriale 3D.
+			<br />
+			La superficie sferica racchiude un volume, e l'HUD verifica che $\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$.</div>
+		<br />
+		<br />
+
+		<h2>Interfaccia Utente e Interazione</h2>
+		<p>
+			<strong>NablaVis</strong> fornisce un'interfaccia intuitiva con diverse funzionalit&agrave; chiave:
+			<ul>
+				<li><strong>HUD in tempo reale (Heads-Up Display)</strong>: Mostra le formule matematiche, i valori calcolati per entrambi i membri di ciascuna equazione,
+				e la conferma quando il teorema &egrave; verificato (i valori coincidono entro una tolleranza numerica)</li>
+				<li><strong>Selezioni predefinite</strong>: Accesso rapido a campi scalari e vettoriali predefiniti che dimostrano propriet&agrave; matematiche interessanti</li>
+				<li><strong>Controlli camera 3D</strong>: Ruotare, spostare e zoomare per visualizzare le scene da qualsiasi angolazione</li>
+				<li><strong>Supporto multilingue</strong>: Interfaccia disponibile in inglese e italiano</li>
+				<li><strong>Design responsive</strong>: Funziona su computer desktop, tablet e dispositivi mobili</li>
+				<li><strong>Manipolazione interattiva</strong>:
+					<ul>
+						<li>Per il Teorema del Gradiente: Cliccare sul terreno per spostare gli estremi del percorso</li>
+						<li>Per i Teoremi del Rotore e della Divergenza: Osservare come si comportano i diversi campi predefiniti</li>
+					</ul>
+				</li>
+			</ul>
+		</p>
+
+		<h2>Implementazione Tecnica</h2>
+		<p>
+			<strong>NablaVis</strong> &egrave; costruito utilizzando tecnologie web moderne che consentono grafica 3D ad alte prestazioni nel browser:
+			<ul>
+				<li><strong>React 18</strong>: Framework UI basato su componenti per costruire la struttura dell'applicazione</li>
+				<li><strong>TypeScript</strong>: Aggiunge sicurezza dei tipi e migliora la manutenibilit&agrave; del codice</li>
+				<li><strong>Three.js</strong>: Libreria grafica 3D standard del settore alimentata da WebGL</li>
+				<li><strong>@react-three/fiber</strong>: Renderer React per Three.js, che consente la costruzione dichiarativa di scene 3D</li>
+				<li><strong>@react-three/drei</strong>: Helper e astrazioni utili per pattern 3D comuni</li>
+				<li><strong>Vite</strong>: Strumento di build moderno che fornisce sviluppo veloce e build di produzione ottimizzate</li>
+				<li><strong>React Router (HashRouter)</strong>: Routing lato client che funziona in qualsiasi ambiente di hosting, comprese le sottocartelle</li>
+			</ul>
+		</p>
+
+		<p>
+			Gli algoritmi di integrazione numerica calcolano integrali di linea, integrali di superficie e integrali di volume utilizzando metodi di discretizzazione appropriati.
+			Le visualizzazioni di verifica si aggiornano in tempo reale mentre gli utenti interagiscono con le scene, fornendo un feedback immediato.
+		</p>
+
+		<h2>Applicazioni Educative</h2>
+		<p>
+			<strong>NablaVis</strong> pu&ograve; essere utilizzato in vari contesti educativi:
+			<ul>
+				<li><strong>Dimostrazioni in aula</strong>: Gli insegnanti possono utilizzare lo strumento durante le lezioni per illustrare i concetti del calcolo vettoriale con esempi dal vivo e interattivi</li>
+				<li><strong>Esplorazione degli studenti</strong>: Gli studenti possono sperimentare con diversi campi e percorsi per costruire l'intuizione sui teoremi</li>
+				<li><strong>Verifica dei compiti</strong>: La conferma visiva e numerica aiuta gli studenti a verificare la loro comprensione dei problemi</li>
+				<li><strong>Studio autonomo</strong>: La natura interattiva lo rende adatto per l'apprendimento indipendente al di fuori dell'aula</li>
+			</ul>
+		</p>
+
+		<h2>Prova NablaVis</h2>
+		<p>
+			Prova <strong>NablaVis</strong> direttamente nel tuo browser:
+			<br /><br />
+			<a href="https://computationalmindset.com/apps/NablaVis" target="_blank" class="button primary large">
+				Avvia NablaVis
+			</a>
+			<br /><br />
+			L'applicazione non richiede installazione e funziona su qualsiasi browser web moderno con supporto WebGL.
+			Per la migliore esperienza, utilizza una versione recente di Chrome, Firefox, Safari o Edge.
+		</p>
+
+		<h2>Sviluppo e Contributi</h2>
+		<p>
+			<strong>NablaVis</strong> &egrave; stato sviluppato utilizzando l'assistenza AI (Gemini con Antigravity) come parte di un'esplorazione
+			nello sviluppo software assistito da AI per strumenti educativi.
+		</p>
+
+		<p>
+			Il progetto segue le pratiche standard di sviluppo TypeScript e JavaScript moderno:
+		</p>
+
+		<p>
+			<strong>Clonare il repository:</strong>
+			<pre><code class="bash">git clone https://github.com/ettoremessina/NablaVis.git
+cd NablaVis</code></pre>
+		</p>
+
+		<p>
+			<strong>Installare le dipendenze:</strong>
+			<pre><code class="bash">npm install</code></pre>
+		</p>
+
+		<p>
+			<strong>Avviare il server di sviluppo:</strong>
+			<pre><code class="bash">npm run dev</code></pre>
+			Questo avvia un server di sviluppo locale con hot module replacement per un'iterazione rapida.
+		</p>
+
+		<p>
+			<strong>Build per la produzione:</strong>
+			<pre><code class="bash">npm run build</code></pre>
+			L'output ottimizzato viene generato nella cartella <code>dist/</code> e pu&ograve; essere distribuito su qualsiasi servizio di hosting statico.
+		</p>
+
+		<h2 id="downloadcode">Codice Sorgente e Licenza</h2>
+		<p>
+			Il codice sorgente completo &egrave; disponibile su GitHub a questo indirizzo: <a target="_blank" href="https://github.com/ettoremessina/NablaVis">NablaVis</a>.
+			<br/>
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html">Pruning di reti neurali con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/equazioni-differenziali-e-reti-neurali.html">Equazioni Differenziali e Reti Neurali</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html">Strumenti generali per l&apos;approssimazione di funzioni</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-pycaret.html">Approssimazione di funzioni tramite PyCaret</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Matematica</span>
+											<ul>
+												<li><a href="../../it/matematica/">INDICE</a></li>
+												<li><a href="../../it/matematica/nablavis-teorema-stokes.html">NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</a></li>
+												<li><a href="../../it/matematica/serie-di-fourier-in-python.html">Serie di Fourier in Python</a></li>
+												<li><a href="../../it/matematica/risoluzione-equazioni-differenziali-con-ritardo-in-python-con-metodi-numerici.html">Risoluzione di equazioni differenziali con ritardo con metodi numerici in Python</a></li>
+												<li><a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html">Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
+												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">High Performance</span>
+											<ul>
+												<li><a href="../../it/high-performance/">INDICE</a></li>
+												<li><a href="https://ettoremessina.tech/2024/09/14/high-performance-computing-of-discrete-single-variable-derivative-with-cuda/" target="_blank">High-Performance Computing of Discrete Single Variable Derivative with CUDA<br />
+(post disponibile solo in lingua inglese)</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/03/high-performance-computing-of-discrete-two-variable-partial-derivatives-with-cuda/" target="_blank">High-Performance Computing of Discrete Two Variable Partial Derivatives with CUDA<br />
+(post disponibile solo in lingua inglese)</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/06/numerical-integration-with-cuda-accelerating-calculations-on-the-gpu/" target="_blank">Numerical Integration with CUDA: Accelerating Calculations on the GPU<br />
+(post disponibile solo in lingua inglese)</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../it/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
