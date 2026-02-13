@@ -29,12 +29,12 @@
 		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 
 
-		<title>&apos;Functions&apos; dataset collection</title>
-		<meta name="description" content="The &apos;functions&apos; dataset collection contains csv and arff (Weka) files that are generated executing mathematical functions in a limited subset of the domain." >
-		<meta name="keywords" content="machine learning, deep learning, dataset, csv, arff, weka, function, continuous function, variable, domain, codomain" >
-		<link rel="canonical" href="https://computationalmindset.com/en/datasets/functions-dataset.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/datasets/functions-dataset.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/datasets/functions-dataset.html" />
+		<title>Queue Simulation with M/M/c Algorithm</title>
+		<meta name="description" content="Queue Simulation with M/M/c Algorithm" >
+		<meta name="keywords" content="queue, simulation, M/M/c, queueing theory, multi-server, Erlang, Poisson, exponential, waiting time, service rate, arrival rate, mathematics" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/queue-simulation-mmc-algorithm.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/queue-simulation-mmc-algorithm.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmc.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -78,8 +78,8 @@
             "position": 2,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/datasets/",
-              "name": "Datasets"
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
             }
           },
 
@@ -88,8 +88,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/en/datasets/functions-dataset.html",
-              "name": "&apos;Functions&apos; dataset collection"
+              "@id": "https://computationalmindset.com/en/mathematics/queue-simulation-mmc-algorithm.html",
+              "name": "Queue Simulation with M/M/c Algorithm"
             }
 		  }
 		
@@ -117,13 +117,6 @@
 			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 		</script>
 
-		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
-		<meta property="og:url" content="https://computationalmindset.com/en/datasets/functions-dataset.html" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="" />
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="/social-previews/thumbnail34.jpg" />
-		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
 
 
 		<meta charset="utf-8" />
@@ -163,203 +156,281 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>&apos;Functions&apos; dataset collection</h1>
+			<h1>Queue Simulation with M/M/c Algorithm</h1>
 		</header>
-		<p>
-			
-    Collection of synthetic datasets generated applying continuous and limitated functions to a closed subset of its own domain;
-    there are datasets done with scalar and vectorial functions and/or one-variable and multivariate functions.
-    Datasets are in .csv format with header (each header column corresponds to a name of a variable) and in some case there is also the .arff format (for Weka);
-    there are training/learning files and test files: first ones are bigger than seconds ones and the major part of data contained in test files are not present in training/learning ones.
 
+		<p>
+			This post presents <strong>QueueForge</strong>, an interactive educational tool for queue simulation based on the M/M/c model from queueing theory.
+			The application, built with React, TypeScript, and Vite, allows users to visually explore in real time the behavior of a multi-server queueing system,
+			typically used to model real-world scenarios such as call centers, bank counters, and help desks.
 		</p>
 
-		<h2 id="RtoR">One-variable real-valued continuous and limited function datasets: &nbsp; $y=f(x) : {\rm I\!R} \to {\rm I\!R}$</h2>
-
-		<div class="table-wrapper">
-			<table class="alt">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Formula</th>
-						<th>Domain</th>
-						<th>Train Info</th>
-						<th class="align-center">Train Links</th>
-						<th>Test Info</th>
-						<th class="align-center">Test Links</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="valign-middle">RtoR/001</td>
-						<td class="valign-middle">$y=\frac{1}{2} x^3 - 2 x^2 - 3 x - 1$</td>
-						<td class="align-center valign-middle">$[-10, 10]$</td>
-						<td class="valign-middle">Instances: 2001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 446, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/001/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/002</td>
-						<td class="valign-middle">$y=\sin x$</td>
-						<td class="align-center valign-middle">$[-2 \pi, 2 \pi]$</td>
-						<td class="valign-middle">Instances: 1257, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 280, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/002/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/003</td>
-						<td class="valign-middle">$y=e^x$</td>
-						<td class="align-center valign-middle">$[-5, 5]$</td>
-						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/003/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/004</td>
-						<td class="valign-middle">$y=\sqrt{|x|}$</td>
-						<td class="align-center valign-middle">$[-5, 5]$</td>
-						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/004/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>					
-					<tr>
-						<td class="valign-middle">RtoR/005</td>
-						<td class="valign-middle">$y=\ln{|x|}$</td>
-						<td class="align-center valign-middle">$[-5, 5]$</td>
-						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/005/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/006</td>
-						<td class="valign-middle">$y=\arctan{|x|}$</td>
-						<td class="align-center valign-middle">$[-5, 5]$</td>
-						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/006/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/007</td>
-						<td class="valign-middle">$y=e^{\sin x}$</td>
-						<td class="align-center valign-middle">$[-2 \pi, 2 \pi]$</td>
-						<td class="valign-middle">Instances: 1257, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 280, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/007/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/008</td>
-						<td class="valign-middle">$y=\tanh x$</td>
-						<td class="align-center valign-middle">$[-5, 5]$</td>
-						<td class="valign-middle">Instances: 1001, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 223, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/008/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-					<tr>
-						<td class="valign-middle">RtoR/009</td>
-						<td class="valign-middle">$y=\frac{\sin 2x}{e^\frac{x}{5}}$</td>
-						<td class="align-center valign-middle">$[-20, 20]$</td>
-						<td class="valign-middle">Instances: 4000, discretization: 0.01</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/learnds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/learnds.arff" target="_blank">.arff</a>
-						</td>
-						<td class="valign-middle">Instances: 889, discretization: 0.045</td>
-						<td class="align-center valign-middle size-of-symbols">
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/testds.csv" target="_blank">.csv</a>
-							&nbsp;
-							<a href="https://raw.githubusercontent.com/ettoremessina/datasets/master/functions//RtoR/009/testds.arff" target="_blank">.arff</a>
-						</td>
-					</tr>
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
-		</div>
-
-		<h2 id="downloadcode">Download of the datasets</h2>
 		<p>
-			The datasets are available on <a target="_blank" href="https://github.com/ettoremessina/datasets/tree/master/functions/">GitHub</a>.
-			<br />
+			<strong>QueueForge</strong> combines three fundamental aspects:
+			<ul>
+				<li><strong>M/M/c theoretical model</strong> - implementation of the mathematical formulas from queueing theory, including the Erlang C formula</li>
+				<li><strong>Discrete event simulation</strong> - simulation engine that generates empirical data comparable with theoretical predictions</li>
+				<li><strong>Real-time visualization</strong> - charts and metrics updated instantly as parameters change</li>
+			</ul>
+		</p>
+
+		<p>
+			The application is freely accessible at:
+			<a href="https://computationalmindset.com/apps/QueueForge" target="_blank">https://computationalmindset.com/apps/QueueForge</a>
+		</p>
+
+		<h2>Foundations of Queueing Theory</h2>
+		<p>
+			<strong>Queueing theory</strong> is a branch of applied mathematics that studies waiting phenomena.
+			Born in 1909 from the work of Danish engineer Agner Krarup Erlang in the field of telephony, this theory provides mathematical tools
+			for analyzing and optimizing systems in which entities (customers, packets, requests) arrive, wait, and are served.
+		</p>
+
+		<p>
+			A queueing system is characterized by three fundamental components:
+			<ul>
+				<li><strong>Arrival process</strong>: describes how customers arrive in the system (e.g., according to a Poisson process)</li>
+				<li><strong>Service process</strong>: describes the duration of service (e.g., with exponential distribution)</li>
+				<li><strong>Service infrastructure</strong>: number of servers, queue capacity, service discipline (FIFO, LIFO, priority)</li>
+			</ul>
+		</p>
+
+		<p>
+			<strong>Kendall&apos;s notation</strong> classifies queueing systems in the form <strong>A/B/c/K/N/D</strong>, where:
+			<ul>
+				<li><strong>A</strong>: distribution of inter-arrival times (M = Markovian/exponential, D = deterministic, G = general)</li>
+				<li><strong>B</strong>: distribution of service times</li>
+				<li><strong>c</strong>: number of servers</li>
+				<li><strong>K</strong>: maximum system capacity (omitted if infinite)</li>
+				<li><strong>N</strong>: population size (omitted if infinite)</li>
+				<li><strong>D</strong>: service discipline (omitted if FIFO)</li>
+			</ul>
+		</p>
+
+		<p>
+			In the abbreviated form, an <strong>M/M/c</strong> system means:
+			<ul>
+				<li><strong>M</strong> (first): arrivals according to a Poisson process (exponential inter-arrival times)</li>
+				<li><strong>M</strong> (second): service times with exponential distribution</li>
+				<li><strong>c</strong>: number of identical parallel servers</li>
+			</ul>
+			with infinite queue capacity, infinite population, and FIFO discipline.
+		</p>
+
+		<h2>The M/M/c Model</h2>
+		<p>
+			The M/M/c model is the fundamental queueing theory model for multi-server systems.
+			The main parameters are:
+			<ul>
+				<li><strong>Arrival rate</strong> $\lambda$ (lambda): average number of customers arriving per unit of time</li>
+				<li><strong>Service rate</strong> $\mu$ (mu): average number of customers a single server can handle per unit of time</li>
+				<li><strong>Number of servers</strong> $c$: identical parallel servers available</li>
+			</ul>
+		</p>
+
+		<h3>System utilization</h3>
+		<p>
+			The utilization $\rho$ represents the fraction of time servers are busy:
+			$$\rho = \frac{\lambda}{c \cdot \mu}$$
+			The system is <strong>stable</strong> (i.e., the queue does not grow indefinitely) if and only if $\rho < 1$,
+			meaning the total service capacity $c \cdot \mu$ exceeds the arrival rate $\lambda$.
+			If $\rho \geq 1$, the queue grows without bound over time.
+		</p>
+
+		<h3>Erlang C formula</h3>
+		<p>
+			The Erlang C formula calculates the probability that a customer must wait in queue (delay probability).
+			Defining the <em>offered load</em> $a = \lambda / \mu$, the formula is:
+			$$C(c, a) = \frac{\displaystyle \frac{a^c}{c!} \cdot \frac{c}{c - a}}{\displaystyle \sum_{k=0}^{c-1} \frac{a^k}{k!} + \frac{a^c}{c!} \cdot \frac{c}{c - a}}$$
+			This formula is the foundation for computing all performance metrics of the M/M/c system.
+		</p>
+
+		<h3>Performance metrics</h3>
+		<p>
+			From the Erlang C formula the fundamental metrics of the system are derived:
+		</p>
+
+		<p>
+			<strong>Average queue length</strong> $L_q$ (average number of customers waiting, excluding those being served):
+			$$L_q = C(c, a) \cdot \frac{\rho}{1 - \rho}$$
+		</p>
+
+		<p>
+			<strong>Average number of customers in the system</strong> $L$ (waiting + being served):
+			$$L = L_q + \frac{\lambda}{\mu}$$
+		</p>
+
+		<p>
+			<strong>Average waiting time in queue</strong> $W_q$ (derived from Little&apos;s Law):
+			$$W_q = \frac{L_q}{\lambda}$$
+		</p>
+
+		<p>
+			<strong>Average time in the system</strong> $W$ (waiting + service):
+			$$W = \frac{L}{\lambda}$$
+		</p>
+
+		<h3>Little&apos;s Law</h3>
+		<p>
+			<strong>Little&apos;s Law</strong> is a fundamental theorem that holds for any stable queueing system,
+			regardless of the arrival or service distribution:
+			$$L = \lambda \cdot W$$
+			and analogously for the queue:
+			$$L_q = \lambda \cdot W_q$$
+			This relationship is used both in theoretical calculations and in simulation validation.
+		</p>
+
+		<h3>Numerical example: M/M/1 queue</h3>
+		<p>
+			As a special case of the M/M/c model with $c = 1$, consider a system with $\lambda = 6$ customers/min
+			and $\mu = 10$ customers/min:
+			<ul>
+				<li>Utilization: $\rho = 6 / (1 \times 10) = 0.6$ (60%)</li>
+				<li>Average queue length: $L_q = 0.9$ customers</li>
+				<li>Average waiting time: $W_q = 0.15$ min = 9 seconds</li>
+			</ul>
+		</p>
+
+		<h3>Numerical example: M/M/2 queue</h3>
+		<p>
+			For a call center with 2 agents ($c = 2$), $\lambda = 10$ customers/min and $\mu = 8$ customers/min per server:
+			<ul>
+				<li>Utilization: $\rho = 10 / (2 \times 8) = 0.625$ (62.5%)</li>
+				<li>Probability of waiting (Erlang C): $C(2, 1.25) \approx 0.481$</li>
+				<li>Average queue length: $L_q \approx 0.8$ customers</li>
+			</ul>
+		</p>
+
+		<h2>Discrete Event Simulation</h2>
+		<p>
+			Beyond the theoretical calculation, <strong>QueueForge</strong> implements a <strong>discrete event simulation</strong>
+			engine that generates empirical data comparable with the predictions of the mathematical model.
+		</p>
+
+		<p>
+			The simulation operates in discrete time steps, and at each step it performs the following operations:
+			<ol>
+				<li><strong>Arrival generation</strong>: checks whether a new customer arrives in the current step, using a Bernoulli trial
+					with probability $p_{\text{arrival}} = \lambda \cdot \Delta t$ (Poisson process approximation for small $\Delta t$)</li>
+				<li><strong>Service completion</strong>: for each busy server, checks whether service is completed
+					with probability $p_{\text{service}} = \mu \cdot \Delta t$ (exponential process approximation)</li>
+				<li><strong>Queue management</strong>: waiting customers are assigned to available servers according to FIFO discipline</li>
+				<li><strong>Statistics collection</strong>: cumulative metrics are updated (average queue length, average waiting time, etc.)</li>
+			</ol>
+		</p>
+
+		<p>
+			This approach allows users to observe how empirical values converge toward theoretical predictions as simulation time increases.
+			For sufficiently long simulations (over 5000 seconds), empirical results tend to converge within 5-10% of theoretical values.
+		</p>
+
+		<h2>User Interface and Interaction</h2>
+		<p>
+			<strong>QueueForge</strong> provides an intuitive and professional interface with several key features:
+			<ul>
+				<li><strong>Interactive sliders</strong>: real-time adjustment of arrival rate ($\lambda$), service rate ($\mu$),
+					number of servers ($c$), and simulation speed</li>
+				<li><strong>Real-time chart</strong>: canvas visualization of queue length evolution over time</li>
+				<li><strong>System metrics</strong>: current queue length, utilization, and theoretical vs. empirical averages side by side</li>
+				<li><strong>Educational tooltips</strong>: hovering over parameters displays an explanation of their meaning</li>
+				<li><strong>Simulation controls</strong>: Play, Pause, and Reset buttons to control the simulation flow</li>
+			</ul>
+		</p>
+
+		<p>
+			The main interaction consists of modifying system parameters and immediately observing the effect on both the theoretical metrics
+			(computed analytically) and the running simulation, thereby building a deep intuition for the behavior of queueing systems.
+		</p>
+
+		<h2>Technical Implementation</h2>
+		<p>
+			<strong>QueueForge</strong> is built using modern web technologies and follows an architecture with <strong>clean separation of concerns</strong>:
+			<ul>
+				<li><strong>React 18</strong>: component-based UI framework for building the application structure</li>
+				<li><strong>TypeScript</strong>: with strict mode enabled for type safety and code maintainability</li>
+				<li><strong>Vite</strong>: modern build tool for fast development and optimized production builds</li>
+				<li><strong>SCSS</strong>: CSS with variables and modules for structured styling</li>
+				<li><strong>Canvas API</strong>: custom chart rendering for optimal performance</li>
+			</ul>
+		</p>
+
+		<p>
+			The project architecture is organized into four distinct layers:
+			<ol>
+				<li><strong>Models layer</strong> (<code>models/</code>): pure mathematical functions implementing M/M/c queueing theory formulas (Erlang C, Little&apos;s Law, etc.)</li>
+				<li><strong>Simulation layer</strong> (<code>simulation/</code>): discrete event simulation engine that generates empirical data</li>
+				<li><strong>Visualization layer</strong> (<code>visualization/</code>): Canvas-based rendering optimized for real-time updates</li>
+				<li><strong>UI layer</strong> (<code>components/</code>, <code>App.tsx</code>): React components orchestrating user interaction</li>
+			</ol>
+		</p>
+
+		<p>
+			The test suite ensures code coverage above 70%, verifying the accuracy of M/M/c formulas,
+			compliance with Little&apos;s Law, simulation convergence, and correct detection of system instability.
+		</p>
+
+		<h2>Try QueueForge</h2>
+		<p>
+			Experience <strong>QueueForge</strong> directly in your browser:
+			<br /><br />
+			<a href="https://computationalmindset.com/apps/QueueForge" target="_blank" class="button primary large">
+				Launch QueueForge
+			</a>
+			<br /><br />
+			The application requires no installation and works on any modern web browser.
+			For the best experience, use a recent version of Chrome, Firefox, Safari, or Edge.
+		</p>
+
+		<h2>Development and Contribution</h2>
+		<p>
+			<strong>QueueForge</strong> was developed with <strong>Claude Code</strong> following the <strong>BMAD</strong> (Breakthrough Method of Agile AI-driven Development) approach,
+			as part of an exploration in AI-assisted software development for educational tools.
+		</p>
+
+		<p>
+			The project follows standard modern TypeScript and JavaScript development practices:
+		</p>
+
+		<p>
+			<strong>Clone the repository:</strong>
+			<pre><code class="bash">git clone https://github.com/ettoremessina/QueueForge.git
+cd QueueForge</code></pre>
+		</p>
+
+		<p>
+			<strong>Install dependencies:</strong>
+			<pre><code class="bash">npm install</code></pre>
+		</p>
+
+		<p>
+			<strong>Run development server:</strong>
+			<pre><code class="bash">npm run dev</code></pre>
+			This starts a local development server with hot module replacement for rapid iteration.
+		</p>
+
+		<p>
+			<strong>Build for production:</strong>
+			<pre><code class="bash">npm run build</code></pre>
+			The optimized output is generated in the <code>dist/</code> folder and can be deployed to any static hosting service.
+		</p>
+
+		<p>
+			<strong>Run tests:</strong>
+			<pre><code class="bash">npm test</code></pre>
+		</p>
+
+		<h2 id="downloadcode">Source Code and License</h2>
+		<p>
+			The complete source code is available on GitHub at this address: <a target="_blank" href="https://github.com/ettoremessina/QueueForge">QueueForge</a>.
+			<br/>
+			<br/>
 			
 			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
 			<br/>
 			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
 			<br/>
 
-		</p>			
+		</p>
 	</section>
 
 						</div>

@@ -1,0 +1,571 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="it">
+	<head>
+		<meta http-equiv="content-language" content="it">
+		<meta name="author" content="Ettore Messina">
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+
+
+		<title>Simulazione di Code con Algoritmo M/M/c</title>
+		<meta name="description" content="Simulazione di Code con Algoritmo M/M/c" >
+		<meta name="keywords" content="coda, simulazione, M/M/c, teoria delle code, multi-server, Erlang, Poisson, esponenziale, tempo di attesa, tasso di servizio, tasso di arrivo, matematica" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmc.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/queue-simulation-mmc-algorithm.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmc.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset", "https://ettoremessina.tech/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/it/",
+                "name": "Mentalit&agrave; Computazionale"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/",
+              "name": "Matematica"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmc.html",
+              "name": "Simulazione di Code con Algoritmo M/M/c"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../it/info.html" class="logo"><strong>Mentalit&agrave;&nbsp;Computazionale</strong> di&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+										<li><a href="https://ettoremessina.tech/" class="icon brands fa-wordpress" target="_blank"><span class="label">WordPress</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Simulazione di Code con Algoritmo M/M/c</h1>
+		</header>
+
+		<p>
+			Questo post presenta <strong>QueueForge</strong>, uno strumento interattivo e didattico per la simulazione di code basato sul modello M/M/c della teoria delle code.
+			L&apos;applicazione, costruita con React, TypeScript e Vite, consente di esplorare in modo visuale e in tempo reale il comportamento di un sistema di code multi-server,
+			tipicamente utilizzato per modellare scenari reali come call center, sportelli bancari e help desk.
+		</p>
+
+		<p>
+			<strong>QueueForge</strong> combina tre aspetti fondamentali:
+			<ul>
+				<li><strong>Modello teorico M/M/c</strong> - implementazione delle formule matematiche della teoria delle code, inclusa la formula di Erlang C</li>
+				<li><strong>Simulazione a eventi discreti</strong> - motore di simulazione che genera dati empirici confrontabili con le previsioni teoriche</li>
+				<li><strong>Visualizzazione in tempo reale</strong> - grafici e metriche aggiornate istantaneamente al variare dei parametri</li>
+			</ul>
+		</p>
+
+		<p>
+			L&apos;applicazione &egrave; disponibile e accessibile liberamente all&apos;indirizzo:
+			<a href="https://computationalmindset.com/apps/QueueForge" target="_blank">https://computationalmindset.com/apps/QueueForge</a>
+		</p>
+
+		<h2>Fondamenti della Teoria delle Code</h2>
+		<p>
+			La <strong>teoria delle code</strong> (in inglese <em>queueing theory</em>) &egrave; una branca della matematica applicata che studia i fenomeni di attesa.
+			Nata nel 1909 dal lavoro dell&apos;ingegnere danese Agner Krarup Erlang nell&apos;ambito della telefonia, questa teoria fornisce strumenti matematici
+			per analizzare e ottimizzare sistemi in cui entit&agrave; (clienti, pacchetti, richieste) arrivano, attendono e vengono servite.
+		</p>
+
+		<p>
+			Un sistema di code &egrave; caratterizzato da tre componenti fondamentali:
+			<ul>
+				<li><strong>Processo di arrivo</strong>: descrive come i clienti arrivano nel sistema (ad esempio, secondo un processo di Poisson)</li>
+				<li><strong>Processo di servizio</strong>: descrive la durata del servizio (ad esempio, con distribuzione esponenziale)</li>
+				<li><strong>Infrastruttura di servizio</strong>: numero di server, capacit&agrave; della coda, disciplina di servizio (FIFO, LIFO, priorit&agrave;)</li>
+			</ul>
+		</p>
+
+		<p>
+			La <strong>notazione di Kendall</strong> classifica i sistemi di code con la forma <strong>A/B/c/K/N/D</strong>, dove:
+			<ul>
+				<li><strong>A</strong>: distribuzione dei tempi di inter-arrivo (M = Markoviana/esponenziale, D = deterministica, G = generica)</li>
+				<li><strong>B</strong>: distribuzione dei tempi di servizio</li>
+				<li><strong>c</strong>: numero di server</li>
+				<li><strong>K</strong>: capacit&agrave; massima del sistema (omessa se infinita)</li>
+				<li><strong>N</strong>: dimensione della popolazione (omessa se infinita)</li>
+				<li><strong>D</strong>: disciplina di servizio (omessa se FIFO)</li>
+			</ul>
+		</p>
+
+		<p>
+			Nella forma abbreviata, un sistema <strong>M/M/c</strong> indica:
+			<ul>
+				<li><strong>M</strong> (primo): arrivi secondo un processo di Poisson (tempi di inter-arrivo esponenziali)</li>
+				<li><strong>M</strong> (secondo): tempi di servizio con distribuzione esponenziale</li>
+				<li><strong>c</strong>: numero di server identici e paralleli</li>
+			</ul>
+			con capacit&agrave; infinita della coda, popolazione infinita e disciplina FIFO.
+		</p>
+
+		<h2>Il Modello M/M/c</h2>
+		<p>
+			Il modello M/M/c &egrave; il modello fondamentale della teoria delle code per sistemi multi-server.
+			I parametri principali sono:
+			<ul>
+				<li><strong>Tasso di arrivo</strong> $\lambda$ (lambda): numero medio di clienti che arrivano per unit&agrave; di tempo</li>
+				<li><strong>Tasso di servizio</strong> $\mu$ (mu): numero medio di clienti che un singolo server pu&ograve; servire per unit&agrave; di tempo</li>
+				<li><strong>Numero di server</strong> $c$: server identici e paralleli disponibili</li>
+			</ul>
+		</p>
+
+		<h3>Utilizzazione del sistema</h3>
+		<p>
+			L'utilizzazione $\rho$ rappresenta la frazione di tempo in cui i server sono occupati:
+			$$\rho = \frac{\lambda}{c \cdot \mu}$$
+			Il sistema &egrave; <strong>stabile</strong> (cio&egrave; la coda non cresce indefinitamente) se e solo se $\rho < 1$,
+			ossia quando la capacit&agrave; complessiva di servizio $c \cdot \mu$ &egrave; superiore al tasso di arrivo $\lambda$.
+			Se $\rho \geq 1$, la coda cresce senza limiti nel tempo.
+		</p>
+
+		<h3>Formula di Erlang C</h3>
+		<p>
+			La formula di Erlang C calcola la probabilit&agrave; che un cliente debba attendere in coda (probabilit&agrave; di ritardo).
+			Definendo il <em>carico offerto</em> $a = \lambda / \mu$, la formula &egrave;:
+			$$C(c, a) = \frac{\displaystyle \frac{a^c}{c!} \cdot \frac{c}{c - a}}{\displaystyle \sum_{k=0}^{c-1} \frac{a^k}{k!} + \frac{a^c}{c!} \cdot \frac{c}{c - a}}$$
+			Questa formula &egrave; alla base del calcolo di tutte le metriche prestazionali del sistema M/M/c.
+		</p>
+
+		<h3>Metriche prestazionali</h3>
+		<p>
+			A partire dalla formula di Erlang C si derivano le metriche fondamentali del sistema:
+		</p>
+
+		<p>
+			<strong>Lunghezza media della coda</strong> $L_q$ (numero medio di clienti in attesa, esclusi quelli in servizio):
+			$$L_q = C(c, a) \cdot \frac{\rho}{1 - \rho}$$
+		</p>
+
+		<p>
+			<strong>Numero medio di clienti nel sistema</strong> $L$ (in attesa + in servizio):
+			$$L = L_q + \frac{\lambda}{\mu}$$
+		</p>
+
+		<p>
+			<strong>Tempo medio di attesa in coda</strong> $W_q$ (derivato dalla Legge di Little):
+			$$W_q = \frac{L_q}{\lambda}$$
+		</p>
+
+		<p>
+			<strong>Tempo medio nel sistema</strong> $W$ (attesa + servizio):
+			$$W = \frac{L}{\lambda}$$
+		</p>
+
+		<h3>La Legge di Little</h3>
+		<p>
+			La <strong>Legge di Little</strong> &egrave; un teorema fondamentale che vale per qualunque sistema di code stabile,
+			indipendentemente dalla distribuzione degli arrivi o dei servizi:
+			$$L = \lambda \cdot W$$
+			e analogamente per la coda:
+			$$L_q = \lambda \cdot W_q$$
+			Questa relazione &egrave; utilizzata sia nel calcolo teorico sia nella validazione della simulazione.
+		</p>
+
+		<h3>Esempio numerico: coda M/M/1</h3>
+		<p>
+			Come caso particolare del modello M/M/c con $c = 1$, consideriamo un sistema con $\lambda = 6$ clienti/min
+			e $\mu = 10$ clienti/min:
+			<ul>
+				<li>Utilizzazione: $\rho = 6 / (1 \times 10) = 0{,}6$ (60%)</li>
+				<li>Lunghezza media della coda: $L_q = 0{,}9$ clienti</li>
+				<li>Tempo medio di attesa: $W_q = 0{,}15$ min = 9 secondi</li>
+			</ul>
+		</p>
+
+		<h3>Esempio numerico: coda M/M/2</h3>
+		<p>
+			Per un call center con 2 operatori ($c = 2$), $\lambda = 10$ clienti/min e $\mu = 8$ clienti/min per server:
+			<ul>
+				<li>Utilizzazione: $\rho = 10 / (2 \times 8) = 0{,}625$ (62,5%)</li>
+				<li>Probabilit&agrave; di attesa (Erlang C): $C(2, 1{,}25) \approx 0{,}481$</li>
+				<li>Lunghezza media della coda: $L_q \approx 0{,}8$ clienti</li>
+			</ul>
+		</p>
+
+		<h2>La Simulazione a Eventi Discreti</h2>
+		<p>
+			Oltre al calcolo teorico, <strong>QueueForge</strong> implementa un motore di <strong>simulazione a eventi discreti</strong>
+			(<em>discrete event simulation</em>) che genera dati empirici confrontabili con le previsioni del modello matematico.
+		</p>
+
+		<p>
+			La simulazione opera per passi temporali discreti e ad ogni passo esegue le seguenti operazioni:
+			<ol>
+				<li><strong>Generazione degli arrivi</strong>: si verifica se un nuovo cliente arriva nel passo corrente, usando un processo di Bernoulli
+					con probabilit&agrave; $p_{\text{arrivo}} = \lambda \cdot \Delta t$ (approssimazione del processo di Poisson per piccoli $\Delta t$)</li>
+				<li><strong>Completamento dei servizi</strong>: per ciascun server occupato, si verifica se il servizio viene completato
+					con probabilit&agrave; $p_{\text{servizio}} = \mu \cdot \Delta t$ (approssimazione del processo esponenziale)</li>
+				<li><strong>Gestione della coda</strong>: i clienti in attesa vengono assegnati ai server disponibili secondo la disciplina FIFO</li>
+				<li><strong>Raccolta delle statistiche</strong>: si aggiornano le metriche cumulative (lunghezza media della coda, tempo medio di attesa, ecc.)</li>
+			</ol>
+		</p>
+
+		<p>
+			Questo approccio consente di osservare come i valori empirici convergano verso le previsioni teoriche all&apos;aumentare del tempo di simulazione.
+			Per simulazioni sufficientemente lunghe (oltre 5000 secondi), i risultati empirici tendono a convergere entro il 5-10% dei valori teorici.
+		</p>
+
+		<h2>Interfaccia Utente e Interazione</h2>
+		<p>
+			<strong>QueueForge</strong> fornisce un&apos;interfaccia intuitiva e professionale con diverse funzionalit&agrave; chiave:
+			<ul>
+				<li><strong>Slider interattivi</strong>: regolazione in tempo reale del tasso di arrivo ($\lambda$), tasso di servizio ($\mu$),
+					numero di server ($c$) e velocit&agrave; di simulazione</li>
+				<li><strong>Grafico in tempo reale</strong>: visualizzazione canvas dell&apos;andamento della lunghezza della coda nel tempo</li>
+				<li><strong>Metriche del sistema</strong>: lunghezza corrente della coda, utilizzazione, medie teoriche ed empiriche a confronto</li>
+				<li><strong>Tooltip educativi</strong>: passando il mouse sui parametri si ottiene una spiegazione del loro significato</li>
+				<li><strong>Controlli di simulazione</strong>: pulsanti Play, Pausa e Reset per controllare il flusso della simulazione</li>
+			</ul>
+		</p>
+
+		<p>
+			L&apos;interazione principale consiste nel modificare i parametri del sistema e osservare immediatamente l&apos;effetto sia sulle metriche teoriche
+			(calcolate analiticamente) sia sulla simulazione in corso, costruendo cos&igrave; un&apos;intuizione profonda sul comportamento dei sistemi di code.
+		</p>
+
+		<h2>Implementazione Tecnica</h2>
+		<p>
+			<strong>QueueForge</strong> &egrave; costruito utilizzando tecnologie web moderne e segue una architettura a <strong>separazione netta delle responsabilit&agrave;</strong>:
+			<ul>
+				<li><strong>React 18</strong>: framework UI basato su componenti per costruire la struttura dell&apos;applicazione</li>
+				<li><strong>TypeScript</strong>: con strict mode abilitato per la sicurezza dei tipi e la manutenibilit&agrave; del codice</li>
+				<li><strong>Vite</strong>: strumento di build moderno per uno sviluppo veloce e build di produzione ottimizzate</li>
+				<li><strong>SCSS</strong>: CSS con variabili e moduli per uno stile strutturato</li>
+				<li><strong>Canvas API</strong>: rendering personalizzato dei grafici per prestazioni ottimali</li>
+			</ul>
+		</p>
+
+		<p>
+			L&apos;architettura del progetto &egrave; organizzata in quattro livelli distinti:
+			<ol>
+				<li><strong>Livello Models</strong> (<code>models/</code>): funzioni matematiche pure che implementano le formule della teoria delle code M/M/c (Erlang C, Legge di Little, ecc.)</li>
+				<li><strong>Livello Simulation</strong> (<code>simulation/</code>): motore di simulazione a eventi discreti che genera dati empirici</li>
+				<li><strong>Livello Visualization</strong> (<code>visualization/</code>): rendering basato su Canvas ottimizzato per aggiornamenti in tempo reale</li>
+				<li><strong>Livello UI</strong> (<code>components/</code>, <code>App.tsx</code>): componenti React che orchestrano l&apos;interazione con l&apos;utente</li>
+			</ol>
+		</p>
+
+		<p>
+			La suite di test garantisce una copertura del codice superiore al 70%, verificando l&apos;accuratezza delle formule M/M/c,
+			la conformit&agrave; alla Legge di Little, la convergenza della simulazione e il corretto rilevamento dell&apos;instabilit&agrave; del sistema.
+		</p>
+
+		<h2>Prova QueueForge</h2>
+		<p>
+			Prova <strong>QueueForge</strong> direttamente nel tuo browser:
+			<br /><br />
+			<a href="https://computationalmindset.com/apps/QueueForge" target="_blank" class="button primary large">
+				Avvia QueueForge
+			</a>
+			<br /><br />
+			L&apos;applicazione non richiede installazione e funziona su qualsiasi browser web moderno.
+			Per la migliore esperienza, utilizza una versione recente di Chrome, Firefox, Safari o Edge.
+		</p>
+
+		<h2>Sviluppo e Contributi</h2>
+		<p>
+			<strong>QueueForge</strong> &egrave; stato sviluppato con <strong>Claude Code</strong> seguendo l&apos;approccio <strong>BMAD</strong> (Breakthrough Method of Agile AI-driven Development),
+			come parte di un&apos;esplorazione nello sviluppo software assistito da AI per strumenti educativi.
+		</p>
+
+		<p>
+			Il progetto segue le pratiche standard di sviluppo TypeScript e JavaScript moderno:
+		</p>
+
+		<p>
+			<strong>Clonare il repository:</strong>
+			<pre><code class="bash">git clone https://github.com/ettoremessina/QueueForge.git
+cd QueueForge</code></pre>
+		</p>
+
+		<p>
+			<strong>Installare le dipendenze:</strong>
+			<pre><code class="bash">npm install</code></pre>
+		</p>
+
+		<p>
+			<strong>Avviare il server di sviluppo:</strong>
+			<pre><code class="bash">npm run dev</code></pre>
+			Questo avvia un server di sviluppo locale con hot module replacement per un&apos;iterazione rapida.
+		</p>
+
+		<p>
+			<strong>Build per la produzione:</strong>
+			<pre><code class="bash">npm run build</code></pre>
+			L&apos;output ottimizzato viene generato nella cartella <code>dist/</code> e pu&ograve; essere distribuito su qualsiasi servizio di hosting statico.
+		</p>
+
+		<p>
+			<strong>Eseguire i test:</strong>
+			<pre><code class="bash">npm test</code></pre>
+		</p>
+
+		<h2 id="downloadcode">Codice Sorgente e Licenza</h2>
+		<p>
+			Il codice sorgente completo &egrave; disponibile su GitHub a questo indirizzo: <a target="_blank" href="https://github.com/ettoremessina/QueueForge">QueueForge</a>.
+			<br/>
+			<br/>
+			
+			Questo materiale &egrave; distribuito su licenza MIT; sentiti libero di usare, condividere, &quot;forkare&quot; e adattare tale materiale come credi.
+			<br/>
+			Sentiti anche libero di pubblicare pull-request e bug-report su questo repository di GitHub oppure di contattarmi sui miei canali social disponibili nell&apos;angolo in alto a destra di questa pagina. 
+			<br/>
+
+		</p>
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Mentalit&agrave;&nbsp;Computazionale"/></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../it/">Home</a></li>
+										<li>
+											<span class="opener">Reti&nbsp;Neurali</span>
+											<ul>
+												<li><a href="../../it/reti-neurali/">INDICE</a></li>
+												<li><a href="../../it/reti-neurali/pruning-di-reti-neurali-con-tensorflow.html">Pruning di reti neurali con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/equazioni-differenziali-e-reti-neurali.html">Equazioni Differenziali e Reti Neurali</a></li>
+												<li><a href="../../it/reti-neurali/forecast-di-una-serie-temporale-univariata-equispaziata-con-tensorflow.html">Forecast di una serie temporale univariata ed equispaziata con TensorFlow</a></li>
+												<li><a href="../../it/reti-neurali/approssimazione-con-percettroni-multistrato-altamente-configurabili.html">Approssimazione con percettroni multistrato altamente configurabili</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Computazione&nbsp;Quantistica</span>
+											<ul>
+												<li><a href="../../it/computazione-quantistica/">INDICE</a></li>
+												<li><a href="../../it/computazione-quantistica/operatori-not-cnot.html">Porte quantistiche NOT e C-NOT</a></li>
+												<li><a href="../../it/computazione-quantistica/generazione-numero-casuale.html">Generazione di un numero casuale</a></li>
+												<li><a href="../../it/computazione-quantistica/porte-hadamard-in-cascata.html">Porte Hadamard in cascata</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../it/machine-learning/">INDICE</a></li>
+												<li><a href="../../it/machine-learning/strumenti-generali-per-approssimazione-di-funzioni.html">Strumenti generali per l&apos;approssimazione di funzioni</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-pycaret.html">Approssimazione di funzioni tramite PyCaret</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-xgboost-configurabile.html">Approssimazione di funzioni tramite un regressore XGBoost configurabile</a></li>
+												<li><a href="../../it/machine-learning/approssimazione-di-funzioni-con-svr-configurabile.html">Approssimazione di funzioni tramite un Support Vector Regressor configurabile</a></li>
+												<li><a href="../../it/machine-learning/regressione-polinomiale-con-accord-net.html">Regressione polinomiale con Accord.NET</a></li>
+												<li><a href="../../it/machine-learning/regressione-smo-con-kernel-puk-in-weka.html">Regressione con SMO per SVM con kernel PUK in Weka</a></li>
+												<li><a href="../../it/machine-learning/forecast-smo-con-kernel-polinomiale-in-weka.html">Forecast con SMO per SVM con kernel polinomiale in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Matematica</span>
+											<ul>
+												<li><a href="../../it/matematica/">INDICE</a></li>
+												<li><a href="../../it/matematica/simulazione-code-algoritmo-mmc.html">Simulazione di Code con Algoritmo M/M/c</a></li>
+												<li><a href="../../it/matematica/nablavis-teorema-stokes.html">NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</a></li>
+												<li><a href="../../it/matematica/serie-di-fourier-in-python.html">Serie di Fourier in Python</a></li>
+												<li><a href="../../it/matematica/risoluzione-equazioni-differenziali-con-ritardo-in-python-con-metodi-numerici.html">Risoluzione di equazioni differenziali con ritardo con metodi numerici in Python</a></li>
+												<li><a href="../../it/matematica/calcolo-integrale-in-python.html">Calcolo Integrale in Python</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-sul-piano-lineare-omogeneo-coefficienti-costanti.html">Analizzatore di un sistema dinamico, lineare e omogeneo sul piano a coefficienti costanti</a></li>
+												<li><a href="../../it/matematica/analizzatore-di-un-sistema-dinamico-non-lineare-autonomo-sul-piano-tramite-teorema-hartman-grobman.html">Analizzatore di un sistema dinamico non lineare e autonomo sul piano tramite il teorema di Hartman-Grobman</a></li>
+												<li><a href="../../it/matematica/esperimenti-con-sympy-per-risolvere-odes-ordine-1.html">Esperimenti con SymPy per risolvere equazioni differenziali ordinarie del 1&deg; ordine</a></li>
+												<li><a href="../../it/matematica/metodo-soluzione-dde-primo-ordine-usando-funzione-w-lambert.html">Un metodo di soluzione di una equazione differenziale con ritardo del primo ordine utilizzando la funzione W di Lambert</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">High Performance</span>
+											<ul>
+												<li><a href="../../it/high-performance/">INDICE</a></li>
+												<li><a href="https://ettoremessina.tech/2024/09/14/high-performance-computing-of-discrete-single-variable-derivative-with-cuda/" target="_blank">High-Performance Computing of Discrete Single Variable Derivative with CUDA<br />
+(post disponibile solo in lingua inglese)</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/03/high-performance-computing-of-discrete-two-variable-partial-derivatives-with-cuda/" target="_blank">High-Performance Computing of Discrete Two Variable Partial Derivatives with CUDA<br />
+(post disponibile solo in lingua inglese)</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/06/numerical-integration-with-cuda-accelerating-calculations-on-the-gpu/" target="_blank">Numerical Integration with CUDA: Accelerating Calculations on the GPU<br />
+(post disponibile solo in lingua inglese)</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Dataset</span>
+											<ul>
+												<li><a href="../../it/datasets/">INDICE</a></li>
+												<li><a href="../../it/datasets/functions-dataset.html">Collezione di dataset &apos;Functions&apos;</a></li>
+												<li><a href="../../it/datasets/time-series-dataset.html">Collezione di dataset &apos;Time&nbsp;Series&apos;</a></li>
+												<li><a href="../../it/datasets/synthetic-words-dataset.html">Dataset &apos;Synthetic Words&apos;</a></li>
+											</ul>
+										</li>
+										<li><a href="../../it/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../it/reti-neurali/">Reti&nbsp;Neurali</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/reti-neurali/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../it/computazione-quantistica/">Computazione&nbsp;Quantistica</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../it/computazione-quantistica/" class="image"><span class="icon solid fa-atom"/></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Grafica basata sul template &apos;Editorial&apos; (con personalizzazione) scaricato da <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Clicka sui link per vedere i file <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> e <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> del template &apos;Editorial&apos; di HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../it/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+			    	border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
