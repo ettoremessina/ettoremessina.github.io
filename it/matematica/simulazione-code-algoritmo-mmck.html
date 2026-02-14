@@ -27,12 +27,12 @@
 		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 
 
-		<title>NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</title>
-		<meta name="description" content="NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes" >
-		<meta name="keywords" content="teorema di stokes, teorema del gradiente, teorema del rotore, teorema della divergenza, calcolo vettoriale, integrale di linea, integrale di superficie, campo vettoriale, interattivo, visualizzazione, matematica, calcolo, three.js, react" >
-		<link rel="canonical" href="https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html" />
-		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/nablavis-stokes-theorem.html" />
-		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html" />
+		<title>Simulazione di Code con Algoritmo M/M/c/K</title>
+		<meta name="description" content="Simulazione di Code con Algoritmo M/M/c/K" >
+		<meta name="keywords" content="coda, simulazione, M/M/c/K, capacit&agrave; finita, teoria delle code, probabilit&agrave; di rifiuto, Erlang, blocco, multi-server, matematica" >
+		<link rel="canonical" href="https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmck.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/queue-simulation-mmck-algorithm.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmck.html" />
 		
     <!-- SCHEMA.ORG JSON-LD WEBSITE -->
     <script type="application/ld+json">
@@ -86,8 +86,8 @@
             "position": 3,
             "item":
             {
-              "@id": "https://computationalmindset.com/it/matematica/nablavis-teorema-stokes.html",
-              "name": "NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes"
+              "@id": "https://computationalmindset.com/it/matematica/simulazione-code-algoritmo-mmck.html",
+              "name": "Simulazione di Code con Algoritmo M/M/c/K"
             }
 		  }
 		
@@ -154,227 +154,212 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</h1>
+			<h1>Simulazione di Code con Algoritmo M/M/c/K</h1>
 		</header>
 
 		<p>
-			Questo post introduce <strong>NablaVis</strong>, un'applicazione web didattica e interattiva progettata per aiutare studenti
-			a visualizzare e comprendere i teoremi fondamentali del calcolo vettoriale attraverso scene 3D interattive. Lo strumento permette agli utenti di esplorare
-			campi scalari e vettoriali, manipolare percorsi e superfici e osservare la verifica numerica in tempo reale delle relazioni matematiche.
+			Questo post presenta l&apos;estensione <strong>M/M/c/K</strong> del modello di code M/M/c, implementata in <strong>QueueForge</strong>.
+			QueueForge supporta ora entrambi i modelli — <strong>M/M/c</strong> (capacit&agrave; infinita) e <strong>M/M/c/K</strong> (capacit&agrave; finita) —
+			selezionabili tramite un menu a tendina nel pannello dei parametri.
+			Se non hai ancora familiarit&agrave; con la teoria delle code e il modello M/M/c, ti consigliamo di leggere prima il post introduttivo
+			<a href="../../it/matematica/simulazione-code-algoritmo-mmc.html">Simulazione di Code con Algoritmo M/M/c</a>, che tratta la notazione di Kendall,
+			gli arrivi di Poisson, la formula di Erlang C e la Legge di Little.
+			Questo post si concentra esclusivamente sulla variante a capacit&agrave; finita e su come cambia l&apos;analisi matematica.
 		</p>
 
 		<p>
-			<strong>NablaVis</strong> copre tre applicazioni fondamentali che sono tutte unificate nel quadro generale del Teorema di Stokes:
+			L&apos;applicazione &egrave; disponibile e accessibile liberamente all&apos;indirizzo:
+			<a href="https://computationalmindset.com/apps/QueueForge?model=mmck" target="_blank">https://computationalmindset.com/apps/QueueForge?model=mmck</a>
+		</p>
+
+		<h2>Da M/M/c a M/M/c/K: Capacit&agrave; Finita del Sistema</h2>
+		<p>
+			Il modello <strong>M/M/c</strong> assume una sala d&apos;attesa illimitata: qualunque numero di clienti pu&ograve;
+			accodarsi mentre tutti i server sono occupati. In pratica, molti sistemi reali hanno un limite fisico o logico
+			al numero totale di clienti consentiti contemporaneamente (coda + server combinati).
+			Quando il sistema &egrave; pieno, i nuovi arrivi vengono <strong>rifiutati</strong> (persi o bloccati).
+		</p>
+
+		<p>
+			Nella notazione di Kendall <strong>A/B/c/K/N/D</strong>, il quarto campo <strong>K</strong> specifica la
+			<em>capacit&agrave; massima del sistema</em> (clienti in attesa pi&ugrave; clienti in servizio).
+			Un sistema <strong>M/M/c/K</strong> ha quindi:
 			<ul>
-				<li><strong>Teorema del Gradiente</strong> - relazione tra un integrale di linea di un campo gradiente e la differenza dei valori del campo scalare agli estremi</li>
-				<li><strong>Teorema del Rotore</strong> - relazione tra un integrale di linea lungo una curva chiusa e un integrale di superficie del rotore sulla superficie racchiusa</li>
-				<li><strong>Teorema della Divergenza</strong> - relazione tra il flusso di un campo vettoriale attraverso una superficie chiusa e la divergenza sul volume racchiuso</li>
+				<li><strong>M</strong> (primo): arrivi di Poisson con tasso $\lambda$</li>
+				<li><strong>M</strong> (secondo): tempi di servizio esponenziali con tasso $\mu$ per server</li>
+				<li><strong>c</strong>: numero di server identici e paralleli</li>
+				<li><strong>K</strong>: capacit&agrave; massima del sistema — deve soddisfare $K \geq c + 1$</li>
 			</ul>
 		</p>
 
 		<p>
-			L'applicazione &egrave; disponibile e accessibile liberamente all'indirizzo:
-			<a href="https://computationalmindset.com/apps/NablaVis?lang=it" target="_blank">https://computationalmindset.com/apps/NablaVis</a>
-		</p>
-
-		<h2>Filosofia Educativa</h2>
-		<p>
-			I concetti del calcolo vettoriale come gradiente, rotore e divergenza sono spesso difficili da comprendere per gli studenti attraverso le sole presentazioni tradizionali dei libri di testo.
-			<strong>NablaVis</strong> colma questa lacuna rendendo questi concetti matematici astratti tangibili e interattivi. Invece di un apprendimento passivo,
-			gli studenti possono manipolare oggetti matematici in tempo reale e osservare immediatamente come i cambiamenti influenzano la verifica dei teoremi.
-		</p>
-
-		<p>
-			Lo strumento enfatizza l'esplorazione pratica: gli utenti possono trascinare gli estremi dei percorsi, regolare le superfici, cambiare i campi vettoriali e osservare mentre l'applicazione
-			calcola e confronta istantaneamente entrambi i membri dell'equazione di ciascun teorema. Questo feedback visivo e numerico immediato aiuta a costruire l'intuizione su
-			cosa significano realmente questi teoremi e perch&eacute; funzionano.
-		</p>
-
-		<h2>Il Teorema del Gradiente</h2>
-		<p>
-			Il Teorema del Gradiente afferma che per un campo scalare $f$ e un percorso dal punto $P$ al punto $Q$:
-			$$\int_C \nabla f \cdot \mathrm{d}\mathbf{r} = f(Q) - f(P)$$
-		</p>
-
-		<p>
-			In <strong>NablaVis</strong>, questo teorema &egrave; visualizzato attraverso:
+			Due conseguenze immediate distinguono M/M/c/K da M/M/c:
 			<ul>
-				<li><strong>Rappresentazione 3D del campo scalare</strong>: Una mappa di altezza dove la coordinata z rappresenta il valore del campo scalare $f(x,y)$</li>
-				<li><strong>Percorso interattivo</strong>: Una curva che collega i punti P e Q che pu&ograve; essere modificata cliccando sul terreno per riposizionare gli estremi</li>
-				<li><strong>Verifica in tempo reale</strong>: L'HUD mostra sia $f(Q) - f(P)$ che l'integrale di linea calcolato $\int_C \nabla f \cdot \mathrm{d}\mathbf{r}$,
-				confermando che sono uguali indipendentemente dal percorso scelto</li>
+				<li><strong>Sempre stabile</strong>: poich&eacute; la coda &egrave; limitata, il sistema &egrave; sempre in stato stazionario
+				indipendentemente dal rapporto &rho;. Anche con &lambda; &gt; c&mu; il sistema non va mai in overflow.</li>
+				<li><strong>Probabilit&agrave; di rifiuto</strong>: un cliente che arriva quando il sistema &egrave; alla capacit&agrave; K viene respinto.
+				Questa probabilit&agrave; deve essere calcolata e incorporata in tutte le metriche prestazionali tramite un <em>tasso di arrivo effettivo</em>.</li>
 			</ul>
 		</p>
 
+		<h2>Il Modello Matematico M/M/c/K</h2>
+
+		<h3>Probabilit&agrave; di stato</h3>
 		<p>
-			Quattro campi scalari predefiniti sono disponibili per l'esplorazione:
+			La probabilit&agrave; stazionaria $P_n$ di avere $n$ clienti nel sistema &egrave;:
+			$$P_n = \begin{cases}
+			  P_0 \cdot \dfrac{a^n}{n!} & 0 \le n \le c \\[6pt]
+			  P_0 \cdot \dfrac{a^c}{c!} \cdot \rho^{n-c} & c < n \le K
+			\end{cases}$$
+			dove $a = \lambda / \mu$ &egrave; il <em>carico offerto</em> e $\rho = \lambda / (c \cdot \mu)$ &egrave; l&apos;<em>utilizzazione del server</em>.
+			La costante di normalizzazione $P_0$ (probabilit&agrave; che il sistema sia vuoto) si ottiene imponendo $\sum_{n=0}^{K} P_n = 1$:
+			$$P_0 = \frac{1}{\displaystyle\sum_{k=0}^{c-1} \frac{a^k}{k!} \;+\; \frac{a^c}{c!} \cdot \frac{1 - \rho^{K-c+1}}{1 - \rho}} \qquad (\rho \ne 1)$$
+			Quando $\rho = 1$ la somma geometrica degenera e il denominatore diventa:
+			$$\sum_{k=0}^{c-1} \frac{a^k}{k!} + \frac{a^c}{c!} \cdot (K - c + 1)$$
+		</p>
+
+		<h3>Probabilit&agrave; di rifiuto</h3>
+		<p>
+			La probabilit&agrave; che il sistema sia pieno — e che un cliente in arrivo venga respinto — &egrave; $P_K$:
+			$$P_K = \begin{cases}
+			  P_0 \cdot \dfrac{a^K}{K!} & K \le c \\[6pt]
+			  P_0 \cdot \dfrac{a^c}{c!} \cdot \rho^{K-c} & K > c
+			\end{cases}$$
+			$P_K$ &egrave; talvolta chiamata <em>probabilit&agrave; di perdita</em> o <em>probabilit&agrave; di blocco</em>.
+		</p>
+
+		<h3>Tasso di arrivo effettivo</h3>
+		<p>
+			Poich&eacute; una frazione $P_K$ di tutti gli arrivi viene persa, il tasso di clienti che entrano effettivamente nel sistema &egrave;:
+			$$\lambda_{\text{eff}} = \lambda \cdot (1 - P_K)$$
+			Tutte le metriche prestazionali devono essere calcolate con $\lambda_{\text{eff}}$ anziché con il $\lambda$ nominale,
+			altrimenti la Legge di Little verrebbe violata.
+		</p>
+
+		<h3>Lunghezza media della coda</h3>
+		<p>
+			Il numero medio di clienti in attesa (esclusi quelli in servizio) &egrave;:
+			$$L_q = \frac{a^c \cdot \rho \cdot P_0}{c!} \cdot
+			\frac{1 - \rho^{K-c+1} - (K-c+1)\,\rho^{K-c}(1-\rho)}{(1-\rho)^2} \qquad (\rho \ne 1)$$
+			Quando $\rho = 1$:
+			$$L_q = \frac{a^c \cdot P_0}{c!} \cdot \frac{(K-c)(K-c+1)}{2}$$
+		</p>
+
+		<h3>Metriche prestazionali derivate</h3>
+		<p>
+			Le rimanenti metriche si derivano da $L_q$ e $\lambda_{\text{eff}}$ applicando la Legge di Little:
+		</p>
+		<p>
+			<strong>Numero medio di clienti nel sistema</strong> $L$:
+			$$L = L_q + \frac{\lambda_{\text{eff}}}{\mu}$$
+		</p>
+		<p>
+			<strong>Tempo medio di attesa in coda</strong> $W_q$:
+			$$W_q = \frac{L_q}{\lambda_{\text{eff}}}$$
+		</p>
+		<p>
+			<strong>Tempo medio nel sistema</strong> $W$:
+			$$W = \frac{L}{\lambda_{\text{eff}}}$$
+		</p>
+
+		<h3>Confronto con M/M/c</h3>
+		<p>
+			Per $K \to \infty$ le formule M/M/c/K convergono ai risultati M/M/c: $P_K \to 0$, $\lambda_{\text{eff}} \to \lambda$
+			e la formula di $L_q$ si riduce all&apos;espressione di Erlang C $C(c,a) \cdot \rho / (1-\rho)$.
+			In un sistema a capacit&agrave; finita la coda &egrave; sempre pi&ugrave; corta (alcuni clienti vengono respinti prima di accodarsi),
+			quindi $L_q^{(K)} \le L_q^{(\infty)}$ per qualsiasi $K$ e qualsiasi $\rho$.
+		</p>
+
+		<h3>Esempio numerico: coda M/M/1/5</h3>
+		<p>
+			Consideriamo un sistema a singolo server sovraccarico con $c = 1$, $K = 5$, $\lambda = 10$ arrivi/min
+			e $\mu = 8$ clienti/min — una configurazione che sarebbe instabile come semplice M/M/1 ($\rho = 1{,}25 > 1$),
+			ma &egrave; sempre stabile con M/M/1/5:
 			<ul>
-				<li><strong>Paraboloide</strong>: $f(x,y) = x^2 + y^2$ - una semplice superficie convessa</li>
-				<li><strong>Superficie a Sella</strong>: $f(x,y) = x^2 - y^2$ - dimostra un paraboloide iperbolico</li>
-				<li><strong>Picco Gaussiano</strong>: $f(x,y) = e^-(x^2 + y^2)$ - una superficie liscia a forma di campana</li>
-				<li><strong>Collina e Valle</strong>: Un terreno pi&uacute; complesso con pi&uacute; punti critici</li>
+				<li>Utilizzazione del server: $\rho = 10 / (1 \times 8) = 1{,}25$ (sovraccaricato, eppure stabile grazie a $K$)</li>
+				<li>Probabilit&agrave; di rifiuto: $P_5 \approx 0{,}271$ (circa il 27,1% degli arrivi viene respinto)</li>
+				<li>Tasso di arrivo effettivo: $\lambda_{\text{eff}} = 10 \times (1 - 0{,}271) \approx 7{,}29$ clienti/min</li>
+				<li>Lunghezza media della coda: $L_q \approx 2{,}22$ clienti</li>
+				<li>Tempo medio nel sistema: $W = L / \lambda_{\text{eff}} \approx 0{,}43$ min = 25,8 secondi</li>
 			</ul>
+			Aumentando $K$ si riduce la probabilit&agrave; di rifiuto, si allunga la coda e il sistema si avvicina all&apos;instabilit&agrave; M/M/1 per $K \to \infty$.
+		</p>
+
+		<h2>Simulazione di M/M/c/K</h2>
+		<p>
+			Il motore di simulazione di <strong>QueueForge</strong> gestisce il caso a capacit&agrave; finita estendendo la simulazione
+			M/M/c a passi temporali con una sola regola aggiuntiva: quando viene generato un nuovo arrivo e il numero corrente
+			di clienti nel sistema &egrave; uguale a $K$, il cliente viene <strong>rifiutato</strong> e il contatore dei rifiuti viene incrementato.
+			Tutte le altre meccaniche (prove di Bernoulli per gli arrivi con $p = \lambda \cdot \Delta t$, prove di completamento del servizio
+			con $p = \mu \cdot \Delta t$ per ciascun server occupato, gestione FIFO della coda) rimangono identiche alla simulazione M/M/c
+			descritta in <a href="../../it/matematica/simulazione-code-algoritmo-mmc.html">Simulazione di Code con Algoritmo M/M/c</a>.
 		</p>
 
 		<p>
-			La visualizzazione dimostra chiaramente una propriet&agrave; chiave dei campi gradiente: sono <em>conservativi</em>, il che significa che l'integrale di linea dipende
-			solo dagli estremi, non dal percorso scelto tra di essi.
+			Questo consente alla simulazione di stimare direttamente il tasso empirico di rifiuto, che converge alla
+			$P_K$ teorica all&apos;aumentare del tempo di simulazione. Il <strong>tasso di rifiuto</strong> esposto dal motore di simulazione &egrave;:
+			$$\hat{P}_K = \frac{\text{totale rifiutati}}{\text{totale arrivi}}$$
 		</p>
-
-		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis-gradient.png" alt="Visualizzazione NablaVis del Teorema del Gradiente che mostra un campo scalare 3D con percorso tra i punti P e Q" width="840" /></div>
-		<div class="photocaption">
-			Figura: Visualizzazione NablaVis del Teorema del Gradiente con un campo scalare 3D.
-			<br />
-			Il percorso collega i punti P e Q, e l'HUD verifica che $\int_C \nabla f \cdot \mathrm{d}\mathbf{r} = f(Q) - f(P)$.
-		</div>
-		<br />
-		<br />
-
-		<h2>Il Teorema del Rotore</h2>
-		<p>
-			Il Teorema del Rotore mette in relazione la circuitazione di un campo vettoriale lungo una curva chiusa con il flusso del suo rotore attraverso la superficie racchiusa:
-			$$\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$$
-		</p>
-
-		<p>
-			La visualizzazione presenta:
-			<ul>
-				<li><strong>Campo vettoriale 2D</strong>: Frecce sul piano xy che mostrano il campo vettoriale $\mathbf{F}(x,y)$</li>
-				<li><strong>Percorso circolare</strong>: Una curva chiusa $C$ che delimita una superficie $S$</li>
-				<li><strong>Verifica matematica</strong>: Confronto in tempo reale della circuitazione $\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r}$
-				(membro sinistro) con l'integrale di superficie $\iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$ (membro destro)</li>
-			</ul>
-		</p>
-
-		<p>
-			Quattro campi vettoriali predefiniti illustrano comportamenti diversi:
-			<ul>
-				<li><strong>Rotazione Semplice</strong>: $\mathbf{F} = (-y, x)$ - rotazione uniforme intorno all'origine</li>
-				<li><strong>Flusso di Taglio</strong>: $\mathbf{F} = (y, 0)$ - movimento di taglio orizzontale</li>
-				<li><strong>Spirale Espansiva</strong>: Combinazione di rotazione ed espansione radiale</li>
-				<li><strong>Campo a Sella</strong>: Un campo con distribuzione del rotore pi&uacute; complessa</li>
-			</ul>
-		</p>
-
-		<p>
-			Questa visualizzazione aiuta gli studenti a comprendere che il rotore misura la "tendenza rotazionale" di un campo vettoriale, e il Teorema del Rotore
-			mette in relazione la rotazione microscopica (rotore in ogni punto) con la circuitazione macroscopica lungo un contorno.
-		</p>
-
-		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis_curl.png" alt="Visualizzazione NablaVis del Teorema del Rotore che mostra un campo vettoriale 2D con percorso circolare" width="840" /></div>
-		<div class="photocaption">
-			Figura: Visualizzazione NablaVis del Teorema del Rotore con un campo vettoriale 2D.
-			<br />
-			Il percorso circolare delimita una superficie, e l'HUD verifica che $\oint_C \mathbf{F} \cdot \mathrm{d}\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot \mathrm{d}\mathbf{S}$.
-		</div>
-		<br />
-		<br />
-
-		<h2>Il Teorema della Divergenza</h2>
-		<p>
-			Il Teorema della Divergenza mette in relazione il flusso di un campo vettoriale attraverso una superficie chiusa con la divergenza
-			nel volume racchiuso:
-			$$\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$$
-		</p>
-
-		<p>
-			La visualizzazione 3D include:
-			<ul>
-				<li><strong>Campo vettoriale 3D</strong>: Frecce nello spazio tridimensionale che mostrano $\mathbf{F}(x,y,z)$</li>
-				<li><strong>Superficie sferica</strong>: Una superficie chiusa $S$ che racchiude un volume $V$</li>
-				<li><strong>Verifica in tempo reale</strong>: Confronto del flusso totale $\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S}$ attraverso la superficie
-				con l'integrale di volume $\iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$</li>
-			</ul>
-		</p>
-
-		<p>
-			Quattro campi predefiniti dimostrano comportamenti di divergenza diversi:
-			<ul>
-				<li><strong>Sorgente (Carica Puntiforme)</strong>: $\mathbf{F} = (x, y, z)$ - flusso radiale verso l'esterno, divergenza positiva</li>
-				<li><strong>Pozzo</strong>: $\mathbf{F} = (-x, -y, -z)$ - flusso radiale verso l'interno, divergenza negativa</li>
-				<li><strong>Campo Uniforme</strong>: $\mathbf{F} = (1, 0, 0)$ - campo costante con divergenza zero</li>
-				<li><strong>Espansione Verticale</strong>: $\mathbf{F} = (0, 0, z)$ - espansione in una sola direzione</li>
-			</ul>
-		</p>
-
-		<p>
-			La visualizzazione mostra chiaramente che la divergenza misura l'"intensit&agrave; della sorgente" o l'"intensit&agrave; del pozzo" in ogni punto - se il campo
-			si sta espandendo verso l'esterno (divergenza positiva) o contraendo verso l'interno (divergenza negativa).
-		</p>
-
-		<div class="betweentextlines"><img src="../../posts/mathematics/nablavis-stokes-theorem/nablavis-divergence.png" alt="Visualizzazione NablaVis del Teorema della Divergenza che mostra un campo vettoriale 3D con superficie sferica" width="840" /></div>
-		<div class="photocaption">
-			Figura: Visualizzazione NablaVis del Teorema della Divergenza con un campo vettoriale 3D.
-			<br />
-			La superficie sferica racchiude un volume, e l'HUD verifica che $\iint_S \mathbf{F} \cdot \mathrm{d}\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) \, \mathrm{d}V$.</div>
-		<br />
-		<br />
 
 		<h2>Interfaccia Utente e Interazione</h2>
 		<p>
-			<strong>NablaVis</strong> fornisce un'interfaccia intuitiva con diverse funzionalit&agrave; chiave:
+			<strong>QueueForge</strong> mette a disposizione un menu a tendina <strong>Modello di Coda</strong> in cima al pannello dei parametri
+			per passare in qualsiasi momento tra M/M/c e M/M/c/K. Il modello M/M/c/K &egrave; apribile direttamente anche tramite
+			il parametro URL <code>?model=mmck</code> (ad es. <code>.../QueueForge?model=mmck</code>);
+			cambiando il menu a tendina l&apos;URL si aggiorna automaticamente, rendendo il link condivisibile.
+		</p>
+		<p>
+			Quando &egrave; selezionato M/M/c/K, appare uno slider aggiuntivo <strong>Capacit&agrave; Massima (K)</strong> accanto
+			ai parametri standard ($\lambda$, $\mu$, $c$, velocit&agrave; di simulazione). Il pannello delle metriche mostra anche:
 			<ul>
-				<li><strong>HUD in tempo reale (Heads-Up Display)</strong>: Mostra le formule matematiche, i valori calcolati per entrambi i membri di ciascuna equazione,
-				e la conferma quando il teorema &egrave; verificato (i valori coincidono entro una tolleranza numerica)</li>
-				<li><strong>Selezioni predefinite</strong>: Accesso rapido a campi scalari e vettoriali predefiniti che dimostrano propriet&agrave; matematiche interessanti</li>
-				<li><strong>Controlli camera 3D</strong>: Ruotare, spostare e zoomare per visualizzare le scene da qualsiasi angolazione</li>
-				<li><strong>Supporto multilingue</strong>: Interfaccia disponibile in inglese e italiano</li>
-				<li><strong>Design responsive</strong>: Funziona su computer desktop, tablet e dispositivi mobili</li>
-				<li><strong>Manipolazione interattiva</strong>:
-					<ul>
-						<li>Per il Teorema del Gradiente: Cliccare sul terreno per spostare gli estremi del percorso</li>
-						<li>Per i Teoremi del Rotore e della Divergenza: Osservare come si comportano i diversi campi predefiniti</li>
-					</ul>
-				</li>
+				<li><strong>Probabilit&agrave; di rifiuto</strong>: P<sub>K</sub> teorica e tasso empirico di rifiuto a confronto</li>
+				<li><strong>Tasso di arrivo effettivo</strong>: la vera portata di clienti che entra nel sistema</li>
 			</ul>
 		</p>
 
 		<h2>Implementazione Tecnica</h2>
 		<p>
-			<strong>NablaVis</strong> &egrave; costruito utilizzando tecnologie web moderne che consentono grafica 3D ad alte prestazioni nel browser:
-			<ul>
-				<li><strong>React 18</strong>: Framework UI basato su componenti per costruire la struttura dell'applicazione</li>
-				<li><strong>TypeScript</strong>: Aggiunge sicurezza dei tipi e migliora la manutenibilit&agrave; del codice</li>
-				<li><strong>Three.js</strong>: Libreria grafica 3D standard del settore alimentata da WebGL</li>
-				<li><strong>@react-three/fiber</strong>: Renderer React per Three.js, che consente la costruzione dichiarativa di scene 3D</li>
-				<li><strong>@react-three/drei</strong>: Helper e astrazioni utili per pattern 3D comuni</li>
-				<li><strong>Vite</strong>: Strumento di build moderno che fornisce sviluppo veloce e build di produzione ottimizzate</li>
-				<li><strong>React Router (HashRouter)</strong>: Routing lato client che funziona in qualsiasi ambiente di hosting, comprese le sottocartelle</li>
-			</ul>
+			Il modello M/M/c/K &egrave; implementato nella classe <code>MMCKQueueingModel</code>
+			(<code>src/models/MMCKQueueingModel.ts</code>), un complemento alla classe <code>MMCQueueingModel</code>
+			per il caso illimitato. Il motore di simulazione in <code>QueueSimulation.ts</code> accetta
+			un parametro opzionale <code>maxCapacity</code>: quando fornito, attiva la modalit&agrave; M/M/c/K in modo trasparente,
+			senza modificare la struttura del ciclo di simulazione.
 		</p>
 
 		<p>
-			Gli algoritmi di integrazione numerica calcolano integrali di linea, integrali di superficie e integrali di volume utilizzando metodi di discretizzazione appropriati.
-			Le visualizzazioni di verifica si aggiornano in tempo reale mentre gli utenti interagiscono con le scene, fornendo un feedback immediato.
+			L&apos;architettura complessiva rimane la stessa a quattro livelli:
+			<ol>
+				<li><strong>Livello Models</strong> (<code>models/</code>): <code>MMCKQueueingModel</code> implementa $P_0$,
+				$P_K$ (probabilit&agrave; di blocco di Erlang B), $L_q$ e tutte le metriche derivate con le formule in forma chiusa indicate sopra</li>
+				<li><strong>Livello Simulation</strong> (<code>simulation/</code>): <code>QueueSimulation</code> con <code>maxCapacity</code> per il tracciamento dei rifiuti</li>
+				<li><strong>Livello Visualization</strong> (<code>visualization/</code>): grafico canvas invariato; il tasso di rifiuto &egrave; mostrato nel pannello metriche</li>
+				<li><strong>Livello UI</strong> (<code>components/</code>, <code>App.tsx</code>): componenti React con uno slider K aggiuntivo</li>
+			</ol>
 		</p>
 
-		<h2>Applicazioni Educative</h2>
 		<p>
-			<strong>NablaVis</strong> pu&ograve; essere utilizzato in vari contesti educativi:
-			<ul>
-				<li><strong>Dimostrazioni in aula</strong>: Gli insegnanti possono utilizzare lo strumento durante le lezioni per illustrare i concetti del calcolo vettoriale con esempi dal vivo e interattivi</li>
-				<li><strong>Esplorazione degli studenti</strong>: Gli studenti possono sperimentare con diversi campi e percorsi per costruire l'intuizione sui teoremi</li>
-				<li><strong>Verifica dei compiti</strong>: La conferma visiva e numerica aiuta gli studenti a verificare la loro comprensione dei problemi</li>
-				<li><strong>Studio autonomo</strong>: La natura interattiva lo rende adatto per l'apprendimento indipendente al di fuori dell'aula</li>
-			</ul>
+			La suite di test in <code>src/models/__tests__/MMCKQueueingModel.test.ts</code> verifica valori noti per M/M/1/K e M/M/2/K,
+			valida la probabilit&agrave; di blocco di Erlang B rispetto a tabelle di riferimento pubblicate,
+			controlla che $P_K \to 0$ per $K \to \infty$ e conferma che $\lambda_{\text{eff}} \le \lambda$ sia sempre verificato.
 		</p>
 
-		<h2>Prova NablaVis</h2>
+		<h2>Prova QueueForge</h2>
 		<p>
-			Prova <strong>NablaVis</strong> direttamente nel tuo browser:
+			Prova <strong>QueueForge</strong> con il modello M/M/c/K direttamente nel tuo browser:
 			<br /><br />
-			<a href="https://computationalmindset.com/apps/NablaVis?lang=it" target="_blank" class="button primary large">
-				Avvia NablaVis
+			<a href="https://computationalmindset.com/apps/QueueForge?model=mmck" target="_blank" class="button primary large">
+				Avvia QueueForge (M/M/c/K)
 			</a>
 			<br /><br />
-			L'applicazione non richiede installazione e funziona su qualsiasi browser web moderno con supporto WebGL.
+			L&apos;applicazione non richiede installazione e funziona su qualsiasi browser web moderno.
 			Per la migliore esperienza, utilizza una versione recente di Chrome, Firefox, Safari o Edge.
 		</p>
 
 		<h2>Sviluppo e Contributi</h2>
 		<p>
-			<strong>NablaVis</strong> &egrave; stato sviluppato utilizzando l'assistenza AI (Gemini con Antigravity) come parte di un'esplorazione
-			nello sviluppo software assistito da AI per strumenti educativi.
+			L&apos;estensione M/M/c/K di <strong>QueueForge</strong> &egrave; stata sviluppata con <strong>Claude Code</strong> seguendo
+			l&apos;approccio <strong>BMAD</strong> (Breakthrough Method of Agile AI-driven Development),
+			come parte di un&apos;esplorazione continua nello sviluppo software assistito da AI per strumenti educativi.
 		</p>
 
 		<p>
@@ -383,8 +368,8 @@
 
 		<p>
 			<strong>Clonare il repository:</strong>
-			<pre><code class="bash">git clone https://github.com/ettoremessina/NablaVis.git
-cd NablaVis</code></pre>
+			<pre><code class="bash">git clone https://github.com/ettoremessina/QueueForge.git
+cd QueueForge</code></pre>
 		</p>
 
 		<p>
@@ -395,18 +380,23 @@ cd NablaVis</code></pre>
 		<p>
 			<strong>Avviare il server di sviluppo:</strong>
 			<pre><code class="bash">npm run dev</code></pre>
-			Questo avvia un server di sviluppo locale con hot module replacement per un'iterazione rapida.
+			Questo avvia un server di sviluppo locale con hot module replacement per un&apos;iterazione rapida.
 		</p>
 
 		<p>
 			<strong>Build per la produzione:</strong>
 			<pre><code class="bash">npm run build</code></pre>
-			L'output ottimizzato viene generato nella cartella <code>dist/</code> e pu&ograve; essere distribuito su qualsiasi servizio di hosting statico.
+			L&apos;output ottimizzato viene generato nella cartella <code>dist/</code> e pu&ograve; essere distribuito su qualsiasi servizio di hosting statico.
+		</p>
+
+		<p>
+			<strong>Eseguire i test:</strong>
+			<pre><code class="bash">npm test</code></pre>
 		</p>
 
 		<h2 id="downloadcode">Codice Sorgente e Licenza</h2>
 		<p>
-			Il codice sorgente completo &egrave; disponibile su GitHub a questo indirizzo: <a target="_blank" href="https://github.com/ettoremessina/NablaVis">NablaVis</a>.
+			Il codice sorgente completo &egrave; disponibile su GitHub a questo indirizzo: <a target="_blank" href="https://github.com/ettoremessina/QueueForge">QueueForge</a>.
 			<br/>
 			<br/>
 			
