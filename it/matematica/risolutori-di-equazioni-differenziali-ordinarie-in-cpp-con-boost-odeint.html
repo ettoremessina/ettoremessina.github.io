@@ -27,9 +27,9 @@
 		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
 
 
-		<title>Risolutori di equazioni differenziali ordinarie in C++ con boost.odeint</title>
+		<title>Risolutori di equazioni differenziali ordinarie in C++ con boost::odeint</title>
 		<meta name="description" content="Risoluzione numerica di equazioni differenziali ordinarie in C++ con boost::numeric::odeint: tre demo con lo stepper adattivo Dormand-Prince RK45 per una ODE del primo ordine, una del secondo ordine e un sistema accoppiato di due ODE del primo ordine." >
-		<meta name="keywords" content="equazioni differenziali ordinarie, ODE, C++, boost, boost.odeint, boost::numeric::odeint, metodi numerici, Dormand-Prince, RK45, dopri5, Runge-Kutta, passo adattivo, IVP, problema di Cauchy, matematica" >
+		<meta name="keywords" content="equazioni differenziali ordinarie, ODE, C++, boost, boost::odeint, boost::numeric::odeint, metodi numerici, Dormand-Prince, RK45, dopri5, Runge-Kutta, passo adattivo, IVP, problema di Cauchy, matematica" >
 		<link rel="canonical" href="https://computationalmindset.com/it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html" />
 		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html" />
 		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html" />
@@ -87,7 +87,7 @@
             "item":
             {
               "@id": "https://computationalmindset.com/it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html",
-              "name": "Risolutori di equazioni differenziali ordinarie in C++ con boost.odeint"
+              "name": "Risolutori di equazioni differenziali ordinarie in C++ con boost::odeint"
             }
 		  }
 		
@@ -161,7 +161,7 @@
 <!-- Content -->
 	<section>
 		<header class="main">
-			<h1>Risolutori di equazioni differenziali ordinarie in C++ con boost.odeint</h1>
+			<h1>Risolutori di equazioni differenziali ordinarie in C++ con boost::odeint</h1>
 		</header>
 
 		<p>
@@ -200,7 +200,7 @@
 			I tre programmi richiedono:
 			<ul>
 				<li>Un compilatore compatibile con C++17 (ad es. <code>g++</code> o <code>clang++</code>)</li>
-				<li>La libreria <strong>Boost</strong> con gli header di <code>boost.odeint</code> installati:
+				<li>La libreria <strong>Boost</strong> con gli header di <code>boost::odeint</code> installati:
 					<ul>
 						<li>macOS con Homebrew: <code>brew install boost</code></li>
 						<li>Debian / Ubuntu: <code>sudo apt install libboost-dev</code></li>
@@ -232,7 +232,7 @@
 			soluzione varia rapidamente, mantenendo l&apos;errore di troncamento locale entro la tolleranza richiesta
 			senza sprecare valutazioni della funzione.<br />
 			<br />
-			In boost.odeint lo stepper viene istanziato come:
+			In boost::odeint lo stepper viene istanziato come:
 			<pre><code class="cpp">using namespace boost::numeric::odeint;
 auto stepper = make_dense_output(1.0e-9, 1.0e-9, runge_kutta_dopri5&lt;state_type&gt;());</code></pre>
 			I primi due argomenti sono le tolleranze assoluta e relativa; il wrapper dense-output permette inoltre
@@ -259,7 +259,7 @@ auto stepper = make_dense_output(1.0e-9, 1.0e-9, runge_kutta_dopri5&lt;state_typ
 			$$x(t) = \tfrac{1}{2}\sin t - \tfrac{1}{2}\cos t + \tfrac{3}{5}\cos 2t + \tfrac{6}{5}\sin 2t - \tfrac{1}{10}e^{-t}$$
 			verificabile tramite <a href="https://www.wolframalpha.com/" target="_blank">Wolfram Alpha</a>.<br />
 			<br />
-			In C++ con boost.odeint l&apos;ODE deve essere espressa come un callable che scrive il membro destro
+			In C++ con boost::odeint l&apos;ODE deve essere espressa come un callable che scrive il membro destro
 			nell&apos;argomento derivata.
 			Per un problema scalare del primo ordine il tipo di stato &egrave; semplicemente un <code>double</code>:
 			<pre><code class="cpp">typedef double state_type;
@@ -339,7 +339,7 @@ integrate_adaptive(stepper, sys_rhs, s, 0.0, 5.0, 0.01,
 			\end{cases}
 			\quad x(0) = 1,\; y(0) = 0$$
 			Questa riduzione trasforma un problema scalare del secondo ordine in un sistema bidimensionale del primo ordine,
-			che boost.odeint gestisce in modo identico al sistema accoppiato della sezione precedente.
+			che boost::odeint gestisce in modo identico al sistema accoppiato della sezione precedente.
 			In C++ il membro destro diventa:
 			<pre><code class="cpp">typedef std::vector&lt;double&gt; state_type;
 
@@ -388,7 +388,23 @@ integrate_adaptive(stepper, ode2_rhs, s, 0.0, 12.0, 0.01,
 		<br />
 		<br />
 		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/ode_1st_ord_ivp_01_numerical.png" width="810" height="465" /></div>
-		<div class="photocaption">Soluzione numerica dell&apos;ODE del primo ordine ottenuta con lo stepper adattivo dopri5 di boost.odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
+		<div class="photocaption">Soluzione numerica dell&apos;ODE del primo ordine ottenuta con lo stepper adattivo dopri5 di boost::odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
+		<br />
+		<br />
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/sys_1st_ord_ivp_01_analytical_x.png" width="809" height="464" /></div>
+		<div class="photocaption">Soluzione analitica del sistema accoppiato, componente $x(t) = e^t + e^-3t$.</div>
+		<br />
+		<br />
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/sys_1st_ord_ivp_01_numerical_x.png" width="810" height="465" /></div>
+		<div class="photocaption">Soluzione numerica del sistema accoppiato, componente $x$, ottenuta con lo stepper adattivo dopri5 di boost::odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
+		<br />
+		<br />
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/sys_1st_ord_ivp_01_analytical_y.png" width="810" height="465" /></div>
+		<div class="photocaption">Soluzione analitica del sistema accoppiato, componente $y(t) = 2e^t - 2e^-3t$.</div>
+		<br />
+		<br />
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/sys_1st_ord_ivp_01_numerical_y.png" width="809" height="465" /></div>
+		<div class="photocaption">Soluzione numerica del sistema accoppiato, componente $y$, ottenuta con lo stepper adattivo dopri5 di boost::odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
 		<br />
 		<br />
 		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/ode_2nd_ord_ivp_01_analytical.png" width="809" height="466" /></div>
@@ -396,7 +412,7 @@ integrate_adaptive(stepper, ode2_rhs, s, 0.0, 12.0, 0.01,
 		<br />
 		<br />
 		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/ode_2nd_ord_ivp_01_numerical.png" width="810" height="463" /></div>
-		<div class="photocaption">Soluzione numerica dell&apos;ODE del secondo ordine ottenuta con lo stepper adattivo dopri5 di boost.odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
+		<div class="photocaption">Soluzione numerica dell&apos;ODE del secondo ordine ottenuta con lo stepper adattivo dopri5 di boost::odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
 		<br />
 		<br />
 
@@ -464,7 +480,7 @@ integrate_adaptive(stepper, ode2_rhs, s, 0.0, 12.0, 0.01,
 											<span class="opener">Matematica</span>
 											<ul>
 												<li><a href="../../it/matematica/">INDICE</a></li>
-												<li><a href="../../it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html">Risolutori di equazioni differenziali ordinarie in C++ con boost.odeint</a></li>
+												<li><a href="../../it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html">Risolutori di equazioni differenziali ordinarie in C++ con boost::odeint</a></li>
 												<li><a href="../../it/matematica/simulazione-code-algoritmo-mmck.html">Simulazione di Code con Algoritmo M/M/c/K</a></li>
 												<li><a href="../../it/matematica/simulazione-code-algoritmo-mmc.html">Simulazione di Code con Algoritmo M/M/c</a></li>
 												<li><a href="../../it/matematica/nablavis-teorema-stokes.html">NablaVis: un tool didattico e interattivo per visualizzare tre applicazioni del Teorema di Stokes</a></li>
