@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head lang="en">
+		<meta http-equiv="content-language" content="en">
+		<meta name="author" content="Ettore Messina">	
+
+		<style>
+			#cookiescript_checkbox_input {
+				-moz-appearance: checkbox;
+				-webkit-appearance: checkbox;
+				-ms-appearance: checkbox;
+				appearance: checkbox;
+				opacity: 1.0;
+			}
+			#cookiescript_checkbox_text {
+				color: white;
+			}
+			#cookiescript_description a:hover {
+				color: yellow !important;
+			}
+		</style>
+		<script type="text/javascript" charset="UTF-8" src="https://cookie-script.com/s/19e1626ea9f21a6fcc285b559b5957e6.js"></script>
+
+
+		<title>Ordinary differential equation solvers in C++ with boost.odeint</title>
+		<meta name="description" content="Numerical resolution of ordinary differential equations in C++ using boost::numeric::odeint: three demos with the Dormand-Prince RK45 adaptive stepper for first-order ODE, second-order ODE, and a coupled system of two first-order ODEs." >
+		<meta name="keywords" content="ordinary differential equations, ODE, C++, boost, boost.odeint, boost::numeric::odeint, numerical methods, Dormand-Prince, RK45, dopri5, Runge-Kutta, adaptive step control, IVP, initial value problem, mathematics" >
+		<link rel="canonical" href="https://computationalmindset.com/en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html" />
+		<link rel="alternate" hreflang="en" href="https://computationalmindset.com/en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html" />
+		<link rel="alternate" hreflang="it" href="https://computationalmindset.com/it/matematica/risolutori-di-equazioni-differenziali-ordinarie-in-cpp-con-boost-odeint.html" />
+		
+    <!-- SCHEMA.ORG JSON-LD WEBSITE -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "Computational Mindset",
+        "url": "https://computationalmindset.com/",
+        "sameAs": ["https://www.facebook.com/ComputationalMindset/", "https://github.com/ettoremessina/"],
+        "author":
+        {
+          "@type": "Person",
+          "name": "Ettore Messina",
+          "image": "https://computationalmindset.com/images/ettore-messina.jpg",
+          "gender": "Male",          
+          "sameAs": ["https://www.facebook.com/ettore.messina.73/", "https://www.instagram.com/etmessina/", "https://twitter.com/ettoremessina/", "https://twitter.com/Computational_M/", "https://github.com/ettoremessina/", "https://medium.com/@ettoremessina/", "https://www.linkedin.com/in/ettoremessina", "https://www.linkedin.com/company/computational-mindset", "https://ettoremessina.tech/"]
+        }
+    }
+    </script>
+
+		
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+		
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item":
+            {
+                "@id": "https://computationalmindset.com/en/",
+                "name": "Computational Mindset"
+            }
+          },
+		
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/",
+              "name": "Mathematics"
+            }
+          },
+
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item":
+            {
+              "@id": "https://computationalmindset.com/en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html",
+              "name": "Ordinary differential equation solvers in C++ with boost.odeint"
+            }
+		  }
+		
+        ]
+    }
+    </script>
+		
+
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/railscasts.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+		
+		<script>hljs.initHighlightingOnLoad();</script>
+		<style>
+			pre > code 
+			{
+				font-size: 1.2em;
+			}
+		</style>
+
+		
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript"
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
+		<meta property="og:url" content="https://computationalmindset.com/en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="" />
+		<meta property="og:description" content="" />
+		<meta property="og:image" content="/social-previews/thumbnail19.jpg" />
+		<!-- OPEN GRAPH PROTOCOL --------------------------------------------------------------------->
+
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="../../en/info.html" class="logo"><strong>Computational&nbsp;Mindset</strong> by&nbsp;Ettore&nbsp;Messina</a>
+									<div style="text-align:right">
+										<a class="logo" href="../../en/">en</a>
+										&nbsp;&nbsp;&nbsp;
+										<a class="logo" href="../../it/">it</a>
+									</div>
+									<ul class="icons">
+										<li><a href="https://github.com/ettoremessina/" class="icon brands fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+										<li><a href="https://www.linkedin.com/company/computational-mindset" class="icon brands fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+										<li><a href="https://twitter.com/Computational_M/" class="icon brands fa-twitter" target="_blank"><span class="label">Twitter</span></a></li>
+										<li><a href="https://www.facebook.com/ComputationalMindset/" class="icon brands fa-facebook-f" target="_blank"><span class="label">Facebook</span></a></li>
+										<li><a href="https://www.youtube.com/c/ComputationalMindset" class="icon brands fa-youtube" target="_blank"><span class="label">YouTube</span></a></li>
+										<li><a href="https://linktr.ee/ComputationalMindset/" class="fas fa-link" style="color: grey;" target="_blank"><span class="label"></span></a></li>
+										<li><a href="https://ettoremessina.tech/" class="icon brands fa-wordpress" target="_blank"><span class="label">WordPress</span></a></li>
+									</ul>
+								</header>
+
+<!-- Content -->
+	<section>
+		<header class="main">
+			<h1>Ordinary differential equation solvers in C++ with boost.odeint</h1>
+		</header>
+
+		<p>
+			When performance and precise resource control are non-negotiable requirements &mdash; think embedded firmware,
+			real-time control loops, high-frequency simulators, or scientific kernels running on HPC clusters &mdash;
+			C++ remains the language of choice.
+			Unlike interpreted or just-in-time compiled environments, C++ compiles directly to native machine code,
+			gives the programmer deterministic memory management, and imposes zero hidden runtime overhead.
+			These properties make it a natural fit for computationally intensive numerical work, including the integration of
+			<em>ordinary differential equations</em> (ODEs).<br />
+			<br />
+			The <strong>boost::numeric::odeint</strong> library (part of the well-known
+			<a href="https://www.boost.org/" target="_blank">Boost</a> collection) brings industrial-strength ODE solvers
+			to C++ through a clean, generic interface built on C++ templates.
+			It provides a range of steppers &mdash; from fixed-step Euler to high-order adaptive methods &mdash;
+			while letting the programmer keep full ownership of memory layout and type choices.<br />
+			<br />
+			This post presents three demonstration programs that solve ODE problems numerically using the
+			<strong>Dormand-Prince RK45</strong> (<code>dopri5</code>) stepper with adaptive step control.
+			Each program compares numerical results against the known analytical solution and exports results to a CSV file
+			for straightforward visualisation.<br />
+			The three problems tackled are: a <strong>first-order ODE</strong>, a <strong>system of two coupled
+			first-order ODEs</strong>, and a <strong>second-order ODE</strong> (reduced to a first-order system).<br />
+			All three originate from the same set of problems used in the post
+			<a href="../../en/neural-networks/ordinary-differential-equation-solvers.html">Ordinary differential equation solvers in Python</a>,
+			making them a natural C++ counterpart to that Python-oriented work.<br />
+			<br />
+			To get the source code see paragraph <a href='#downloadcode'>Download the complete code</a> at the end of this post.<br />
+		</p>
+
+		<h2>Prerequisites</h2>
+		<p>
+			The three programs require:
+			<ul>
+				<li>A C++17-capable compiler (e.g. <code>g++</code> or <code>clang++</code>)</li>
+				<li>The <strong>Boost</strong> library with <code>boost.odeint</code> headers installed:
+					<ul>
+						<li>macOS with Homebrew: <code>brew install boost</code></li>
+						<li>Debian / Ubuntu: <code>sudo apt install libboost-dev</code></li>
+					</ul>
+				</li>
+			</ul>
+			Before building, open <code>build.sh</code> in the repository and set the <code>BOOST_INC</code> variable
+			to the directory that contains the Boost headers on your system.
+			The default points to a Homebrew installation; adjust it if your setup differs.<br />
+			Then build all three programs with:
+			<pre><code class="bash">bash build.sh</code></pre>
+			And run each one individually:
+			<pre><code class="bash">./ode_1st_ord_ivp_01
+./sys_1st_ord_ivp_01
+./ode_2nd_ord_ivp_01</code></pre>
+			Each executable writes a CSV file to the current directory containing both the analytical solution
+			and the numerical approximation, ready to be visualised (see paragraph
+			<a href="#visualise">Visualising the results</a> below).
+		</p>
+
+		<h2>About the Dormand-Prince RK45 stepper</h2>
+		<p>
+			All three demos use the same stepper: <strong>dopri5</strong>, the Dormand-Prince Runge-Kutta method of order 4/5.
+			It is an <em>explicit</em>, <em>adaptive</em> single-step method that belongs to the embedded Runge-Kutta family.
+			At each step it computes two estimates of the solution &mdash; one of order 4 and one of order 5 &mdash;
+			and uses their difference as a local error estimate to adjust the step size automatically.
+			This means the integrator takes large steps in smooth regions and shrinks the step where the solution changes rapidly,
+			keeping the local truncation error within the requested tolerance without wasting function evaluations.<br />
+			<br />
+			In boost.odeint the stepper is instantiated as:
+			<pre><code class="cpp">using namespace boost::numeric::odeint;
+auto stepper = make_dense_output(1.0e-9, 1.0e-9, runge_kutta_dopri5&lt;state_type&gt;());</code></pre>
+			The first two arguments are the absolute and relative tolerances; the dense-output wrapper additionally
+			allows querying the solution at arbitrary intermediate times, which is convenient for writing evenly-spaced
+			CSV rows regardless of the internal step size chosen by the controller.
+		</p>
+
+		<h2>Conventions</h2>
+		<p>
+			Throughout this post the following conventions are adopted:
+			<ul>
+				<li>$t$ is the independent variable (time)</li>
+				<li>$x$ and $y$ are unknown functions of $t$, written in compact form (i.e. $x \equiv x(t)$, $y \equiv y(t)$)</li>
+				<li>$x'$ denotes the first derivative of $x$ with respect to $t$; $x''$ denotes the second derivative</li>
+				<li>Initial conditions are expressed as <em>Initial Value Problems</em> (IVP), also known as Cauchy problems</li>
+			</ul>
+		</p>
+
+		<h2 id="ode1">First-order ODE with IVP</h2>
+		<p>
+			Consider the following Cauchy problem:
+			$$x' = \sin t + 3\cos 2t - x, \quad x(0) = 0, \quad t \in [0,\,10]$$
+			whose analytical solution is:
+			$$x(t) = \tfrac{1}{2}\sin t - \tfrac{1}{2}\cos t + \tfrac{3}{5}\cos 2t + \tfrac{6}{5}\sin 2t - \tfrac{1}{10}e^{-t}$$
+			verifiable via <a href="https://www.wolframalpha.com/" target="_blank">Wolfram Alpha</a>.<br />
+			<br />
+			In C++ with boost.odeint the ODE must be expressed as a callable that writes the right-hand side into the
+			derivative argument.
+			For a scalar first-order problem the state type is simply a <code>double</code>:
+			<pre><code class="cpp">typedef double state_type;
+void ode_rhs(const state_type &amp;x, state_type &amp;dxdt, const double t)
+{
+    dxdt = std::sin(t) + 3.0 * std::cos(2.0 * t) - x;
+}</code></pre>
+			The integration is then driven by <code>integrate_adaptive</code>, which advances the solution from
+			$t_0$ to $t_1$ using the dopri5 stepper with adaptive step control.
+			An <em>observer</em> lambda is called after every accepted step, providing the current state and time;
+			here it is used to record the numerical solution alongside the analytical value at each output point:
+			<pre><code class="cpp">auto stepper = make_dense_output(1e-9, 1e-9, runge_kutta_dopri5&lt;state_type&gt;());
+state_type x = 0.0;  // x(0) = 0
+integrate_adaptive(stepper, ode_rhs, x, 0.0, 10.0, 0.01,
+    [&amp;](const state_type &amp;x_obs, double t) {
+        double analytical = 0.5*sin(t) - 0.5*cos(t)
+                          + 0.6*cos(2*t) + 1.2*sin(2*t)
+                          - 0.1*exp(-t);
+        csv &lt;&lt; t &lt;&lt; "," &lt;&lt; analytical &lt;&lt; "," &lt;&lt; x_obs &lt;&lt; "\n";
+    });</code></pre>
+			Here the link to the full source on
+			<a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/cpp/boost.odeint/ode_1st_ord_ivp_01.cpp">GitHub</a>.
+		</p>
+
+		<h2 id="sys1">System of two first-order ODEs with IVP</h2>
+		<p>
+			Consider the following coupled system:
+			$$\begin{cases}
+			  x' = -x + y, & x(0) = 2 \\
+			  y' = 4x - y, & y(0) = 0
+			\end{cases}
+			\quad t \in [0,\,5]$$
+			whose analytical solutions are:
+			$$x(t) = e^{t} + e^{-3t}, \qquad y(t) = 2e^{t} - 2e^{-3t}$$
+			verifiable via <a href="https://www.wolframalpha.com/" target="_blank">Wolfram Alpha</a>.<br />
+			<br />
+			For a system of $n$ equations the state type is a vector.
+			Using <code>std::vector&lt;double&gt;</code> of size two, the right-hand side becomes:
+			<pre><code class="cpp">typedef std::vector&lt;double&gt; state_type;
+
+void sys_rhs(const state_type &amp;s, state_type &amp;dsdt, const double /* t */)
+{
+    dsdt[0] = -s[0] + s[1];       // dx/dt
+    dsdt[1] =  4.0*s[0] - s[1];   // dy/dt
+}</code></pre>
+			The initial condition vector and the call to <code>integrate_adaptive</code> follow the same pattern
+			as the scalar case; the observer now receives a two-element state vector at each step:
+			<pre><code class="cpp">state_type s = {2.0, 0.0};  // x(0)=2, y(0)=0
+integrate_adaptive(stepper, sys_rhs, s, 0.0, 5.0, 0.01,
+    [&amp;](const state_type &amp;s_obs, double t) {
+        double ax = exp(t) + exp(-3.0*t);
+        double ay = 2.0*exp(t) - 2.0*exp(-3.0*t);
+        csv &lt;&lt; t &lt;&lt; "," &lt;&lt; ax &lt;&lt; "," &lt;&lt; ay
+            &lt;&lt; "," &lt;&lt; s_obs[0] &lt;&lt; "," &lt;&lt; s_obs[1] &lt;&lt; "\n";
+    });</code></pre>
+			The output CSV contains columns for $t$, the analytical $x$ and $y$, and their numerical counterparts,
+			making it straightforward to overlay all four curves at once in a chart.<br />
+			Here the link to the full source on
+			<a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/cpp/boost.odeint/sys_1st_ord_ivp_01.cpp">GitHub</a>.
+		</p>
+
+		<h2 id="ode2">Second-order ODE with IVP</h2>
+		<p>
+			Consider the following Cauchy problem for a second-order equation:
+			$$x'' + x' + 2x = 0, \quad x(0) = 1,\quad x'(0) = 0, \quad t \in [0,\,12]$$
+			whose analytical solution is:
+			$$x(t) = e^{-t/2}\!\left(\cos\frac{\sqrt{7}\,t}{2} + \frac{1}{\sqrt{7}}\sin\frac{\sqrt{7}\,t}{2}\right)$$
+			verifiable via <a href="https://www.wolframalpha.com/" target="_blank">Wolfram Alpha</a>.<br />
+			<br />
+			A second-order ODE is not directly handled by first-order steppers.
+			The standard technique is to introduce the auxiliary variable $y = x'$ and rewrite the equation
+			as an equivalent first-order system:
+			$$\begin{cases}
+			  x' = y \\
+			  y' = -y - 2x
+			\end{cases}
+			\quad x(0) = 1,\; y(0) = 0$$
+			This reduction maps a scalar second-order problem onto a two-dimensional first-order system,
+			which boost.odeint handles identically to the coupled system of the previous section.
+			In C++ the right-hand side becomes:
+			<pre><code class="cpp">typedef std::vector&lt;double&gt; state_type;
+
+// s[0] = x,  s[1] = y = x'
+void ode2_rhs(const state_type &amp;s, state_type &amp;dsdt, const double /* t */)
+{
+    dsdt[0] =  s[1];                    // x'  = y
+    dsdt[1] = -s[1] - 2.0 * s[0];      // y'  = -y - 2x
+}</code></pre>
+			The initial conditions $x(0)=1$ and $x'(0)=0$ translate directly to the initial state vector
+			<code>1.0, 0.0</code>.
+			The observer extracts only the first component ($x$) for comparison with the analytical solution,
+			because that is the quantity of physical interest:
+			<pre><code class="cpp">state_type s = {1.0, 0.0};  // x(0)=1, x'(0)=0
+integrate_adaptive(stepper, ode2_rhs, s, 0.0, 12.0, 0.01,
+    [&amp;](const state_type &amp;s_obs, double t) {
+        double ax = exp(-t/2.0) * (cos(sqrt7h*t) + sin(sqrt7h*t)/sqrt7);
+        csv &lt;&lt; t &lt;&lt; "," &lt;&lt; ax &lt;&lt; "," &lt;&lt; s_obs[0] &lt;&lt; "\n";
+    });</code></pre>
+			where <code>sqrt7 = std::sqrt(7.0)</code> and <code>sqrt7h = sqrt7 / 2.0</code>
+			are precomputed constants.<br />
+			Here the link to the full source on
+			<a target="_blank" href="https://github.com/ettoremessina/differential-equations/blob/main/ODEs/solver-demos/cpp/boost.odeint/ode_2nd_ord_ivp_01.cpp">GitHub</a>.
+		</p>
+
+		<h2 id="visualise">Visualising the results</h2>
+		<p>
+			Each program writes a CSV file to the current directory:
+			<ul>
+				<li><code>ode_1st_ord_ivp_01.csv</code> &mdash; columns: <code>t</code>, <code>analytical</code>, <code>numerical</code></li>
+				<li><code>sys_1st_ord_ivp_01.csv</code> &mdash; columns: <code>t</code>, <code>analytical_x</code>, <code>analytical_y</code>, <code>numerical_x</code>, <code>numerical_y</code></li>
+				<li><code>ode_2nd_ord_ivp_01.csv</code> &mdash; columns: <code>t</code>, <code>analytical</code>, <code>numerical</code></li>
+			</ul>
+			To inspect the results without writing any additional code, drag-and-drop a generated CSV file onto
+			<a href="https://csvplot.com/" target="_blank">csvplot.com</a>:
+			<ol>
+				<li>Drag the <code>t</code> column to the <strong>X axis</strong></li>
+				<li>Drag <code>analytical</code> (or <code>analytical_x</code> / <code>analytical_y</code>) to the <strong>Y axis</strong> to plot the exact solution</li>
+				<li>Drag <code>numerical</code> (or <code>numerical_x</code> / <code>numerical_y</code>) to the <strong>Y axis</strong> to overlay the numerical approximation</li>
+			</ol>
+			The two curves should be practically indistinguishable at the default tolerances
+			(<code>atol = rtol = 1e-9</code>), confirming that dopri5 resolves all three problems with high accuracy.
+		</p>
+
+		<h2 id="downloadcode">Download the complete code</h2>
+		<p>
+			The complete source code is available at
+			<a target="_blank" href="https://github.com/ettoremessina/differential-equations/tree/main/ODEs/solver-demos/cpp/boost.odeint/">GitHub</a>.
+			<br/>
+			
+			These materials are distributed under MIT license; feel free to use, share, fork and adapt these materials as you see fit.
+			<br/>
+			Also please feel free to submit pull-requests and bug-reports to this GitHub repository or contact me on my social media channels available on the top right corner of this page.
+			<br/>
+
+		</p>
+
+	</section>
+
+						</div>
+				</div>
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<div class="align-center"><img src="../../images/cm-logo-small.png" alt="Computational&nbsp;Mindset" /></div>
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="../../en/">Home</a></li>
+										<li>
+											<span class="opener">Neural&nbsp;Networks</span>
+											<ul>
+												<li><a href="../../en/neural-networks/">INDEX</a></li>
+												<li><a href="../../en/neural-networks/pruning-of-neural-networks-with-tensorflow.html">Pruning of neural networks with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/differential-equations-and-neural-networks.html">Differential Equations and Neural Networks</a></li>
+												<li><a href="../../en/neural-networks/univariate-equally-spaced-time-series-forecast-with-tensorflow.html">Forecast of a univariate equally spaced time series with TensorFlow</a></li>
+												<li><a href="../../en/neural-networks/fitting-with-multi-layer-perceptrons-highly-configurable.html">Fitting with highly configurable multi layer perceptrons</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Quantum&nbsp;Computing</span>
+											<ul>
+												<li><a href="../../en/quantum-computing/">INDEX</a></li>
+												<li><a href="../../en/quantum-computing/not-cnot-operators.html">NOT and C-NOT quantum gates</a></li>
+												<li><a href="../../en/quantum-computing/random-number-generation.html">Random Numbers Generation</a></li>
+												<li><a href="../../en/quantum-computing/hadamard-gate-cascade.html">Cascade Hadamard Gates</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Machine&nbsp;Learning</span>
+											<ul>
+												<li><a href="../../en/machine-learning/">INDEX</a></li>
+												<li><a href="../../en/machine-learning/common-tools-for-function-fitting.html">Common tools for function fitting</a></li>
+												<li><a href="../../en/machine-learning/fitting-functions-with-pycaret.html">Fitting functions with PyCaret</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-xgboost.html">Fitting functions with a configurable XGBoost regressor</a></li>
+												<li><a href="../../en/machine-learning/fitting-with-configurable-svr.html">Fitting functions with a configurable Support Vector Regressor</a></li>
+												<li><a href="../../en/machine-learning/polynomial-regression-with-accord-net.html">Polynomial regression with Accord.NET</a></li>
+												<li><a href="../../en/machine-learning/smo-regression-with-puk-kernel-in-weka.html">SMO regression for SVM with PUK kernel in Weka</a></li>
+												<li><a href="../../en/machine-learning/smo-forecast-with-poly-kernel-in-weka.html">SMO forecast for SVM with polynomial kernel in Weka</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mathematics</span>
+											<ul>
+												<li><a href="../../en/mathematics/">INDEX</a></li>
+												<li><a href="../../en/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint.html">Ordinary differential equation solvers in C++ with boost.odeint</a></li>
+												<li><a href="../../en/mathematics/queue-simulation-mmck-algorithm.html">Queue Simulation with M/M/c/K Algorithm</a></li>
+												<li><a href="../../en/mathematics/queue-simulation-mmc-algorithm.html">Queue Simulation with M/M/c Algorithm</a></li>
+												<li><a href="../../en/mathematics/nablavis-stokes-theorem.html">NablaVis: an interactive educational tool to visualize three applications of Stokes&apos; Theorem</a></li>
+												<li><a href="../../en/mathematics/fourier-series-in-python.html">Fourier Series in Python</a></li>
+												<li><a href="../../en/mathematics/solving-delay-differential-equations-in-python-using-numerical-methods.html">Solving delay differential equations using numerical methods in Python</a></li>
+												<li><a href="../../en/mathematics/integral-calculus-in-python.html">Integral Calculus in Python</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-constant-coefficient-linear-and-homogeneous-dynamical-system-on-plane.html">Analyzer of a constant coefficient linear and homogeneous dynamical system on plane</a></li>
+												<li><a href="../../en/mathematics/analyzer-of-a-nonlinear-autonomous-dynamical-system-on-plane-by-hartman-grobman-theorem.html">Analyzer of a nonlinear autonomous dynamical system on the plane by Hartman-Grobman theorem</a></li>
+												<li><a href="../../en/mathematics/experiments-with-sympy-to-solve-odes-1st-order.html">Experiments with SymPy to solve first-order ordinary differential equations</a></li>
+												<li><a href="../../en/mathematics/method-solving-first-order-dde-using-lambert-w-function.html">A method to solve first-order time delay differential equation using Lambert W function</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">High Performance</span>
+											<ul>
+												<li><a href="../../en/high-performance/">INDEX</a></li>
+												<li><a href="https://ettoremessina.tech/2024/09/14/high-performance-computing-of-discrete-single-variable-derivative-with-cuda/" target="_blank">High-Performance Computing of Discrete Single Variable Derivative with CUDA</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/03/high-performance-computing-of-discrete-two-variable-partial-derivatives-with-cuda/" target="_blank">High-Performance Computing of Discrete Two Variable Partial Derivatives with CUDA</a></li>
+												<li><a href="https://ettoremessina.tech/2024/10/06/numerical-integration-with-cuda-accelerating-calculations-on-the-gpu/" target="_blank">Numerical Integration with CUDA: Accelerating Calculations on the GPU</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Datasets</span>
+											<ul>
+												<li><a href="../../en/datasets/">INDEX</a></li>
+												<li><a href="../../en/datasets/functions-dataset.html">&apos;Functions&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/time-series-dataset.html">&apos;Time&nbsp;Series&apos; dataset collection</a></li>
+												<li><a href="../../en/datasets/synthetic-words-dataset.html">&apos;Synthetic Words&apos; dataset</a></li>
+											</ul>
+										</li>
+										<li><a href="../../en/info.html">Info</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+                                    <div class="side-topics">
+                                        <header class="align-center">
+                                            <h2><a href="../../en/neural-networks/">Neural&nbsp;Networks</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/neural-networks/" class="image"><span class="icon solid fa-sitemap"/></a>
+                                        </article>
+                                        <header class="align-center">
+                                            <h2><a href="../../en/quantum-computing/">Quantum&nbsp;Computing</a></h2>
+                                        </header>
+                                        <article>
+                                            <a href="../../en/quantum-computing/" class="image"><span class="icon solid fa-atom" /></a>
+                                        </article>
+                                    </div>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">
+										Design based on &apos;Editorial&apos; template (with customization) downloaded from <a href="https://html5up.net" target="_blank">HTML5 UP</a>.
+										<br/>
+										Click on links to see <a href="../../html5up-license/LICENSE.txt" target="_blank">LICENSE.txt</a> and <a href="../../html5up-license/README.txt" target="_blank">README.txt</a> files of &apos;Editorial&apos; template by HTML5 UP.
+										<br>
+										<br>
+										&copy; <a href="../../en/info.html">Ettore Messina</a>. 
+									</p>
+								</footer>
+						</div>
+					</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+			<style>
+				a.cc-link
+				{
+				    border-bottom: none;
+				}
+				a.cc-link:hover
+				{
+					color: white !important;
+				}
+			</style>
+	</body>
+</html>
+
