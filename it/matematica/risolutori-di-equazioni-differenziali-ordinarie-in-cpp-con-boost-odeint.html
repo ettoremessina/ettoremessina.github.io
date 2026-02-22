@@ -383,6 +383,14 @@ integrate_adaptive(stepper, ode2_rhs, s, 0.0, 12.0, 0.01,
 			Le due curve dovrebbero risultare praticamente indistinguibili alle tolleranze predefinite
 			(<code>atol = rtol = 1e-9</code>), confermando che dopri5 risolve tutti e tre i problemi con elevata accuratezza.
 		</p>
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/ode_1st_ord_ivp_01_analytical.png" /></div>
+		<div class="photocaption">Soluzione analitica dell&apos;ODE del primo ordine: $x(t) = \tfrac12\sin t - \tfrac12\cos t + \tfrac35\cos 2t + \tfrac65\sin 2t - \tfrac110e^-t$.</div>
+		<br />
+		<br />
+		<div class="betweentextlines"><img src="../../posts/mathematics/ordinary-differential-equation-solvers-in-cpp-with-boost-odeint/ode_1st_ord_ivp_01_numerical.png" /></div>
+		<div class="photocaption">Soluzione numerica dell&apos;ODE del primo ordine ottenuta con lo stepper adattivo dopri5 di boost.odeint &mdash; visivamente indistinguibile da quella analitica a <code>atol = rtol = 1e-9</code>.</div>
+		<br />
+		<br />
 
 		<h2 id="downloadcode">Download del codice completo</h2>
 		<p>
